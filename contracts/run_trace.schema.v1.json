@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://financial-agent-reliability.local/contracts/run_trace.schema.v1.json",
+  "title": "Financial agent benchmark run trace v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_type", "contract_version", "run_id", "run_identity", "status",
+    "provider", "request", "preflight", "context", "tool_calls", "environment",
+    "timing", "usage", "cost", "attempts", "retry", "resume", "checkpoint",
+    "failure", "result", "immutable_bundle", "redaction"
+  ],
+  "properties": {
+    "contract_type": {"const": "run_trace"},
+    "contract_version": {"const": "1.0.0"},
+    "run_id": {"type": "string", "pattern": "^run_[0-9a-f]{32}$"},
+    "run_identity": {"type": "object"},
+    "status": {"enum": ["succeeded", "failed", "invalidated"]},
+    "provider": {
+      "type": "object",
+      "required": ["name", "requested_model_id", "response_model_id", "endpoint_id", "model_manifest_sha256"],
+      "properties": {
+        "name": {"const": "bailian"},
+        "requested_model_id": {"enum": ["qwen-3.8-max", "glm-5.2", "deepseek-v4-pro"]},
+        "response_model_id": {"type": "string"},
+        "endpoint_id": {"type": "string", "pattern": "^bailian_[0-9a-f]{12}$"},
+        "model_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "request": {"type": "object"},
+    "preflight": {"type": "object"},
+    "context": {"type": "object"},
+    "tool_calls": {"type": "array"},
+    "environment": {"type": "object"},
+    "timing": {"type": "object"},
+    "usage": {"type": "object"},
+    "cost": {"type": "object"},
+    "attempts": {"type": "array", "minItems": 1},
+    "retry": {"type": "object"},
+    "resume": {"type": "object"},
+    "checkpoint": {"type": "object"},
+    "failure": {"type": "object"},
+    "result": {"type": "object"},
+    "immutable_bundle": {"type": "object"},
+    "redaction": {"type": "object"}
+  }
+}
