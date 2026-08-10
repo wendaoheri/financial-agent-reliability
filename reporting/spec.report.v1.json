@@ -1,0 +1,55 @@
+{
+  "contract_type": "financial_agent_reporting_spec",
+  "contract_version": "1.0.0",
+  "status": "frozen",
+  "frozen_by_issue": "PER-27",
+  "main_ranking": {
+    "eligible_tier": "Gold",
+    "track_weights": {
+      "financial_knowledge_work": "0.500000",
+      "financial_tool_workflow": "0.500000"
+    },
+    "weight_override_allowed": false,
+    "requires_complete_run_matrix": true,
+    "requires_signed_audit": true,
+    "silver_destination": "diagnostic_appendix_only",
+    "cost_and_latency_affect_rank": false
+  },
+  "required_sections": [
+    "identity_and_scope",
+    "coverage_and_validity",
+    "main_ranking_or_withheld_notice",
+    "capability_reliability_safety",
+    "cost_latency_uncertainty",
+    "failures_and_limitations",
+    "illustrative_case_replays",
+    "reproduction_and_provenance"
+  ],
+  "run_states": ["succeeded", "failed", "blocked", "excluded", "missing"],
+  "output_formats": ["json", "markdown", "html"],
+  "demo": {
+    "minimum_cases": 6,
+    "maximum_cases": 8,
+    "illustrative_only": true,
+    "affects_ranking": false,
+    "selection_before_identity_unblinding": true,
+    "all_candidate_outcomes_per_case": true,
+    "required_views": [
+      "final_answer",
+      "tool_trace",
+      "evidence_chain",
+      "environment_state",
+      "failure_step",
+      "cost_latency",
+      "uncertainty"
+    ]
+  },
+  "accessibility": {
+    "html_lang": "zh-CN",
+    "semantic_main": true,
+    "skip_link": true,
+    "table_caption_and_scope": true,
+    "no_color_only_meaning": true
+  },
+  "mutation_policy": "append-only audit record plus new reporting contract version; demonstrations never alter scores, weights, exclusions, or ranking"
+}

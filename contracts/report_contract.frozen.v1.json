@@ -1,0 +1,19 @@
+{
+  "contract_type": "financial_agent_reporting_contract_bundle",
+  "contract_version": "1.0.0",
+  "status": "frozen",
+  "frozen_at": "2026-08-11T09:00:00+08:00",
+  "frozen_by_issue": "PER-27",
+  "mutation_policy": "new version and audit record required; candidate results or demonstration selection must never mutate this bundle",
+  "files": [
+    {"path": "reporting/spec.report.v1.json", "sha256": "c9a7d4699eabc0fa64ef2dc2aa82ec99477b3231a4bf949802f91ff28c982efe"},
+    {"path": "contracts/report_bundle.schema.v1.json", "sha256": "afdc4f70e7e6147c0c46040c9b2e174c2cfdd1dd3efb7e6d0289634110646f1c"},
+    {"path": "reporting/report.py", "sha256": "6847deb2b81b9f3cca98851c75fb441a7659b78fe9e716f9891d34966ef85804"},
+    {"path": "docs/reporting-contract-v1.md", "sha256": "c437174bbe55a094f99d54df5d69a1716aa2c98a96249862e52b9b1836d978ca"},
+    {"path": "tests/fixtures/reporting/report.partial.valid.json", "sha256": "80197a5038c0761afe4efe1fa38bd0b4a8d234806bcdfda069dbb530d6fc9f2d"},
+    {"path": "tests/expected/reporting/report.partial.valid.md", "sha256": "0dd020ba8c2db2c865d54a4fb9b62e101af84131c48b189487f9fe2ebb991573"},
+    {"path": "tests/expected/reporting/report.partial.valid.html", "sha256": "b2dad6aa44710f0311951859b78c7422e91263ff8947fe09d2e300e19cd680e2"},
+    {"path": "tests/test_reporting_contracts.py", "sha256": "89ce4e927bd2a71046a3c3db0bb3e47f5693b74efb7df4be24e3b19acdc1dfc0"}
+  ],
+  "contract_bundle_sha256": "a0a1053379e8df6c8c689f79e622fb69b68c7dc083db1702ea9fff7c5e400988"
+}
