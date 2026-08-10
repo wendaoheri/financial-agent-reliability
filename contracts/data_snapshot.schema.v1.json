@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://financial-agent-reliability.local/contracts/data_snapshot.schema.v1.json",
+  "title": "Financial Agent Benchmark data_snapshot",
+  "type": "object",
+  "required": [
+    "contract_type",
+    "contract_version",
+    "snapshot_id",
+    "revision",
+    "status",
+    "source",
+    "access",
+    "financial_subject",
+    "temporal",
+    "records",
+    "lineage",
+    "integrity"
+  ],
+  "properties": {
+    "contract_type": { "const": "data_snapshot" },
+    "contract_version": { "const": "1.0.0" },
+    "snapshot_id": { "type": "string", "minLength": 1 },
+    "revision": { "type": "integer", "minimum": 1 },
+    "status": { "const": "frozen" },
+    "source": { "$ref": "#/$defs/source" },
+    "access": { "$ref": "#/$defs/access" },
+    "financial_subject": { "$ref": "case_card.schema.v1.json#/$defs/financial_subject" },
+    "temporal": { "$ref": "#/$defs/snapshot_temporal" },
+    "records": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/record" } },
+    "lineage": { "$ref": "#/$defs/lineage" },
+    "integrity": { "$ref": "case_card.schema.v1.json#/$defs/integrity" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "timestamp": { "type": "string", "format": "date-time" },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "license": {
+      "type": "object",
+      "required": ["name", "url", "redistributable"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "format": "uri" },
+        "redistributable": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "required": ["provider", "source_type", "dataset", "uri", "license"],
+      "properties": {
+        "provider": { "type": "string", "minLength": 1 },
+        "source_type": { "enum": ["market_data", "filing", "announcement", "fundamentals", "valuation", "macro", "corporate_action", "benchmark"] },
+        "dataset": { "type": "string", "minLength": 1 },
+        "uri": { "type": "string", "format": "uri" },
+        "license": { "$ref": "#/$defs/license" }
+      },
+      "additionalProperties": false
+    },
+    "access": {
+      "type": "object",
+      "required": ["mode", "query_name", "query_args", "prohibited_scopes"],
+      "properties": {
+        "mode": { "const": "public_read_only" },
+        "query_name": { "type": "string", "minLength": 1 },
+        "query_args": { "type": "object" },
+        "prohibited_scopes": {
+          "type": "array",
+          "items": { "enum": ["account", "assets", "cash", "holdings", "orders", "positions", "portfolio", "trades"] },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "snapshot_temporal": {
+      "type": "object",
+      "required": ["event_time", "as_of", "available_at", "retrieved_at"],
+      "properties": {
+        "event_time": { "$ref": "#/$defs/timestamp" },
+        "as_of": { "$ref": "#/$defs/timestamp" },
+        "available_at": { "$ref": "#/$defs/timestamp" },
+        "retrieved_at": { "$ref": "#/$defs/timestamp" }
+      },
+      "additionalProperties": false
+    },
+    "record": {
+      "type": "object",
+      "required": ["record_id", "evidence_type", "source_locator", "payload"],
+      "properties": {
+        "record_id": { "type": "string", "minLength": 1 },
+        "evidence_type": { "type": "string", "minLength": 1 },
+        "source_locator": { "type": "string", "minLength": 1 },
+        "payload": {}
+      },
+      "additionalProperties": false
+    },
+    "lineage": {
+      "type": "object",
+      "required": ["collector", "collector_version", "schema_version", "query_args", "raw_response_sha256", "code_revision", "parent_snapshot_ids"],
+      "properties": {
+        "collector": { "type": "string", "minLength": 1 },
+        "collector_version": { "type": "string", "minLength": 1 },
+        "schema_version": { "type": "string", "minLength": 1 },
+        "query_args": { "type": "object" },
+        "raw_response_sha256": { "$ref": "#/$defs/sha256" },
+        "code_revision": { "type": "string", "minLength": 1 },
+        "parent_snapshot_ids": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+      },
+      "additionalProperties": false
+    }
+  }
+}

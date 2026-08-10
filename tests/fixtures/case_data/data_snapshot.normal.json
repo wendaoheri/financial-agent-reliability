@@ -1,0 +1,96 @@
+{
+  "contract_type": "data_snapshot",
+  "contract_version": "1.0.0",
+  "snapshot_id": "snapshot-xhkg-demo-2026-07-31-close-v1",
+  "revision": 1,
+  "status": "frozen",
+  "source": {
+    "provider": "per-23-fixture",
+    "source_type": "benchmark",
+    "dataset": "synthetic_market_close_acceptance_fixture",
+    "uri": "https://financial-agent-reliability.local/PER-23/raw-market-input",
+    "license": {
+      "name": "Project-internal acceptance fixture",
+      "url": "https://financial-agent-reliability.local/licenses/internal-fixture",
+      "redistributable": false
+    }
+  },
+  "access": {
+    "mode": "public_read_only",
+    "query_name": "fixture market-data lookup",
+    "query_args": {
+      "symbol": "DEMO.HK",
+      "period": "day",
+      "count": 2,
+      "adjust_type": "no_adjust"
+    },
+    "prohibited_scopes": [
+      "account",
+      "assets",
+      "cash",
+      "holdings",
+      "orders",
+      "positions",
+      "portfolio",
+      "trades"
+    ]
+  },
+  "financial_subject": {
+    "subject_type": "security",
+    "entity_name": "Example Holdings Limited",
+    "identifiers": [
+      { "scheme": "ticker", "value": "DEMO.HK" }
+    ],
+    "market": {
+      "mic": "XHKG",
+      "country": "HK",
+      "timezone": "Asia/Hong_Kong"
+    },
+    "currency": { "code": "HKD" },
+    "units": {
+      "amount_scale": "unit",
+      "price_basis": "raw",
+      "accounting_basis": "not_applicable"
+    }
+  },
+  "temporal": {
+    "event_time": "2026-07-31T16:00:00+08:00",
+    "as_of": "2026-07-31T16:00:00+08:00",
+    "available_at": "2026-07-31T16:15:00+08:00",
+    "retrieved_at": "2026-08-01T09:00:00+08:00"
+  },
+  "records": [
+    {
+      "record_id": "DEMO.HK-close-change-2026-07-31",
+      "evidence_type": "market_close",
+      "source_locator": "raw_market_input.json#/close",
+      "payload": {
+        "previous_close": "550.000",
+        "close": "566.500",
+        "change_pct": "3.0",
+        "currency": "HKD",
+        "price_unit": "per_share"
+      }
+    }
+  ],
+  "lineage": {
+    "collector": "per-23-fixture-loader",
+    "collector_version": "1.0.0",
+    "schema_version": "case-data/1.0.0",
+    "query_args": {
+      "symbol": "DEMO.HK",
+      "period": "day",
+      "count": 2,
+      "adjust_type": "no_adjust",
+      "as_of": "2026-07-31T16:00:00+08:00"
+    },
+    "raw_response_sha256": "2885443451aeff84831675f6ebed4b715fe90a85e5fe718cb2d7fc451b5e1654",
+    "code_revision": "per-23-fixture-v1",
+    "parent_snapshot_ids": []
+  },
+  "integrity": {
+    "canonicalization": "financial-agent-c14n-json-v1",
+    "hash_algorithm": "sha256",
+    "content_sha256": "77829e459cb6e491dc1d89cf4df706099bb3471cacc3f9e1882ddae20ede481f"
+  }
+}
