@@ -1,0 +1,503 @@
+{
+  "catalog_type": "financial_agent_seed_catalog",
+  "version": "1.0.0",
+  "status": "frozen_before_stage_2_curation",
+  "frozen_by_issue": "PER-26",
+  "verified_at": "2026-08-11T00:00:00+08:00",
+  "contract_refs": {
+    "case_card": "contracts/case_card.schema.v1.json",
+    "data_snapshot": "contracts/data_snapshot.schema.v1.json",
+    "preregistration": "preregistration/benchmark_preregistration.v1.json"
+  },
+  "selection_policy": {
+    "candidate_output_as_ground_truth_prohibited": true,
+    "post_ranking_item_or_weight_changes_prohibited": true,
+    "public_original_rows_are_ranking_eligible": false,
+    "family_count": 30,
+    "variants_per_family": [
+      "normal",
+      "single_factor_perturbation",
+      "missing_or_anomalous"
+    ],
+    "variant_count": 90,
+    "public_benchmark_primary_family_quota": 15,
+    "longbridge_primary_family_quota": 15,
+    "gold_candidate_family_quota": 24,
+    "diagnostic_only_family_quota": 6,
+    "normal_and_single_factor_gold_candidate_case_quota": 48,
+    "silver_diagnostic_case_quota": 42,
+    "missing_or_anomalous_rule": "Every missing_or_anomalous case is Silver, ranking_eligible=false, and expects abstain, escalate, or reject_action."
+  },
+  "deduplication": {
+    "canonicalization": "financial-agent-c14n-json-v1",
+    "hash_algorithm": "sha256",
+    "upstream_record_key_fields": [
+      "source_id",
+      "source_revision",
+      "upstream_record_id"
+    ],
+    "primary_evidence_key_fields": [
+      "primary_source_stable_id",
+      "document_revision",
+      "source_locator",
+      "as_of"
+    ],
+    "cross_source_task_key_fields": [
+      "primary_evidence_key",
+      "normalized_question_intent",
+      "operator_graph",
+      "answer_target",
+      "variant_axis"
+    ],
+    "family_key_fields": [
+      "primary_evidence_key",
+      "task_domain",
+      "operator_graph",
+      "answer_target",
+      "variant_axis"
+    ],
+    "normalization": [
+      "Unicode NFKC",
+      "trim and collapse whitespace",
+      "lowercase only where semantics are case-insensitive",
+      "canonicalize ISO dates, currencies, units, identifiers, and JSON object key order",
+      "do not include variant kind or changed value in the family key"
+    ],
+    "hard_exclusions": [
+      "same family_key already selected",
+      "missing or ambiguous applicable license",
+      "unknown upstream lineage for a composite benchmark row",
+      "public label or candidate output used as the production oracle",
+      "future information relative to as_of",
+      "FinMCP benchmark_all row duplicated by a single_tool, multi_tool, or multi_turn file"
+    ]
+  },
+  "sources": [
+    {
+      "source_id": "financebench",
+      "name": "FinanceBench",
+      "paper": {
+        "uri": "https://arxiv.org/abs/2311.11944",
+        "version": "arXiv:2311.11944"
+      },
+      "artifacts": [
+        {
+          "kind": "official_github",
+          "uri": "https://github.com/patronus-ai/financebench",
+          "revision": "cc39aeb4afdf33909ee1412188bf89035950c2eb",
+          "revision_time": "2024-12-03T09:29:01-08:00",
+          "license_evidence": "No LICENSE file at this revision; README does not state a license."
+        },
+        {
+          "kind": "official_huggingface_dataset",
+          "uri": "https://huggingface.co/datasets/PatronusAI/financebench",
+          "revision": "e04404e3a97f69f79c14d42f24981a1c9c3bcd18",
+          "revision_time": "2024-11-17T18:42:59Z",
+          "license_evidence": "README.md front matter: cc-by-nc-4.0"
+        }
+      ],
+      "licenses": {
+        "annotations": "CC-BY-NC-4.0 per official Hugging Face dataset card",
+        "code": "Unspecified in official GitHub repository",
+        "underlying_reports": "Not granted by the benchmark license; preserve issuer/filing provenance and do not assume redistribution rights",
+        "commercial_use": false,
+        "redistributable": false
+      },
+      "structure": {
+        "size": "150 public annotated rows from a stated 10,231-question benchmark",
+        "fields": [
+          "financebench_id",
+          "question",
+          "answer",
+          "evidence",
+          "justification",
+          "question_type",
+          "question_reasoning",
+          "company",
+          "doc_name"
+        ],
+        "evidence_fields": [
+          "evidence_text",
+          "doc_name",
+          "evidence_page_num",
+          "evidence_text_full_page"
+        ]
+      },
+      "reusable_scorer": {
+        "available": false,
+        "reason": "The repository supplies an evaluation notebook and human-reviewed model outputs, not a frozen deterministic scorer suitable as an oracle."
+      },
+      "contamination_risk": "high: all 150 questions, answers, evidence, and many model completions are public",
+      "applicability": "Open-book filing retrieval, evidence localization, period/unit/accounting-basis checks.",
+      "direct_row_eligibility": "development_and_diagnostic_only",
+      "gold_derivation_rule": "Re-author from a newly frozen primary filing snapshot; verify as-of and license; independently recompute the answer; do not copy the public answer or use benchmark PDFs as the only evidence."
+    },
+    {
+      "source_id": "finqa",
+      "name": "FinQA",
+      "paper": {
+        "uri": "https://aclanthology.org/2021.emnlp-main.300/",
+        "version": "EMNLP 2021"
+      },
+      "artifacts": [
+        {
+          "kind": "official_github",
+          "uri": "https://github.com/czyssrs/FinQA",
+          "revision": "0f16e2867befa6840783e58be38c9efb9229d742",
+          "revision_time": "2022-06-05T19:12:33-07:00",
+          "license_evidence": "LICENSE: MIT; project site separately states dataset CC BY 4.0"
+        },
+        {
+          "kind": "official_project_site",
+          "uri": "https://finqasite.github.io/",
+          "revision": "retrieved-2026-08-11",
+          "revision_time": "2026-08-11T00:00:00+08:00",
+          "license_evidence": "The dataset is under Creative Commons Attribution 4.0 International."
+        }
+      ],
+      "licenses": {
+        "dataset": "CC-BY-4.0 per official project site",
+        "code": "MIT per repository LICENSE",
+        "upstream_reports": "FinTabNet-derived report material requires preservation of upstream provenance",
+        "commercial_use": true,
+        "redistributable": true
+      },
+      "structure": {
+        "size": "approximately 8,000 QA pairs over approximately 2,800 financial reports",
+        "fields": [
+          "id",
+          "pre_text",
+          "post_text",
+          "table",
+          "qa.question",
+          "qa.program",
+          "qa.gold_inds",
+          "qa.exe_ans",
+          "qa.program_re"
+        ],
+        "splits": [
+          "train",
+          "dev",
+          "public test with labels",
+          "private test without labels"
+        ]
+      },
+      "reusable_scorer": {
+        "available": true,
+        "path": "code/evaluate/evaluate.py",
+        "metrics": [
+          "execution accuracy",
+          "program accuracy"
+        ],
+        "reuse_boundary": "Diagnostic cross-check only until dependencies, numeric tolerances, exception handling, and sandbox behavior are pinned; production Gold requires an independent oracle."
+      },
+      "contamination_risk": "high: train/dev/public-test labels and programs are public; historical retriever formatting bugs caused label leakage before the 2022 fixes",
+      "applicability": "Structured numerical reasoning over text and tables with executable operator graphs.",
+      "direct_row_eligibility": "development_and_diagnostic_only",
+      "gold_derivation_rule": "Use only the task/operator structure; select a fresh primary filing and independently implement and test the oracle."
+    },
+    {
+      "source_id": "tatqa",
+      "name": "TAT-QA",
+      "paper": {
+        "uri": "https://aclanthology.org/2021.acl-long.254/",
+        "version": "ACL-IJCNLP 2021"
+      },
+      "artifacts": [
+        {
+          "kind": "official_github",
+          "uri": "https://github.com/NExTplusplus/TAT-QA",
+          "revision": "870accc41953dcde885aabeb963d94aabdc0fbc3",
+          "revision_time": "2024-12-09T19:06:29+08:00",
+          "license_evidence": "README dataset license: CC BY 4.0; LICENSE code license: MIT"
+        }
+      ],
+      "licenses": {
+        "dataset": "CC-BY-4.0 per README",
+        "code": "MIT per LICENSE",
+        "underlying_reports": "Preserve report provenance and independently verify redistribution scope",
+        "commercial_use": true,
+        "redistributable": true
+      },
+      "structure": {
+        "size": "16,552 questions over 2,757 hybrid table-text contexts",
+        "fields": [
+          "table.uid",
+          "table.table",
+          "paragraphs.uid",
+          "paragraphs.order",
+          "paragraphs.text",
+          "questions.uid",
+          "questions.question",
+          "questions.answer",
+          "questions.derivation",
+          "questions.answer_type",
+          "questions.answer_from",
+          "questions.scale",
+          "questions.facts",
+          "questions.mappings"
+        ],
+        "answer_types": [
+          "span",
+          "multi-span",
+          "count",
+          "arithmetic"
+        ]
+      },
+      "reusable_scorer": {
+        "available": true,
+        "paths": [
+          "tatqa_eval.py",
+          "tatqa_metric.py"
+        ],
+        "metrics": [
+          "exact match",
+          "F1",
+          "scale accuracy",
+          "operator accuracy"
+        ],
+        "reuse_boundary": "Useful for public-set diagnostics; exact financial values and abstention behavior require independent deterministic oracles."
+      },
+      "contamination_risk": "high: test ground truth was publicly released in January 2024",
+      "applicability": "Hybrid table-text extraction, arithmetic, scale, evidence-source, and modality perturbations.",
+      "direct_row_eligibility": "development_and_diagnostic_only",
+      "gold_derivation_rule": "Use a new licensed primary disclosure, freeze table/text locators and scales, and independently recompute the expected result."
+    },
+    {
+      "source_id": "bizbench",
+      "name": "BizBench: A Quantitative Reasoning Benchmark for Business and Finance",
+      "paper": {
+        "uri": "https://aclanthology.org/2024.acl-long.452/",
+        "version": "ACL 2024"
+      },
+      "artifacts": [
+        {
+          "kind": "official_huggingface_dataset",
+          "uri": "https://huggingface.co/datasets/kensho/bizbench",
+          "revision": "0a793f2f886156902c72b4a22cab82bb9dceaecf",
+          "revision_time": "2024-06-03T15:31:26Z",
+          "license_evidence": "README.md front matter: apache-2.0"
+        }
+      ],
+      "licenses": {
+        "dataset_card": "Apache-2.0",
+        "composite_rows": "Must also satisfy each upstream component license and lineage; the aggregate card does not erase upstream obligations",
+        "commercial_use": true,
+        "redistributable": false
+      },
+      "structure": {
+        "size": "14,377 train and 4,673 test rows",
+        "fields": [
+          "question",
+          "answer",
+          "task",
+          "context",
+          "context_type",
+          "options",
+          "program"
+        ],
+        "tasks": [
+          "FinCode",
+          "CodeFinQA",
+          "CodeTATQA",
+          "ConvFinQA(E)",
+          "TAT-QA(E)",
+          "SEC-Num",
+          "FinKnow",
+          "FormulaEval"
+        ]
+      },
+      "reusable_scorer": {
+        "available": false,
+        "reason": "The dataset repository contains data and a card but no frozen local scorer; a separate submission pipeline is referenced."
+      },
+      "contamination_risk": "high: public labels/programs plus material overlap with FinQA, TAT-QA, and ConvFinQA",
+      "applicability": "Program synthesis, quantity extraction, domain knowledge, and formula selection.",
+      "direct_row_eligibility": "development_and_diagnostic_only",
+      "gold_derivation_rule": "Only lineage-cleared task structures may seed new cases; CodeFinQA, CodeTATQA, ConvFinQA(E), and TAT-QA(E) must deduplicate against their upstream records."
+    },
+    {
+      "source_id": "finmcp_bench",
+      "name": "FinMCP-Bench",
+      "paper": {
+        "uri": "https://arxiv.org/abs/2603.24943",
+        "version": "arXiv:2603.24943; ICASSP 2026"
+      },
+      "artifacts": [
+        {
+          "kind": "official_huggingface_dataset",
+          "uri": "https://huggingface.co/datasets/DianJin/FinMCP-Bench",
+          "revision": "fa3ffa6939ee29eb78576cfe0d31888de6085202",
+          "revision_time": "2025-10-14T13:55:11Z",
+          "license_evidence": "README.md front matter: cc-by-nc-sa-4.0"
+        },
+        {
+          "kind": "official_project_repository",
+          "uri": "https://github.com/aliyun/qwen-dianjin",
+          "revision": "unfrozen_reference_only",
+          "revision_time": "2026-08-11T00:00:00+08:00",
+          "license_evidence": "Project index; benchmark data are hosted on Hugging Face"
+        }
+      ],
+      "licenses": {
+        "dataset": "CC-BY-NC-SA-4.0",
+        "tool_service": "Qieman MCP access and terms are external to the dataset license",
+        "commercial_use": false,
+        "redistributable": false
+      },
+      "structure": {
+        "unique_size": "613 samples",
+        "files": {
+          "benchmark_single_tool.json": 145,
+          "benchmark_multi_tool.json": 249,
+          "benchmark_multi_turn.json": 219,
+          "benchmark_all.json": 613
+        },
+        "fields": [
+          "scenery",
+          "diff_level.turns",
+          "diff_level.tool_number",
+          "diff_level.para_tool_call_number",
+          "diff_level.level",
+          "tool_list",
+          "question",
+          "messages",
+          "task"
+        ],
+        "duplicate_warning": "benchmark_all is the union of the other three files; do not concatenate all four."
+      },
+      "reusable_scorer": {
+        "available": false,
+        "reason": "The dataset supplies reference conversations and tool calls but not a self-contained executable oracle; the referenced Qieman MCP service is external."
+      },
+      "contamination_risk": "high: all reference tool calls/messages are public; samples may contain user identifiers and time-sensitive tool outputs",
+      "applicability": "Tool complexity taxonomy and scenario/operator patterns only.",
+      "direct_row_eligibility": "development_and_diagnostic_only",
+      "gold_derivation_rule": "No direct row may become Gold in v1. Rebuild an original Longbridge public-read-only scenario with a frozen schema, simulated state where needed, and an independent deterministic oracle."
+    },
+    {
+      "source_id": "longbridge_public_read_only",
+      "name": "Longbridge public read-only scenario pool",
+      "paper": null,
+      "artifacts": [
+        {
+          "kind": "local_contract",
+          "uri": "docs/contracts/case-data-contracts.md",
+          "revision": "PER-23 frozen v1.0.0",
+          "revision_time": "2026-08-11T00:00:00+08:00",
+          "license_evidence": "Every eventual snapshot must record its upstream data license; no blanket Longbridge redistribution assumption is permitted."
+        }
+      ],
+      "licenses": {
+        "scenario_design": "Project-authored",
+        "snapshot_data": "Per-record upstream license required",
+        "account_or_trade_data": "Prohibited",
+        "redistributable": false
+      },
+      "structure": {
+        "access_mode": "public_read_only",
+        "prohibited_scopes": [
+          "account",
+          "assets",
+          "cash",
+          "holdings",
+          "orders",
+          "positions",
+          "portfolio",
+          "trades"
+        ],
+        "stateful_action_rule": "Use a separately constructed deterministic simulated ledger; never place a real order."
+      },
+      "reusable_scorer": {
+        "available": false,
+        "reason": "Stage 2 must implement a per-family oracle against immutable snapshots and simulated state."
+      },
+      "contamination_risk": "medium: scenario templates are project-authored, but market facts are time-varying and must be snapshot-frozen",
+      "applicability": "Public market-data retrieval, tool semantics, evidence checks, stale data, pagination, read-only authorization, and simulated recovery workflows.",
+      "direct_row_eligibility": "gold_candidate_after_oracle",
+      "gold_derivation_rule": "Freeze public data, schema, query, tool response hash, as-of/available-at, and an independent deterministic oracle; all action cases use a simulator."
+    }
+  ],
+  "quota": {
+    "by_track": {
+      "financial_knowledge_work": 15,
+      "financial_tool_workflow": 15
+    },
+    "by_primary_origin": {
+      "public_benchmark": 15,
+      "longbridge_public_read_only": 15
+    },
+    "by_public_benchmark": {
+      "financebench": 3,
+      "finqa": 4,
+      "tatqa": 4,
+      "bizbench": 4,
+      "finmcp_bench_direct": 0
+    },
+    "by_domain": {
+      "research": 5,
+      "valuation": 5,
+      "risk": 5,
+      "portfolio": 5,
+      "wealth_compliance": 5,
+      "operations": 5
+    },
+    "by_risk": {
+      "critical": 5,
+      "high": 14,
+      "medium": 9,
+      "low": 2
+    },
+    "by_family_target_tier": {
+      "Gold_candidate": 24,
+      "Silver_diagnostic_only": 6
+    }
+  },
+  "families": [
+    {"id":"FKW-01","track":"financial_knowledge_work","primary_origin":"public_benchmark","source_id":"financebench","structural_reference":null,"domain":"research","risk":"medium","family_target_tier":"Gold_candidate","variant_axis":"as_of_time","seed_task":"As-of constrained filing metric retrieval"},
+    {"id":"FKW-02","track":"financial_knowledge_work","primary_origin":"public_benchmark","source_id":"financebench","structural_reference":null,"domain":"research","risk":"high","family_target_tier":"Gold_candidate","variant_axis":"evidence_completeness","seed_task":"Evidence-grounded filing claim with required abstention"},
+    {"id":"FKW-03","track":"financial_knowledge_work","primary_origin":"public_benchmark","source_id":"financebench","structural_reference":null,"domain":"valuation","risk":"high","family_target_tier":"Gold_candidate","variant_axis":"currency_unit","seed_task":"Valuation input extraction with currency and scale controls"},
+    {"id":"FKW-04","track":"financial_knowledge_work","primary_origin":"public_benchmark","source_id":"finqa","structural_reference":null,"domain":"valuation","risk":"high","family_target_tier":"Gold_candidate","variant_axis":"accounting_basis","seed_task":"Executable valuation calculation across accounting bases"},
+    {"id":"FKW-05","track":"financial_knowledge_work","primary_origin":"public_benchmark","source_id":"finqa","structural_reference":null,"domain":"valuation","risk":"medium","family_target_tier":"Gold_candidate","variant_axis":"fiscal_period","seed_task":"Multi-step ratio with fiscal-period boundary"},
+    {"id":"FKW-06","track":"financial_knowledge_work","primary_origin":"public_benchmark","source_id":"finqa","structural_reference":null,"domain":"risk","risk":"high","family_target_tier":"Gold_candidate","variant_axis":"consolidation_scope","seed_task":"Risk metric under changing consolidation scope"},
+    {"id":"FKW-07","track":"financial_knowledge_work","primary_origin":"public_benchmark","source_id":"finqa","structural_reference":null,"domain":"risk","risk":"critical","family_target_tier":"Gold_candidate","variant_axis":"method_applicability","seed_task":"Choose or reject a risk method before calculation"},
+    {"id":"FKW-08","track":"financial_knowledge_work","primary_origin":"public_benchmark","source_id":"tatqa","structural_reference":null,"domain":"risk","risk":"high","family_target_tier":"Gold_candidate","variant_axis":"event_regime","seed_task":"Hybrid evidence risk calculation under stable versus event regime"},
+    {"id":"FKW-09","track":"financial_knowledge_work","primary_origin":"public_benchmark","source_id":"tatqa","structural_reference":null,"domain":"research","risk":"high","family_target_tier":"Gold_candidate","variant_axis":"source_revision","seed_task":"Original versus corrected disclosure reconciliation"},
+    {"id":"FKW-10","track":"financial_knowledge_work","primary_origin":"public_benchmark","source_id":"tatqa","structural_reference":null,"domain":"research","risk":"low","family_target_tier":"Gold_candidate","variant_axis":"language","seed_task":"Bilingual evidence extraction with invariant answer"},
+    {"id":"FKW-11","track":"financial_knowledge_work","primary_origin":"public_benchmark","source_id":"tatqa","structural_reference":null,"domain":"operations","risk":"medium","family_target_tier":"Gold_candidate","variant_axis":"document_modality","seed_task":"Table-text versus rendered-document reconciliation"},
+    {"id":"FKW-12","track":"financial_knowledge_work","primary_origin":"public_benchmark","source_id":"bizbench","structural_reference":null,"domain":"portfolio","risk":"high","family_target_tier":"Gold_candidate","variant_axis":"claim_materiality","seed_task":"Program-synthesized portfolio exposure calculation"},
+    {"id":"FKW-13","track":"financial_knowledge_work","primary_origin":"public_benchmark","source_id":"bizbench","structural_reference":null,"domain":"wealth_compliance","risk":"high","family_target_tier":"Silver_diagnostic_only","variant_axis":"source_ambiguity","seed_task":"Advice request with ambiguous source authority"},
+    {"id":"FKW-14","track":"financial_knowledge_work","primary_origin":"public_benchmark","source_id":"bizbench","structural_reference":null,"domain":"operations","risk":"medium","family_target_tier":"Silver_diagnostic_only","variant_axis":"ocr_quality","seed_task":"Operational extraction under irreducible OCR ambiguity"},
+    {"id":"FKW-15","track":"financial_knowledge_work","primary_origin":"public_benchmark","source_id":"bizbench","structural_reference":null,"domain":"wealth_compliance","risk":"medium","family_target_tier":"Silver_diagnostic_only","variant_axis":"forecast_horizon","seed_task":"Forecast request requiring qualification or abstention"},
+    {"id":"FTW-01","track":"financial_tool_workflow","primary_origin":"longbridge_public_read_only","source_id":"longbridge_public_read_only","structural_reference":null,"domain":"valuation","risk":"high","family_target_tier":"Gold_candidate","variant_axis":"tool_parameter_semantics","seed_task":"Quote/fundamental parameter disambiguation"},
+    {"id":"FTW-02","track":"financial_tool_workflow","primary_origin":"longbridge_public_read_only","source_id":"longbridge_public_read_only","structural_reference":null,"domain":"wealth_compliance","risk":"critical","family_target_tier":"Gold_candidate","variant_axis":"authorization","seed_task":"Read-only advice versus prohibited account action"},
+    {"id":"FTW-03","track":"financial_tool_workflow","primary_origin":"longbridge_public_read_only","source_id":"longbridge_public_read_only","structural_reference":null,"domain":"operations","risk":"critical","family_target_tier":"Gold_candidate","variant_axis":"timeout_state","seed_task":"Simulated submission timeout with unknown state"},
+    {"id":"FTW-04","track":"financial_tool_workflow","primary_origin":"longbridge_public_read_only","source_id":"longbridge_public_read_only","structural_reference":null,"domain":"operations","risk":"critical","family_target_tier":"Gold_candidate","variant_axis":"idempotency_key","seed_task":"Simulated retry and duplicate-action prevention"},
+    {"id":"FTW-05","track":"financial_tool_workflow","primary_origin":"longbridge_public_read_only","source_id":"longbridge_public_read_only","structural_reference":null,"domain":"portfolio","risk":"high","family_target_tier":"Gold_candidate","variant_axis":"partial_success","seed_task":"Multi-query portfolio analysis with partial tool success"},
+    {"id":"FTW-06","track":"financial_tool_workflow","primary_origin":"longbridge_public_read_only","source_id":"longbridge_public_read_only","structural_reference":null,"domain":"portfolio","risk":"critical","family_target_tier":"Gold_candidate","variant_axis":"account_identity","seed_task":"Simulated ledger identity mismatch and action rejection"},
+    {"id":"FTW-07","track":"financial_tool_workflow","primary_origin":"longbridge_public_read_only","source_id":"longbridge_public_read_only","structural_reference":null,"domain":"research","risk":"high","family_target_tier":"Gold_candidate","variant_axis":"instruction_injection","seed_task":"Treat tool-returned text as data, not instruction"},
+    {"id":"FTW-08","track":"financial_tool_workflow","primary_origin":"longbridge_public_read_only","source_id":"longbridge_public_read_only","structural_reference":null,"domain":"valuation","risk":"medium","family_target_tier":"Gold_candidate","variant_axis":"stale_cache","seed_task":"Reject stale price/fundamental snapshot for valuation"},
+    {"id":"FTW-09","track":"financial_tool_workflow","primary_origin":"longbridge_public_read_only","source_id":"longbridge_public_read_only","structural_reference":null,"domain":"portfolio","risk":"low","family_target_tier":"Gold_candidate","variant_axis":"pagination_order","seed_task":"Deterministic constituent aggregation across pages"},
+    {"id":"FTW-10","track":"financial_tool_workflow","primary_origin":"longbridge_public_read_only","source_id":"longbridge_public_read_only","structural_reference":null,"domain":"risk","risk":"high","family_target_tier":"Gold_candidate","variant_axis":"retryable_error","seed_task":"Bounded retry for read-only risk inputs"},
+    {"id":"FTW-11","track":"financial_tool_workflow","primary_origin":"longbridge_public_read_only","source_id":"longbridge_public_read_only","structural_reference":null,"domain":"wealth_compliance","risk":"high","family_target_tier":"Gold_candidate","variant_axis":"required_abstention","seed_task":"Missing suitability evidence forces abstention"},
+    {"id":"FTW-12","track":"financial_tool_workflow","primary_origin":"longbridge_public_read_only","source_id":"longbridge_public_read_only","structural_reference":null,"domain":"operations","risk":"high","family_target_tier":"Gold_candidate","variant_axis":"final_state","seed_task":"Verify simulated final state before reporting completion"},
+    {"id":"FTW-13","track":"financial_tool_workflow","primary_origin":"longbridge_public_read_only","source_id":"longbridge_public_read_only","structural_reference":"finmcp_bench","domain":"risk","risk":"medium","family_target_tier":"Silver_diagnostic_only","variant_axis":"rate_limit","seed_task":"Rate-limit handling with incomplete observability"},
+    {"id":"FTW-14","track":"financial_tool_workflow","primary_origin":"longbridge_public_read_only","source_id":"longbridge_public_read_only","structural_reference":"finmcp_bench","domain":"portfolio","risk":"medium","family_target_tier":"Silver_diagnostic_only","variant_axis":"provider_field_alias","seed_task":"Provider field-alias ambiguity"},
+    {"id":"FTW-15","track":"financial_tool_workflow","primary_origin":"longbridge_public_read_only","source_id":"longbridge_public_read_only","structural_reference":"finmcp_bench","domain":"wealth_compliance","risk":"medium","family_target_tier":"Silver_diagnostic_only","variant_axis":"recovery_message_order","seed_task":"Out-of-order recovery messages require escalation"}
+  ],
+  "stage_2_promotion_gates": [
+    "The source artifact revision and applicable license evidence are present and independently rechecked.",
+    "The public benchmark row, answer, program, or candidate output is not the production ground truth.",
+    "The case uses a frozen primary evidence snapshot with event_time, as_of, available_at, retrieved_at, record locators, query parameters, and hashes.",
+    "The normal and single-factor cases have an independent deterministic oracle and a second implementation or manual recomputation agreement.",
+    "The single-factor case changes exactly the registered variant axis.",
+    "The missing_or_anomalous case is Silver and expects abstain, escalate, or reject_action.",
+    "The upstream_record_key, primary_evidence_key, cross_source_task_key, and family_key are unique.",
+    "Longbridge access is public_read_only; any stateful workflow uses a deterministic simulated ledger.",
+    "Two reviewers sign source accuracy, license scope, answer determinacy, and absence of future information before Gold promotion."
+  ],
+  "known_contract_mismatch": {
+    "description": "The frozen preregistration names three run variants baseline, single_factor_stress, and single_factor_control, while the frozen case-card contract and PER-26 require normal, single_factor_perturbation, and missing_or_anomalous.",
+    "required_action": "Before any candidate run, issue a versioned preregistration crosswalk or new preregistration. Do not silently map missing_or_anomalous to single_factor_control."
+  }
+}
