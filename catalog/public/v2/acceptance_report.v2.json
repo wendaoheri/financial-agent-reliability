@@ -1,0 +1,56 @@
+{
+  "allocation": {
+    "cases": 45,
+    "families": 15,
+    "gold_cases_materialized": 22,
+    "silver_cases_materialized": 23
+  },
+  "as_of": "2026-08-11T00:24:17.510180Z",
+  "evidence_classification": {
+    "direct_evidence": [
+      "Frozen WDI API response bytes, per-response collection timestamps, collection-session hashes, and official benchmark license pages",
+      "Machine validation results named below"
+    ],
+    "evidence_based_inference": [
+      "available_at equals retrieved_at because no earlier observation-level availability is proven"
+    ],
+    "illustration": [
+      "Benchmark task structures are re-authored over WDI facts and are not claims of domain or jurisdictional representativeness"
+    ]
+  },
+  "issue": "PER-28",
+  "license_correction": {
+    "assertion": "Repository root LICENSE is MIT; no separate dataset license was evidenced, so no CC-BY claim or FinQA content redistribution right is asserted.",
+    "evidence_url": "https://github.com/czyssrs/FinQA/blob/0f16e2867befa6840783e58be38c9efb9229d742/LICENSE",
+    "source_id": "finqa"
+  },
+  "release": {
+    "candidate_runs_allowed": false,
+    "next_gate": "independent Stage 2 re-audit"
+  },
+  "report_type": "per_28_public_case_acceptance",
+  "superseded_bundle": {
+    "bundle_sha256": "7a05f78739f6751778cac31cde031bf56721fa7429a68ce8aa6b1ff576de87a7",
+    "reason_codes": [
+      "FUTURE_RETRIEVAL_TIMESTAMP",
+      "UNSUPPORTED_FINQA_DATASET_LICENSE_CLAIM"
+    ],
+    "status": "revoked",
+    "version": "1.0.0"
+  },
+  "validation": [
+    {
+      "command": "uv run python -m unittest tests.test_public_cases_v2 -v",
+      "expected": "time consistency and license negative tests pass"
+    },
+    {
+      "command": "uv run python contracts/validate_case_data.py verify-manifest catalog/public/v2/frozen_manifest.v2.json",
+      "expected": "valid=true"
+    },
+    {
+      "command": "uv run python -m unittest discover -s tests -v",
+      "expected": "full suite passes"
+    }
+  ],
+  "version": "2.0.0"
+}

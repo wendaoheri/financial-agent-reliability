@@ -1,0 +1,68 @@
+{
+  "request_urls": [
+    "https://api.worldbank.org/v2/country/GBR/indicator/FP.CPI.TOTL?date=2021%3A2023&format=json&per_page=1000&source=2"
+  ],
+  "responses": [
+    [
+      {
+        "lastupdated": "2026-07-13",
+        "page": 1,
+        "pages": 1,
+        "per_page": 1000,
+        "sourceid": "2",
+        "total": 3
+      },
+      [
+        {
+          "country": {
+            "id": "GB",
+            "value": "United Kingdom"
+          },
+          "countryiso3code": "GBR",
+          "date": "2023",
+          "decimal": 1,
+          "indicator": {
+            "id": "FP.CPI.TOTL",
+            "value": "Consumer price index (2010 = 100)"
+          },
+          "obs_status": "",
+          "unit": "",
+          "value": 142.740891437026
+        },
+        {
+          "country": {
+            "id": "GB",
+            "value": "United Kingdom"
+          },
+          "countryiso3code": "GBR",
+          "date": "2022",
+          "decimal": 1,
+          "indicator": {
+            "id": "FP.CPI.TOTL",
+            "value": "Consumer price index (2010 = 100)"
+          },
+          "obs_status": "",
+          "unit": "",
+          "value": 133.660070279268
+        },
+        {
+          "country": {
+            "id": "GB",
+            "value": "United Kingdom"
+          },
+          "countryiso3code": "GBR",
+          "date": "2021",
+          "decimal": 1,
+          "indicator": {
+            "id": "FP.CPI.TOTL",
+            "value": "Consumer price index (2010 = 100)"
+          },
+          "obs_status": "",
+          "unit": "",
+          "value": 123.848714629184
+        }
+      ]
+    ]
+  ],
+  "retrieved_at": "2026-08-11T02:00:00Z"
+}

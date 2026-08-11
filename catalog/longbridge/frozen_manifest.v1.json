@@ -1,0 +1,340 @@
+{
+  "contract_bundle_sha256": "d862b41b9e03a8e6d478e3515c1ce5c8613994527bd6bdd577082222dcc37c77",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "21f0108451349bed925934b0e0f883223f8a2d11e16a57881063b97c1db5608a"
+    },
+    {
+      "path": "acceptance_report.v1.json",
+      "sha256": "cc2c4d1f1b511da658ef739b0019552fdaf20b7e442f0c3efec3d2e4a3af447e"
+    },
+    {
+      "path": "seed_catalog.v1.json",
+      "sha256": "5c24a89c563b66f25e988de5b5cb4b787e7ef76a4521a9f23fa1fddf08c3c5be"
+    },
+    {
+      "path": "quote.schema.v0.26.0.json",
+      "sha256": "835fcc8a6373f935e94a997833ae874dd37bbf1b8bb3fcad3ba66de8db0dfa31"
+    },
+    {
+      "path": "../../pipelines/longbridge/freeze.py",
+      "sha256": "e77e77cbae6f71b9c4c0caaa4f7931486485ebc6cc0a088e2ba604d2aaed6371"
+    },
+    {
+      "path": "../../oracles/longbridge/oracle.py",
+      "sha256": "fe648edd2b24c47bb179c830b025be34cae127adbf71f503de674e8897eefad7"
+    },
+    {
+      "path": "../../oracles/longbridge/oracle_reference.py",
+      "sha256": "66041e66bcb98be4c0420c2d88e24fb092c586a67f945cf92e2bf51257a8ed27"
+    },
+    {
+      "path": "../../tests/test_longbridge_cases.py",
+      "sha256": "874f8cfe5c48264be25202b19153cfc653a3e3a0b2491dedbbd870bb6d84075f"
+    },
+    {
+      "path": "../../snapshots/longbridge/raw/FTW-01.json",
+      "sha256": "caa3a385a963ded59a4b10d5a2d22f5ab2b6e3b774de9375eb20991b639c5b9f"
+    },
+    {
+      "path": "../../snapshots/longbridge/raw/FTW-02.json",
+      "sha256": "3584e6ad44824cf1cb45702c32f20747b936046c2dd006a5efd38bf89f760b2b"
+    },
+    {
+      "path": "../../snapshots/longbridge/raw/FTW-03.json",
+      "sha256": "dc124833d600cd7035759312f9cc16b32c2e38c470c62c43562e6cf14537a4b4"
+    },
+    {
+      "path": "../../snapshots/longbridge/raw/FTW-04.json",
+      "sha256": "6718a37dec6556229bd53ab566d7db0c67320e4624ef26038f9f035028f0ce98"
+    },
+    {
+      "path": "../../snapshots/longbridge/raw/FTW-05.json",
+      "sha256": "3351e2c7635b9d6de50e46478b429d6d6c9e031c4ee6c7d214d9591aff23ffa7"
+    },
+    {
+      "path": "../../snapshots/longbridge/raw/FTW-06.json",
+      "sha256": "9b432129bd246a678ff78aeafd5f842d0488dc8b74914839f45e20c681f3b2fa"
+    },
+    {
+      "path": "../../snapshots/longbridge/raw/FTW-07.json",
+      "sha256": "8c1f2d743c034251695afe27eabf0b96350111c897cb8d28d76063bdada16422"
+    },
+    {
+      "path": "../../snapshots/longbridge/raw/FTW-08.json",
+      "sha256": "3ffd07567a4fa39b006c7e9ce78e2fd7266e424aa252d51c15c838f5986ae1c6"
+    },
+    {
+      "path": "../../snapshots/longbridge/raw/FTW-09.json",
+      "sha256": "0717989393053aa32b5c88db78f8697ec1df1030a83342a585bc8601b2bc51ab"
+    },
+    {
+      "path": "../../snapshots/longbridge/raw/FTW-10.json",
+      "sha256": "d0b638b4a7ea3426cd44676e774417f90488b74c3ec8fe7ad7cabb2b5d3378ed"
+    },
+    {
+      "path": "../../snapshots/longbridge/raw/FTW-11.json",
+      "sha256": "8efc335895930cf40e03ba9a48ec863797fae4a4a59f5b0509e9e505813595fc"
+    },
+    {
+      "path": "../../snapshots/longbridge/raw/FTW-12.json",
+      "sha256": "a2c19f5091873cb884e627d6ebf3d5db96dc67589645f28b717d45952a6d4326"
+    },
+    {
+      "path": "../../snapshots/longbridge/raw/FTW-13.json",
+      "sha256": "5b41089a4263e24d3f44b9a793cd7d5da0e9b4e9eac340178d1b46a4650e6e36"
+    },
+    {
+      "path": "../../snapshots/longbridge/raw/FTW-14.json",
+      "sha256": "935fa8077cc9ae3507c3f3792c4684b139835ee46fb8409e71a31eedf8f97d18"
+    },
+    {
+      "path": "../../snapshots/longbridge/raw/FTW-15.json",
+      "sha256": "943ecf66ede0d3e83a8c9a6e85e0201f441b42b014aa717704e3807765dc98e7"
+    },
+    {
+      "path": "../../snapshots/longbridge/data_snapshot.FTW-01.json",
+      "sha256": "7b92306f135abac8b536c361011de58d3431c5fa23235abdbd9139f02565a645"
+    },
+    {
+      "path": "../../snapshots/longbridge/data_snapshot.FTW-02.json",
+      "sha256": "e59226a992d8ec10b860f7b0b4bc358c23e8bc9d9a32c9d5a4647959cc4c0304"
+    },
+    {
+      "path": "../../snapshots/longbridge/data_snapshot.FTW-03.json",
+      "sha256": "8a3c04168451dadea742bc76da1b9c12f805faf2e99830d845c79ff1601a796d"
+    },
+    {
+      "path": "../../snapshots/longbridge/data_snapshot.FTW-04.json",
+      "sha256": "5100c06fa04d0c236da56129a6248c86b6c2759722b2fd3a0d11f10ecc85f400"
+    },
+    {
+      "path": "../../snapshots/longbridge/data_snapshot.FTW-05.json",
+      "sha256": "9b075575e39368e7b82e00030dc590ea5fa3f7f3a8f06875f06186b37add1aec"
+    },
+    {
+      "path": "../../snapshots/longbridge/data_snapshot.FTW-06.json",
+      "sha256": "ae5189ac29e5f04bdc7465794cf9bbde63048df6a88b1638c004fa85d0c488b1"
+    },
+    {
+      "path": "../../snapshots/longbridge/data_snapshot.FTW-07.json",
+      "sha256": "73f2965ce39144ae8648114671d2fb90a2a2dde58b8bafd78a73a5bd82fdcb24"
+    },
+    {
+      "path": "../../snapshots/longbridge/data_snapshot.FTW-08.json",
+      "sha256": "63fd3e2b8940bae0187de8ea8de400bcb1b6b5088980a02fd2a853fc3e43a85d"
+    },
+    {
+      "path": "../../snapshots/longbridge/data_snapshot.FTW-09.json",
+      "sha256": "339d2000552f00147148387fa7b38f7ccf12471924aea39cca2e1040e8bcebc0"
+    },
+    {
+      "path": "../../snapshots/longbridge/data_snapshot.FTW-10.json",
+      "sha256": "a59797d4e2afffdd1af1ef06ea309dea6e263899d0a1b893a86bf76daa9392d2"
+    },
+    {
+      "path": "../../snapshots/longbridge/data_snapshot.FTW-11.json",
+      "sha256": "6f0ffe5d180091c8814ec3d31b7bfe780daec3cf1328f1ba47667c480d385342"
+    },
+    {
+      "path": "../../snapshots/longbridge/data_snapshot.FTW-12.json",
+      "sha256": "3e8bb40e86178a929c4f8ad691e9b9893f022a6bfe0d3c1fc344568d63bcf5f9"
+    },
+    {
+      "path": "../../snapshots/longbridge/data_snapshot.FTW-13.json",
+      "sha256": "376c63ae2e8b7f4e74f7ddd6290a369e4f9dce4938293a64996a696a3bd6a6ab"
+    },
+    {
+      "path": "../../snapshots/longbridge/data_snapshot.FTW-14.json",
+      "sha256": "eff70137042677e67d8bae9df70559c6967660a073727df3aed401706f411a47"
+    },
+    {
+      "path": "../../snapshots/longbridge/data_snapshot.FTW-15.json",
+      "sha256": "088f726125e611475955a04543ef5a1cabcfcc5734d6a128b5b239bd744ce0fb"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-01.missing_or_anomalous.json",
+      "sha256": "1299f0a316a8ad1cfda2431145fe58e188cb554e92c510daed6c39d22d09cd82"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-01.normal.json",
+      "sha256": "f66cffc2d15e613cc767defb58473d57516a1964aafdffc4c302dececc1b6985"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-01.single_factor_perturbation.json",
+      "sha256": "ea1207c3af7a37f87c7c8adbeed16790de4c169a2a1a6e1031085cb9eb5645b4"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-02.missing_or_anomalous.json",
+      "sha256": "a548b9860118343d7f4ab90329d9215a1d8a1f0e49c13c962fad28dce91a23ff"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-02.normal.json",
+      "sha256": "753b1c080b75a16768e42241b44f6a266d963c902b3390afb0a2869ead70c81d"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-02.single_factor_perturbation.json",
+      "sha256": "18afb97057247a7a9d7a665a583ab12337d282fb236f5aed7f6a36e26ceeeaa5"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-03.missing_or_anomalous.json",
+      "sha256": "c2f26b7ffe289be0d697f31b5f1b884e8fef78763060a1945e5eb5295e54af83"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-03.normal.json",
+      "sha256": "c5357a1c02bf9d7b93624cc9a980c3687401dc1f6a9923b5ee9bac60d7541a39"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-03.single_factor_perturbation.json",
+      "sha256": "6fed2db5f55e2360a7c1c74b55e147ac8ab66e54e8aff2b219b1ea26c96acca6"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-04.missing_or_anomalous.json",
+      "sha256": "20905031c50e375081aef816d93c97fe792af52d8e2f64ba176ad859d1a0ec84"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-04.normal.json",
+      "sha256": "5f596c207b859fcd7bd1753fa0773f2f943cc3f595c6a88b42fd2dac43dc5e69"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-04.single_factor_perturbation.json",
+      "sha256": "2b7c0c70152fe7ec289a5d1799d0adef02df82aca1a4947d64a9829230604507"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-05.missing_or_anomalous.json",
+      "sha256": "3e3e64bf5d67b9dbb8c3d1f0e6528a63d6d82c12cec910552888ec19e06ae9cc"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-05.normal.json",
+      "sha256": "45169746958e9a98e3a868c3ca21c1198bfc5a8b2de0a85892aa8c828dcc30b9"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-05.single_factor_perturbation.json",
+      "sha256": "aaadd4e408b926ba7502ac9d129994767f84236c99b25b0a03bee5950850c1aa"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-06.missing_or_anomalous.json",
+      "sha256": "b1c4084fa2834d70d41a46d648c7880c93acb96758a4d5fa378bb68ce06a2f9c"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-06.normal.json",
+      "sha256": "3f6ac2bb79fbb3d730697c62d90ac18fa790875e406da1edce8de20b92ef7eda"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-06.single_factor_perturbation.json",
+      "sha256": "bce44d6b854f130bac71dcbe8a5ad6df169f42d640cbf531955f340ab301d0f8"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-07.missing_or_anomalous.json",
+      "sha256": "ff9530b26c6c57f6b57c54b1eedb9ce34d3add031a319957cfea45b2116dce91"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-07.normal.json",
+      "sha256": "26b30df8eeaa82ffcf19ee9d5af8e8e8fcd0a172307b5adc1c7bcb71475ae70c"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-07.single_factor_perturbation.json",
+      "sha256": "72ff2a4c98b67920143954ab9caa116a903953aa5401ba074b8babebafb21825"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-08.missing_or_anomalous.json",
+      "sha256": "5f17b9dfedcc335594893a0b242cf2fe35999ff394a00ee3828b7b08a062f780"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-08.normal.json",
+      "sha256": "513ab5467734542ad48735abb333a817852d3efc295fbe9a14e260f9b60c0c70"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-08.single_factor_perturbation.json",
+      "sha256": "317bfcb253c2fbc565a8d44fade98cc347af81d5e8979543e2e5dbfcfc7ce459"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-09.missing_or_anomalous.json",
+      "sha256": "6bfd730e2c5afb05a3ab29d7c1a68fcf6709bf5484a405d304dff465b8ce6b5d"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-09.normal.json",
+      "sha256": "fd04fcfdc6117ae346cb53f7ec93cfdc6132c5130b421cc836b27b7aceda9d80"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-09.single_factor_perturbation.json",
+      "sha256": "53ead94e1159d96ef9cfb4327152a58cc4e13f5eb51a3cfb308d8a8427078eb0"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-10.missing_or_anomalous.json",
+      "sha256": "a3be2301888ed944b3fdd5192f10c5a3dc44df81af4c99ea39907b17e2a5845b"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-10.normal.json",
+      "sha256": "88124775e9935c39da66f9ce7641120bb8f8408c29cf837ad271eaccf6c84408"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-10.single_factor_perturbation.json",
+      "sha256": "dc2de67fc3d9cb7d07bd8f0a1f137282aaca8c99f731d87c7d16422f0920dee6"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-11.missing_or_anomalous.json",
+      "sha256": "eef0367310839b366ab5ac028b595846a4477761aac47cb1816479c840c5df5f"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-11.normal.json",
+      "sha256": "88eb3121808b29eaa83436599e56ffab3beb7c6ac4a5d3433da0cc572f769ae3"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-11.single_factor_perturbation.json",
+      "sha256": "030134cd794bf4b136e2006cc14476895e9d4c2ae0d240554f211e58b9d12df2"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-12.missing_or_anomalous.json",
+      "sha256": "da6b20d050db8fcf0298ac7d84c1011ee0087b4f5b2aa4996b0cc8d6fe9988b1"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-12.normal.json",
+      "sha256": "5909f61da9a431544764073dc61796691ccd5b7aee7d1ca5684f6f1a9998071f"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-12.single_factor_perturbation.json",
+      "sha256": "e63481dc6fc0e608661ec52dbd6d061ceea644485825c205de4d211c1200d975"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-13.missing_or_anomalous.json",
+      "sha256": "ee012378670c89cc44d575405059cbf295ab71eeaf6f3c2b965ffe6767220108"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-13.normal.json",
+      "sha256": "d5ca914c3a289d413a479348cd61123c7096edacf231c5f49319f02f7ced94d4"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-13.single_factor_perturbation.json",
+      "sha256": "f62e2bc8339c69536f0c8bd30640271804fdacbdcfc4b82e7b88de60b07972f7"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-14.missing_or_anomalous.json",
+      "sha256": "820887d81b8cc8b675c452ed55db5a4228677df62f0dedc6edb573df7ba812c9"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-14.normal.json",
+      "sha256": "a3c763890e4d154937faad6ef10f81114f875432e4a5e527cc88e23c970c8059"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-14.single_factor_perturbation.json",
+      "sha256": "d4c1cbeab8b9a7591a57e9dc266c5fead24edac7d146984d4c7ca49142690c1b"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-15.missing_or_anomalous.json",
+      "sha256": "e75f517da1121f2cdd9e1b8260af099cc62bfd0abf5e085ba5c58e964080fc89"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-15.normal.json",
+      "sha256": "d37f515db380e7dfc31b707baea73648eff29a93c6eb0f929afda40ab7eca2fb"
+    },
+    {
+      "path": "../../cases/longbridge/case_card.FTW-15.single_factor_perturbation.json",
+      "sha256": "b341907c86d7b6df545157d6ca15ad139fa0c943bdae3af1df6643ec57051b98"
+    }
+  ],
+  "manifest_type": "per_29_longbridge_case_bundle",
+  "status": "frozen",
+  "version": "1.0.0"
+}

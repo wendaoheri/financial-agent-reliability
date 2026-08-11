@@ -1,0 +1,143 @@
+{
+  "access": {
+    "mode": "public_read_only",
+    "prohibited_scopes": [
+      "account",
+      "assets",
+      "cash",
+      "holdings",
+      "orders",
+      "positions",
+      "portfolio",
+      "trades"
+    ],
+    "query_args": {
+      "countries": [
+        "MEX"
+      ],
+      "date": "2021:2023",
+      "format": "json",
+      "indicator": "NE.EXP.GNFS.ZS",
+      "per_page": 1000,
+      "source": 2
+    },
+    "query_name": "World Bank Indicators API v2"
+  },
+  "contract_type": "data_snapshot",
+  "contract_version": "1.0.0",
+  "financial_subject": {
+    "currency": {
+      "code": "USD"
+    },
+    "entity_name": "MEX — Exports of goods and services (% of GDP)",
+    "identifiers": [
+      {
+        "scheme": "WB_COUNTRY",
+        "value": "MEX"
+      },
+      {
+        "scheme": "WB_INDICATOR",
+        "value": "NE.EXP.GNFS.ZS"
+      }
+    ],
+    "market": {
+      "country": "MEX",
+      "mic": "XXXX",
+      "timezone": "UTC"
+    },
+    "subject_type": "macro_series",
+    "units": {
+      "accounting_basis": "World Development Indicators; indicator-specific unit is preserved in each record",
+      "amount_scale": "unit",
+      "price_basis": "not_applicable"
+    }
+  },
+  "integrity": {
+    "canonicalization": "financial-agent-c14n-json-v1",
+    "content_sha256": "7fef3189e26f1ee87853cd70084c71789f7883fb7672d7677d3f628e896b71dd",
+    "hash_algorithm": "sha256"
+  },
+  "lineage": {
+    "code_revision": "2f0751ef1865b2617913bbcac414392e759945bec0fec01604a8bf8d349177de",
+    "collector": "cases/public/build_public_cases.py:fetch_raw",
+    "collector_version": "1.0.0",
+    "parent_snapshot_ids": [],
+    "query_args": {
+      "request_urls": [
+        "https://api.worldbank.org/v2/country/MEX/indicator/NE.EXP.GNFS.ZS?date=2021%3A2023&format=json&per_page=1000&source=2"
+      ]
+    },
+    "raw_response_sha256": "f8f750e6cb4d003961d6492c2e581a908bbf438e1671263cb219298b6f13c611",
+    "schema_version": "case-data/1.0.0"
+  },
+  "records": [
+    {
+      "evidence_type": "wdi_indicator_observation",
+      "payload": {
+        "country_code": "MEX",
+        "country_name": "Mexico",
+        "decimal_hint": "1",
+        "indicator_code": "NE.EXP.GNFS.ZS",
+        "indicator_name": "Exports of goods and services (% of GDP)",
+        "observation_status": "",
+        "unit": "indicator-defined; see WDI metadata",
+        "value": "40.5691931964594",
+        "year": "2021"
+      },
+      "record_id": "FKW-12-MEX-2021",
+      "source_locator": "snapshots/public/raw/FKW-12.json#/responses/0/1/0"
+    },
+    {
+      "evidence_type": "wdi_indicator_observation",
+      "payload": {
+        "country_code": "MEX",
+        "country_name": "Mexico",
+        "decimal_hint": "1",
+        "indicator_code": "NE.EXP.GNFS.ZS",
+        "indicator_name": "Exports of goods and services (% of GDP)",
+        "observation_status": "",
+        "unit": "indicator-defined; see WDI metadata",
+        "value": "42.9322902148243",
+        "year": "2022"
+      },
+      "record_id": "FKW-12-MEX-2022",
+      "source_locator": "snapshots/public/raw/FKW-12.json#/responses/0/1/1"
+    },
+    {
+      "evidence_type": "wdi_indicator_observation",
+      "payload": {
+        "country_code": "MEX",
+        "country_name": "Mexico",
+        "decimal_hint": "1",
+        "indicator_code": "NE.EXP.GNFS.ZS",
+        "indicator_name": "Exports of goods and services (% of GDP)",
+        "observation_status": "",
+        "unit": "indicator-defined; see WDI metadata",
+        "value": "36.1479343675069",
+        "year": "2023"
+      },
+      "record_id": "FKW-12-MEX-2023",
+      "source_locator": "snapshots/public/raw/FKW-12.json#/responses/0/1/2"
+    }
+  ],
+  "revision": 1,
+  "snapshot_id": "snapshot-public-fkw-12-wdi-2021-2023-v1",
+  "source": {
+    "dataset": "World Development Indicators source=2; API lastupdated=2026-07-13",
+    "license": {
+      "name": "Creative Commons Attribution 4.0",
+      "redistributable": true,
+      "url": "https://datacatalog.worldbank.org/search/dataset/0037712/world-development-indicators"
+    },
+    "provider": "world_bank",
+    "source_type": "macro",
+    "uri": "https://api.worldbank.org/v2/country/MEX/indicator/NE.EXP.GNFS.ZS?date=2021%3A2023&format=json&per_page=1000&source=2"
+  },
+  "status": "frozen",
+  "temporal": {
+    "as_of": "2026-08-11T02:00:00Z",
+    "available_at": "2026-08-11T02:00:00Z",
+    "event_time": "2023-12-31T23:59:59Z",
+    "retrieved_at": "2026-08-11T02:00:00Z"
+  }
+}

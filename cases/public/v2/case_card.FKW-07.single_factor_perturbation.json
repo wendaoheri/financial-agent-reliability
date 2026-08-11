@@ -1,0 +1,128 @@
+{
+  "case_id": "case-public-fkw-07-single-factor-perturbation-v2",
+  "contract_type": "case_card",
+  "contract_version": "1.0.0",
+  "evidence_policy": {
+    "future_information_prohibited": true,
+    "minimum_evidence_count": 1,
+    "required_evidence_types": [
+      "wdi_indicator_observation"
+    ]
+  },
+  "evidence_refs": [
+    {
+      "evidence_type": "wdi_indicator_observation",
+      "record_ids": [
+        "FKW-07-CAN-2021",
+        "FKW-07-CAN-2022",
+        "FKW-07-CAN-2023"
+      ],
+      "snapshot_id": "snapshot-public-fkw-07-wdi-2021-2023-v2",
+      "snapshot_sha256": "2d67eec062761c5911c860e719ec13dfc7845a8c568164b39e2ec3f835569d76"
+    }
+  ],
+  "financial_subject": {
+    "currency": {
+      "code": "USD"
+    },
+    "entity_name": "CAN — Unemployment, total (% of total labor force) (modeled ILO estimate)",
+    "identifiers": [
+      {
+        "scheme": "WB_COUNTRY",
+        "value": "CAN"
+      },
+      {
+        "scheme": "WB_INDICATOR",
+        "value": "SL.UEM.TOTL.ZS"
+      }
+    ],
+    "market": {
+      "country": "CAN",
+      "mic": "XXXX",
+      "timezone": "UTC"
+    },
+    "subject_type": "macro_series",
+    "units": {
+      "accounting_basis": "World Development Indicators; indicator-specific unit is preserved in each record",
+      "amount_scale": "unit",
+      "price_basis": "not_applicable"
+    }
+  },
+  "integrity": {
+    "canonicalization": "financial-agent-c14n-json-v1",
+    "content_sha256": "aa57e6b409a9ed0aafb805123b9cb8475950d5042a9e8fd92540884018b82c86",
+    "hash_algorithm": "sha256"
+  },
+  "lineage": {
+    "code_revision": "1893b4cdccd30729ba6820aa485f5542038c03c470097b1cbcd60cdf9c8370f9",
+    "generated_at": "2026-08-11T00:24:17.510180Z",
+    "generator_version": "2.0.0",
+    "parent_case_id": "case-public-fkw-07-normal-v2",
+    "producer": "cases/public/v2/build_public_cases_v2.py",
+    "source_case_id": "case-public-fkw-07-normal-v2"
+  },
+  "oracle": {
+    "expected_status": "answer",
+    "expected_value": {
+      "method": "three_year_average",
+      "value": "6.073667"
+    },
+    "implementation": "cases/public/oracle.py:evaluate",
+    "implementation_sha256": "9097915075c71bf6344cfadbe0486c508259dd5de8dd47d6c325fccde169858d",
+    "reason_codes": [],
+    "spec_version": "1.0.0"
+  },
+  "quality": {
+    "independently_recomputable": true,
+    "ranking_eligible": true,
+    "rationale": "Primary WDI observations and two independent deterministic implementations agree.",
+    "tier": "Gold"
+  },
+  "revision": 2,
+  "risk": {
+    "level": "critical",
+    "loss_class": "financial",
+    "rationale": "Frozen PER-26 risk assignment for FKW-07; errors may affect risk decisions."
+  },
+  "source": {
+    "license": {
+      "name": "MIT repository license; no separate dataset license evidenced",
+      "redistributable": false,
+      "url": "https://github.com/czyssrs/FinQA/blob/0f16e2867befa6840783e58be38c9efb9229d742/LICENSE"
+    },
+    "name": "FinQA structural seed (structure only; facts re-authored from WDI)",
+    "origin_type": "public_benchmark",
+    "uri": "https://github.com/czyssrs/FinQA"
+  },
+  "status": "frozen",
+  "task": {
+    "domain": "risk",
+    "initial_state": {
+      "simulated_ledger": null
+    },
+    "inputs": {
+      "method": "three_year_average",
+      "operation": "method"
+    },
+    "permissions": [
+      "public_data_read"
+    ],
+    "prompt": "Use only the registered method on the frozen series; reject methods outside the preregistered set.",
+    "required_tools": [
+      "snapshot.read"
+    ]
+  },
+  "temporal": {
+    "as_of": "2026-08-11T00:24:14.255023Z",
+    "available_at_cutoff": "2026-08-11T00:24:14.255023Z",
+    "event_time": "2023-12-31T23:59:59Z"
+  },
+  "variant": {
+    "changed_factors": [
+      "/task/inputs/method"
+    ],
+    "family_id": "FKW-07",
+    "kind": "single_factor_perturbation",
+    "parent_case_id": "case-public-fkw-07-normal-v2"
+  }
+}

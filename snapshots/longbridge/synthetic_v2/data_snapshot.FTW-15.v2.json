@@ -1,0 +1,96 @@
+{
+  "access": {
+    "mode": "frozen_synthetic_read_only",
+    "prohibited_scopes": [
+      "account",
+      "assets",
+      "cash",
+      "holdings",
+      "orders",
+      "positions",
+      "portfolio",
+      "trades"
+    ],
+    "query_args": {
+      "family_id": "FTW-15"
+    },
+    "query_name": "synthetic_record_lookup"
+  },
+  "contract_type": "data_snapshot",
+  "contract_version": "1.0.0",
+  "financial_subject": {
+    "currency": {
+      "code": "XTS"
+    },
+    "entity_name": "Synthetic Asset 15",
+    "identifiers": [
+      {
+        "scheme": "SYNTHETIC_ASSET",
+        "value": "SYN-15"
+      }
+    ],
+    "market": {
+      "country": "ZZ",
+      "mic": "XSIM",
+      "timezone": "UTC"
+    },
+    "subject_type": "security",
+    "units": {
+      "accounting_basis": "not_applicable",
+      "amount_scale": "unit",
+      "price_basis": "raw"
+    }
+  },
+  "integrity": {
+    "canonicalization": "financial-agent-c14n-json-v1",
+    "content_sha256": "60c84b5801472da518ad486aa3934ebbc642f8189961d83d6cf07ec48ae632bb",
+    "hash_algorithm": "sha256"
+  },
+  "lineage": {
+    "code_revision": "85936bb49f639e22583f0bd12771a0298155a03097b7058c3f538d4bbc68a5f3",
+    "collector": "pipelines/longbridge/build_synthetic_v2.py:_record",
+    "collector_version": "2.0.0",
+    "parent_snapshot_ids": [],
+    "query_args": {
+      "family_id": "FTW-15",
+      "seed": 20260811,
+      "upstream_inputs": []
+    },
+    "raw_response_sha256": "031fa76f5d51f1c8f3e1e7bcac7eb81b035752cd1f427ac81cfc3af771b739c1",
+    "schema_version": "case-data/1.0.0;project-synthetic/2.0.0"
+  },
+  "records": [
+    {
+      "evidence_type": "project_authored_synthetic_record",
+      "payload": {
+        "observed_value": "1255.04",
+        "reference_value": "1065.10",
+        "status": "SIMULATED_OPEN",
+        "synthetic_asset_id": "SYN-15"
+      },
+      "record_id": "FTW-15-SYN-15-v2",
+      "source_locator": "snapshots/longbridge/synthetic_v2/raw/FTW-15.json"
+    }
+  ],
+  "revision": 2,
+  "snapshot_id": "snapshot-synthetic-ftw-15-v2",
+  "source": {
+    "dataset": "PER-29 clean-room synthetic financial-tool fixture v2; no third-party market data",
+    "license": {
+      "declaration": "The project authors dedicate the generated synthetic fixtures and scenario text in this v2 bundle to CC0-1.0. No third-party market-data value is included.",
+      "name": "CC0-1.0 project-authored synthetic fixtures",
+      "redistributable": true,
+      "url": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "provider": "project_authored_synthetic",
+    "source_type": "synthetic_fixture",
+    "uri": "catalog/longbridge/synthetic_v2/source_spec.v2.json"
+  },
+  "status": "frozen",
+  "temporal": {
+    "as_of": "2025-01-15T16:00:00Z",
+    "available_at": "2025-01-15T16:00:00Z",
+    "event_time": "2025-01-15T16:00:00Z",
+    "retrieved_at": "2026-08-11T00:09:02Z"
+  }
+}

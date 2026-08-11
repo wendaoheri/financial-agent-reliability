@@ -1,0 +1,27 @@
+{
+  "artifact_type": "project_authored_synthetic_source_spec",
+  "version": "2.0.0",
+  "status": "frozen_before_candidate_runs",
+  "issue": "PER-29",
+  "released_at": "2026-08-11T00:09:02Z",
+  "synthetic_event_time": "2025-01-15T16:00:00Z",
+  "seed": 20260811,
+  "generation": {
+    "method": "closed_form_family_ordinal_v1",
+    "upstream_market_data_used": false,
+    "calibrated_to_real_instruments": false,
+    "derived_from_longbridge_values": false,
+    "invertible_to_any_upstream_record": false
+  },
+  "license": {
+    "name": "CC0-1.0 project-authored synthetic fixtures",
+    "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "redistributable": true,
+    "declaration": "The project authors dedicate the generated synthetic fixtures and scenario text in this v2 bundle to CC0-1.0. No third-party market-data value is included."
+  },
+  "applicability_limits": [
+    "Illustrative synthetic financial-tool workflows only.",
+    "Values are not prices, valuations, forecasts, or recommendations.",
+    "The bundle does not support claims about live-market accuracy or execution quality."
+  ]
+}

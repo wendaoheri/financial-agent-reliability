@@ -1,0 +1,127 @@
+{
+  "case_id": "case-public-fkw-11-normal-v1",
+  "contract_type": "case_card",
+  "contract_version": "1.0.0",
+  "evidence_policy": {
+    "future_information_prohibited": true,
+    "minimum_evidence_count": 1,
+    "required_evidence_types": [
+      "wdi_indicator_observation"
+    ]
+  },
+  "evidence_refs": [
+    {
+      "evidence_type": "wdi_indicator_observation",
+      "record_ids": [
+        "FKW-11-ZAF-2021",
+        "FKW-11-ZAF-2022",
+        "FKW-11-ZAF-2023"
+      ],
+      "snapshot_id": "snapshot-public-fkw-11-wdi-2021-2023-v1",
+      "snapshot_sha256": "b5c5017790ef4389696b152d945e0d48cf0ae6236e654e178dcd71c2fb7da09a"
+    }
+  ],
+  "financial_subject": {
+    "currency": {
+      "code": "USD"
+    },
+    "entity_name": "ZAF — GDP per capita (current US$)",
+    "identifiers": [
+      {
+        "scheme": "WB_COUNTRY",
+        "value": "ZAF"
+      },
+      {
+        "scheme": "WB_INDICATOR",
+        "value": "NY.GDP.PCAP.CD"
+      }
+    ],
+    "market": {
+      "country": "ZAF",
+      "mic": "XXXX",
+      "timezone": "UTC"
+    },
+    "subject_type": "macro_series",
+    "units": {
+      "accounting_basis": "World Development Indicators; indicator-specific unit is preserved in each record",
+      "amount_scale": "unit",
+      "price_basis": "not_applicable"
+    }
+  },
+  "integrity": {
+    "canonicalization": "financial-agent-c14n-json-v1",
+    "content_sha256": "e55be07a4eee041916c9b0d32d26644a4501419ad8efab460eefcb5eac7a79e5",
+    "hash_algorithm": "sha256"
+  },
+  "lineage": {
+    "code_revision": "2f0751ef1865b2617913bbcac414392e759945bec0fec01604a8bf8d349177de",
+    "generated_at": "2026-08-11T02:00:00Z",
+    "generator_version": "1.0.0",
+    "parent_case_id": null,
+    "producer": "cases/public/build_public_cases.py",
+    "source_case_id": null
+  },
+  "oracle": {
+    "expected_status": "answer",
+    "expected_value": {
+      "modality": "table",
+      "value": "6034.27209"
+    },
+    "implementation": "cases/public/oracle.py:evaluate",
+    "implementation_sha256": "9097915075c71bf6344cfadbe0486c508259dd5de8dd47d6c325fccde169858d",
+    "reason_codes": [],
+    "spec_version": "1.0.0"
+  },
+  "quality": {
+    "independently_recomputable": true,
+    "ranking_eligible": true,
+    "rationale": "Primary WDI observations and two independent deterministic implementations agree.",
+    "tier": "Gold"
+  },
+  "revision": 1,
+  "risk": {
+    "level": "medium",
+    "loss_class": "operational",
+    "rationale": "Frozen PER-26 risk assignment for FKW-11; errors may affect operations decisions."
+  },
+  "source": {
+    "license": {
+      "name": "CC-BY-4.0 dataset; MIT code",
+      "redistributable": true,
+      "url": "https://creativecommons.org/licenses/by/4.0/"
+    },
+    "name": "TAT-QA structural seed (task structure only; facts re-authored from WDI)",
+    "origin_type": "public_benchmark",
+    "uri": "https://github.com/NExTplusplus/TAT-QA"
+  },
+  "status": "frozen",
+  "task": {
+    "domain": "operations",
+    "initial_state": {
+      "simulated_ledger": null
+    },
+    "inputs": {
+      "modality": "table",
+      "operation": "modality_invariant",
+      "target_year": "2023"
+    },
+    "permissions": [
+      "public_data_read"
+    ],
+    "prompt": "Read the same frozen observation through the registered representation and return the invariant value.",
+    "required_tools": [
+      "snapshot.read"
+    ]
+  },
+  "temporal": {
+    "as_of": "2026-08-11T02:00:00Z",
+    "available_at_cutoff": "2026-08-11T02:00:00Z",
+    "event_time": "2023-12-31T23:59:59Z"
+  },
+  "variant": {
+    "changed_factors": [],
+    "family_id": "FKW-11",
+    "kind": "normal",
+    "parent_case_id": null
+  }
+}

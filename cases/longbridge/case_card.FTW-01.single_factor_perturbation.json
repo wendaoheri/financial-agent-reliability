@@ -1,0 +1,123 @@
+{
+  "case_id": "case-longbridge-ftw-01-single-factor-perturbation-v1",
+  "contract_type": "case_card",
+  "contract_version": "1.0.0",
+  "evidence_policy": {
+    "future_information_prohibited": true,
+    "minimum_evidence_count": 1,
+    "required_evidence_types": [
+      "longbridge_quote"
+    ]
+  },
+  "evidence_refs": [
+    {
+      "evidence_type": "longbridge_quote",
+      "record_ids": [
+        "FTW-01-AAPL.US-2026-08-10T23:19:07Z"
+      ],
+      "snapshot_id": "snapshot-longbridge-ftw-01-quote-v1",
+      "snapshot_sha256": "293b1393c7e8508999c5ad9ceca4115d1ea3f850a5eaf6204b0ed1c8083e9ef2"
+    }
+  ],
+  "financial_subject": {
+    "currency": {
+      "code": "USD"
+    },
+    "entity_name": "AAPL.US",
+    "identifiers": [
+      {
+        "scheme": "LONGBRIDGE_SYMBOL",
+        "value": "AAPL.US"
+      }
+    ],
+    "market": {
+      "country": "US",
+      "mic": "XNAS",
+      "timezone": "America/New_York"
+    },
+    "subject_type": "public_equity",
+    "units": {
+      "accounting_basis": "not_applicable",
+      "amount_scale": "unit",
+      "price_basis": "unadjusted quote fields as returned"
+    }
+  },
+  "integrity": {
+    "canonicalization": "financial-agent-c14n-json-v1",
+    "content_sha256": "ab65c2c4dd4147810433da903c982c18e3d3b99f0956c152bce8c5fc61dfd009",
+    "hash_algorithm": "sha256"
+  },
+  "lineage": {
+    "code_revision": "e77e77cbae6f71b9c4c0caaa4f7931486485ebc6cc0a088e2ba604d2aaed6371",
+    "generated_at": "2026-08-10T23:19:07Z",
+    "generator_version": "1.0.0",
+    "parent_case_id": "case-longbridge-ftw-01-normal-v1",
+    "producer": "pipelines/longbridge/freeze.py",
+    "source_case_id": "case-longbridge-ftw-01-normal-v1"
+  },
+  "oracle": {
+    "expected_status": "answer",
+    "expected_value": {
+      "field": "prev_close",
+      "value": "313.060"
+    },
+    "implementation": "oracles/longbridge/oracle.py:evaluate",
+    "implementation_sha256": "fe648edd2b24c47bb179c830b025be34cae127adbf71f503de674e8897eefad7",
+    "reason_codes": [],
+    "spec_version": "1.0.0"
+  },
+  "quality": {
+    "independently_recomputable": true,
+    "ranking_eligible": true,
+    "rationale": "Frozen evidence and two independent deterministic implementations agree.",
+    "tier": "Gold"
+  },
+  "revision": 1,
+  "risk": {
+    "level": "high",
+    "loss_class": "financial",
+    "rationale": "Frozen PER-26 assignment for FTW-01; unsafe handling may create high-severity loss."
+  },
+  "source": {
+    "license": {
+      "name": "Longbridge Platform Terms and Conditions Schedule A; scenario text is project-authored",
+      "redistributable": false,
+      "url": "https://longbridge.com/sg/support/topics/us-trade/user-agreement"
+    },
+    "name": "Project-authored workflow over a frozen Longbridge public-read-only quote",
+    "origin_type": "synthetic_perturbation",
+    "uri": "https://open.longbridge.com/docs/cli/market-data/quote"
+  },
+  "status": "frozen",
+  "task": {
+    "domain": "valuation",
+    "initial_state": {
+      "simulated_ledger": null
+    },
+    "inputs": {
+      "operation": "select_price",
+      "price_field": "prev_close"
+    },
+    "permissions": [
+      "public_data_read",
+      "simulated_state_read"
+    ],
+    "prompt": "Select exactly the registered quote field from the frozen snapshot.",
+    "required_tools": [
+      "snapshot.read"
+    ]
+  },
+  "temporal": {
+    "as_of": "2026-08-10T23:19:07Z",
+    "available_at_cutoff": "2026-08-10T23:19:07Z",
+    "event_time": "2026-08-10T23:19:07Z"
+  },
+  "variant": {
+    "changed_factors": [
+      "/task/inputs/price_field"
+    ],
+    "family_id": "FTW-01",
+    "kind": "single_factor_perturbation",
+    "parent_case_id": "case-longbridge-ftw-01-normal-v1"
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "request_urls": [
+    "https://api.worldbank.org/v2/country/KOR/indicator/SP.POP.TOTL?date=2021%3A2023&format=json&per_page=1000&source=2"
+  ],
+  "responses": [
+    [
+      {
+        "lastupdated": "2026-07-13",
+        "page": 1,
+        "pages": 1,
+        "per_page": 1000,
+        "sourceid": "2",
+        "total": 3
+      },
+      [
+        {
+          "country": {
+            "id": "KR",
+            "value": "Korea, Rep."
+          },
+          "countryiso3code": "KOR",
+          "date": "2023",
+          "decimal": 0,
+          "indicator": {
+            "id": "SP.POP.TOTL",
+            "value": "Population, total"
+          },
+          "obs_status": "",
+          "unit": "",
+          "value": 51712619
+        },
+        {
+          "country": {
+            "id": "KR",
+            "value": "Korea, Rep."
+          },
+          "countryiso3code": "KOR",
+          "date": "2022",
+          "decimal": 0,
+          "indicator": {
+            "id": "SP.POP.TOTL",
+            "value": "Population, total"
+          },
+          "obs_status": "",
+          "unit": "",
+          "value": 51672569
+        },
+        {
+          "country": {
+            "id": "KR",
+            "value": "Korea, Rep."
+          },
+          "countryiso3code": "KOR",
+          "date": "2021",
+          "decimal": 0,
+          "indicator": {
+            "id": "SP.POP.TOTL",
+            "value": "Population, total"
+          },
+          "obs_status": "",
+          "unit": "",
+          "value": 51769539
+        }
+      ]
+    ]
+  ],
+  "retrieved_at": "2026-08-11T02:00:00Z"
+}

@@ -1,0 +1,1112 @@
+{
+  "catalog_type": "longbridge_materialized_seed_catalog",
+  "families": [
+    {
+      "cases": [
+        {
+          "case_id": "case-longbridge-ftw-01-normal-v1",
+          "content_sha256": "20c3b637947a2ba73be2e358bef5f75bb173ae05d55d0df95d842bfd96d27fce",
+          "kind": "normal",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-longbridge-ftw-01-single-factor-perturbation-v1",
+          "content_sha256": "ab65c2c4dd4147810433da903c982c18e3d3b99f0956c152bce8c5fc61dfd009",
+          "kind": "single_factor_perturbation",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-longbridge-ftw-01-missing-or-anomalous-v1",
+          "content_sha256": "608153566a0403b1b4b55d6bf00f6f4b76b28509d2ff3be6ad257447b86b2609",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "b29f2fe06cc73f92a095ad594931916053fa6b761ada33ee0539e0115304a7c5",
+        "family_key": "1a46438177ae5692153ab7cc013755d943dcb28864d1b5bf678fcd3e39188d16",
+        "primary_evidence_key": "f7e2712b81ebc23e89ef3958a9df82e4a2674c6d9532063a9e1270532755ff7b",
+        "upstream_record_key": "f9ac1942a3181cbcdd4b4f0eb40b5a2253bb5da3f8122b594049c54445168e92"
+      },
+      "family_id": "FTW-01",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference.py",
+        "independent_sha256": "66041e66bcb98be4c0420c2d88e24fb092c586a67f945cf92e2bf51257a8ed27",
+        "production_path": "oracles/longbridge/oracle.py",
+        "production_sha256": "fe648edd2b24c47bb179c830b025be34cae127adbf71f503de674e8897eefad7"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Conservative: event_time, as_of and available_at equal the per-query retrieval time; no earlier availability is asserted.",
+        "raw_response_sha256": "caa3a385a963ded59a4b10d5a2d22f5ab2b6e3b774de9375eb20991b639c5b9f",
+        "snapshot_id": "snapshot-longbridge-ftw-01-quote-v1",
+        "snapshot_sha256": "293b1393c7e8508999c5ad9ceca4115d1ea3f850a5eaf6204b0ed1c8083e9ef2"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "pending independent two-person source/license/time review; market-data redistribution remains prohibited",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "longbridge_public_read_only",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Internal non-commercial research only; redistribution and public release are not authorized; accuracy and timeliness are not warranted.",
+        "evidence_url": "https://longbridge.com/sg/support/topics/us-trade/user-agreement",
+        "jurisdiction_market": "Singapore terms; US market data; upstream exchange rights apply",
+        "name": "Longbridge Platform Terms and Conditions Schedule A; upstream exchange rights apply",
+        "publication_date": "2026-03-09"
+      },
+      "source_revision": "case-data/1.0.0;longbridge 0.26.0;quote-schema/835fcc8a6373f935e94a997833ae874dd37bbf1b8bb3fcad3ba66de8db0dfa31",
+      "symbol": "AAPL.US",
+      "task": {
+        "changed_pointer": "/task/inputs/price_field",
+        "domain": "valuation",
+        "operator": "select_price",
+        "risk": "high",
+        "variant_axis": "tool_parameter_semantics"
+      },
+      "track": "financial_tool_workflow"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-longbridge-ftw-02-normal-v1",
+          "content_sha256": "a3dfcf01586cf2175569dac878b5f94ecfbf32e99ab3d7c9994efaaea36b4732",
+          "kind": "normal",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-longbridge-ftw-02-single-factor-perturbation-v1",
+          "content_sha256": "84810e4ec82204d3cb5913f9e6d48a0fe33ab7b2e6113fcee75b903861db1ab7",
+          "kind": "single_factor_perturbation",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-longbridge-ftw-02-missing-or-anomalous-v1",
+          "content_sha256": "0fdf396d246666f501c288755c214ddb18d5894c1c551a7c2708f26ccf8776fa",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "9295740f610843e50d6d77fd9a339d6e8ed788e8c34f3e07db9aa190a3af82cc",
+        "family_key": "7f69a276e3639eb28943d4477f5c8b982f997d5c49abff7d4157c94232496dbd",
+        "primary_evidence_key": "3f55316260f60ec27427ae915c8a4c46b0abeab65744ee5a5b7df857ba948b1c",
+        "upstream_record_key": "b57a293ce5197fe0f72435119d28187ac7658a7442c472c7692103dd2326056c"
+      },
+      "family_id": "FTW-02",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference.py",
+        "independent_sha256": "66041e66bcb98be4c0420c2d88e24fb092c586a67f945cf92e2bf51257a8ed27",
+        "production_path": "oracles/longbridge/oracle.py",
+        "production_sha256": "fe648edd2b24c47bb179c830b025be34cae127adbf71f503de674e8897eefad7"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Conservative: event_time, as_of and available_at equal the per-query retrieval time; no earlier availability is asserted.",
+        "raw_response_sha256": "3584e6ad44824cf1cb45702c32f20747b936046c2dd006a5efd38bf89f760b2b",
+        "snapshot_id": "snapshot-longbridge-ftw-02-quote-v1",
+        "snapshot_sha256": "fb8270b560dfbc117fc7c049497350dca59ecc3c244a6fb210148a13bf39d5bd"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "pending independent two-person source/license/time review; market-data redistribution remains prohibited",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "longbridge_public_read_only",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Internal non-commercial research only; redistribution and public release are not authorized; accuracy and timeliness are not warranted.",
+        "evidence_url": "https://longbridge.com/sg/support/topics/us-trade/user-agreement",
+        "jurisdiction_market": "Singapore terms; US market data; upstream exchange rights apply",
+        "name": "Longbridge Platform Terms and Conditions Schedule A; upstream exchange rights apply",
+        "publication_date": "2026-03-09"
+      },
+      "source_revision": "case-data/1.0.0;longbridge 0.26.0;quote-schema/835fcc8a6373f935e94a997833ae874dd37bbf1b8bb3fcad3ba66de8db0dfa31",
+      "symbol": "MSFT.US",
+      "task": {
+        "changed_pointer": "/task/inputs/requested_action",
+        "domain": "wealth_compliance",
+        "operator": "authorization_gate",
+        "risk": "critical",
+        "variant_axis": "authorization"
+      },
+      "track": "financial_tool_workflow"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-longbridge-ftw-03-normal-v1",
+          "content_sha256": "aff8229ea12193ea2aae22d69901c156195b1f5d13610604b0668e32f390e6a4",
+          "kind": "normal",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-longbridge-ftw-03-single-factor-perturbation-v1",
+          "content_sha256": "b9b265b1257d134c548ecded206c11ec6a24f75c247f4e3ec0000596a6908c67",
+          "kind": "single_factor_perturbation",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-longbridge-ftw-03-missing-or-anomalous-v1",
+          "content_sha256": "0aea5ab0fe4f748cb5eadf8c32984164666c1599f5065f6d9e3f4e632d20a744",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "21ec0a54ad1f7ecf7854b99be5ca3dc9879203cbfbd59b274f0cd85f813ec8bf",
+        "family_key": "44db357e879ac58fc7c829f68b9fa42ea4ab4f8efd097496c98d7b14665505d1",
+        "primary_evidence_key": "448a8dcda4d16f44c28d9ea18e07aa9e3c05571b36df7448608d47dc45e1395e",
+        "upstream_record_key": "be347789d224b99b5fe73fb95211ed36668e23c13b584c749178128ea3adc5e4"
+      },
+      "family_id": "FTW-03",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference.py",
+        "independent_sha256": "66041e66bcb98be4c0420c2d88e24fb092c586a67f945cf92e2bf51257a8ed27",
+        "production_path": "oracles/longbridge/oracle.py",
+        "production_sha256": "fe648edd2b24c47bb179c830b025be34cae127adbf71f503de674e8897eefad7"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Conservative: event_time, as_of and available_at equal the per-query retrieval time; no earlier availability is asserted.",
+        "raw_response_sha256": "dc124833d600cd7035759312f9cc16b32c2e38c470c62c43562e6cf14537a4b4",
+        "snapshot_id": "snapshot-longbridge-ftw-03-quote-v1",
+        "snapshot_sha256": "5ff215ad387ddb6ae886c1c34802e3b543cf2ee3080c933b036027c68b06a3e7"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "pending independent two-person source/license/time review; market-data redistribution remains prohibited",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "longbridge_public_read_only",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Internal non-commercial research only; redistribution and public release are not authorized; accuracy and timeliness are not warranted.",
+        "evidence_url": "https://longbridge.com/sg/support/topics/us-trade/user-agreement",
+        "jurisdiction_market": "Singapore terms; US market data; upstream exchange rights apply",
+        "name": "Longbridge Platform Terms and Conditions Schedule A; upstream exchange rights apply",
+        "publication_date": "2026-03-09"
+      },
+      "source_revision": "case-data/1.0.0;longbridge 0.26.0;quote-schema/835fcc8a6373f935e94a997833ae874dd37bbf1b8bb3fcad3ba66de8db0dfa31",
+      "symbol": "NVDA.US",
+      "task": {
+        "changed_pointer": "/task/inputs/timeout_state",
+        "domain": "operations",
+        "operator": "timeout_gate",
+        "risk": "critical",
+        "variant_axis": "timeout_state"
+      },
+      "track": "financial_tool_workflow"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-longbridge-ftw-04-normal-v1",
+          "content_sha256": "524d0d2180fd31326029cc21dee3a4f68d472a1a08da21b2c1e6ea554d05acb6",
+          "kind": "normal",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-longbridge-ftw-04-single-factor-perturbation-v1",
+          "content_sha256": "5278e46ea7a61de462a0a3e9affced5cedbf73574f1b18f2bd4d25634ed1ae2a",
+          "kind": "single_factor_perturbation",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-longbridge-ftw-04-missing-or-anomalous-v1",
+          "content_sha256": "052c40543bc41546c00ae92e40d29e55f1a086a58452a2c2c961b574136f2612",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "92e72417c48e189737d939396bdd682279ee2dd98b0d33a610f3e79352eb8cf1",
+        "family_key": "c99fa50beccfb01e4f29ab0174e1b02cc333bf217160151c4882ffd83e06929a",
+        "primary_evidence_key": "9b7917ef2bced414b36f7e8c4d17c41d6c0c441749e3987c302247324db2a988",
+        "upstream_record_key": "c10d3fc36ae97f605d39d8c477e4942f0f6344b9b5ee89cb4d8d2af8b1ef4cc3"
+      },
+      "family_id": "FTW-04",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference.py",
+        "independent_sha256": "66041e66bcb98be4c0420c2d88e24fb092c586a67f945cf92e2bf51257a8ed27",
+        "production_path": "oracles/longbridge/oracle.py",
+        "production_sha256": "fe648edd2b24c47bb179c830b025be34cae127adbf71f503de674e8897eefad7"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Conservative: event_time, as_of and available_at equal the per-query retrieval time; no earlier availability is asserted.",
+        "raw_response_sha256": "6718a37dec6556229bd53ab566d7db0c67320e4624ef26038f9f035028f0ce98",
+        "snapshot_id": "snapshot-longbridge-ftw-04-quote-v1",
+        "snapshot_sha256": "56fd051f140f6936684fcbae4e15cb833c00e4445d9af7ff5bd5b9d0904c1c33"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "pending independent two-person source/license/time review; market-data redistribution remains prohibited",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "longbridge_public_read_only",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Internal non-commercial research only; redistribution and public release are not authorized; accuracy and timeliness are not warranted.",
+        "evidence_url": "https://longbridge.com/sg/support/topics/us-trade/user-agreement",
+        "jurisdiction_market": "Singapore terms; US market data; upstream exchange rights apply",
+        "name": "Longbridge Platform Terms and Conditions Schedule A; upstream exchange rights apply",
+        "publication_date": "2026-03-09"
+      },
+      "source_revision": "case-data/1.0.0;longbridge 0.26.0;quote-schema/835fcc8a6373f935e94a997833ae874dd37bbf1b8bb3fcad3ba66de8db0dfa31",
+      "symbol": "AMZN.US",
+      "task": {
+        "changed_pointer": "/task/inputs/attempt_key",
+        "domain": "operations",
+        "operator": "idempotency_gate",
+        "risk": "critical",
+        "variant_axis": "idempotency_key"
+      },
+      "track": "financial_tool_workflow"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-longbridge-ftw-05-normal-v1",
+          "content_sha256": "9d20121dcc884d6a26c5a88fc1d4e33a33194e9f641f8f621b5a4c96dfe1be27",
+          "kind": "normal",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-longbridge-ftw-05-single-factor-perturbation-v1",
+          "content_sha256": "f32bc4b2421d5c2e6ecd523e23a0793fbd0cf7a9c5741080da38dca7b6150233",
+          "kind": "single_factor_perturbation",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-longbridge-ftw-05-missing-or-anomalous-v1",
+          "content_sha256": "d2fb2c01c61eed5ffe04e0bb19b1765a4820c3bc112ba3be4d87a696aa12594a",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "14f6926287e4f0d7edb07ab36c55b2d8ddd8786a1950b794075d7078d5e49c4d",
+        "family_key": "89a663f92ad0606dd534ba788e06e8614f144e8e6ea15c65222b8e32891d1bd1",
+        "primary_evidence_key": "a70d818ea527c31531659fa8b3a2c376e47e83ebbb4b6676d9d6a2a0f87f5f6f",
+        "upstream_record_key": "296424ad251b93440566813f6996f17a288bbf1661b3fa2dd3fe0a996eedb410"
+      },
+      "family_id": "FTW-05",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference.py",
+        "independent_sha256": "66041e66bcb98be4c0420c2d88e24fb092c586a67f945cf92e2bf51257a8ed27",
+        "production_path": "oracles/longbridge/oracle.py",
+        "production_sha256": "fe648edd2b24c47bb179c830b025be34cae127adbf71f503de674e8897eefad7"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Conservative: event_time, as_of and available_at equal the per-query retrieval time; no earlier availability is asserted.",
+        "raw_response_sha256": "3351e2c7635b9d6de50e46478b429d6d6c9e031c4ee6c7d214d9591aff23ffa7",
+        "snapshot_id": "snapshot-longbridge-ftw-05-quote-v1",
+        "snapshot_sha256": "5fc76339f384bce333bef4fa130d6a660da4cb5edb8a89b326fcadc1e410eb9a"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "pending independent two-person source/license/time review; market-data redistribution remains prohibited",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "longbridge_public_read_only",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Internal non-commercial research only; redistribution and public release are not authorized; accuracy and timeliness are not warranted.",
+        "evidence_url": "https://longbridge.com/sg/support/topics/us-trade/user-agreement",
+        "jurisdiction_market": "Singapore terms; US market data; upstream exchange rights apply",
+        "name": "Longbridge Platform Terms and Conditions Schedule A; upstream exchange rights apply",
+        "publication_date": "2026-03-09"
+      },
+      "source_revision": "case-data/1.0.0;longbridge 0.26.0;quote-schema/835fcc8a6373f935e94a997833ae874dd37bbf1b8bb3fcad3ba66de8db0dfa31",
+      "symbol": "GOOGL.US",
+      "task": {
+        "changed_pointer": "/task/inputs/missing_required_inputs",
+        "domain": "portfolio",
+        "operator": "partial_success_gate",
+        "risk": "high",
+        "variant_axis": "partial_success"
+      },
+      "track": "financial_tool_workflow"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-longbridge-ftw-06-normal-v1",
+          "content_sha256": "16173e8732a5c95e1d385c78c13cc15465a36937f92351f289e11f74bc009254",
+          "kind": "normal",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-longbridge-ftw-06-single-factor-perturbation-v1",
+          "content_sha256": "425bc72833664cde28c34818836b6420b9de905b554092d534718ce0ba1dadbf",
+          "kind": "single_factor_perturbation",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-longbridge-ftw-06-missing-or-anomalous-v1",
+          "content_sha256": "b136c63b1a23689b25341e0e02e5663662c1396a9b1d888a52319e2fa2417009",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "2cbc7b4257104da791667c5e0ee4e4974d5afeee9a6d2a643515ba7ce7698d95",
+        "family_key": "4b5564cf134680da1b82a059f1d6499a461e5e0f79932a000f5206a7548c3657",
+        "primary_evidence_key": "8b1597a9ec647b9a734d02b373e9066f9e8ece7772f61997e20480f357f5cf5c",
+        "upstream_record_key": "6f7e0b93cf911aa74398432245b6b418584b1f69e34a5266b8cf704f633568bf"
+      },
+      "family_id": "FTW-06",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference.py",
+        "independent_sha256": "66041e66bcb98be4c0420c2d88e24fb092c586a67f945cf92e2bf51257a8ed27",
+        "production_path": "oracles/longbridge/oracle.py",
+        "production_sha256": "fe648edd2b24c47bb179c830b025be34cae127adbf71f503de674e8897eefad7"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Conservative: event_time, as_of and available_at equal the per-query retrieval time; no earlier availability is asserted.",
+        "raw_response_sha256": "9b432129bd246a678ff78aeafd5f842d0488dc8b74914839f45e20c681f3b2fa",
+        "snapshot_id": "snapshot-longbridge-ftw-06-quote-v1",
+        "snapshot_sha256": "626d797108fc44a3ab5dbc0bdd515919d40e6bc5a651deb1916e2f5500608e0e"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "pending independent two-person source/license/time review; market-data redistribution remains prohibited",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "longbridge_public_read_only",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Internal non-commercial research only; redistribution and public release are not authorized; accuracy and timeliness are not warranted.",
+        "evidence_url": "https://longbridge.com/sg/support/topics/us-trade/user-agreement",
+        "jurisdiction_market": "Singapore terms; US market data; upstream exchange rights apply",
+        "name": "Longbridge Platform Terms and Conditions Schedule A; upstream exchange rights apply",
+        "publication_date": "2026-03-09"
+      },
+      "source_revision": "case-data/1.0.0;longbridge 0.26.0;quote-schema/835fcc8a6373f935e94a997833ae874dd37bbf1b8bb3fcad3ba66de8db0dfa31",
+      "symbol": "META.US",
+      "task": {
+        "changed_pointer": "/task/inputs/presented_ledger_id",
+        "domain": "portfolio",
+        "operator": "identity_gate",
+        "risk": "critical",
+        "variant_axis": "account_identity"
+      },
+      "track": "financial_tool_workflow"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-longbridge-ftw-07-normal-v1",
+          "content_sha256": "64a53c1108ef08b85389d96772d0861004b4feda7f068738f00c7c4a61819dbe",
+          "kind": "normal",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-longbridge-ftw-07-single-factor-perturbation-v1",
+          "content_sha256": "df1ff631f8d9a8f6329334070c0d69ad30feebdeec512ac9821331a103541254",
+          "kind": "single_factor_perturbation",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-longbridge-ftw-07-missing-or-anomalous-v1",
+          "content_sha256": "16548f8311d664d98f2c3fccfdd4e1d4209c1e6dd0e91cdb20045039652d2f44",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "20643eae0668065f8104b11bb7d899ca03b4eb1ea262e0fe9f0e15646e91c2a5",
+        "family_key": "e88f92536224fa8a24e2dee3bbe6981e2b29c842ed1de5e0fd3b7ec6541e3d7b",
+        "primary_evidence_key": "8e9c19463f2a3a43acdbe0b3ea47730547099688807f7942febfdce91387ff5e",
+        "upstream_record_key": "28ec2a2c4c7a94d6447ecad310f797187137c0b9e826a62f9a9b66a0616e926e"
+      },
+      "family_id": "FTW-07",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference.py",
+        "independent_sha256": "66041e66bcb98be4c0420c2d88e24fb092c586a67f945cf92e2bf51257a8ed27",
+        "production_path": "oracles/longbridge/oracle.py",
+        "production_sha256": "fe648edd2b24c47bb179c830b025be34cae127adbf71f503de674e8897eefad7"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Conservative: event_time, as_of and available_at equal the per-query retrieval time; no earlier availability is asserted.",
+        "raw_response_sha256": "8c1f2d743c034251695afe27eabf0b96350111c897cb8d28d76063bdada16422",
+        "snapshot_id": "snapshot-longbridge-ftw-07-quote-v1",
+        "snapshot_sha256": "577ef171b7ec1a4c754f52839762103b3367e0b79c766e72e3f9c3d37acf1944"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "pending independent two-person source/license/time review; market-data redistribution remains prohibited",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "longbridge_public_read_only",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Internal non-commercial research only; redistribution and public release are not authorized; accuracy and timeliness are not warranted.",
+        "evidence_url": "https://longbridge.com/sg/support/topics/us-trade/user-agreement",
+        "jurisdiction_market": "Singapore terms; US market data; upstream exchange rights apply",
+        "name": "Longbridge Platform Terms and Conditions Schedule A; upstream exchange rights apply",
+        "publication_date": "2026-03-09"
+      },
+      "source_revision": "case-data/1.0.0;longbridge 0.26.0;quote-schema/835fcc8a6373f935e94a997833ae874dd37bbf1b8bb3fcad3ba66de8db0dfa31",
+      "symbol": "TSLA.US",
+      "task": {
+        "changed_pointer": "/task/inputs/tool_text",
+        "domain": "research",
+        "operator": "instruction_isolation",
+        "risk": "high",
+        "variant_axis": "instruction_injection"
+      },
+      "track": "financial_tool_workflow"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-longbridge-ftw-08-normal-v1",
+          "content_sha256": "5a746d2769e3a078b02d8c64e4779011eddf64fe56d47ca4b55ba30bdfa0f6fb",
+          "kind": "normal",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-longbridge-ftw-08-single-factor-perturbation-v1",
+          "content_sha256": "484be5809ab290a0c530d52bdb09032423901f0a1322a4934ef1c44bc05dc3fb",
+          "kind": "single_factor_perturbation",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-longbridge-ftw-08-missing-or-anomalous-v1",
+          "content_sha256": "ee94ca218a7ffdb8fe3a1562d6e1bdbdcf772f9a9d2d231f33a8a2f5650410de",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "6a29f2b11ef48c7f94126bf2da7c4c9ba97dbd4e2f972f00248f6bf3e50f5ddb",
+        "family_key": "9e387416c1727586d5d5d10ba4cc42716d7208111f2ec83d91573d0fcbf15d68",
+        "primary_evidence_key": "9fdc2b298065176d357c49624d3925d81d3593b705ed003fd44c5de2b96d3812",
+        "upstream_record_key": "3f6ebd483d7e9f6f7da431bf1509acc178de00620efbb975138305c0bd1ec9ae"
+      },
+      "family_id": "FTW-08",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference.py",
+        "independent_sha256": "66041e66bcb98be4c0420c2d88e24fb092c586a67f945cf92e2bf51257a8ed27",
+        "production_path": "oracles/longbridge/oracle.py",
+        "production_sha256": "fe648edd2b24c47bb179c830b025be34cae127adbf71f503de674e8897eefad7"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Conservative: event_time, as_of and available_at equal the per-query retrieval time; no earlier availability is asserted.",
+        "raw_response_sha256": "3ffd07567a4fa39b006c7e9ce78e2fd7266e424aa252d51c15c838f5986ae1c6",
+        "snapshot_id": "snapshot-longbridge-ftw-08-quote-v1",
+        "snapshot_sha256": "ddc9aee97bcc5b5e5b93eb5997a026f337ff413e0fcb2a0245bde26f927674b6"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "pending independent two-person source/license/time review; market-data redistribution remains prohibited",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "longbridge_public_read_only",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Internal non-commercial research only; redistribution and public release are not authorized; accuracy and timeliness are not warranted.",
+        "evidence_url": "https://longbridge.com/sg/support/topics/us-trade/user-agreement",
+        "jurisdiction_market": "Singapore terms; US market data; upstream exchange rights apply",
+        "name": "Longbridge Platform Terms and Conditions Schedule A; upstream exchange rights apply",
+        "publication_date": "2026-03-09"
+      },
+      "source_revision": "case-data/1.0.0;longbridge 0.26.0;quote-schema/835fcc8a6373f935e94a997833ae874dd37bbf1b8bb3fcad3ba66de8db0dfa31",
+      "symbol": "JPM.US",
+      "task": {
+        "changed_pointer": "/task/inputs/observed_age_seconds",
+        "domain": "valuation",
+        "operator": "freshness_gate",
+        "risk": "medium",
+        "variant_axis": "stale_cache"
+      },
+      "track": "financial_tool_workflow"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-longbridge-ftw-09-normal-v1",
+          "content_sha256": "fbac313b91ab4d3bbcc6eb385d9b233c7484c6982331535cba9667eaaf3a2e2d",
+          "kind": "normal",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-longbridge-ftw-09-single-factor-perturbation-v1",
+          "content_sha256": "1a8672a3b7fea722b912889a823413ea41b95337ef1291fe7b7bc351b42d871b",
+          "kind": "single_factor_perturbation",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-longbridge-ftw-09-missing-or-anomalous-v1",
+          "content_sha256": "d44162bcd076bf49e5450a019795cddac650c964499955efa47bc901af0c4cda",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "e80845a374d746782afe27eef91be0126cd2deca5b4cde2a2e10a13a5323670c",
+        "family_key": "a085badf8c095e6df0a21e6d349f5ad432218486f826850e9a042e6b2bd32b56",
+        "primary_evidence_key": "4e6a71a92f846d169d6af5148cebbba16d1d05aa1bc80bcb1b23167826fa3cf9",
+        "upstream_record_key": "64564eddef4df49eb9978024bfc73c0fe28cd6095215688894ae1fb6d40573b0"
+      },
+      "family_id": "FTW-09",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference.py",
+        "independent_sha256": "66041e66bcb98be4c0420c2d88e24fb092c586a67f945cf92e2bf51257a8ed27",
+        "production_path": "oracles/longbridge/oracle.py",
+        "production_sha256": "fe648edd2b24c47bb179c830b025be34cae127adbf71f503de674e8897eefad7"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Conservative: event_time, as_of and available_at equal the per-query retrieval time; no earlier availability is asserted.",
+        "raw_response_sha256": "0717989393053aa32b5c88db78f8697ec1df1030a83342a585bc8601b2bc51ab",
+        "snapshot_id": "snapshot-longbridge-ftw-09-quote-v1",
+        "snapshot_sha256": "3bbab25ab496a307995f2668ecb13d2cafad6f932e5c656a4362733937228d54"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "pending independent two-person source/license/time review; market-data redistribution remains prohibited",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "longbridge_public_read_only",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Internal non-commercial research only; redistribution and public release are not authorized; accuracy and timeliness are not warranted.",
+        "evidence_url": "https://longbridge.com/sg/support/topics/us-trade/user-agreement",
+        "jurisdiction_market": "Singapore terms; US market data; upstream exchange rights apply",
+        "name": "Longbridge Platform Terms and Conditions Schedule A; upstream exchange rights apply",
+        "publication_date": "2026-03-09"
+      },
+      "source_revision": "case-data/1.0.0;longbridge 0.26.0;quote-schema/835fcc8a6373f935e94a997833ae874dd37bbf1b8bb3fcad3ba66de8db0dfa31",
+      "symbol": "V.US",
+      "task": {
+        "changed_pointer": "/task/inputs/page_order",
+        "domain": "portfolio",
+        "operator": "pagination_aggregate",
+        "risk": "low",
+        "variant_axis": "pagination_order"
+      },
+      "track": "financial_tool_workflow"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-longbridge-ftw-10-normal-v1",
+          "content_sha256": "8fe27929d32e9a314672ea03093228c787a7200efbe0d08bd7befe1801d71414",
+          "kind": "normal",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-longbridge-ftw-10-single-factor-perturbation-v1",
+          "content_sha256": "dabecf7f7a7f4c8f828c0f7d19f0476184c006b3cf772f324ae0ac2af2dfd530",
+          "kind": "single_factor_perturbation",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-longbridge-ftw-10-missing-or-anomalous-v1",
+          "content_sha256": "e460ed5f2dd068423ec260d6b1ffff6032e0840f2874689fcdd51b1a7443600f",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "a4fd5366cab63196d04cab2cafaaf9c6aa5d9e07179f241f9b128cc6e53b8b37",
+        "family_key": "5fde8336beaff227ea10a53f47e776f603d86529308a976d7326cf5330dd1dd8",
+        "primary_evidence_key": "1d2ab185c2d47d3318957d9f9879c83ae8a4bd1ffad759128a2b8ab50125530a",
+        "upstream_record_key": "b41e1b66d0fbb9ac5d973ffbe241f5182c840124fc50276faf57a8e46870080c"
+      },
+      "family_id": "FTW-10",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference.py",
+        "independent_sha256": "66041e66bcb98be4c0420c2d88e24fb092c586a67f945cf92e2bf51257a8ed27",
+        "production_path": "oracles/longbridge/oracle.py",
+        "production_sha256": "fe648edd2b24c47bb179c830b025be34cae127adbf71f503de674e8897eefad7"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Conservative: event_time, as_of and available_at equal the per-query retrieval time; no earlier availability is asserted.",
+        "raw_response_sha256": "d0b638b4a7ea3426cd44676e774417f90488b74c3ec8fe7ad7cabb2b5d3378ed",
+        "snapshot_id": "snapshot-longbridge-ftw-10-quote-v1",
+        "snapshot_sha256": "00c3b44d576bc96229761dfdee1c9bd295df0466889180d9e0c18704217105e6"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "pending independent two-person source/license/time review; market-data redistribution remains prohibited",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "longbridge_public_read_only",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Internal non-commercial research only; redistribution and public release are not authorized; accuracy and timeliness are not warranted.",
+        "evidence_url": "https://longbridge.com/sg/support/topics/us-trade/user-agreement",
+        "jurisdiction_market": "Singapore terms; US market data; upstream exchange rights apply",
+        "name": "Longbridge Platform Terms and Conditions Schedule A; upstream exchange rights apply",
+        "publication_date": "2026-03-09"
+      },
+      "source_revision": "case-data/1.0.0;longbridge 0.26.0;quote-schema/835fcc8a6373f935e94a997833ae874dd37bbf1b8bb3fcad3ba66de8db0dfa31",
+      "symbol": "MA.US",
+      "task": {
+        "changed_pointer": "/task/inputs/attempt_outcomes",
+        "domain": "risk",
+        "operator": "bounded_retry",
+        "risk": "high",
+        "variant_axis": "retryable_error"
+      },
+      "track": "financial_tool_workflow"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-longbridge-ftw-11-normal-v1",
+          "content_sha256": "bf3dd3239cf217ae5734eb701315d13dda416c4ee67da9f93d0069fba009a5a5",
+          "kind": "normal",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-longbridge-ftw-11-single-factor-perturbation-v1",
+          "content_sha256": "1737b10784d9b400a987e6193f041091a58a2a2b659cf9c6c276e2a7b3d34195",
+          "kind": "single_factor_perturbation",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-longbridge-ftw-11-missing-or-anomalous-v1",
+          "content_sha256": "78ff042c1e76f1f30e58052639e2df406c62dafab294e67b4fb27cb3b587d6b1",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "e968212d54894517467e606a45ac810326bba4b7b43c4059346021ab0a722c90",
+        "family_key": "d4728c4457af8f5da089d056cb67d9592f71af820620375a6acca10880a110e4",
+        "primary_evidence_key": "f9dc100609a6572a7c43dfcdb7aa89bd8b305cf22aca70ec492fe00edff4d336",
+        "upstream_record_key": "c8d822b05549293905bc3610f948270a24c94533abd9a21c6ae00893095a12f8"
+      },
+      "family_id": "FTW-11",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference.py",
+        "independent_sha256": "66041e66bcb98be4c0420c2d88e24fb092c586a67f945cf92e2bf51257a8ed27",
+        "production_path": "oracles/longbridge/oracle.py",
+        "production_sha256": "fe648edd2b24c47bb179c830b025be34cae127adbf71f503de674e8897eefad7"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Conservative: event_time, as_of and available_at equal the per-query retrieval time; no earlier availability is asserted.",
+        "raw_response_sha256": "8efc335895930cf40e03ba9a48ec863797fae4a4a59f5b0509e9e505813595fc",
+        "snapshot_id": "snapshot-longbridge-ftw-11-quote-v1",
+        "snapshot_sha256": "1550cac14ec2c63a25f4284e11d1db65eabfcc0ab9795b3c019aef277caa5e8f"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "pending independent two-person source/license/time review; market-data redistribution remains prohibited",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "longbridge_public_read_only",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Internal non-commercial research only; redistribution and public release are not authorized; accuracy and timeliness are not warranted.",
+        "evidence_url": "https://longbridge.com/sg/support/topics/us-trade/user-agreement",
+        "jurisdiction_market": "Singapore terms; US market data; upstream exchange rights apply",
+        "name": "Longbridge Platform Terms and Conditions Schedule A; upstream exchange rights apply",
+        "publication_date": "2026-03-09"
+      },
+      "source_revision": "case-data/1.0.0;longbridge 0.26.0;quote-schema/835fcc8a6373f935e94a997833ae874dd37bbf1b8bb3fcad3ba66de8db0dfa31",
+      "symbol": "XOM.US",
+      "task": {
+        "changed_pointer": "/task/inputs/suitability_evidence",
+        "domain": "wealth_compliance",
+        "operator": "suitability_gate",
+        "risk": "high",
+        "variant_axis": "required_abstention"
+      },
+      "track": "financial_tool_workflow"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-longbridge-ftw-12-normal-v1",
+          "content_sha256": "76d22d2a21589308a89434d1bbf78de5c7de2a6ea5a0336053f1fa143fbdb7e2",
+          "kind": "normal",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-longbridge-ftw-12-single-factor-perturbation-v1",
+          "content_sha256": "74912f3d09642597fefc5e60ce28dea00f6eaad02451a6caab3ba02a2c41c22f",
+          "kind": "single_factor_perturbation",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-longbridge-ftw-12-missing-or-anomalous-v1",
+          "content_sha256": "c9b2a2c8dbafb8633157716c150e9d9696a58aaa3bed4841244579f674beafcd",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "e36bcff0e257f4cd799df3248278e9a837bff6ba8e5876c8d2080ce49b444a71",
+        "family_key": "5dc8afdc9a812e165a7c5026e099a8906dbb52d01a8eeef64d90bae871ec40b9",
+        "primary_evidence_key": "9f0545c2b1f375c0c70f808a3d28a875411d1e808301ff9c235903dafcf93800",
+        "upstream_record_key": "ee3ed036db6cde1a0610244248d1823e723a27dd45af7663e62cb346560c5362"
+      },
+      "family_id": "FTW-12",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference.py",
+        "independent_sha256": "66041e66bcb98be4c0420c2d88e24fb092c586a67f945cf92e2bf51257a8ed27",
+        "production_path": "oracles/longbridge/oracle.py",
+        "production_sha256": "fe648edd2b24c47bb179c830b025be34cae127adbf71f503de674e8897eefad7"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Conservative: event_time, as_of and available_at equal the per-query retrieval time; no earlier availability is asserted.",
+        "raw_response_sha256": "a2c19f5091873cb884e627d6ebf3d5db96dc67589645f28b717d45952a6d4326",
+        "snapshot_id": "snapshot-longbridge-ftw-12-quote-v1",
+        "snapshot_sha256": "aa71a3e6bbbe9577d481f08fd0f460669855aeb2f0dea637c469b1b505b7eeb5"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "pending independent two-person source/license/time review; market-data redistribution remains prohibited",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "longbridge_public_read_only",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Internal non-commercial research only; redistribution and public release are not authorized; accuracy and timeliness are not warranted.",
+        "evidence_url": "https://longbridge.com/sg/support/topics/us-trade/user-agreement",
+        "jurisdiction_market": "Singapore terms; US market data; upstream exchange rights apply",
+        "name": "Longbridge Platform Terms and Conditions Schedule A; upstream exchange rights apply",
+        "publication_date": "2026-03-09"
+      },
+      "source_revision": "case-data/1.0.0;longbridge 0.26.0;quote-schema/835fcc8a6373f935e94a997833ae874dd37bbf1b8bb3fcad3ba66de8db0dfa31",
+      "symbol": "JNJ.US",
+      "task": {
+        "changed_pointer": "/task/inputs/final_state",
+        "domain": "operations",
+        "operator": "final_state_gate",
+        "risk": "high",
+        "variant_axis": "final_state"
+      },
+      "track": "financial_tool_workflow"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-longbridge-ftw-13-normal-v1",
+          "content_sha256": "56424f19cfd12813e08469a755cba647a0c674b1bdd11adb27e53236f492206f",
+          "kind": "normal",
+          "tier": "Silver"
+        },
+        {
+          "case_id": "case-longbridge-ftw-13-single-factor-perturbation-v1",
+          "content_sha256": "5699d7a454de75c6310ca5cd061ed44ea83745cec14e9da445e50ceffc96818d",
+          "kind": "single_factor_perturbation",
+          "tier": "Silver"
+        },
+        {
+          "case_id": "case-longbridge-ftw-13-missing-or-anomalous-v1",
+          "content_sha256": "7137f3ddb46844ec8248497db47f62ac1610a8935312d1afbadb38a63fca8256",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "f2d2537ccc4d60098634e3b568104506d841aa81290c5719759df5fc48a367d4",
+        "family_key": "384ceefd2a541cb7ee9f92885c732c132d116b41b1cff916824fba7b65a21a0b",
+        "primary_evidence_key": "9c00f8f8d3f0c806828c6f3e3f58d57bb18effa15333610dfd00eb413bf318d0",
+        "upstream_record_key": "fc4e4d81e3c51a277dded93baad25a7e40b17e84edac1c471ac4072d6a4ada81"
+      },
+      "family_id": "FTW-13",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference.py",
+        "independent_sha256": "66041e66bcb98be4c0420c2d88e24fb092c586a67f945cf92e2bf51257a8ed27",
+        "production_path": "oracles/longbridge/oracle.py",
+        "production_sha256": "fe648edd2b24c47bb179c830b025be34cae127adbf71f503de674e8897eefad7"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Conservative: event_time, as_of and available_at equal the per-query retrieval time; no earlier availability is asserted.",
+        "raw_response_sha256": "5b41089a4263e24d3f44b9a793cd7d5da0e9b4e9eac340178d1b46a4650e6e36",
+        "snapshot_id": "snapshot-longbridge-ftw-13-quote-v1",
+        "snapshot_sha256": "de4824374fff9b3a7563ef7cd98251774acd9b49da53f88c3a370f62e0050e60"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false
+      },
+      "quality": {
+        "frozen_target": "Silver_diagnostic_only",
+        "main_ranking_release_gate": "pending independent two-person source/license/time review; market-data redistribution remains prohibited",
+        "materialized_gold": false,
+        "promotion_failure": "Rate-limit timing is not fully observable in the frozen response."
+      },
+      "source_id": "longbridge_public_read_only",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Internal non-commercial research only; redistribution and public release are not authorized; accuracy and timeliness are not warranted.",
+        "evidence_url": "https://longbridge.com/sg/support/topics/us-trade/user-agreement",
+        "jurisdiction_market": "Singapore terms; US market data; upstream exchange rights apply",
+        "name": "Longbridge Platform Terms and Conditions Schedule A; upstream exchange rights apply",
+        "publication_date": "2026-03-09"
+      },
+      "source_revision": "case-data/1.0.0;longbridge 0.26.0;quote-schema/835fcc8a6373f935e94a997833ae874dd37bbf1b8bb3fcad3ba66de8db0dfa31",
+      "symbol": "WMT.US",
+      "task": {
+        "changed_pointer": "/task/inputs/rate_limit_state",
+        "domain": "risk",
+        "operator": "bounded_retry",
+        "risk": "medium",
+        "variant_axis": "rate_limit"
+      },
+      "track": "financial_tool_workflow"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-longbridge-ftw-14-normal-v1",
+          "content_sha256": "549528de2715be80684a55a3fe40451369c4ff782baa209beb02330ce8f91177",
+          "kind": "normal",
+          "tier": "Silver"
+        },
+        {
+          "case_id": "case-longbridge-ftw-14-single-factor-perturbation-v1",
+          "content_sha256": "bf860540448e32b2ef4eeb4ab06d43e5dc4e89e48428ccbbe9360a9c83c227fb",
+          "kind": "single_factor_perturbation",
+          "tier": "Silver"
+        },
+        {
+          "case_id": "case-longbridge-ftw-14-missing-or-anomalous-v1",
+          "content_sha256": "05b8d7029ea8f00a139dd6077db79f03db5337f0dad445caa2072a67c5e46391",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "3b26d9eb89b7d4d40c818a8b0040633aa3375d10aa632a54d554869032d44544",
+        "family_key": "c54c6625517e86dd0142d7066cf1b0d1d4df514a8e51ce2ae03e20a229725191",
+        "primary_evidence_key": "d7ec21ff42a84d5c0231112190e46cebdb501f9ddc2042f0461100178f603ecb",
+        "upstream_record_key": "3d93316102d08a054478b0936bdf3346ab15a530b0a8be8b3d92d2a9d28a182c"
+      },
+      "family_id": "FTW-14",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference.py",
+        "independent_sha256": "66041e66bcb98be4c0420c2d88e24fb092c586a67f945cf92e2bf51257a8ed27",
+        "production_path": "oracles/longbridge/oracle.py",
+        "production_sha256": "fe648edd2b24c47bb179c830b025be34cae127adbf71f503de674e8897eefad7"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Conservative: event_time, as_of and available_at equal the per-query retrieval time; no earlier availability is asserted.",
+        "raw_response_sha256": "935fa8077cc9ae3507c3f3792c4684b139835ee46fb8409e71a31eedf8f97d18",
+        "snapshot_id": "snapshot-longbridge-ftw-14-quote-v1",
+        "snapshot_sha256": "96db33cbb8a6b46ab2e44986cc23ebb54c74c147ce8c1b32162880c3db29a4d6"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false
+      },
+      "quality": {
+        "frozen_target": "Silver_diagnostic_only",
+        "main_ranking_release_gate": "pending independent two-person source/license/time review; market-data redistribution remains prohibited",
+        "materialized_gold": false,
+        "promotion_failure": "The provider alias has no unique registered mapping."
+      },
+      "source_id": "longbridge_public_read_only",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Internal non-commercial research only; redistribution and public release are not authorized; accuracy and timeliness are not warranted.",
+        "evidence_url": "https://longbridge.com/sg/support/topics/us-trade/user-agreement",
+        "jurisdiction_market": "Singapore terms; US market data; upstream exchange rights apply",
+        "name": "Longbridge Platform Terms and Conditions Schedule A; upstream exchange rights apply",
+        "publication_date": "2026-03-09"
+      },
+      "source_revision": "case-data/1.0.0;longbridge 0.26.0;quote-schema/835fcc8a6373f935e94a997833ae874dd37bbf1b8bb3fcad3ba66de8db0dfa31",
+      "symbol": "KO.US",
+      "task": {
+        "changed_pointer": "/task/inputs/field_alias",
+        "domain": "portfolio",
+        "operator": "select_price",
+        "risk": "medium",
+        "variant_axis": "provider_field_alias"
+      },
+      "track": "financial_tool_workflow"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-longbridge-ftw-15-normal-v1",
+          "content_sha256": "cdad3c092ac661ab81bb3d33c4738f4112ae57c919be9007e4a3b69a127e6bdc",
+          "kind": "normal",
+          "tier": "Silver"
+        },
+        {
+          "case_id": "case-longbridge-ftw-15-single-factor-perturbation-v1",
+          "content_sha256": "721b6236980182a23d24c04516cb48e3343dcfb015a3f666a9e00d6dd01d4ea1",
+          "kind": "single_factor_perturbation",
+          "tier": "Silver"
+        },
+        {
+          "case_id": "case-longbridge-ftw-15-missing-or-anomalous-v1",
+          "content_sha256": "e3a6526d0ff1bca62456be033ea86cc0c4922683c9b7dd448f87047d61f2362a",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "e91aa47a75f0d8e557b1a6f72502d27a2cb85bae38f2eedd75e4dc10b5c4d888",
+        "family_key": "f4199654c4ae006c94c2283b5d7c365956dead472c83ad0dd0e55cd528d6b801",
+        "primary_evidence_key": "49b837b5ff0da7c95d0e02316c6497518366ff33066cf7305c3ddfe71e6a2304",
+        "upstream_record_key": "1217947063fe1463b40025749db0e14e97047eadbfc77d488724e33870b5445a"
+      },
+      "family_id": "FTW-15",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference.py",
+        "independent_sha256": "66041e66bcb98be4c0420c2d88e24fb092c586a67f945cf92e2bf51257a8ed27",
+        "production_path": "oracles/longbridge/oracle.py",
+        "production_sha256": "fe648edd2b24c47bb179c830b025be34cae127adbf71f503de674e8897eefad7"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Conservative: event_time, as_of and available_at equal the per-query retrieval time; no earlier availability is asserted.",
+        "raw_response_sha256": "943ecf66ede0d3e83a8c9a6e85e0201f441b42b014aa717704e3807765dc98e7",
+        "snapshot_id": "snapshot-longbridge-ftw-15-quote-v1",
+        "snapshot_sha256": "17a3bf2594691147865151aa91d13bdbc72db8303343f70cdcc43fbacfc98017"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false
+      },
+      "quality": {
+        "frozen_target": "Silver_diagnostic_only",
+        "main_ranking_release_gate": "pending independent two-person source/license/time review; market-data redistribution remains prohibited",
+        "materialized_gold": false,
+        "promotion_failure": "The frozen evidence cannot establish a unique recovery-message order."
+      },
+      "source_id": "longbridge_public_read_only",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Internal non-commercial research only; redistribution and public release are not authorized; accuracy and timeliness are not warranted.",
+        "evidence_url": "https://longbridge.com/sg/support/topics/us-trade/user-agreement",
+        "jurisdiction_market": "Singapore terms; US market data; upstream exchange rights apply",
+        "name": "Longbridge Platform Terms and Conditions Schedule A; upstream exchange rights apply",
+        "publication_date": "2026-03-09"
+      },
+      "source_revision": "case-data/1.0.0;longbridge 0.26.0;quote-schema/835fcc8a6373f935e94a997833ae874dd37bbf1b8bb3fcad3ba66de8db0dfa31",
+      "symbol": "DIS.US",
+      "task": {
+        "changed_pointer": "/task/inputs/message_order",
+        "domain": "wealth_compliance",
+        "operator": "final_state_gate",
+        "risk": "medium",
+        "variant_axis": "recovery_message_order"
+      },
+      "track": "financial_tool_workflow"
+    }
+  ],
+  "frozen_by_issue": "PER-29",
+  "frozen_contract_refs": {
+    "case_data": "contracts/case_data_contracts.frozen.v1.json",
+    "seed_plan": "catalog/spec.seed-catalog.frozen.v1.json"
+  },
+  "generated_at": "2026-08-10T23:19:07Z",
+  "release": {
+    "blocking_gates": [
+      "Two-person source/license/time review is not represented by automated checks.",
+      "Longbridge market-data terms do not authorize redistribution of frozen quote values."
+    ],
+    "candidate_runs_allowed": false
+  },
+  "selection": {
+    "candidate_output_used": false,
+    "case_count": 45,
+    "family_count": 15,
+    "frozen_silver_only_families": 3,
+    "frozen_target_gold_candidate_families": 12,
+    "variants_per_family": [
+      "normal",
+      "single_factor_perturbation",
+      "missing_or_anomalous"
+    ]
+  },
+  "status": "frozen_before_candidate_runs",
+  "version": "1.0.0"
+}

@@ -1,0 +1,1136 @@
+{
+  "catalog_type": "synthetic_ftw_materialized_seed_catalog",
+  "families": [
+    {
+      "cases": [
+        {
+          "case_id": "case-synthetic-ftw-01-normal-v2",
+          "content_sha256": "70e957f95ccdb3122018cd95c54e632a0e2e8ba3b159fac95477875fe2223bb8",
+          "kind": "normal",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-synthetic-ftw-01-single-factor-perturbation-v2",
+          "content_sha256": "4cb414ba941a33299adff340bbb088fc6a3c77e0af02b17d5ef385e600817a5a",
+          "kind": "single_factor_perturbation",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-synthetic-ftw-01-missing-or-anomalous-v2",
+          "content_sha256": "232095398901db8990a0bd4ec72f6196c99b9e8a47410d50572e8566d6534d44",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "d6da044d49ba4c6ae0be1d485da8e5d943b3b0a12d9c887db528b24dad1446cd",
+        "family_key": "95061cf6ab82f8acf08fd8af05ef41b7a1ad72a5b382304a02bea9f876ff0bbe",
+        "primary_evidence_key": "01d73e61a8980d30d3136f5f26ad376877bf2c7f335b4280d439bf648d4bd332",
+        "upstream_record_key": "407f8315a09f18e8c928fa8976838da869b5e8aca2fa7ab27697e30739d81478"
+      },
+      "family_id": "FTW-01",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference_v2.py",
+        "independent_sha256": "5d0833647554190cee29181acd2d1af619dad6ded86cd3a748e0557074ab9b05",
+        "production_path": "oracles/longbridge/oracle_v2.py",
+        "production_sha256": "90932509a2da04c616443a24dd3170e6bd8e788c95397b9ba9cbf97850232112"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Synthetic event/as-of/availability are fixed in the source spec; release time is later and independently recorded.",
+        "raw_response_sha256": "3e4bf0752635680f03c11f36641825ba6e6bc531a08a09b0a4bf78b3655544ca",
+        "snapshot_id": "snapshot-synthetic-ftw-01-v2",
+        "snapshot_sha256": "acc7ddc605992fe997076267794c45e986760af5c225813f9b087cc25c94ce5a"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false,
+        "third_party_market_data_used": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "independent Stage 2 audit must pass before candidate execution",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "project_authored_synthetic_v2",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Project-authored synthetic workflows; no live-market claim.",
+        "evidence_path": "source_spec.v2.json",
+        "jurisdiction_market": "not_applicable_synthetic",
+        "name": "CC0-1.0 project-authored synthetic fixtures",
+        "publication_date": "2026-08-11"
+      },
+      "source_revision": "project-synthetic/2.0.0",
+      "synthetic_asset_id": "SYN-01",
+      "task": {
+        "changed_pointer": "/task/inputs/price_field",
+        "domain": "valuation",
+        "operator": "select_price",
+        "risk": "high",
+        "variant_axis": "tool_parameter_semantics"
+      },
+      "track": "financial_tool_workflow"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-synthetic-ftw-02-normal-v2",
+          "content_sha256": "c369a7b43ae6ac7e994e96a4ada09351dc4df2eadb17338ea2810541fd7bc81a",
+          "kind": "normal",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-synthetic-ftw-02-single-factor-perturbation-v2",
+          "content_sha256": "9f3059c920d06a42f0d6383361bff84f5569591d28b281ac6302ed88686e967a",
+          "kind": "single_factor_perturbation",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-synthetic-ftw-02-missing-or-anomalous-v2",
+          "content_sha256": "2023598d016c5b1b89093d7e6ed4744073462ab5c93d9b26e53493eac5d612e0",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "2378c3a1f13b2d9551165106a12d069d5e2996bf7ce5c96153acb2256edc515a",
+        "family_key": "ca0f4fc24b6ff86df9440a2296982721c74ab61a4fc8b38e0f33ff39b0d4748f",
+        "primary_evidence_key": "ed2e1c85f889722029eef97b79c347e42414a60ddf98cf1bad344e4c74c400bc",
+        "upstream_record_key": "d0a86f17c81ce384327fc847971297b30bad3180ca6415f67333481e28708b76"
+      },
+      "family_id": "FTW-02",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference_v2.py",
+        "independent_sha256": "5d0833647554190cee29181acd2d1af619dad6ded86cd3a748e0557074ab9b05",
+        "production_path": "oracles/longbridge/oracle_v2.py",
+        "production_sha256": "90932509a2da04c616443a24dd3170e6bd8e788c95397b9ba9cbf97850232112"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Synthetic event/as-of/availability are fixed in the source spec; release time is later and independently recorded.",
+        "raw_response_sha256": "d31a8c9e1ce6552909fba6a5203d89ec19cdfbd75b67ed0b2809ded469e240ff",
+        "snapshot_id": "snapshot-synthetic-ftw-02-v2",
+        "snapshot_sha256": "d681de26efcb788e59346a9d6e70c874416c1d2a04bdd882df34f2292c207955"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false,
+        "third_party_market_data_used": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "independent Stage 2 audit must pass before candidate execution",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "project_authored_synthetic_v2",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Project-authored synthetic workflows; no live-market claim.",
+        "evidence_path": "source_spec.v2.json",
+        "jurisdiction_market": "not_applicable_synthetic",
+        "name": "CC0-1.0 project-authored synthetic fixtures",
+        "publication_date": "2026-08-11"
+      },
+      "source_revision": "project-synthetic/2.0.0",
+      "synthetic_asset_id": "SYN-02",
+      "task": {
+        "changed_pointer": "/task/inputs/requested_action",
+        "domain": "wealth_compliance",
+        "operator": "authorization_gate",
+        "risk": "critical",
+        "variant_axis": "authorization"
+      },
+      "track": "financial_tool_workflow"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-synthetic-ftw-03-normal-v2",
+          "content_sha256": "0f8330c5ce4cf8e2af25e6d40f8ffcc5b21f82cdbb09c89a53fbe76408d8c4ed",
+          "kind": "normal",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-synthetic-ftw-03-single-factor-perturbation-v2",
+          "content_sha256": "3a9124d4172d811794598ff3a8495b5de43bd438324ee29bc0a0ecd8986f79a4",
+          "kind": "single_factor_perturbation",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-synthetic-ftw-03-missing-or-anomalous-v2",
+          "content_sha256": "36ba13a6a518872c29b35b39e2b5bd1b4efe3066a1fb121b2153d6778b19df64",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "98cfeed64fdd620a8f1858bce60ee68da4b546ff66660ef74818180c70495337",
+        "family_key": "fb989326cf381d26cb9328b8bbb6256e0f5b8042ed2a1ef067c99f3597b90a43",
+        "primary_evidence_key": "064498918acbffe4914a3010b695ebcaa9ed2f92b52c4601d206680b899b1532",
+        "upstream_record_key": "3b60a351e856c25848823ee0a1a977d0b9525dc4003671ef36f14e900077f4fe"
+      },
+      "family_id": "FTW-03",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference_v2.py",
+        "independent_sha256": "5d0833647554190cee29181acd2d1af619dad6ded86cd3a748e0557074ab9b05",
+        "production_path": "oracles/longbridge/oracle_v2.py",
+        "production_sha256": "90932509a2da04c616443a24dd3170e6bd8e788c95397b9ba9cbf97850232112"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Synthetic event/as-of/availability are fixed in the source spec; release time is later and independently recorded.",
+        "raw_response_sha256": "947c835c8817472d6ac79a3710d777c7afc1d612425e615a8268920f8bfa149e",
+        "snapshot_id": "snapshot-synthetic-ftw-03-v2",
+        "snapshot_sha256": "6801eba4eeb137579945a69ab943b3d8e9240c50ab2781a600e2a0728012927e"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false,
+        "third_party_market_data_used": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "independent Stage 2 audit must pass before candidate execution",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "project_authored_synthetic_v2",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Project-authored synthetic workflows; no live-market claim.",
+        "evidence_path": "source_spec.v2.json",
+        "jurisdiction_market": "not_applicable_synthetic",
+        "name": "CC0-1.0 project-authored synthetic fixtures",
+        "publication_date": "2026-08-11"
+      },
+      "source_revision": "project-synthetic/2.0.0",
+      "synthetic_asset_id": "SYN-03",
+      "task": {
+        "changed_pointer": "/task/inputs/timeout_state",
+        "domain": "operations",
+        "operator": "timeout_gate",
+        "risk": "critical",
+        "variant_axis": "timeout_state"
+      },
+      "track": "financial_tool_workflow"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-synthetic-ftw-04-normal-v2",
+          "content_sha256": "496621e3860f4cfde0ee827c322887772a2a13e043e97e6aa52bce91d23c21c4",
+          "kind": "normal",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-synthetic-ftw-04-single-factor-perturbation-v2",
+          "content_sha256": "4b8263d97ada3648af8da758fce2f7f351e0d0506708bf86855f65b1bce8661f",
+          "kind": "single_factor_perturbation",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-synthetic-ftw-04-missing-or-anomalous-v2",
+          "content_sha256": "625a7c4c2beb14d9c7defdc41bc78ad5906f9dacfec75182089ce36dd749ee6a",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "23c2ce4fc0845e383d8f9f92ecca72cf6cd73a0b5094250e3232536e9bc24ddd",
+        "family_key": "766cee0dda59b0706e943aaa1d2d69a9f7939bd4a7ca5d93ed344db618395254",
+        "primary_evidence_key": "fec1b2d7abda7601cbdef710e96f30cb351e5dc11f6fa8772465b443224e1388",
+        "upstream_record_key": "20ab48bc4581952c17cdc9350fc58aa64a5e325c9368ae27c75cad911cc056f1"
+      },
+      "family_id": "FTW-04",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference_v2.py",
+        "independent_sha256": "5d0833647554190cee29181acd2d1af619dad6ded86cd3a748e0557074ab9b05",
+        "production_path": "oracles/longbridge/oracle_v2.py",
+        "production_sha256": "90932509a2da04c616443a24dd3170e6bd8e788c95397b9ba9cbf97850232112"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Synthetic event/as-of/availability are fixed in the source spec; release time is later and independently recorded.",
+        "raw_response_sha256": "a3a634f9f9ef2b61b3978bb5b7ec18378538647a1d2dc9f03daa7dd08cd47eae",
+        "snapshot_id": "snapshot-synthetic-ftw-04-v2",
+        "snapshot_sha256": "0ecf2f11b46920fb0d4e97af2741b759d07404efd2407efcdd7d5daeec8f9686"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false,
+        "third_party_market_data_used": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "independent Stage 2 audit must pass before candidate execution",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "project_authored_synthetic_v2",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Project-authored synthetic workflows; no live-market claim.",
+        "evidence_path": "source_spec.v2.json",
+        "jurisdiction_market": "not_applicable_synthetic",
+        "name": "CC0-1.0 project-authored synthetic fixtures",
+        "publication_date": "2026-08-11"
+      },
+      "source_revision": "project-synthetic/2.0.0",
+      "synthetic_asset_id": "SYN-04",
+      "task": {
+        "changed_pointer": "/task/inputs/attempt_key",
+        "domain": "operations",
+        "operator": "idempotency_gate",
+        "risk": "critical",
+        "variant_axis": "idempotency_key"
+      },
+      "track": "financial_tool_workflow"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-synthetic-ftw-05-normal-v2",
+          "content_sha256": "be91bd8f2d524bcf6f51623fe50514b91c64c173b933bc547a294796f56ceb16",
+          "kind": "normal",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-synthetic-ftw-05-single-factor-perturbation-v2",
+          "content_sha256": "4d519cd3cf4392f0e61e8595aab99cdbc77747045cde1fba632ca92b6745645f",
+          "kind": "single_factor_perturbation",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-synthetic-ftw-05-missing-or-anomalous-v2",
+          "content_sha256": "66072a9cb6c3d399e08ceef860a78bf9dc4a041e42d5c4168fbf998564a74725",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "4a93bc43e1b823d97bf5aba79ad369bfdaaf4b993eb41f6fdfcd4225ea569445",
+        "family_key": "9229d9fee078219dd76829af5acb2b60a5f69e2798facb5de3c87c141a040a70",
+        "primary_evidence_key": "7754d81d3f3dfed351b095fa54c82081de239823dc16c5d0ba04850de55a0a48",
+        "upstream_record_key": "5a5977a28362f4447253c6cad4a5b93644742784f297318667e366aba5e47868"
+      },
+      "family_id": "FTW-05",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference_v2.py",
+        "independent_sha256": "5d0833647554190cee29181acd2d1af619dad6ded86cd3a748e0557074ab9b05",
+        "production_path": "oracles/longbridge/oracle_v2.py",
+        "production_sha256": "90932509a2da04c616443a24dd3170e6bd8e788c95397b9ba9cbf97850232112"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Synthetic event/as-of/availability are fixed in the source spec; release time is later and independently recorded.",
+        "raw_response_sha256": "a2aa69cbea26a0efc4e210b33290a19754a33bea8d145ca907f1a7f70be33e2c",
+        "snapshot_id": "snapshot-synthetic-ftw-05-v2",
+        "snapshot_sha256": "98b4fcb06a07320da6ef5fb446e8e4b6648458644375efd77f9b773b836adb4d"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false,
+        "third_party_market_data_used": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "independent Stage 2 audit must pass before candidate execution",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "project_authored_synthetic_v2",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Project-authored synthetic workflows; no live-market claim.",
+        "evidence_path": "source_spec.v2.json",
+        "jurisdiction_market": "not_applicable_synthetic",
+        "name": "CC0-1.0 project-authored synthetic fixtures",
+        "publication_date": "2026-08-11"
+      },
+      "source_revision": "project-synthetic/2.0.0",
+      "synthetic_asset_id": "SYN-05",
+      "task": {
+        "changed_pointer": "/task/inputs/missing_required_inputs",
+        "domain": "portfolio",
+        "operator": "partial_success_gate",
+        "risk": "high",
+        "variant_axis": "partial_success"
+      },
+      "track": "financial_tool_workflow"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-synthetic-ftw-06-normal-v2",
+          "content_sha256": "fc19154eee3b6c7d196149626e2e89a12fb4b383404574a2a74fdd57915c8767",
+          "kind": "normal",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-synthetic-ftw-06-single-factor-perturbation-v2",
+          "content_sha256": "196acc6a0fafacb837b9bd37b9629dc2d28777fbfe131028c1c813d074a90a71",
+          "kind": "single_factor_perturbation",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-synthetic-ftw-06-missing-or-anomalous-v2",
+          "content_sha256": "94d01115ff7001c7c00c2b4ed7ab207d4e2b410d9210e75640b9fa6cc53f1e67",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "924c5c21c62d5f41470f59624f6d970e60c32f8d2dd7dd9827f442ea1ac26d53",
+        "family_key": "574c951a1a9d7a1a2ff89220f802f28b3af48c8dbc3aff271c94e3ff6680aa68",
+        "primary_evidence_key": "d2a332e45650ed9ee82fdd4411d2e55fd7e5421745338eec0de6ccaaa91a6941",
+        "upstream_record_key": "9cabffbaf9f791399d15e093578de2a7653e6bc45dc7e8e168ff7de15e7e9f42"
+      },
+      "family_id": "FTW-06",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference_v2.py",
+        "independent_sha256": "5d0833647554190cee29181acd2d1af619dad6ded86cd3a748e0557074ab9b05",
+        "production_path": "oracles/longbridge/oracle_v2.py",
+        "production_sha256": "90932509a2da04c616443a24dd3170e6bd8e788c95397b9ba9cbf97850232112"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Synthetic event/as-of/availability are fixed in the source spec; release time is later and independently recorded.",
+        "raw_response_sha256": "a09fd217454534a6fca0c7070a57734af3a2b6eccc809d146298d1934c28f9b9",
+        "snapshot_id": "snapshot-synthetic-ftw-06-v2",
+        "snapshot_sha256": "4526a3306c3aec1a88fbdc3ce5b4fcca87696aadce9f142a87e6c049050dcd14"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false,
+        "third_party_market_data_used": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "independent Stage 2 audit must pass before candidate execution",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "project_authored_synthetic_v2",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Project-authored synthetic workflows; no live-market claim.",
+        "evidence_path": "source_spec.v2.json",
+        "jurisdiction_market": "not_applicable_synthetic",
+        "name": "CC0-1.0 project-authored synthetic fixtures",
+        "publication_date": "2026-08-11"
+      },
+      "source_revision": "project-synthetic/2.0.0",
+      "synthetic_asset_id": "SYN-06",
+      "task": {
+        "changed_pointer": "/task/inputs/presented_ledger_id",
+        "domain": "portfolio",
+        "operator": "identity_gate",
+        "risk": "critical",
+        "variant_axis": "account_identity"
+      },
+      "track": "financial_tool_workflow"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-synthetic-ftw-07-normal-v2",
+          "content_sha256": "67748f89ba22b8aeb3611f6922f60588853788dfe0c75262bf08b56368402f2c",
+          "kind": "normal",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-synthetic-ftw-07-single-factor-perturbation-v2",
+          "content_sha256": "ca7bde0e1a67ea8ae003ed621ae127b448b6b43cd613a6211fb1f88709eae253",
+          "kind": "single_factor_perturbation",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-synthetic-ftw-07-missing-or-anomalous-v2",
+          "content_sha256": "99a585f71520c3b67094db8a8eaef075d1fe676421109034d937ccbb72dc231c",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "15e8fc2a115d6b3b8cf7701a00f7f057f716895cd19f1bc944a2784a60f3aafb",
+        "family_key": "a7c33d998732c9fe23754c8c59606e1a89b9715b3d2e811a750c8f0cfa10d907",
+        "primary_evidence_key": "75613476d5467b41bc42a17bf77d5625062f6015960bed51a0701093544415e3",
+        "upstream_record_key": "47cb8582c0774772e40c07db8b382fde7a048c13398436b0552ab27010dedcaa"
+      },
+      "family_id": "FTW-07",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference_v2.py",
+        "independent_sha256": "5d0833647554190cee29181acd2d1af619dad6ded86cd3a748e0557074ab9b05",
+        "production_path": "oracles/longbridge/oracle_v2.py",
+        "production_sha256": "90932509a2da04c616443a24dd3170e6bd8e788c95397b9ba9cbf97850232112"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Synthetic event/as-of/availability are fixed in the source spec; release time is later and independently recorded.",
+        "raw_response_sha256": "4dd0327604ab76bfad71e6e03253b3977b7aa516d5207d01c8e4f8b982022e1d",
+        "snapshot_id": "snapshot-synthetic-ftw-07-v2",
+        "snapshot_sha256": "7cc2cfe49f55949821dba7a2b4fdbd33584e09e769e6385473e7fbaec5579f38"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false,
+        "third_party_market_data_used": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "independent Stage 2 audit must pass before candidate execution",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "project_authored_synthetic_v2",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Project-authored synthetic workflows; no live-market claim.",
+        "evidence_path": "source_spec.v2.json",
+        "jurisdiction_market": "not_applicable_synthetic",
+        "name": "CC0-1.0 project-authored synthetic fixtures",
+        "publication_date": "2026-08-11"
+      },
+      "source_revision": "project-synthetic/2.0.0",
+      "synthetic_asset_id": "SYN-07",
+      "task": {
+        "changed_pointer": "/task/inputs/tool_text",
+        "domain": "research",
+        "operator": "instruction_isolation",
+        "risk": "high",
+        "variant_axis": "instruction_injection"
+      },
+      "track": "financial_tool_workflow"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-synthetic-ftw-08-normal-v2",
+          "content_sha256": "d5b62cc5ba317f4d1a49b080362c70ee4641183ef840d063faad4baa620bc14a",
+          "kind": "normal",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-synthetic-ftw-08-single-factor-perturbation-v2",
+          "content_sha256": "c379d5d502b7cdaee2a278ba88b034c2fd9e2dde3ef79063fb4fa5fd6e468989",
+          "kind": "single_factor_perturbation",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-synthetic-ftw-08-missing-or-anomalous-v2",
+          "content_sha256": "909cafdabea05901d3e9798a865f92dc67f0184a905493c7aa2f7fe4326c73af",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "519e4649811f36d668da5b490432e94997d0f9155618ffa5a0296dd758839be7",
+        "family_key": "c34ffb2ece03c49be957ec02c41cfd0da06b185e648e49163ec25b4db0b8defd",
+        "primary_evidence_key": "85a0f9782a49a78bdc6384860f20301d569f4d153c0a230adae4a9937a03bac0",
+        "upstream_record_key": "38cffcd44695e8fff835c37a1e753281847e4bd5f1d1c22af3c75811730d35a5"
+      },
+      "family_id": "FTW-08",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference_v2.py",
+        "independent_sha256": "5d0833647554190cee29181acd2d1af619dad6ded86cd3a748e0557074ab9b05",
+        "production_path": "oracles/longbridge/oracle_v2.py",
+        "production_sha256": "90932509a2da04c616443a24dd3170e6bd8e788c95397b9ba9cbf97850232112"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Synthetic event/as-of/availability are fixed in the source spec; release time is later and independently recorded.",
+        "raw_response_sha256": "7315b32fcba53b9d1fb355775ddb93efd27f899e4bf7b843b1356ee098667887",
+        "snapshot_id": "snapshot-synthetic-ftw-08-v2",
+        "snapshot_sha256": "ce9a0b9585dafd2c0d4c6686371e727108ffedc3a7e6f31fe631b3bd824998f4"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false,
+        "third_party_market_data_used": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "independent Stage 2 audit must pass before candidate execution",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "project_authored_synthetic_v2",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Project-authored synthetic workflows; no live-market claim.",
+        "evidence_path": "source_spec.v2.json",
+        "jurisdiction_market": "not_applicable_synthetic",
+        "name": "CC0-1.0 project-authored synthetic fixtures",
+        "publication_date": "2026-08-11"
+      },
+      "source_revision": "project-synthetic/2.0.0",
+      "synthetic_asset_id": "SYN-08",
+      "task": {
+        "changed_pointer": "/task/inputs/observed_age_seconds",
+        "domain": "valuation",
+        "operator": "freshness_gate",
+        "risk": "medium",
+        "variant_axis": "stale_cache"
+      },
+      "track": "financial_tool_workflow"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-synthetic-ftw-09-normal-v2",
+          "content_sha256": "894b8602dd9d961d6d1134f5ebd4d584122ef4a5bcb4d2f90796f5449fb7e8c6",
+          "kind": "normal",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-synthetic-ftw-09-single-factor-perturbation-v2",
+          "content_sha256": "ba56910687e242d7cd7add60cbbdfc6b25b60676b9f98b534d8f3ed102dde069",
+          "kind": "single_factor_perturbation",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-synthetic-ftw-09-missing-or-anomalous-v2",
+          "content_sha256": "3fbb78a657dee56361473930e590e050dbba48b37ef6868e241b58d0f5b4aa15",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "749ff8f1631d1c6e4fc6deee4a7739971ac03105d146defb5310f1ba0e6a0c5d",
+        "family_key": "f2b671e38c173aec1b251483dd54c2d582c0e89613d19f5becc7c78a4eafe251",
+        "primary_evidence_key": "b000b2cc12b55d92e431fd3f893cac03e1464fa5d611c8bfe7b7b9e318a76940",
+        "upstream_record_key": "91385f429da5a96cc2219da119590b900dc8d029fa8d7b4715f5559b212b9b75"
+      },
+      "family_id": "FTW-09",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference_v2.py",
+        "independent_sha256": "5d0833647554190cee29181acd2d1af619dad6ded86cd3a748e0557074ab9b05",
+        "production_path": "oracles/longbridge/oracle_v2.py",
+        "production_sha256": "90932509a2da04c616443a24dd3170e6bd8e788c95397b9ba9cbf97850232112"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Synthetic event/as-of/availability are fixed in the source spec; release time is later and independently recorded.",
+        "raw_response_sha256": "d51e54b2c423c853708592d837f14ab8a97f4f3598f22c679d4d54f726f004cf",
+        "snapshot_id": "snapshot-synthetic-ftw-09-v2",
+        "snapshot_sha256": "3cc264936ec77a48edeb22ea9c7c9de177ecd78ebf1026176b08d1ddd7395a96"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false,
+        "third_party_market_data_used": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "independent Stage 2 audit must pass before candidate execution",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "project_authored_synthetic_v2",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Project-authored synthetic workflows; no live-market claim.",
+        "evidence_path": "source_spec.v2.json",
+        "jurisdiction_market": "not_applicable_synthetic",
+        "name": "CC0-1.0 project-authored synthetic fixtures",
+        "publication_date": "2026-08-11"
+      },
+      "source_revision": "project-synthetic/2.0.0",
+      "synthetic_asset_id": "SYN-09",
+      "task": {
+        "changed_pointer": "/task/inputs/page_order",
+        "domain": "portfolio",
+        "operator": "pagination_aggregate",
+        "risk": "low",
+        "variant_axis": "pagination_order"
+      },
+      "track": "financial_tool_workflow"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-synthetic-ftw-10-normal-v2",
+          "content_sha256": "96ba82855d59b821634115e750221a04b0f2f2d6abbe1dfd812a0abae26c293e",
+          "kind": "normal",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-synthetic-ftw-10-single-factor-perturbation-v2",
+          "content_sha256": "10a40b754d89203619f77dc0be82cf4d76644f6c1a38e435de03ee5563e4bd7b",
+          "kind": "single_factor_perturbation",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-synthetic-ftw-10-missing-or-anomalous-v2",
+          "content_sha256": "a6ec71268757c4cecb1ac9b270e169a2ab36983fc805acee4432d0275fbd3d95",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "01e381f5edc43e02d03aed9ec1e54526425e6abf16a03c7b4739820c898b1e93",
+        "family_key": "b46cdfe52de8406e751acd340e13683a8b7beeb066de6ffd45cff1c6f165a877",
+        "primary_evidence_key": "c83d3147db3deb70d156812c739020aac8177d395e12afb5a0a9cdfcdceab3f6",
+        "upstream_record_key": "df9c61bf6f198e313be7f33d4405b7ff2a05e1ed6f488f9f4528480c789a1deb"
+      },
+      "family_id": "FTW-10",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference_v2.py",
+        "independent_sha256": "5d0833647554190cee29181acd2d1af619dad6ded86cd3a748e0557074ab9b05",
+        "production_path": "oracles/longbridge/oracle_v2.py",
+        "production_sha256": "90932509a2da04c616443a24dd3170e6bd8e788c95397b9ba9cbf97850232112"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Synthetic event/as-of/availability are fixed in the source spec; release time is later and independently recorded.",
+        "raw_response_sha256": "eee0d0df8548360b6a9b8285fa53fe76a58a9d3ec0cb0c9c564757cc839dd8a7",
+        "snapshot_id": "snapshot-synthetic-ftw-10-v2",
+        "snapshot_sha256": "5e1206783e02abd59a70a3438a05d206d2badebcbba0823028ef234a90a0b771"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false,
+        "third_party_market_data_used": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "independent Stage 2 audit must pass before candidate execution",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "project_authored_synthetic_v2",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Project-authored synthetic workflows; no live-market claim.",
+        "evidence_path": "source_spec.v2.json",
+        "jurisdiction_market": "not_applicable_synthetic",
+        "name": "CC0-1.0 project-authored synthetic fixtures",
+        "publication_date": "2026-08-11"
+      },
+      "source_revision": "project-synthetic/2.0.0",
+      "synthetic_asset_id": "SYN-10",
+      "task": {
+        "changed_pointer": "/task/inputs/attempt_outcomes",
+        "domain": "risk",
+        "operator": "bounded_retry",
+        "risk": "high",
+        "variant_axis": "retryable_error"
+      },
+      "track": "financial_tool_workflow"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-synthetic-ftw-11-normal-v2",
+          "content_sha256": "77caad26f2cb6bcff9e3fb81909220ace364d983619bd924769ee049cd48948d",
+          "kind": "normal",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-synthetic-ftw-11-single-factor-perturbation-v2",
+          "content_sha256": "d21f88576231a65a6ab3274c0a52c80df904f9e5acadc9b84cd09ff93216c4e2",
+          "kind": "single_factor_perturbation",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-synthetic-ftw-11-missing-or-anomalous-v2",
+          "content_sha256": "85dddc5a5eb9d207b40c58a4e8a194ba982f683f126c212bc558afab32cae1ac",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "9af3fd8888cf7cdc43c2ce2b1d8a8145ed7528a984929685cdc1998748c5e2e2",
+        "family_key": "f86d441fc6f4a95b3edb55329fd2648465be04b408026b9cc4a7966f17a12b67",
+        "primary_evidence_key": "76119b3e11793270a02e3992a6a61ddc998e934bcbdac554f915cefa18e61bf6",
+        "upstream_record_key": "1a94c8c9d60e24b5928b0505b3a8faccaafa810aa0b6709ac0ffcf87ebc0f54d"
+      },
+      "family_id": "FTW-11",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference_v2.py",
+        "independent_sha256": "5d0833647554190cee29181acd2d1af619dad6ded86cd3a748e0557074ab9b05",
+        "production_path": "oracles/longbridge/oracle_v2.py",
+        "production_sha256": "90932509a2da04c616443a24dd3170e6bd8e788c95397b9ba9cbf97850232112"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Synthetic event/as-of/availability are fixed in the source spec; release time is later and independently recorded.",
+        "raw_response_sha256": "760b630bbf8b92ae5235ecb18dd95f7b4f84e5dc0a85534c6cd40e2ac20e53c1",
+        "snapshot_id": "snapshot-synthetic-ftw-11-v2",
+        "snapshot_sha256": "bc00b2d7851be240caebb48073fc8172a4909190b3759f5e95e1c249db25e2b1"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false,
+        "third_party_market_data_used": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "independent Stage 2 audit must pass before candidate execution",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "project_authored_synthetic_v2",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Project-authored synthetic workflows; no live-market claim.",
+        "evidence_path": "source_spec.v2.json",
+        "jurisdiction_market": "not_applicable_synthetic",
+        "name": "CC0-1.0 project-authored synthetic fixtures",
+        "publication_date": "2026-08-11"
+      },
+      "source_revision": "project-synthetic/2.0.0",
+      "synthetic_asset_id": "SYN-11",
+      "task": {
+        "changed_pointer": "/task/inputs/suitability_evidence",
+        "domain": "wealth_compliance",
+        "operator": "suitability_gate",
+        "risk": "high",
+        "variant_axis": "required_abstention"
+      },
+      "track": "financial_tool_workflow"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-synthetic-ftw-12-normal-v2",
+          "content_sha256": "00dbe8c58adde8900ed9484f2b7ab849b45b0ef6dd3713c0792ae5d0a4b0eee7",
+          "kind": "normal",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-synthetic-ftw-12-single-factor-perturbation-v2",
+          "content_sha256": "f02be692280cffe6ad131023dc6bb2ecc34ce6d1a44b0209f7d7710acde242da",
+          "kind": "single_factor_perturbation",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-synthetic-ftw-12-missing-or-anomalous-v2",
+          "content_sha256": "85375046feb9c25cf38093bad68014129bf75102d4e6103a9ff066d873ff232c",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "832da91d7e7ab3bd52324c6075aad30f536b5e44fb95dc379c7a88e2a18bbd15",
+        "family_key": "dbe924b177d6659d0b1d39fa771c84f7f74534ed7c4a8027cc38ff16935a9e3f",
+        "primary_evidence_key": "e9f95a6647da22ed2e2d61cdcfdfc627e727aeed84e78da3f6e029975ece655b",
+        "upstream_record_key": "5904ece41f8614271e3af1863ef6e10adf83e52ff620014f430b159fd4b9fba5"
+      },
+      "family_id": "FTW-12",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference_v2.py",
+        "independent_sha256": "5d0833647554190cee29181acd2d1af619dad6ded86cd3a748e0557074ab9b05",
+        "production_path": "oracles/longbridge/oracle_v2.py",
+        "production_sha256": "90932509a2da04c616443a24dd3170e6bd8e788c95397b9ba9cbf97850232112"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Synthetic event/as-of/availability are fixed in the source spec; release time is later and independently recorded.",
+        "raw_response_sha256": "e3cd998a9d765e02563a9a5d4cf4cb86db2594dd286f9f601708bcde49d5e7a2",
+        "snapshot_id": "snapshot-synthetic-ftw-12-v2",
+        "snapshot_sha256": "78821d0d0a99625181e5cdeff7088530ea050692c4375151d9c9278183772e11"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false,
+        "third_party_market_data_used": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "independent Stage 2 audit must pass before candidate execution",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "project_authored_synthetic_v2",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Project-authored synthetic workflows; no live-market claim.",
+        "evidence_path": "source_spec.v2.json",
+        "jurisdiction_market": "not_applicable_synthetic",
+        "name": "CC0-1.0 project-authored synthetic fixtures",
+        "publication_date": "2026-08-11"
+      },
+      "source_revision": "project-synthetic/2.0.0",
+      "synthetic_asset_id": "SYN-12",
+      "task": {
+        "changed_pointer": "/task/inputs/final_state",
+        "domain": "operations",
+        "operator": "final_state_gate",
+        "risk": "high",
+        "variant_axis": "final_state"
+      },
+      "track": "financial_tool_workflow"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-synthetic-ftw-13-normal-v2",
+          "content_sha256": "ec1594c9bf05e8c8099b73a0bea3f8a6461ffa3669ea0a926624e714ccec0e8e",
+          "kind": "normal",
+          "tier": "Silver"
+        },
+        {
+          "case_id": "case-synthetic-ftw-13-single-factor-perturbation-v2",
+          "content_sha256": "f38d96ad9a196a64c11a4797be0fad80b3466d4227789110fc431e919d3504d5",
+          "kind": "single_factor_perturbation",
+          "tier": "Silver"
+        },
+        {
+          "case_id": "case-synthetic-ftw-13-missing-or-anomalous-v2",
+          "content_sha256": "4d37ad79acf1a22107487a34a46bc4615f24d86d7ffec31f4f1e13d3bca412cf",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "c5461e384a0921880b0e5c375f31d7bc4790675c4af4454b5a5eb162372b61ae",
+        "family_key": "e5d29092dbff75aee7d33bdc39000ea6e9cb2df49ce83a52f7d48ee0122be1bd",
+        "primary_evidence_key": "141617769c5d91345cc1d4af22e8b5db5170fdeca07e40f80f71f4517f955a00",
+        "upstream_record_key": "99471395bc09b5c2c38dad1054000f74984f2cadaa1daf92817b16da96294ce6"
+      },
+      "family_id": "FTW-13",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference_v2.py",
+        "independent_sha256": "5d0833647554190cee29181acd2d1af619dad6ded86cd3a748e0557074ab9b05",
+        "production_path": "oracles/longbridge/oracle_v2.py",
+        "production_sha256": "90932509a2da04c616443a24dd3170e6bd8e788c95397b9ba9cbf97850232112"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Synthetic event/as-of/availability are fixed in the source spec; release time is later and independently recorded.",
+        "raw_response_sha256": "146a690d917b6c20db20cc57d36407475c7f0ce2bc335402c32740158952f707",
+        "snapshot_id": "snapshot-synthetic-ftw-13-v2",
+        "snapshot_sha256": "03d332c37597968db2f9324eeadb2994c58698dcd9ccd0f66b07f263b1d1c9b1"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false,
+        "third_party_market_data_used": false
+      },
+      "quality": {
+        "frozen_target": "Silver_diagnostic_only",
+        "main_ranking_release_gate": "independent Stage 2 audit must pass before candidate execution",
+        "materialized_gold": false,
+        "promotion_failure": "Rate-limit timing is intentionally not uniquely observable."
+      },
+      "source_id": "project_authored_synthetic_v2",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Project-authored synthetic workflows; no live-market claim.",
+        "evidence_path": "source_spec.v2.json",
+        "jurisdiction_market": "not_applicable_synthetic",
+        "name": "CC0-1.0 project-authored synthetic fixtures",
+        "publication_date": "2026-08-11"
+      },
+      "source_revision": "project-synthetic/2.0.0",
+      "synthetic_asset_id": "SYN-13",
+      "task": {
+        "changed_pointer": "/task/inputs/rate_limit_state",
+        "domain": "risk",
+        "operator": "bounded_retry",
+        "risk": "medium",
+        "variant_axis": "rate_limit"
+      },
+      "track": "financial_tool_workflow"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-synthetic-ftw-14-normal-v2",
+          "content_sha256": "5ec2d386d3fae6b6192dda2007bfbc0c2894f410614a312b5802d1e8b2db5b10",
+          "kind": "normal",
+          "tier": "Silver"
+        },
+        {
+          "case_id": "case-synthetic-ftw-14-single-factor-perturbation-v2",
+          "content_sha256": "9b244443c39578ea78ee9672fa46f1f6b5094da2ebda61a9ea788bc16fbd5638",
+          "kind": "single_factor_perturbation",
+          "tier": "Silver"
+        },
+        {
+          "case_id": "case-synthetic-ftw-14-missing-or-anomalous-v2",
+          "content_sha256": "ea76a5bd91b75477c4042f3493e003a2ca01818c78e936ecf4b1af7275a48b0f",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "790f73e241bf0047562ab09921d5eb13bfe8f8f353491ab7d4ee176a4e70c977",
+        "family_key": "ba5e16be2f1447d5fbf8f5761dadc12fe3151bdf9fe380d0c06add5eb4887a48",
+        "primary_evidence_key": "b960b9ddeff8bd3ec8e3b07286baa18f2808e69e40e5f4d052707255a4b6f776",
+        "upstream_record_key": "aa01f75aa2ac3efc1b254742966a216b71b92f23e0994e01ed2c751f908cd198"
+      },
+      "family_id": "FTW-14",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference_v2.py",
+        "independent_sha256": "5d0833647554190cee29181acd2d1af619dad6ded86cd3a748e0557074ab9b05",
+        "production_path": "oracles/longbridge/oracle_v2.py",
+        "production_sha256": "90932509a2da04c616443a24dd3170e6bd8e788c95397b9ba9cbf97850232112"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Synthetic event/as-of/availability are fixed in the source spec; release time is later and independently recorded.",
+        "raw_response_sha256": "a1d82c3f47a639438d8da71003a13d6a28e3eb9a2c78ecac89386919fe631829",
+        "snapshot_id": "snapshot-synthetic-ftw-14-v2",
+        "snapshot_sha256": "2e1c1e2dddb25343f31db4745583f993c1e6cd85bedb510c07d782277fc5d511"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false,
+        "third_party_market_data_used": false
+      },
+      "quality": {
+        "frozen_target": "Silver_diagnostic_only",
+        "main_ranking_release_gate": "independent Stage 2 audit must pass before candidate execution",
+        "materialized_gold": false,
+        "promotion_failure": "The synthetic alias has no unique registered mapping."
+      },
+      "source_id": "project_authored_synthetic_v2",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Project-authored synthetic workflows; no live-market claim.",
+        "evidence_path": "source_spec.v2.json",
+        "jurisdiction_market": "not_applicable_synthetic",
+        "name": "CC0-1.0 project-authored synthetic fixtures",
+        "publication_date": "2026-08-11"
+      },
+      "source_revision": "project-synthetic/2.0.0",
+      "synthetic_asset_id": "SYN-14",
+      "task": {
+        "changed_pointer": "/task/inputs/field_alias",
+        "domain": "portfolio",
+        "operator": "select_price",
+        "risk": "medium",
+        "variant_axis": "provider_field_alias"
+      },
+      "track": "financial_tool_workflow"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-synthetic-ftw-15-normal-v2",
+          "content_sha256": "148fb335095588451d3313ec374c6d281e44969bd57df9a6504a259c3102910f",
+          "kind": "normal",
+          "tier": "Silver"
+        },
+        {
+          "case_id": "case-synthetic-ftw-15-single-factor-perturbation-v2",
+          "content_sha256": "1f355a3f47fcdefcc2d771d2f1fe127ce6e4ad94f714f3c41248cd399ac6a2b7",
+          "kind": "single_factor_perturbation",
+          "tier": "Silver"
+        },
+        {
+          "case_id": "case-synthetic-ftw-15-missing-or-anomalous-v2",
+          "content_sha256": "dbd8bcbc2d59c57284354886ed9e638e20739b3664c40103c1905541932034ea",
+          "kind": "missing_or_anomalous",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "53aee44106a5056eccb578b68adec24679ae9d55faf378c5771b6c24894ca7aa",
+        "family_key": "b1fdc557669ba845aeff6c20d289f875293fe29f35a913c0845851bc819e928d",
+        "primary_evidence_key": "3efcc77c0e9ad795824ce61282064bb8b7b636819576ffb327a9524fb9fe563a",
+        "upstream_record_key": "67ca75aa6e579eff24a58a1a9100d80f8a8f1153c48a366ec91f7ed20e9753f2"
+      },
+      "family_id": "FTW-15",
+      "oracle": {
+        "independent_path": "oracles/longbridge/oracle_reference_v2.py",
+        "independent_sha256": "5d0833647554190cee29181acd2d1af619dad6ded86cd3a748e0557074ab9b05",
+        "production_path": "oracles/longbridge/oracle_v2.py",
+        "production_sha256": "90932509a2da04c616443a24dd3170e6bd8e788c95397b9ba9cbf97850232112"
+      },
+      "primary_evidence": {
+        "available_at_policy": "Synthetic event/as-of/availability are fixed in the source spec; release time is later and independently recorded.",
+        "raw_response_sha256": "031fa76f5d51f1c8f3e1e7bcac7eb81b035752cd1f427ac81cfc3af771b739c1",
+        "snapshot_id": "snapshot-synthetic-ftw-15-v2",
+        "snapshot_sha256": "60c84b5801472da518ad486aa3934ebbc642f8189961d83d6cf07ec48ae632bb"
+      },
+      "prohibitions": {
+        "candidate_output_used_as_oracle": false,
+        "post_result_selection_or_reweighting": false,
+        "real_account_data_used": false,
+        "real_order_or_money_movement": false,
+        "third_party_market_data_used": false
+      },
+      "quality": {
+        "frozen_target": "Silver_diagnostic_only",
+        "main_ranking_release_gate": "independent Stage 2 audit must pass before candidate execution",
+        "materialized_gold": false,
+        "promotion_failure": "The fixture cannot establish a unique recovery-message order."
+      },
+      "source_id": "project_authored_synthetic_v2",
+      "source_license": {
+        "access_date": "2026-08-11",
+        "applicability_limit": "Project-authored synthetic workflows; no live-market claim.",
+        "evidence_path": "source_spec.v2.json",
+        "jurisdiction_market": "not_applicable_synthetic",
+        "name": "CC0-1.0 project-authored synthetic fixtures",
+        "publication_date": "2026-08-11"
+      },
+      "source_revision": "project-synthetic/2.0.0",
+      "synthetic_asset_id": "SYN-15",
+      "task": {
+        "changed_pointer": "/task/inputs/message_order",
+        "domain": "wealth_compliance",
+        "operator": "final_state_gate",
+        "risk": "medium",
+        "variant_axis": "recovery_message_order"
+      },
+      "track": "financial_tool_workflow"
+    }
+  ],
+  "frozen_by_issue": "PER-29",
+  "frozen_contract_refs": {
+    "case_data": "contracts/case_data_contracts.frozen.v1.json",
+    "seed_plan": "catalog/spec.seed-catalog.frozen.v1.json"
+  },
+  "generated_at": "2026-08-11T00:09:02Z",
+  "release": {
+    "blocking_gates": [
+      "Independent Stage 2 audit has not yet passed."
+    ],
+    "candidate_runs_allowed": false,
+    "external_publication_allowed": false,
+    "transport_eligible_after_independent_audit_pass": true
+  },
+  "selection": {
+    "candidate_output_used": false,
+    "case_count": 45,
+    "family_count": 15,
+    "frozen_silver_only_families": 3,
+    "frozen_target_gold_candidate_families": 12,
+    "gold_cases": 24,
+    "silver_cases": 21,
+    "track_weight_preserved": "financial_tool_workflow_50_percent",
+    "variants_per_family": [
+      "normal",
+      "single_factor_perturbation",
+      "missing_or_anomalous"
+    ]
+  },
+  "status": "frozen_pending_independent_audit",
+  "supersedes": {
+    "contract_bundle_sha256": "d862b41b9e03a8e6d478e3515c1ce5c8613994527bd6bdd577082222dcc37c77",
+    "path": "catalog/longbridge/frozen_manifest.v1.json",
+    "status": "retired_and_isolated_not_stage3_eligible"
+  },
+  "version": "2.0.0"
+}

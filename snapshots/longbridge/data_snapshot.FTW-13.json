@@ -1,0 +1,103 @@
+{
+  "access": {
+    "mode": "public_read_only",
+    "prohibited_scopes": [
+      "account",
+      "assets",
+      "cash",
+      "holdings",
+      "orders",
+      "positions",
+      "portfolio",
+      "trades"
+    ],
+    "query_args": {
+      "format": "json",
+      "symbols": [
+        "WMT.US"
+      ]
+    },
+    "query_name": "quote"
+  },
+  "contract_type": "data_snapshot",
+  "contract_version": "1.0.0",
+  "financial_subject": {
+    "currency": {
+      "code": "USD"
+    },
+    "entity_name": "WMT.US",
+    "identifiers": [
+      {
+        "scheme": "LONGBRIDGE_SYMBOL",
+        "value": "WMT.US"
+      }
+    ],
+    "market": {
+      "country": "US",
+      "mic": "XNAS",
+      "timezone": "America/New_York"
+    },
+    "subject_type": "public_equity",
+    "units": {
+      "accounting_basis": "not_applicable",
+      "amount_scale": "unit",
+      "price_basis": "unadjusted quote fields as returned"
+    }
+  },
+  "integrity": {
+    "canonicalization": "financial-agent-c14n-json-v1",
+    "content_sha256": "de4824374fff9b3a7563ef7cd98251774acd9b49da53f88c3a370f62e0050e60",
+    "hash_algorithm": "sha256"
+  },
+  "lineage": {
+    "code_revision": "e77e77cbae6f71b9c4c0caaa4f7931486485ebc6cc0a088e2ba604d2aaed6371",
+    "collector": "pipelines/longbridge/freeze.py:fetch",
+    "collector_version": "1.0.0",
+    "parent_snapshot_ids": [],
+    "query_args": {
+      "command": [
+        "longbridge",
+        "quote",
+        "WMT.US",
+        "--format",
+        "json"
+      ],
+      "response_schema_sha256": "835fcc8a6373f935e94a997833ae874dd37bbf1b8bb3fcad3ba66de8db0dfa31"
+    },
+    "raw_response_sha256": "5b41089a4263e24d3f44b9a793cd7d5da0e9b4e9eac340178d1b46a4650e6e36",
+    "schema_version": "case-data/1.0.0;longbridge 0.26.0;quote-schema/835fcc8a6373f935e94a997833ae874dd37bbf1b8bb3fcad3ba66de8db0dfa31"
+  },
+  "records": [
+    {
+      "evidence_type": "longbridge_quote",
+      "payload": {
+        "last": "112.660",
+        "prev_close": "111.850",
+        "status": "Normal",
+        "symbol": "WMT.US"
+      },
+      "record_id": "FTW-13-WMT.US-2026-08-10T23:19:14Z",
+      "source_locator": "snapshots/longbridge/raw/FTW-13.json#/response/0"
+    }
+  ],
+  "revision": 1,
+  "snapshot_id": "snapshot-longbridge-ftw-13-quote-v1",
+  "source": {
+    "dataset": "Longbridge CLI quote; internal non-commercial research snapshot; accuracy/timeliness not warranted; redistribution not authorized",
+    "license": {
+      "name": "Longbridge Platform Terms and Conditions Schedule A; upstream exchange rights apply",
+      "redistributable": false,
+      "url": "https://longbridge.com/sg/support/topics/us-trade/user-agreement"
+    },
+    "provider": "longbridge",
+    "source_type": "market_data",
+    "uri": "https://open.longbridge.com/docs/cli/market-data/quote"
+  },
+  "status": "frozen",
+  "temporal": {
+    "as_of": "2026-08-10T23:19:14Z",
+    "available_at": "2026-08-10T23:19:14Z",
+    "event_time": "2026-08-10T23:19:14Z",
+    "retrieved_at": "2026-08-10T23:19:14Z"
+  }
+}

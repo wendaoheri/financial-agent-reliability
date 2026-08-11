@@ -1,0 +1,41 @@
+{
+  "automated_checks": {
+    "contract_time_hash_single_factor": true,
+    "independent_gold_oracle": true,
+    "no_real_account_or_execution": true,
+    "no_third_party_market_data": true,
+    "offline_replay": true,
+    "v1_stage3_rejection": true
+  },
+  "counts": {
+    "cases": 45,
+    "families": 15,
+    "gold_cases": 24,
+    "silver_cases": 21
+  },
+  "evidence_classification": {
+    "direct_evidence": [
+      "All Stage 3-listed files are generated only from source_spec.v2.json and family ordinals.",
+      "The source spec declares CC0-1.0 redistribution and no upstream inputs."
+    ],
+    "illustration": [
+      "All assets, markets, values, ledgers, actions, and states are synthetic fixtures."
+    ],
+    "inference": [
+      "Because generation consumes no upstream record, the values cannot reconstruct a provider record."
+    ]
+  },
+  "issue": "PER-29",
+  "limitations": [
+    "Illustrative synthetic financial-tool workflows only.",
+    "Values are not prices, valuations, forecasts, or recommendations.",
+    "The bundle does not support claims about live-market accuracy or execution quality."
+  ],
+  "release": {
+    "candidate_runs_allowed": false,
+    "reason": "Awaiting independent Stage 2 audit; v1 remains forbidden regardless.",
+    "transport_eligible_after_independent_audit_pass": true
+  },
+  "report_type": "synthetic_ftw_bundle_acceptance",
+  "version": "2.0.0"
+}

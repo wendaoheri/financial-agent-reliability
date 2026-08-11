@@ -1,0 +1,103 @@
+{
+  "access": {
+    "mode": "public_read_only",
+    "prohibited_scopes": [
+      "account",
+      "assets",
+      "cash",
+      "holdings",
+      "orders",
+      "positions",
+      "portfolio",
+      "trades"
+    ],
+    "query_args": {
+      "format": "json",
+      "symbols": [
+        "KO.US"
+      ]
+    },
+    "query_name": "quote"
+  },
+  "contract_type": "data_snapshot",
+  "contract_version": "1.0.0",
+  "financial_subject": {
+    "currency": {
+      "code": "USD"
+    },
+    "entity_name": "KO.US",
+    "identifiers": [
+      {
+        "scheme": "LONGBRIDGE_SYMBOL",
+        "value": "KO.US"
+      }
+    ],
+    "market": {
+      "country": "US",
+      "mic": "XNYS",
+      "timezone": "America/New_York"
+    },
+    "subject_type": "public_equity",
+    "units": {
+      "accounting_basis": "not_applicable",
+      "amount_scale": "unit",
+      "price_basis": "unadjusted quote fields as returned"
+    }
+  },
+  "integrity": {
+    "canonicalization": "financial-agent-c14n-json-v1",
+    "content_sha256": "96db33cbb8a6b46ab2e44986cc23ebb54c74c147ce8c1b32162880c3db29a4d6",
+    "hash_algorithm": "sha256"
+  },
+  "lineage": {
+    "code_revision": "e77e77cbae6f71b9c4c0caaa4f7931486485ebc6cc0a088e2ba604d2aaed6371",
+    "collector": "pipelines/longbridge/freeze.py:fetch",
+    "collector_version": "1.0.0",
+    "parent_snapshot_ids": [],
+    "query_args": {
+      "command": [
+        "longbridge",
+        "quote",
+        "KO.US",
+        "--format",
+        "json"
+      ],
+      "response_schema_sha256": "835fcc8a6373f935e94a997833ae874dd37bbf1b8bb3fcad3ba66de8db0dfa31"
+    },
+    "raw_response_sha256": "935fa8077cc9ae3507c3f3792c4684b139835ee46fb8409e71a31eedf8f97d18",
+    "schema_version": "case-data/1.0.0;longbridge 0.26.0;quote-schema/835fcc8a6373f935e94a997833ae874dd37bbf1b8bb3fcad3ba66de8db0dfa31"
+  },
+  "records": [
+    {
+      "evidence_type": "longbridge_quote",
+      "payload": {
+        "last": "86.870",
+        "prev_close": "87.050",
+        "status": "Normal",
+        "symbol": "KO.US"
+      },
+      "record_id": "FTW-14-KO.US-2026-08-10T23:19:15Z",
+      "source_locator": "snapshots/longbridge/raw/FTW-14.json#/response/0"
+    }
+  ],
+  "revision": 1,
+  "snapshot_id": "snapshot-longbridge-ftw-14-quote-v1",
+  "source": {
+    "dataset": "Longbridge CLI quote; internal non-commercial research snapshot; accuracy/timeliness not warranted; redistribution not authorized",
+    "license": {
+      "name": "Longbridge Platform Terms and Conditions Schedule A; upstream exchange rights apply",
+      "redistributable": false,
+      "url": "https://longbridge.com/sg/support/topics/us-trade/user-agreement"
+    },
+    "provider": "longbridge",
+    "source_type": "market_data",
+    "uri": "https://open.longbridge.com/docs/cli/market-data/quote"
+  },
+  "status": "frozen",
+  "temporal": {
+    "as_of": "2026-08-10T23:19:15Z",
+    "available_at": "2026-08-10T23:19:15Z",
+    "event_time": "2026-08-10T23:19:15Z",
+    "retrieved_at": "2026-08-10T23:19:15Z"
+  }
+}

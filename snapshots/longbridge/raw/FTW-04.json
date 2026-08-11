@@ -1,0 +1,54 @@
+{
+  "cli_version": "longbridge 0.26.0",
+  "command": [
+    "longbridge",
+    "quote",
+    "AMZN.US",
+    "--format",
+    "json"
+  ],
+  "response": [
+    {
+      "change_percentage": "1.32",
+      "change_value": "3.610",
+      "high": "280.140",
+      "last": "278.090",
+      "low": "273.600",
+      "open": "274.010",
+      "overnight": {
+        "high": "275.010",
+        "last": "274.500",
+        "low": "273.800",
+        "prev_close": "274.480",
+        "timestamp": "2026-08-10T08:00:00Z",
+        "turnover": "13650059.000",
+        "volume": 49725
+      },
+      "post_market": {
+        "high": "278.190",
+        "last": "276.950",
+        "low": "276.800",
+        "prev_close": "278.090",
+        "timestamp": "2026-08-10T23:19:04Z",
+        "turnover": "868940087.609",
+        "volume": 3124926
+      },
+      "pre_market": {
+        "high": "276.500",
+        "last": "274.370",
+        "low": "273.330",
+        "prev_close": "274.480",
+        "timestamp": "2026-08-10T13:30:00Z",
+        "turnover": "64694278.052",
+        "volume": 235513
+      },
+      "prev_close": "274.480",
+      "status": "Normal",
+      "symbol": "AMZN.US",
+      "turnover": "9911668948.592",
+      "volume": 35716706
+    }
+  ],
+  "response_schema_sha256": "835fcc8a6373f935e94a997833ae874dd37bbf1b8bb3fcad3ba66de8db0dfa31",
+  "retrieved_at": "2026-08-10T23:19:09Z"
+}

@@ -1,0 +1,54 @@
+{
+  "cli_version": "longbridge 0.26.0",
+  "command": [
+    "longbridge",
+    "quote",
+    "MSFT.US",
+    "--format",
+    "json"
+  ],
+  "response": [
+    {
+      "change_percentage": "1.21",
+      "change_value": "6.070",
+      "high": "513.730",
+      "last": "506.060",
+      "low": "502.270",
+      "open": "503.440",
+      "overnight": {
+        "high": "501.100",
+        "last": "499.580",
+        "low": "498.090",
+        "prev_close": "499.990",
+        "timestamp": "2026-08-10T08:00:00Z",
+        "turnover": "35941437.000",
+        "volume": 71923
+      },
+      "post_market": {
+        "high": "507.200",
+        "last": "505.580",
+        "low": "505.020",
+        "prev_close": "506.060",
+        "timestamp": "2026-08-10T23:19:00Z",
+        "turnover": "1209255597.740",
+        "volume": 2389660
+      },
+      "pre_market": {
+        "high": "505.000",
+        "last": "503.500",
+        "low": "497.800",
+        "prev_close": "499.990",
+        "timestamp": "2026-08-10T13:30:01Z",
+        "turnover": "162396265.503",
+        "volume": 324316
+      },
+      "prev_close": "499.990",
+      "status": "Normal",
+      "symbol": "MSFT.US",
+      "turnover": "15822490665.530",
+      "volume": 31192472
+    }
+  ],
+  "response_schema_sha256": "835fcc8a6373f935e94a997833ae874dd37bbf1b8bb3fcad3ba66de8db0dfa31",
+  "retrieved_at": "2026-08-10T23:19:08Z"
+}

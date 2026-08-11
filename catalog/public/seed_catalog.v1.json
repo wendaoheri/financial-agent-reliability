@@ -1,0 +1,1126 @@
+{
+  "catalog_type": "public_benchmark_materialized_seed_catalog",
+  "families": [
+    {
+      "cases": [
+        {
+          "case_id": "case-public-fkw-01-normal-v1",
+          "kind": "normal",
+          "sha256": "712fcb3ca5d3d74ffd691db450c66ec1a8a8dc9f605dafedb60b2667dfc3f6e4",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-public-fkw-01-single-factor-perturbation-v1",
+          "kind": "single_factor_perturbation",
+          "sha256": "10f46a9a66fb906187985061938b32726307581615021a96bb384f0a9dc5c15d",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-public-fkw-01-missing-or-anomalous-v1",
+          "kind": "missing_or_anomalous",
+          "sha256": "ec5a60d0e7d3617e29fe99fd85e98f516416761f30657e79543b073a74f6de0e",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "68a91e8cb2ff2c858c9d6d8d9655e75f96b7a00ffaea8ab3cf6aab2b5da985e6",
+        "family_key": "7d0091d6e5ffc8edae3c8fad822e348477762ee73cba6c7afe9b4e4d77f8f8e0",
+        "primary_evidence_key": "d55897fe7b68f9d0251c1e1dc7382b17e2dd9cec15736f305cc3805a060d2866",
+        "upstream_record_key": "6d9abb1b3f705a58ca5dc02e5cd3f4d2791849a07e8aa7e76ded3665e7e0c07c"
+      },
+      "family_id": "FKW-01",
+      "oracle": {
+        "independent_path": "cases/public/oracle_reference.py",
+        "independent_sha256": "528f69934240742685b7385fb914e8d806a249c426656512dff8987e297a9ad4",
+        "production_path": "cases/public/oracle.py",
+        "production_sha256": "9097915075c71bf6344cfadbe0486c508259dd5de8dd47d6c325fccde169858d"
+      },
+      "primary_evidence": {
+        "api_documentation": "https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation",
+        "available_at_policy": "Conservative: available_at equals authenticated-free API retrieval time; no earlier availability is asserted.",
+        "dataset": "World Development Indicators",
+        "dataset_revision": "2026-07-13",
+        "license": "CC-BY-4.0",
+        "license_evidence_url": "https://datacatalog.worldbank.org/search/dataset/0037712/world-development-indicators",
+        "raw_response_sha256": "f586bb66b21f301ff6e51faad1a1ec98b13bb74903784fc23852fcb0e914cf9d",
+        "snapshot_id": "snapshot-public-fkw-01-wdi-2021-2023-v1",
+        "snapshot_sha256": "b6e87a810fa1aabf9173e1225da4dedeb041f48244c37bcbf86c1ff5282c3e0f"
+      },
+      "prohibitions": {
+        "benchmark_answer_used_as_oracle": false,
+        "candidate_output_used_as_oracle": false,
+        "original_benchmark_row_redistributed": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "pending_two_person_source/license/time review; automated contract and independent-oracle checks are complete",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "financebench",
+      "source_license": {
+        "applicability_limit": "Task structure only; no benchmark row, answer, program, context, or completion is redistributed.",
+        "evidence_url": "https://huggingface.co/datasets/PatronusAI/financebench",
+        "name": "CC-BY-NC-4.0",
+        "verified_at": "2026-08-11"
+      },
+      "source_revision": "e04404e3a97f69f79c14d42f24981a1c9c3bcd18",
+      "task": {
+        "changed_pointer": "/temporal/as_of",
+        "domain": "research",
+        "operator": "direct",
+        "risk": "medium",
+        "variant_axis": "as_of_time"
+      },
+      "track": "financial_knowledge_work"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-public-fkw-02-normal-v1",
+          "kind": "normal",
+          "sha256": "7cbb42821450e0074be0a9e6789ccd9f98c8630fcd018c4d020de11a055f8e26",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-public-fkw-02-single-factor-perturbation-v1",
+          "kind": "single_factor_perturbation",
+          "sha256": "17935d000b2fc83fb2ddead0d4b37120f6c5dc5d31b000d9623a691ef2d0d718",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-public-fkw-02-missing-or-anomalous-v1",
+          "kind": "missing_or_anomalous",
+          "sha256": "f253cf209905e51c165465230746c7e5b5d419958f78971e987552a34b853e68",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "68e96f2f887e471eb6b95f117f33893db921e53f0558faddfc2968351b625162",
+        "family_key": "1354e5d4190aead1ffbf9245cb8d519752746986a6ee87a0a579e7809b731cdc",
+        "primary_evidence_key": "b5d09f508c99a6f20899eb0718f892aa3bc8b75da45ef99670c2fc7ea78d3bd2",
+        "upstream_record_key": "e97359f1618f39e59adb3ec0db7fc968109eb725d41d2b647761573bf7cd0c15"
+      },
+      "family_id": "FKW-02",
+      "oracle": {
+        "independent_path": "cases/public/oracle_reference.py",
+        "independent_sha256": "528f69934240742685b7385fb914e8d806a249c426656512dff8987e297a9ad4",
+        "production_path": "cases/public/oracle.py",
+        "production_sha256": "9097915075c71bf6344cfadbe0486c508259dd5de8dd47d6c325fccde169858d"
+      },
+      "primary_evidence": {
+        "api_documentation": "https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation",
+        "available_at_policy": "Conservative: available_at equals authenticated-free API retrieval time; no earlier availability is asserted.",
+        "dataset": "World Development Indicators",
+        "dataset_revision": "2026-07-13",
+        "license": "CC-BY-4.0",
+        "license_evidence_url": "https://datacatalog.worldbank.org/search/dataset/0037712/world-development-indicators",
+        "raw_response_sha256": "e41dab1292e592d7695ed77de09d28b6c5fe57d48841e39086ad2db5409a6e35",
+        "snapshot_id": "snapshot-public-fkw-02-wdi-2021-2023-v1",
+        "snapshot_sha256": "5281d30c48b819359a331e83710b16fbed0a4f12a99702e367f1728b4c0c0b61"
+      },
+      "prohibitions": {
+        "benchmark_answer_used_as_oracle": false,
+        "candidate_output_used_as_oracle": false,
+        "original_benchmark_row_redistributed": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "pending_two_person_source/license/time review; automated contract and independent-oracle checks are complete",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "financebench",
+      "source_license": {
+        "applicability_limit": "Task structure only; no benchmark row, answer, program, context, or completion is redistributed.",
+        "evidence_url": "https://huggingface.co/datasets/PatronusAI/financebench",
+        "name": "CC-BY-NC-4.0",
+        "verified_at": "2026-08-11"
+      },
+      "source_revision": "e04404e3a97f69f79c14d42f24981a1c9c3bcd18",
+      "task": {
+        "changed_pointer": "/task/inputs/years",
+        "domain": "research",
+        "operator": "average",
+        "risk": "high",
+        "variant_axis": "evidence_completeness"
+      },
+      "track": "financial_knowledge_work"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-public-fkw-03-normal-v1",
+          "kind": "normal",
+          "sha256": "d7f08a255d862ebb82d69de69d47b79abe2fd53427884a5fb9a3877c2858983a",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-public-fkw-03-single-factor-perturbation-v1",
+          "kind": "single_factor_perturbation",
+          "sha256": "c783bbfdd0c35d09b1ba0e5f589639caa64d1121a056e08fd2cd2ee98fbb9975",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-public-fkw-03-missing-or-anomalous-v1",
+          "kind": "missing_or_anomalous",
+          "sha256": "5a6f5f157d25b67709c71f132d35d26ccc616c2014c8d04f90682e6a03a050a4",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "ad40b36de2c639625486a941132182c78458f0631578a2efc9d721db391cab90",
+        "family_key": "cb0931fb204b21af4612c4ae61fcb8c01ea95d0d0da5d8fbd0cb9941305801d5",
+        "primary_evidence_key": "d7fe463eebf3b8a50ca3b91647ee88ac9a57692ab2b9c8194cafc8f383bc88d0",
+        "upstream_record_key": "83daff5314ad8f41327231dcb7b3fa1bac0d9ee45cb0f39f2c9d31539e4a94e9"
+      },
+      "family_id": "FKW-03",
+      "oracle": {
+        "independent_path": "cases/public/oracle_reference.py",
+        "independent_sha256": "528f69934240742685b7385fb914e8d806a249c426656512dff8987e297a9ad4",
+        "production_path": "cases/public/oracle.py",
+        "production_sha256": "9097915075c71bf6344cfadbe0486c508259dd5de8dd47d6c325fccde169858d"
+      },
+      "primary_evidence": {
+        "api_documentation": "https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation",
+        "available_at_policy": "Conservative: available_at equals authenticated-free API retrieval time; no earlier availability is asserted.",
+        "dataset": "World Development Indicators",
+        "dataset_revision": "2026-07-13",
+        "license": "CC-BY-4.0",
+        "license_evidence_url": "https://datacatalog.worldbank.org/search/dataset/0037712/world-development-indicators",
+        "raw_response_sha256": "b2990712810975cc4ca523b5192b5cb1f6499635e3c28ce923e431d4bd34192b",
+        "snapshot_id": "snapshot-public-fkw-03-wdi-2021-2023-v1",
+        "snapshot_sha256": "128166d7095bffeb26c56d6fcb67ce694c6d85ba64ee4bbb381327b2eab066b4"
+      },
+      "prohibitions": {
+        "benchmark_answer_used_as_oracle": false,
+        "candidate_output_used_as_oracle": false,
+        "original_benchmark_row_redistributed": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "pending_two_person_source/license/time review; automated contract and independent-oracle checks are complete",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "financebench",
+      "source_license": {
+        "applicability_limit": "Task structure only; no benchmark row, answer, program, context, or completion is redistributed.",
+        "evidence_url": "https://huggingface.co/datasets/PatronusAI/financebench",
+        "name": "CC-BY-NC-4.0",
+        "verified_at": "2026-08-11"
+      },
+      "source_revision": "e04404e3a97f69f79c14d42f24981a1c9c3bcd18",
+      "task": {
+        "changed_pointer": "/task/inputs/divisor",
+        "domain": "valuation",
+        "operator": "scale",
+        "risk": "high",
+        "variant_axis": "currency_unit"
+      },
+      "track": "financial_knowledge_work"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-public-fkw-04-normal-v1",
+          "kind": "normal",
+          "sha256": "1aa42e59508c1ea63fcfc24382fb379f1349afd68c8591b54f94fe29765e6be4",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-public-fkw-04-single-factor-perturbation-v1",
+          "kind": "single_factor_perturbation",
+          "sha256": "33ed80640d41a337ecdf24a11f8e3680f060cab76412ecc8bdb2a88c6cb8b92f",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-public-fkw-04-missing-or-anomalous-v1",
+          "kind": "missing_or_anomalous",
+          "sha256": "0f42a1b869da7a40a02dd37f2c275d93e541185160de0d2bd4724776e9e491cf",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "2d9439fc82366ce6850e0ef70a4eccc8d02e7320fae451ff7a83339fe1cf5b96",
+        "family_key": "3cc306ab582bc851780f0c6dbfaa57908ab174f6e72f1a0a0a357c302c5846dc",
+        "primary_evidence_key": "14aec4918a249eb43eacd2d1b42697a1216bb9c25eb2d29c054d03335923fe3c",
+        "upstream_record_key": "582a8f6b72771a5e008c8ed47f763130e31f1ee6a66aff2c67285008e8466bd6"
+      },
+      "family_id": "FKW-04",
+      "oracle": {
+        "independent_path": "cases/public/oracle_reference.py",
+        "independent_sha256": "528f69934240742685b7385fb914e8d806a249c426656512dff8987e297a9ad4",
+        "production_path": "cases/public/oracle.py",
+        "production_sha256": "9097915075c71bf6344cfadbe0486c508259dd5de8dd47d6c325fccde169858d"
+      },
+      "primary_evidence": {
+        "api_documentation": "https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation",
+        "available_at_policy": "Conservative: available_at equals authenticated-free API retrieval time; no earlier availability is asserted.",
+        "dataset": "World Development Indicators",
+        "dataset_revision": "2026-07-13",
+        "license": "CC-BY-4.0",
+        "license_evidence_url": "https://datacatalog.worldbank.org/search/dataset/0037712/world-development-indicators",
+        "raw_response_sha256": "956ea25b795ab4d8d8473d1d0d6b75bd1b9edf6f1bb32cff146e55f1b6fd02be",
+        "snapshot_id": "snapshot-public-fkw-04-wdi-2021-2023-v1",
+        "snapshot_sha256": "4030cf68815a2722fb0e227c1b807a7d96026f1e008b485af7011e2fcd34c65f"
+      },
+      "prohibitions": {
+        "benchmark_answer_used_as_oracle": false,
+        "candidate_output_used_as_oracle": false,
+        "original_benchmark_row_redistributed": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "pending_two_person_source/license/time review; automated contract and independent-oracle checks are complete",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "finqa",
+      "source_license": {
+        "applicability_limit": "Task structure only; no benchmark row, answer, program, context, or completion is redistributed.",
+        "evidence_url": "https://github.com/czyssrs/FinQA",
+        "name": "CC-BY-4.0 dataset; MIT code",
+        "verified_at": "2026-08-11"
+      },
+      "source_revision": "0f16e2867befa6840783e58be38c9efb9229d742",
+      "task": {
+        "changed_pointer": "/task/inputs/accounting_basis",
+        "domain": "valuation",
+        "operator": "basis",
+        "risk": "high",
+        "variant_axis": "accounting_basis"
+      },
+      "track": "financial_knowledge_work"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-public-fkw-05-normal-v1",
+          "kind": "normal",
+          "sha256": "75a206548238a87f8b8bd6e32a88931ceb34b94b9de91f75cf80ce3665b78bdf",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-public-fkw-05-single-factor-perturbation-v1",
+          "kind": "single_factor_perturbation",
+          "sha256": "bd317134f3af424e18d993d5322d00c42bd10ed1b60b035c7d87fd046ebbf0f1",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-public-fkw-05-missing-or-anomalous-v1",
+          "kind": "missing_or_anomalous",
+          "sha256": "9a3420a5672778616651d9e303e03ae5ef540d63b77a139ebebb3fd55498c129",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "8384ffcf04d880ac3ff2f91cccad4a04bc9bf0a3555f38abf49320f5100e404c",
+        "family_key": "290f009fefe52d2ba3d69dcb687a868a6d94be42af391561632cba19aa4de603",
+        "primary_evidence_key": "4b7661ba92c530b575d3d77e176bd7bc61620def61eab1271dce46869ab1fe98",
+        "upstream_record_key": "c48ca1fa22982a1a8e9cf7ea093560c34c7f1a8068cbbca2c656f4d8e562b46a"
+      },
+      "family_id": "FKW-05",
+      "oracle": {
+        "independent_path": "cases/public/oracle_reference.py",
+        "independent_sha256": "528f69934240742685b7385fb914e8d806a249c426656512dff8987e297a9ad4",
+        "production_path": "cases/public/oracle.py",
+        "production_sha256": "9097915075c71bf6344cfadbe0486c508259dd5de8dd47d6c325fccde169858d"
+      },
+      "primary_evidence": {
+        "api_documentation": "https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation",
+        "available_at_policy": "Conservative: available_at equals authenticated-free API retrieval time; no earlier availability is asserted.",
+        "dataset": "World Development Indicators",
+        "dataset_revision": "2026-07-13",
+        "license": "CC-BY-4.0",
+        "license_evidence_url": "https://datacatalog.worldbank.org/search/dataset/0037712/world-development-indicators",
+        "raw_response_sha256": "eb3fcf8b87f6991b04d680be0a9a2c432fc55cdde6f20db467425b6f0685b05e",
+        "snapshot_id": "snapshot-public-fkw-05-wdi-2021-2023-v1",
+        "snapshot_sha256": "330611c845906cbf30ab46fdef54a843ca43bb4c2e8d2a64ac2e365edab6ec33"
+      },
+      "prohibitions": {
+        "benchmark_answer_used_as_oracle": false,
+        "candidate_output_used_as_oracle": false,
+        "original_benchmark_row_redistributed": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "pending_two_person_source/license/time review; automated contract and independent-oracle checks are complete",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "finqa",
+      "source_license": {
+        "applicability_limit": "Task structure only; no benchmark row, answer, program, context, or completion is redistributed.",
+        "evidence_url": "https://github.com/czyssrs/FinQA",
+        "name": "CC-BY-4.0 dataset; MIT code",
+        "verified_at": "2026-08-11"
+      },
+      "source_revision": "0f16e2867befa6840783e58be38c9efb9229d742",
+      "task": {
+        "changed_pointer": "/task/inputs/start_year",
+        "domain": "valuation",
+        "operator": "growth",
+        "risk": "medium",
+        "variant_axis": "fiscal_period"
+      },
+      "track": "financial_knowledge_work"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-public-fkw-06-normal-v1",
+          "kind": "normal",
+          "sha256": "c485aa1aaa88a44339c1db3a93874533e73808ec5f77b7cb9b50397819ab298a",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-public-fkw-06-single-factor-perturbation-v1",
+          "kind": "single_factor_perturbation",
+          "sha256": "df67871e442c77210e76f0c7eae1f3ace5887763b66406ba879cd1feb42ca439",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-public-fkw-06-missing-or-anomalous-v1",
+          "kind": "missing_or_anomalous",
+          "sha256": "8cf19150687fd49bbdf558c5f4e692fb9348b5829688f546df144ce868641ab4",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "cd659529c36036b006633ed0bd92fdce25e58ec45f283960df415d6be536074a",
+        "family_key": "788ff1da787861fe8de634a5071fccdfc63d9647a8e58d8e6a73a55d8c845a89",
+        "primary_evidence_key": "1cc76f5323b82de6bab4084f27fab6359ed052eb1ecf69d1be2612803cb99662",
+        "upstream_record_key": "902e13caa7358b48e0c129269832fa3953d92d33c34df80d9cb19e703b272903"
+      },
+      "family_id": "FKW-06",
+      "oracle": {
+        "independent_path": "cases/public/oracle_reference.py",
+        "independent_sha256": "528f69934240742685b7385fb914e8d806a249c426656512dff8987e297a9ad4",
+        "production_path": "cases/public/oracle.py",
+        "production_sha256": "9097915075c71bf6344cfadbe0486c508259dd5de8dd47d6c325fccde169858d"
+      },
+      "primary_evidence": {
+        "api_documentation": "https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation",
+        "available_at_policy": "Conservative: available_at equals authenticated-free API retrieval time; no earlier availability is asserted.",
+        "dataset": "World Development Indicators",
+        "dataset_revision": "2026-07-13",
+        "license": "CC-BY-4.0",
+        "license_evidence_url": "https://datacatalog.worldbank.org/search/dataset/0037712/world-development-indicators",
+        "raw_response_sha256": "3c7f6bab86196bca4e98dd448d5bf731104b6022a5403d3dcce67f7a3804da3e",
+        "snapshot_id": "snapshot-public-fkw-06-wdi-2021-2023-v1",
+        "snapshot_sha256": "674d3f1dfccf1adbfc80be4658d55922d6de94ce07c8dc30da9fe842a743aa97"
+      },
+      "prohibitions": {
+        "benchmark_answer_used_as_oracle": false,
+        "candidate_output_used_as_oracle": false,
+        "original_benchmark_row_redistributed": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "pending_two_person_source/license/time review; automated contract and independent-oracle checks are complete",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "finqa",
+      "source_license": {
+        "applicability_limit": "Task structure only; no benchmark row, answer, program, context, or completion is redistributed.",
+        "evidence_url": "https://github.com/czyssrs/FinQA",
+        "name": "CC-BY-4.0 dataset; MIT code",
+        "verified_at": "2026-08-11"
+      },
+      "source_revision": "0f16e2867befa6840783e58be38c9efb9229d742",
+      "task": {
+        "changed_pointer": "/task/inputs/included_countries",
+        "domain": "risk",
+        "operator": "sum_countries",
+        "risk": "high",
+        "variant_axis": "consolidation_scope"
+      },
+      "track": "financial_knowledge_work"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-public-fkw-07-normal-v1",
+          "kind": "normal",
+          "sha256": "a9335f3ddd377a5dfe04841b19dad767989fc72cf4144b9c8af0d150415288ad",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-public-fkw-07-single-factor-perturbation-v1",
+          "kind": "single_factor_perturbation",
+          "sha256": "768088e699c028ebd8a5dee683d93a0796eb9db0209d22246313c1ccc9c0eb4e",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-public-fkw-07-missing-or-anomalous-v1",
+          "kind": "missing_or_anomalous",
+          "sha256": "ca668ec5ed1053e49fb745c60d6c25f68a8b70fd0bb30b8f0a19ae15bc682762",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "4452e3c52d040fa4d03a0cba5b088118d85a9175fb7279f0952b176312293c10",
+        "family_key": "ea534ca59cd0f5b629173fa82ed6bc95bd6dfe356c799d7ed91f04cab89b70de",
+        "primary_evidence_key": "3beded9e9267f962f00117308fc9be40f7498c66c46dd91789b6cd4a4ffdb3f3",
+        "upstream_record_key": "131a343c6d123b64436a6ffeb107090af3e37ad09a481710283f93669b75012e"
+      },
+      "family_id": "FKW-07",
+      "oracle": {
+        "independent_path": "cases/public/oracle_reference.py",
+        "independent_sha256": "528f69934240742685b7385fb914e8d806a249c426656512dff8987e297a9ad4",
+        "production_path": "cases/public/oracle.py",
+        "production_sha256": "9097915075c71bf6344cfadbe0486c508259dd5de8dd47d6c325fccde169858d"
+      },
+      "primary_evidence": {
+        "api_documentation": "https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation",
+        "available_at_policy": "Conservative: available_at equals authenticated-free API retrieval time; no earlier availability is asserted.",
+        "dataset": "World Development Indicators",
+        "dataset_revision": "2026-07-13",
+        "license": "CC-BY-4.0",
+        "license_evidence_url": "https://datacatalog.worldbank.org/search/dataset/0037712/world-development-indicators",
+        "raw_response_sha256": "2bc762730234bc860a80a421b0a93ef76b14f536fcf61c599aee60956f096308",
+        "snapshot_id": "snapshot-public-fkw-07-wdi-2021-2023-v1",
+        "snapshot_sha256": "bda5667d49d1d0afacbca3aa23be5e9123e92df77740c0eaa705d76ff6396847"
+      },
+      "prohibitions": {
+        "benchmark_answer_used_as_oracle": false,
+        "candidate_output_used_as_oracle": false,
+        "original_benchmark_row_redistributed": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "pending_two_person_source/license/time review; automated contract and independent-oracle checks are complete",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "finqa",
+      "source_license": {
+        "applicability_limit": "Task structure only; no benchmark row, answer, program, context, or completion is redistributed.",
+        "evidence_url": "https://github.com/czyssrs/FinQA",
+        "name": "CC-BY-4.0 dataset; MIT code",
+        "verified_at": "2026-08-11"
+      },
+      "source_revision": "0f16e2867befa6840783e58be38c9efb9229d742",
+      "task": {
+        "changed_pointer": "/task/inputs/method",
+        "domain": "risk",
+        "operator": "method",
+        "risk": "critical",
+        "variant_axis": "method_applicability"
+      },
+      "track": "financial_knowledge_work"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-public-fkw-08-normal-v1",
+          "kind": "normal",
+          "sha256": "6e5d7bef3711975f6c6d9ee3fe10885b827cc2dbd5067a0e6ebb1f699772f90b",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-public-fkw-08-single-factor-perturbation-v1",
+          "kind": "single_factor_perturbation",
+          "sha256": "f3dea970bb15faa4a73012312fade569457235d4ae6cb636fca213697f20b13c",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-public-fkw-08-missing-or-anomalous-v1",
+          "kind": "missing_or_anomalous",
+          "sha256": "749ed3fcac155b4481caa84cfc78ddf1b40a3d57e34d8c9b22b540087f000ac3",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "459d12e80a41629ac4db9476860bdbc94e21505f56bf737883c5b16f616f60e9",
+        "family_key": "1d39ed09781b0ad603a5e5e3b33a3d0f0e8a960c70d1d1c508d6ea8d6f261e9d",
+        "primary_evidence_key": "8a6aaf62fce98e2bff1fe8a2763634235c0afe354de96deb001e5e2876197857",
+        "upstream_record_key": "3df7ba48917c7be5b868162e14235491fbe9f49069cb758dfc8bf96c74fa121d"
+      },
+      "family_id": "FKW-08",
+      "oracle": {
+        "independent_path": "cases/public/oracle_reference.py",
+        "independent_sha256": "528f69934240742685b7385fb914e8d806a249c426656512dff8987e297a9ad4",
+        "production_path": "cases/public/oracle.py",
+        "production_sha256": "9097915075c71bf6344cfadbe0486c508259dd5de8dd47d6c325fccde169858d"
+      },
+      "primary_evidence": {
+        "api_documentation": "https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation",
+        "available_at_policy": "Conservative: available_at equals authenticated-free API retrieval time; no earlier availability is asserted.",
+        "dataset": "World Development Indicators",
+        "dataset_revision": "2026-07-13",
+        "license": "CC-BY-4.0",
+        "license_evidence_url": "https://datacatalog.worldbank.org/search/dataset/0037712/world-development-indicators",
+        "raw_response_sha256": "68d40921ccb9f4cbd5fcf102c9df7089c6cc966c48589642b281305944fcbef7",
+        "snapshot_id": "snapshot-public-fkw-08-wdi-2021-2023-v1",
+        "snapshot_sha256": "8ccc15d180483761f7b1239dc4997ca9e2094ae6b9d9adf29f986313dcf9c08f"
+      },
+      "prohibitions": {
+        "benchmark_answer_used_as_oracle": false,
+        "candidate_output_used_as_oracle": false,
+        "original_benchmark_row_redistributed": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "pending_two_person_source/license/time review; automated contract and independent-oracle checks are complete",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "tatqa",
+      "source_license": {
+        "applicability_limit": "Task structure only; no benchmark row, answer, program, context, or completion is redistributed.",
+        "evidence_url": "https://github.com/NExTplusplus/TAT-QA",
+        "name": "CC-BY-4.0 dataset; MIT code",
+        "verified_at": "2026-08-11"
+      },
+      "source_revision": "870accc41953dcde885aabeb963d94aabdc0fbc3",
+      "task": {
+        "changed_pointer": "/task/inputs",
+        "domain": "risk",
+        "operator": "regime",
+        "risk": "high",
+        "variant_axis": "event_regime"
+      },
+      "track": "financial_knowledge_work"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-public-fkw-09-normal-v1",
+          "kind": "normal",
+          "sha256": "971bdcb7436ffdc123202491fab8df114f31a9c94d11b63f77ad8c1decf19e40",
+          "tier": "Silver"
+        },
+        {
+          "case_id": "case-public-fkw-09-single-factor-perturbation-v1",
+          "kind": "single_factor_perturbation",
+          "sha256": "7a0c86b2887ff29fbdbe424891e27c749814b0dc1cbe1004d6cff3a164e740b9",
+          "tier": "Silver"
+        },
+        {
+          "case_id": "case-public-fkw-09-missing-or-anomalous-v1",
+          "kind": "missing_or_anomalous",
+          "sha256": "c5f341fa058c1dcc12dcfb4d6b543f93b789ad1b054628dcc0194b6a8c0eb787",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "5991faf6ca8ee659df2d1981ae156ba4b971f79a44257d4d9750371f4d23efac",
+        "family_key": "cb5c3b32052180616f68188553c4fe934e6f24fc112e3ef2779b0c6be0d3104d",
+        "primary_evidence_key": "6be6ddae8b6560a00a2974761367bf6b3b69fb3fc3151fddbf95e3a6a54a0d43",
+        "upstream_record_key": "a882eb3dc59cba0a8425692a99a287186fbc27f19d7a68dfe9d2916a3c420c17"
+      },
+      "family_id": "FKW-09",
+      "oracle": {
+        "independent_path": "cases/public/oracle_reference.py",
+        "independent_sha256": "528f69934240742685b7385fb914e8d806a249c426656512dff8987e297a9ad4",
+        "production_path": "cases/public/oracle.py",
+        "production_sha256": "9097915075c71bf6344cfadbe0486c508259dd5de8dd47d6c325fccde169858d"
+      },
+      "primary_evidence": {
+        "api_documentation": "https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation",
+        "available_at_policy": "Conservative: available_at equals authenticated-free API retrieval time; no earlier availability is asserted.",
+        "dataset": "World Development Indicators",
+        "dataset_revision": "2026-07-13",
+        "license": "CC-BY-4.0",
+        "license_evidence_url": "https://datacatalog.worldbank.org/search/dataset/0037712/world-development-indicators",
+        "raw_response_sha256": "011c6eb0533ec21fe98eac2845acd969b1a2211d53d608d49c43418f9821eb0d",
+        "snapshot_id": "snapshot-public-fkw-09-wdi-2021-2023-v1",
+        "snapshot_sha256": "d2ae3c6c8c819385ed6bea4388cae21754ff578a111b0c8a8cbe69737c8a0926"
+      },
+      "prohibitions": {
+        "benchmark_answer_used_as_oracle": false,
+        "candidate_output_used_as_oracle": false,
+        "original_benchmark_row_redistributed": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "pending_two_person_source/license/time review; automated contract and independent-oracle checks are complete",
+        "materialized_gold": false,
+        "promotion_failure": "The WDI response exposes the current release but not immutable observation-level revision history."
+      },
+      "source_id": "tatqa",
+      "source_license": {
+        "applicability_limit": "Task structure only; no benchmark row, answer, program, context, or completion is redistributed.",
+        "evidence_url": "https://github.com/NExTplusplus/TAT-QA",
+        "name": "CC-BY-4.0 dataset; MIT code",
+        "verified_at": "2026-08-11"
+      },
+      "source_revision": "870accc41953dcde885aabeb963d94aabdc0fbc3",
+      "task": {
+        "changed_pointer": "/task/inputs/revision_selector",
+        "domain": "research",
+        "operator": "direct",
+        "risk": "high",
+        "variant_axis": "source_revision"
+      },
+      "track": "financial_knowledge_work"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-public-fkw-10-normal-v1",
+          "kind": "normal",
+          "sha256": "ec9c425070ba8d27fdf554126de5fb2999e36b81c04c859bf3cb48d92e1b80b3",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-public-fkw-10-single-factor-perturbation-v1",
+          "kind": "single_factor_perturbation",
+          "sha256": "8957a883c4afe260a962189a7be34d49ccd14ab4c0b3ca80e387c489b4e956ce",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-public-fkw-10-missing-or-anomalous-v1",
+          "kind": "missing_or_anomalous",
+          "sha256": "1e1155babe461c0eab7c21fea9147541dc57f8e2b064ca4e6e699cb35612d836",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "758af9cce0e163cfb453df2ee561f3fc2986324587d7072d344e1cf00d5774b8",
+        "family_key": "4e7fea7b109cd157de2851e1a558e45940053ba2b0b49e55968bc7649ac4cdf8",
+        "primary_evidence_key": "5c4f086d3ccf187484fbc6eca57414766aa4ac76bc4e05f4d3fee5d2f1bf9e22",
+        "upstream_record_key": "2ab11e9bbcf7b705bfb17b83f967d07ad9cc7e55bc267b38f1b326ae15b3536b"
+      },
+      "family_id": "FKW-10",
+      "oracle": {
+        "independent_path": "cases/public/oracle_reference.py",
+        "independent_sha256": "528f69934240742685b7385fb914e8d806a249c426656512dff8987e297a9ad4",
+        "production_path": "cases/public/oracle.py",
+        "production_sha256": "9097915075c71bf6344cfadbe0486c508259dd5de8dd47d6c325fccde169858d"
+      },
+      "primary_evidence": {
+        "api_documentation": "https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation",
+        "available_at_policy": "Conservative: available_at equals authenticated-free API retrieval time; no earlier availability is asserted.",
+        "dataset": "World Development Indicators",
+        "dataset_revision": "2026-07-13",
+        "license": "CC-BY-4.0",
+        "license_evidence_url": "https://datacatalog.worldbank.org/search/dataset/0037712/world-development-indicators",
+        "raw_response_sha256": "55e435ecb726ace6f5dd752f3180c95606488b7dc1ab64f032717d73f3039666",
+        "snapshot_id": "snapshot-public-fkw-10-wdi-2021-2023-v1",
+        "snapshot_sha256": "cf6741e951bc5d476fb3087cbc2914088bfe09f1e3f8323a8dbf0a698125bcb9"
+      },
+      "prohibitions": {
+        "benchmark_answer_used_as_oracle": false,
+        "candidate_output_used_as_oracle": false,
+        "original_benchmark_row_redistributed": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "pending_two_person_source/license/time review; automated contract and independent-oracle checks are complete",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "tatqa",
+      "source_license": {
+        "applicability_limit": "Task structure only; no benchmark row, answer, program, context, or completion is redistributed.",
+        "evidence_url": "https://github.com/NExTplusplus/TAT-QA",
+        "name": "CC-BY-4.0 dataset; MIT code",
+        "verified_at": "2026-08-11"
+      },
+      "source_revision": "870accc41953dcde885aabeb963d94aabdc0fbc3",
+      "task": {
+        "changed_pointer": "/task/inputs/language",
+        "domain": "research",
+        "operator": "language_invariant",
+        "risk": "low",
+        "variant_axis": "language"
+      },
+      "track": "financial_knowledge_work"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-public-fkw-11-normal-v1",
+          "kind": "normal",
+          "sha256": "e0c6dbd7591b5a04c49a675a6ef7c354ed2eb70e15242b8d5914af603640bcd9",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-public-fkw-11-single-factor-perturbation-v1",
+          "kind": "single_factor_perturbation",
+          "sha256": "bd9e02c69c45e59ba93857c5a4d72abf40ce3d14ff11cab516396cb7ae3bde6c",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-public-fkw-11-missing-or-anomalous-v1",
+          "kind": "missing_or_anomalous",
+          "sha256": "ea24e36442c0ffd49f1f943838c44ab9de3f02441c772892fd295412d667f702",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "dcee0fc7babce36c5f465a5630d75c83a9fd069acfdf76bbf668d245cd799a9b",
+        "family_key": "43b5bcb8840b68469f0fba59c2e196d9f20f2fc68f3fd373867d93eaee3481f3",
+        "primary_evidence_key": "e54adb5b70cd58a8f6910155cffe97818be934e467234bfc87fc29ed64ab74da",
+        "upstream_record_key": "433c45c573ebbcea2be96c81b2eedc30a92136db6742bd12d1192873e546f354"
+      },
+      "family_id": "FKW-11",
+      "oracle": {
+        "independent_path": "cases/public/oracle_reference.py",
+        "independent_sha256": "528f69934240742685b7385fb914e8d806a249c426656512dff8987e297a9ad4",
+        "production_path": "cases/public/oracle.py",
+        "production_sha256": "9097915075c71bf6344cfadbe0486c508259dd5de8dd47d6c325fccde169858d"
+      },
+      "primary_evidence": {
+        "api_documentation": "https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation",
+        "available_at_policy": "Conservative: available_at equals authenticated-free API retrieval time; no earlier availability is asserted.",
+        "dataset": "World Development Indicators",
+        "dataset_revision": "2026-07-13",
+        "license": "CC-BY-4.0",
+        "license_evidence_url": "https://datacatalog.worldbank.org/search/dataset/0037712/world-development-indicators",
+        "raw_response_sha256": "8ded214c13057b8fac1c3016233c236663865c1f07d45f8ed1acfe9946be978c",
+        "snapshot_id": "snapshot-public-fkw-11-wdi-2021-2023-v1",
+        "snapshot_sha256": "b5c5017790ef4389696b152d945e0d48cf0ae6236e654e178dcd71c2fb7da09a"
+      },
+      "prohibitions": {
+        "benchmark_answer_used_as_oracle": false,
+        "candidate_output_used_as_oracle": false,
+        "original_benchmark_row_redistributed": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "pending_two_person_source/license/time review; automated contract and independent-oracle checks are complete",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "tatqa",
+      "source_license": {
+        "applicability_limit": "Task structure only; no benchmark row, answer, program, context, or completion is redistributed.",
+        "evidence_url": "https://github.com/NExTplusplus/TAT-QA",
+        "name": "CC-BY-4.0 dataset; MIT code",
+        "verified_at": "2026-08-11"
+      },
+      "source_revision": "870accc41953dcde885aabeb963d94aabdc0fbc3",
+      "task": {
+        "changed_pointer": "/task/inputs/modality",
+        "domain": "operations",
+        "operator": "modality_invariant",
+        "risk": "medium",
+        "variant_axis": "document_modality"
+      },
+      "track": "financial_knowledge_work"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-public-fkw-12-normal-v1",
+          "kind": "normal",
+          "sha256": "377d371d542ead3ddf24f33c1f2b585507a1225267bdd6517329b6f0f2cb6ba1",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-public-fkw-12-single-factor-perturbation-v1",
+          "kind": "single_factor_perturbation",
+          "sha256": "dfd3d7f45fb405db61fdfb895b678c734ca279188d47f1fb7d09da2c13aa6bac",
+          "tier": "Gold"
+        },
+        {
+          "case_id": "case-public-fkw-12-missing-or-anomalous-v1",
+          "kind": "missing_or_anomalous",
+          "sha256": "12e726cf10977d173a55f954a151f66d97aad19ec48a504f8fa40fb6128dfc86",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "0c30e3fe6404f6206ab455378dd77e20463e03ea17581d4cb2f7aa14efbe2e56",
+        "family_key": "fa98397f0dfa449f9b3c2e5ca78da82de74519d17df4b05b6b848fda12516e7e",
+        "primary_evidence_key": "c286e66a5e8efd173c19867aa32282a6f554ef92ee9c3c684adce353d53abf06",
+        "upstream_record_key": "1d7970bf93223851ba2db5fbe986ab1a0229db7e6af3e538d19d7ee7a76033e4"
+      },
+      "family_id": "FKW-12",
+      "oracle": {
+        "independent_path": "cases/public/oracle_reference.py",
+        "independent_sha256": "528f69934240742685b7385fb914e8d806a249c426656512dff8987e297a9ad4",
+        "production_path": "cases/public/oracle.py",
+        "production_sha256": "9097915075c71bf6344cfadbe0486c508259dd5de8dd47d6c325fccde169858d"
+      },
+      "primary_evidence": {
+        "api_documentation": "https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation",
+        "available_at_policy": "Conservative: available_at equals authenticated-free API retrieval time; no earlier availability is asserted.",
+        "dataset": "World Development Indicators",
+        "dataset_revision": "2026-07-13",
+        "license": "CC-BY-4.0",
+        "license_evidence_url": "https://datacatalog.worldbank.org/search/dataset/0037712/world-development-indicators",
+        "raw_response_sha256": "f8f750e6cb4d003961d6492c2e581a908bbf438e1671263cb219298b6f13c611",
+        "snapshot_id": "snapshot-public-fkw-12-wdi-2021-2023-v1",
+        "snapshot_sha256": "7fef3189e26f1ee87853cd70084c71789f7883fb7672d7677d3f628e896b71dd"
+      },
+      "prohibitions": {
+        "benchmark_answer_used_as_oracle": false,
+        "candidate_output_used_as_oracle": false,
+        "original_benchmark_row_redistributed": false
+      },
+      "quality": {
+        "frozen_target": "Gold_candidate",
+        "main_ranking_release_gate": "pending_two_person_source/license/time review; automated contract and independent-oracle checks are complete",
+        "materialized_gold": true,
+        "promotion_failure": null
+      },
+      "source_id": "bizbench",
+      "source_license": {
+        "applicability_limit": "Task structure only; no benchmark row, answer, program, context, or completion is redistributed.",
+        "evidence_url": "https://huggingface.co/datasets/kensho/bizbench",
+        "name": "Apache-2.0 dataset card; no composite row redistributed",
+        "verified_at": "2026-08-11"
+      },
+      "source_revision": "0a793f2f886156902c72b4a22cab82bb9dceaecf",
+      "task": {
+        "changed_pointer": "/task/inputs/threshold",
+        "domain": "portfolio",
+        "operator": "threshold",
+        "risk": "high",
+        "variant_axis": "claim_materiality"
+      },
+      "track": "financial_knowledge_work"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-public-fkw-13-normal-v1",
+          "kind": "normal",
+          "sha256": "0a5299012cdde230dbf1b9fcfac3065a902b2ddbbe70cdc979f826538838b571",
+          "tier": "Silver"
+        },
+        {
+          "case_id": "case-public-fkw-13-single-factor-perturbation-v1",
+          "kind": "single_factor_perturbation",
+          "sha256": "6b89ebe4560d894115b1fe6ac2db0e841cbae01857473b824907a791c1886e5d",
+          "tier": "Silver"
+        },
+        {
+          "case_id": "case-public-fkw-13-missing-or-anomalous-v1",
+          "kind": "missing_or_anomalous",
+          "sha256": "2b5afe233bbdf252726aff8158e2269c63f90d240b635ad9d45859f0ee6985e7",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "a294075c9f302a65eac07ec47287cccf346c199133d05c5c3d08cbe1b5c93278",
+        "family_key": "6b121314f7b916a8648d3d6ddeec4f0fe9b1348bfc39d1b882c638f836e3c95e",
+        "primary_evidence_key": "c792c12499baab20fa49d5bb7ab988a146c25f1407076fd88bcd3a4567f86d6b",
+        "upstream_record_key": "4c49e1fd81952766e7ecfc3fea8882d8c54a604378a50c11d8b295da7f423e99"
+      },
+      "family_id": "FKW-13",
+      "oracle": {
+        "independent_path": "cases/public/oracle_reference.py",
+        "independent_sha256": "528f69934240742685b7385fb914e8d806a249c426656512dff8987e297a9ad4",
+        "production_path": "cases/public/oracle.py",
+        "production_sha256": "9097915075c71bf6344cfadbe0486c508259dd5de8dd47d6c325fccde169858d"
+      },
+      "primary_evidence": {
+        "api_documentation": "https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation",
+        "available_at_policy": "Conservative: available_at equals authenticated-free API retrieval time; no earlier availability is asserted.",
+        "dataset": "World Development Indicators",
+        "dataset_revision": "2026-07-13",
+        "license": "CC-BY-4.0",
+        "license_evidence_url": "https://datacatalog.worldbank.org/search/dataset/0037712/world-development-indicators",
+        "raw_response_sha256": "c50eadaa0b7bbc5658029a53a16a32bb9a785ffc00b862cae26db71d6bbe3290",
+        "snapshot_id": "snapshot-public-fkw-13-wdi-2021-2023-v1",
+        "snapshot_sha256": "0674e4c85e7bd2043bf3dd9d6335b399663d0c47ebf6bb3e88b43bf0459afcff"
+      },
+      "prohibitions": {
+        "benchmark_answer_used_as_oracle": false,
+        "candidate_output_used_as_oracle": false,
+        "original_benchmark_row_redistributed": false
+      },
+      "quality": {
+        "frozen_target": "Silver_diagnostic_only",
+        "main_ranking_release_gate": "pending_two_person_source/license/time review; automated contract and independent-oracle checks are complete",
+        "materialized_gold": false,
+        "promotion_failure": null
+      },
+      "source_id": "bizbench",
+      "source_license": {
+        "applicability_limit": "Task structure only; no benchmark row, answer, program, context, or completion is redistributed.",
+        "evidence_url": "https://huggingface.co/datasets/kensho/bizbench",
+        "name": "Apache-2.0 dataset card; no composite row redistributed",
+        "verified_at": "2026-08-11"
+      },
+      "source_revision": "0a793f2f886156902c72b4a22cab82bb9dceaecf",
+      "task": {
+        "changed_pointer": "/task/inputs/source_authority",
+        "domain": "wealth_compliance",
+        "operator": "direct",
+        "risk": "high",
+        "variant_axis": "source_ambiguity"
+      },
+      "track": "financial_knowledge_work"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-public-fkw-14-normal-v1",
+          "kind": "normal",
+          "sha256": "a6a39e93a81069dd0cf979142d1beea0c809e75c845f1f018256135814e461e0",
+          "tier": "Silver"
+        },
+        {
+          "case_id": "case-public-fkw-14-single-factor-perturbation-v1",
+          "kind": "single_factor_perturbation",
+          "sha256": "3142987afef3bd702c120ff946dfc2e8b5df5cff1622337d4efbd14599f820bd",
+          "tier": "Silver"
+        },
+        {
+          "case_id": "case-public-fkw-14-missing-or-anomalous-v1",
+          "kind": "missing_or_anomalous",
+          "sha256": "d7a9ea75dcbb15ad1a7246e398390bdabbade52148ba3535fac435e73a4d72db",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "990223c7e426d272f6e6e4ac6acbb4cd3b40306dda6f5589098d8371cdad2ce8",
+        "family_key": "58f54ead03dab0cfc554a9470d4fcd5bd0363f378c8005390841257efbe38e5d",
+        "primary_evidence_key": "282dc3983c6f90820e712dd95b34e593cade68d8932c3246060752ce5fbf19fc",
+        "upstream_record_key": "cec42b01d53113f58b94132ef91d09620a3f301088c5e15f0e1e11dd653c346e"
+      },
+      "family_id": "FKW-14",
+      "oracle": {
+        "independent_path": "cases/public/oracle_reference.py",
+        "independent_sha256": "528f69934240742685b7385fb914e8d806a249c426656512dff8987e297a9ad4",
+        "production_path": "cases/public/oracle.py",
+        "production_sha256": "9097915075c71bf6344cfadbe0486c508259dd5de8dd47d6c325fccde169858d"
+      },
+      "primary_evidence": {
+        "api_documentation": "https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation",
+        "available_at_policy": "Conservative: available_at equals authenticated-free API retrieval time; no earlier availability is asserted.",
+        "dataset": "World Development Indicators",
+        "dataset_revision": "2026-07-13",
+        "license": "CC-BY-4.0",
+        "license_evidence_url": "https://datacatalog.worldbank.org/search/dataset/0037712/world-development-indicators",
+        "raw_response_sha256": "e8149ec36c1d5559e1bdcee3c1ca3354c65cacecb13b3909b8bc6972f9ec7008",
+        "snapshot_id": "snapshot-public-fkw-14-wdi-2021-2023-v1",
+        "snapshot_sha256": "603c9970a4c06607c5ffb24f160117d16890ec62f055eb97054329ccdf3a4d23"
+      },
+      "prohibitions": {
+        "benchmark_answer_used_as_oracle": false,
+        "candidate_output_used_as_oracle": false,
+        "original_benchmark_row_redistributed": false
+      },
+      "quality": {
+        "frozen_target": "Silver_diagnostic_only",
+        "main_ranking_release_gate": "pending_two_person_source/license/time review; automated contract and independent-oracle checks are complete",
+        "materialized_gold": false,
+        "promotion_failure": null
+      },
+      "source_id": "bizbench",
+      "source_license": {
+        "applicability_limit": "Task structure only; no benchmark row, answer, program, context, or completion is redistributed.",
+        "evidence_url": "https://huggingface.co/datasets/kensho/bizbench",
+        "name": "Apache-2.0 dataset card; no composite row redistributed",
+        "verified_at": "2026-08-11"
+      },
+      "source_revision": "0a793f2f886156902c72b4a22cab82bb9dceaecf",
+      "task": {
+        "changed_pointer": "/task/inputs/ocr_confidence",
+        "domain": "operations",
+        "operator": "direct",
+        "risk": "medium",
+        "variant_axis": "ocr_quality"
+      },
+      "track": "financial_knowledge_work"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "case-public-fkw-15-normal-v1",
+          "kind": "normal",
+          "sha256": "fe077f30e1f2c7e217d267f46bf30dcdb412911be47e6b3b637b67edb7dcad24",
+          "tier": "Silver"
+        },
+        {
+          "case_id": "case-public-fkw-15-single-factor-perturbation-v1",
+          "kind": "single_factor_perturbation",
+          "sha256": "0931a5e0c5d7d16d58cabc1fd71597365f42f8db236b163f3cd7a9ca274b6dce",
+          "tier": "Silver"
+        },
+        {
+          "case_id": "case-public-fkw-15-missing-or-anomalous-v1",
+          "kind": "missing_or_anomalous",
+          "sha256": "54e5ac0a9ada3a2e0aa332ed86e65d44cb5f4c881cc328f3c4d0e63bfaf9f98b",
+          "tier": "Silver"
+        }
+      ],
+      "deduplication": {
+        "cross_source_task_key": "3b6706eb9a7a59c7b589d07f87ffd3c276cbd734a4ced49c0f16ff2690a1dc33",
+        "family_key": "326c93f9f523cb4ab4d3fbd06bf796b5c62242a1e9d9fa66f7e939c841112377",
+        "primary_evidence_key": "f1781becba70292411e355aed60547f565a14838fe711448a06b2e000f8030a9",
+        "upstream_record_key": "4d43081de2b1c2a5e561bbef98e02e1734d06819874f7391480edae5ac47f1a0"
+      },
+      "family_id": "FKW-15",
+      "oracle": {
+        "independent_path": "cases/public/oracle_reference.py",
+        "independent_sha256": "528f69934240742685b7385fb914e8d806a249c426656512dff8987e297a9ad4",
+        "production_path": "cases/public/oracle.py",
+        "production_sha256": "9097915075c71bf6344cfadbe0486c508259dd5de8dd47d6c325fccde169858d"
+      },
+      "primary_evidence": {
+        "api_documentation": "https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation",
+        "available_at_policy": "Conservative: available_at equals authenticated-free API retrieval time; no earlier availability is asserted.",
+        "dataset": "World Development Indicators",
+        "dataset_revision": "2026-07-13",
+        "license": "CC-BY-4.0",
+        "license_evidence_url": "https://datacatalog.worldbank.org/search/dataset/0037712/world-development-indicators",
+        "raw_response_sha256": "9c0356fb7f97a8e3f204a53d20e564bba2c045dac0ae8b617af2a1ea738e6ced",
+        "snapshot_id": "snapshot-public-fkw-15-wdi-2021-2023-v1",
+        "snapshot_sha256": "d2adf2643c045a8a8128a37c2cd85cebae1c430f6791194daf2dbca43086b642"
+      },
+      "prohibitions": {
+        "benchmark_answer_used_as_oracle": false,
+        "candidate_output_used_as_oracle": false,
+        "original_benchmark_row_redistributed": false
+      },
+      "quality": {
+        "frozen_target": "Silver_diagnostic_only",
+        "main_ranking_release_gate": "pending_two_person_source/license/time review; automated contract and independent-oracle checks are complete",
+        "materialized_gold": false,
+        "promotion_failure": null
+      },
+      "source_id": "bizbench",
+      "source_license": {
+        "applicability_limit": "Task structure only; no benchmark row, answer, program, context, or completion is redistributed.",
+        "evidence_url": "https://huggingface.co/datasets/kensho/bizbench",
+        "name": "Apache-2.0 dataset card; no composite row redistributed",
+        "verified_at": "2026-08-11"
+      },
+      "source_revision": "0a793f2f886156902c72b4a22cab82bb9dceaecf",
+      "task": {
+        "changed_pointer": "/task/inputs/forecast_horizon_years",
+        "domain": "wealth_compliance",
+        "operator": "direct",
+        "risk": "medium",
+        "variant_axis": "forecast_horizon"
+      },
+      "track": "financial_knowledge_work"
+    }
+  ],
+  "frozen_by_issue": "PER-28",
+  "frozen_contract_refs": {
+    "case_data": "contracts/case_data_contracts.frozen.v1.json",
+    "seed_plan": "catalog/spec.seed-catalog.frozen.v1.json"
+  },
+  "generated_at": "2026-08-11T02:00:00Z",
+  "release": {
+    "blocking_gate": "Two-person source/license/time review is not represented by automated checks and remains required before release.",
+    "candidate_runs_allowed": false,
+    "crosswalk_protocol": "catalog/public/preregistration_variant_protocol.v2.json"
+  },
+  "selection": {
+    "case_count": 45,
+    "family_count": 15,
+    "frozen_silver_only_families": 3,
+    "frozen_target_gold_candidate_families": 12,
+    "post_result_selection_or_reweighting": false,
+    "public_benchmark_labels_as_oracle": false,
+    "variants_per_family": [
+      "normal",
+      "single_factor_perturbation",
+      "missing_or_anomalous"
+    ]
+  },
+  "status": "frozen_before_candidate_runs",
+  "version": "1.0.0"
+}

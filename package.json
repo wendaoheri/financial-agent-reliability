@@ -1,0 +1,13 @@
+{
+  "name": "financial-agent-reliability-harness",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Pinned pi-agent-core runtime boundary for the offline-first financial benchmark harness",
+  "type": "module",
+  "scripts": {
+    "test:runtime": "node --test tests/integration/pi_runtime.test.mjs"
+  },
+  "dependencies": {
+    "@mariozechner/pi-agent-core": "0.73.1"
+  }
+}

@@ -1,0 +1,144 @@
+{
+  "access": {
+    "mode": "public_read_only",
+    "prohibited_scopes": [
+      "account",
+      "assets",
+      "cash",
+      "holdings",
+      "orders",
+      "positions",
+      "portfolio",
+      "trades"
+    ],
+    "query_args": {
+      "countries": [
+        "IND"
+      ],
+      "date": "2021:2023",
+      "format": "json",
+      "indicator": "NY.GDP.MKTP.CD",
+      "per_page": 1000,
+      "source": 2
+    },
+    "query_name": "World Bank Indicators API v2"
+  },
+  "contract_type": "data_snapshot",
+  "contract_version": "1.0.0",
+  "financial_subject": {
+    "currency": {
+      "code": "USD"
+    },
+    "entity_name": "IND — GDP (current US$)",
+    "identifiers": [
+      {
+        "scheme": "WB_COUNTRY",
+        "value": "IND"
+      },
+      {
+        "scheme": "WB_INDICATOR",
+        "value": "NY.GDP.MKTP.CD"
+      }
+    ],
+    "market": {
+      "country": "IND",
+      "mic": "XXXX",
+      "timezone": "UTC"
+    },
+    "subject_type": "macro_series",
+    "units": {
+      "accounting_basis": "World Development Indicators; indicator-specific unit is preserved in each record",
+      "amount_scale": "unit",
+      "price_basis": "not_applicable"
+    }
+  },
+  "integrity": {
+    "canonicalization": "financial-agent-c14n-json-v1",
+    "content_sha256": "495f0c92373af5cc0daf43c1fc6fc2433f54acdd85e383fe71c09b60da757e85",
+    "hash_algorithm": "sha256"
+  },
+  "lineage": {
+    "code_revision": "1893b4cdccd30729ba6820aa485f5542038c03c470097b1cbcd60cdf9c8370f9",
+    "collection_session_sha256": "07eeb057b61da934ae4d462be786ab183a7cebb9be5213ae27f22d3fa8478f30",
+    "collector": "cases/public/v2/build_public_cases_v2.py:fetch_raw",
+    "collector_version": "2.0.0",
+    "parent_snapshot_ids": [],
+    "query_args": {
+      "request_urls": [
+        "https://api.worldbank.org/v2/country/IND/indicator/NY.GDP.MKTP.CD?date=2021%3A2023&format=json&per_page=1000&source=2"
+      ]
+    },
+    "raw_response_sha256": "404f972270006487f70bed33247379c1f0cb65cd4be108d112a1bece315c3e88",
+    "schema_version": "case-data/1.0.0"
+  },
+  "records": [
+    {
+      "evidence_type": "wdi_indicator_observation",
+      "payload": {
+        "country_code": "IND",
+        "country_name": "India",
+        "decimal_hint": "0",
+        "indicator_code": "NY.GDP.MKTP.CD",
+        "indicator_name": "GDP (current US$)",
+        "observation_status": "",
+        "unit": "indicator-defined; see WDI metadata",
+        "value": "3167270623260.47",
+        "year": "2021"
+      },
+      "record_id": "FKW-09-IND-2021",
+      "source_locator": "snapshots/public/v2/raw/FKW-09.json#/responses/0/1/0"
+    },
+    {
+      "evidence_type": "wdi_indicator_observation",
+      "payload": {
+        "country_code": "IND",
+        "country_name": "India",
+        "decimal_hint": "0",
+        "indicator_code": "NY.GDP.MKTP.CD",
+        "indicator_name": "GDP (current US$)",
+        "observation_status": "",
+        "unit": "indicator-defined; see WDI metadata",
+        "value": "3249938492013.47",
+        "year": "2022"
+      },
+      "record_id": "FKW-09-IND-2022",
+      "source_locator": "snapshots/public/v2/raw/FKW-09.json#/responses/0/1/1"
+    },
+    {
+      "evidence_type": "wdi_indicator_observation",
+      "payload": {
+        "country_code": "IND",
+        "country_name": "India",
+        "decimal_hint": "0",
+        "indicator_code": "NY.GDP.MKTP.CD",
+        "indicator_name": "GDP (current US$)",
+        "observation_status": "",
+        "unit": "indicator-defined; see WDI metadata",
+        "value": "3500906030644.76",
+        "year": "2023"
+      },
+      "record_id": "FKW-09-IND-2023",
+      "source_locator": "snapshots/public/v2/raw/FKW-09.json#/responses/0/1/2"
+    }
+  ],
+  "revision": 2,
+  "snapshot_id": "snapshot-public-fkw-09-wdi-2021-2023-v2",
+  "source": {
+    "dataset": "World Development Indicators source=2; API lastupdated=2026-07-13",
+    "license": {
+      "name": "Creative Commons Attribution 4.0",
+      "redistributable": true,
+      "url": "https://datacatalog.worldbank.org/search/dataset/0037712/world-development-indicators"
+    },
+    "provider": "world_bank",
+    "source_type": "macro",
+    "uri": "https://api.worldbank.org/v2/country/IND/indicator/NY.GDP.MKTP.CD?date=2021%3A2023&format=json&per_page=1000&source=2"
+  },
+  "status": "frozen",
+  "temporal": {
+    "as_of": "2026-08-11T00:24:14.632976Z",
+    "available_at": "2026-08-11T00:24:14.632976Z",
+    "event_time": "2023-12-31T23:59:59Z",
+    "retrieved_at": "2026-08-11T00:24:14.632976Z"
+  }
+}
