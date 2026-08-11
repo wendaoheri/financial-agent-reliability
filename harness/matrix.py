@@ -77,8 +77,12 @@ def _load(path: pathlib.Path) -> Any:
 
 def _bundle_commitments(root: pathlib.Path) -> list[dict[str, str]]:
     paths = [
-        root / "contracts" / "run_trace_harness_config.v1.json",
-        root / "contracts" / "model_manifest.frozen.v1.json",
+        root / "contracts" / "run_trace_harness_config.v2.json",
+        root / "contracts" / "model_manifest.frozen.v2.json",
+        root / "contracts" / "model_manifest.schema.v2.json",
+        root / "contracts" / "run_trace.schema.v2.json",
+        root / "contracts" / "run_trace_validator_v2.py",
+        root / "docs" / "contracts" / "harness-run-trace-v2.md",
         root / "preregistration" / "benchmark_preregistration.v1.json",
         root / VARIANT_PROTOCOL_RELATIVE_PATH,
         root / PUBLIC_MANIFEST_RELATIVE_PATH,
@@ -433,7 +437,7 @@ def _load_and_validate_variant_protocol(
 
 def build_run_manifest(root: pathlib.Path) -> dict[str, Any]:
     root = pathlib.Path(root)
-    config_path = root / "contracts" / "run_trace_harness_config.v1.json"
+    config_path = root / "contracts" / "run_trace_harness_config.v2.json"
     prereg_path = root / "preregistration" / "benchmark_preregistration.v1.json"
     config = _load(config_path)
     prereg = _load(prereg_path)
@@ -497,7 +501,7 @@ def build_run_manifest(root: pathlib.Path) -> dict[str, Any]:
         raise ValueError("run matrix must contain exactly 810 unique rows")
     manifest_core = {
         "contract_type": "benchmark_run_manifest",
-        "contract_version": "3.0.0",
+        "contract_version": "4.0.0",
         "randomization": "family_variant_repeat_blocks_seeded_then_model_order_seeded",
         "randomization_seed": BASE_SEED,
         "config_sha256": config_hash,

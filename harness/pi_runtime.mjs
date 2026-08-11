@@ -9,7 +9,7 @@ import { Agent } from "@mariozechner/pi-agent-core";
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = dirname(HERE);
 const CONFIG = JSON.parse(
-  readFileSync(join(ROOT, "contracts", "run_trace_harness_config.v1.json"), "utf8"),
+  readFileSync(join(ROOT, "contracts", "run_trace_harness_config.v2.json"), "utf8"),
 );
 const MODELS = new Set(CONFIG.candidate_model_ids);
 
@@ -25,7 +25,18 @@ export function assertPinnedRuntime() {
 }
 
 
-export function createPinnedAgent({ model, tools, streamFn, getApiKey }) {
+export function createPinnedAgent({
+  model,
+  tools,
+  streamFn,
+  getApiKey,
+  onPayload,
+  onResponse,
+  beforeToolCall,
+  afterToolCall,
+  maxRetryDelayMs,
+  sessionId,
+}) {
   assertPinnedRuntime();
   if (!model || !MODELS.has(model.id)) {
     throw new Error("model.id must be one exact frozen candidate ID");
@@ -49,5 +60,11 @@ export function createPinnedAgent({ model, tools, streamFn, getApiKey }) {
     toolExecution: "sequential",
     streamFn,
     getApiKey,
+    onPayload,
+    onResponse,
+    beforeToolCall,
+    afterToolCall,
+    maxRetryDelayMs,
+    sessionId,
   });
 }

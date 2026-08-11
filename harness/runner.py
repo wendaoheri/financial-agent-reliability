@@ -22,8 +22,8 @@ from providers.bailian import BailianAdapter, Transport
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-CONFIG_PATH = ROOT / "contracts" / "run_trace_harness_config.v1.json"
-MODEL_MANIFEST_PATH = ROOT / "contracts" / "model_manifest.frozen.v1.json"
+CONFIG_PATH = ROOT / "contracts" / "run_trace_harness_config.v2.json"
+MODEL_MANIFEST_PATH = ROOT / "contracts" / "model_manifest.frozen.v2.json"
 
 
 def _timestamp() -> str:
@@ -192,7 +192,7 @@ class OfflineHarness:
         )
         trace = {
             "contract_type": "run_trace",
-            "contract_version": "1.0.0",
+            "contract_version": "2.0.0",
             "run_id": run_id,
             "run_identity": identity,
             "status": status,

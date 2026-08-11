@@ -11,8 +11,8 @@ from urllib.parse import urlsplit
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-CONFIG_PATH = ROOT / "contracts" / "run_trace_harness_config.v1.json"
-EXPECTED_MODELS = ("qwen-3.8-max", "glm-5.2", "deepseek-v4-pro")
+CONFIG_PATH = ROOT / "contracts" / "run_trace_harness_config.v2.json"
+EXPECTED_MODELS = ("qwen3.8-max", "glm-5.2", "deepseek-v4-pro")
 
 
 class BailianConfigError(ValueError):
@@ -70,6 +70,8 @@ class PreflightResult:
     retryable: bool
     fallback_attempted: bool
     endpoint_id: str
+    provider_error_code: str | None = None
+    http_status: int | None = None
 
 
 Transport = Callable[[dict[str, Any]], Mapping[str, Any]]
@@ -85,14 +87,18 @@ class BailianAdapter:
         self.model_id = model_id
         self._config = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
 
-    def build_request(self, seed: int, user_content: str = "Return one tool call.") -> dict[str, Any]:
+    def build_request(self, seed: int, user_content: str | None = None) -> dict[str, Any]:
         parameters = dict(self._config["request_parameters"])
         parameters.pop("seed_required")
         return {
             "model": self.model_id,
             "messages": [
                 {"role": "system", "content": self._config["system_prompt"]},
-                {"role": "user", "content": user_content},
+                {
+                    "role": "user",
+                    "content": user_content
+                    or self._config["provider"]["preflight_tool_instruction"],
+                },
             ],
             "tools": self._config["tools"],
             "parameters": dict(parameters, seed=seed),
@@ -106,6 +112,22 @@ class BailianAdapter:
             return PreflightResult(
                 self.model_id, None, False, "timeout", True, False, self.settings.endpoint_id
             )
+        except Exception as exc:
+            failure_type = getattr(exc, "failure_type", None)
+            retryable = getattr(exc, "retryable", None)
+            if isinstance(failure_type, str) and isinstance(retryable, bool):
+                return PreflightResult(
+                    self.model_id,
+                    None,
+                    False,
+                    failure_type,
+                    retryable,
+                    False,
+                    self.settings.endpoint_id,
+                    getattr(exc, "provider_code", None),
+                    getattr(exc, "http_status", None),
+                )
+            raise
         response_model = response.get("model")
         fallback = bool(response.get("fallback_detected", False))
         if response_model != self.model_id:
@@ -132,7 +154,7 @@ class BailianAdapter:
             )
         if response.get("tool_call_supported") is not True:
             return PreflightResult(
-                self.model_id, str(response_model), False, "parameters_ignored", False, False,
+                self.model_id, str(response_model), False, "tool_capability_unverified", False, False,
                 self.settings.endpoint_id,
             )
         return PreflightResult(
