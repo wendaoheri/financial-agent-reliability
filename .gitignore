@@ -17,3 +17,6 @@ runs/
 CLAUDE.md
 description.md
 .DS_Store
+
+# Multica issue-attachment downloads — local working copies, not source artifacts
+attachments/
