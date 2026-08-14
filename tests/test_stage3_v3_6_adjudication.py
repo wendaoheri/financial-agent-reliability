@@ -1,5 +1,9 @@
 import unittest
 
+# PER-86 兼容层:先导入主包,把旧顶层包名(harness 等)注册为别名,
+# 冻结审计脚本 audit/build_stage3_v3_6_adjudication.py 才能按旧导入路径加载。
+import financial_agent_reliability  # noqa: F401
+
 from audit.build_stage3_v3_6_adjudication import (
     CASE_REASON_CODE_SETS,
     REASON_CODE_DEFINITIONS,

@@ -19,7 +19,7 @@ import { createPinnedAgent } from "./pi_runtime.mjs";
 
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const ROOT = dirname(HERE);
+const ROOT = dirname(dirname(dirname(HERE)));
 const CONFIG = JSON.parse(
   readFileSync(join(ROOT, "contracts", "run_trace_harness_config.v2.json"), "utf8"),
 );

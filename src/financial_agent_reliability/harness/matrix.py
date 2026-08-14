@@ -9,6 +9,7 @@ import random
 from typing import Any
 
 from contracts.run_trace_validator import build_run_id, file_sha256
+from financial_agent_reliability.relocation import verify_frozen_pin
 
 
 BASE_SEED = 20260811
@@ -135,7 +136,13 @@ def _verify_frozen_manifest(
         if not artifact.is_relative_to(root_resolved):
             raise ValueError(f"input commitment escapes project root: {listed_path}")
         if not artifact.is_file() or file_sha256(artifact) != expected:
-            raise ValueError(f"input hash drift: {listed_path}")
+            # PER-85-D6 / PER-86: 旧血缘 manifest 钉住的代码文件已迁入 src 布局;
+            # 按迁移映射解析,内容逐字节一致的按新位置校验,重构机械改写的
+            # 文件由 CONTENT_CHANGED_BY_REFACTOR 显式放行。
+            relative_to_root = artifact.relative_to(root_resolved).as_posix()
+            pinned_ok, _classification = verify_frozen_pin(root, relative_to_root, expected)
+            if not pinned_ok:
+                raise ValueError(f"input hash drift: {listed_path}")
         commitment_lines.append(f"{expected}  {listed_path}\n")
     actual_bundle = hashlib.sha256("".join(commitment_lines).encode("utf-8")).hexdigest()
     if (

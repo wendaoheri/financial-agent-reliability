@@ -134,7 +134,7 @@ class ProviderAdapterTests(unittest.TestCase):
                 return json.dumps(body).encode("utf-8")
 
         transport = BailianHTTPTransport(settings, timeout_seconds=5)
-        with patch("providers.bailian_http.urlopen", return_value=Response()) as opened:
+        with patch("financial_agent_reliability.providers.bailian_http.urlopen", return_value=Response()) as opened:
             normalized = transport(adapter.build_request(20260811), force_tool_call=True)
         sent = opened.call_args.args[0]
         self.assertNotIn(settings.api_key, repr(normalized))
@@ -160,7 +160,7 @@ class ProviderAdapterTests(unittest.TestCase):
             hdrs=None,
             fp=None,
         )
-        with patch("providers.bailian_http.urlopen", side_effect=error):
+        with patch("financial_agent_reliability.providers.bailian_http.urlopen", side_effect=error):
             with self.assertRaises(BailianHTTPError) as caught:
                 transport(adapter.build_request(20260811), force_tool_call=True)
         self.assertEqual(caught.exception.failure_type, "rate_limited")
@@ -259,8 +259,8 @@ class ManifestAndRecoveryTests(unittest.TestCase):
             "cases/longbridge",
             "snapshots/public",
             "snapshots/longbridge",
-            "pipelines/longbridge",
-            "oracles/longbridge",
+            "src/financial_agent_reliability/pipelines/longbridge",
+            "src/financial_agent_reliability/oracles/longbridge",
         ):
             source = ROOT / relative
             target = destination / relative
@@ -294,7 +294,7 @@ class ManifestAndRecoveryTests(unittest.TestCase):
         self.assertEqual(first, second)
         self.assertEqual(
             first,
-            json.loads((ROOT / "harness/run_manifest.v4.json").read_text(encoding="utf-8")),
+            json.loads((ROOT / "src/financial_agent_reliability/harness/run_manifest.v4.json").read_text(encoding="utf-8")),
         )
         self.assertEqual(first["contract_version"], "4.0.0")
         self.assertEqual(len(first["runs"]), 810)
@@ -341,7 +341,7 @@ class ManifestAndRecoveryTests(unittest.TestCase):
             },
         )
         previous = json.loads(
-            (ROOT / "harness/run_manifest.v3.json").read_text(encoding="utf-8")
+            (ROOT / "src/financial_agent_reliability/harness/run_manifest.v3.json").read_text(encoding="utf-8")
         )
         self.assertTrue(
             {row["run_id"] for row in first["runs"]}.isdisjoint(
@@ -380,7 +380,7 @@ class ManifestAndRecoveryTests(unittest.TestCase):
             {row["model_id"] for row in plan["runs"]},
             {"qwen3.8-max", "glm-5.2", "deepseek-v4-pro"},
         )
-        full = json.loads((ROOT / "harness/run_manifest.v4.json").read_text(encoding="utf-8"))
+        full = json.loads((ROOT / "src/financial_agent_reliability/harness/run_manifest.v4.json").read_text(encoding="utf-8"))
         full_rows = {row["run_id"]: row for row in full["runs"]}
         self.assertTrue(all(row == full_rows[row["run_id"]] for row in plan["runs"]))
         validate_smoke_plan(plan, ROOT)

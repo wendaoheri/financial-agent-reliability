@@ -26,6 +26,7 @@ from financial_agent_reliability.pipelines.longbridge.build_synthetic_v2 import 
     check,
     validate_stage3_artifact,
 )
+from financial_agent_reliability.relocation import verify_frozen_manifest
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -73,8 +74,16 @@ class SyntheticV2CaseTests(unittest.TestCase):
 
     def test_offline_replay_and_v1_manifest_both_remain_valid(self):
         check()
-        verify_manifest(ROOT / "catalog/longbridge/frozen_manifest.v1.json")
-        verify_manifest(CATALOG_DIR / "frozen_manifest.v2.json")
+        # PER-85-D6: v1/v2 manifest 为历史基线,其钉住的代码文件已迁入 src 布局;
+        # 按 PER-86 迁移映射解析,重构机械改写的文件与本测试文件由放行清单
+        # 显式点名,而不是静默跳过。
+        for manifest_path, allow in (
+            (ROOT / "catalog/longbridge/frozen_manifest.v1.json", ("../../tests/test_longbridge_cases.py",)),
+            (CATALOG_DIR / "frozen_manifest.v2.json", ("../../../tests/test_longbridge_synthetic_v2.py",)),
+        ):
+            result = verify_frozen_manifest(manifest_path, project_root=ROOT, extra_allow_changed=allow)
+            self.assertTrue(result["bundle_commitment_valid"], manifest_path)
+            self.assertEqual(result["errors"], [], manifest_path)
 
     def test_source_is_clean_room_redistributable_and_formula_recomputable(self):
         spec = load_json(SPEC_PATH)

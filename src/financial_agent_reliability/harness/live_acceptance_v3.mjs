@@ -9,7 +9,7 @@ import { createPinnedAgentV3 } from "./pi_runtime_v3.mjs";
 
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const ROOT = dirname(HERE);
+const ROOT = dirname(dirname(dirname(HERE)));
 const CONFIG_PATH = join(ROOT, "contracts", "run_trace_harness_config.v3.json");
 const CONFIG = JSON.parse(readFileSync(CONFIG_PATH, "utf8"));
 const MODEL_MANIFEST_PATH = join(ROOT, "contracts", "model_manifest.frozen.v2.json");

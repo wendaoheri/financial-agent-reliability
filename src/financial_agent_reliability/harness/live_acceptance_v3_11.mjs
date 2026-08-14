@@ -29,7 +29,7 @@ import { buildToolSchemasV37 } from "./live_acceptance_v3_7.mjs";
 //      into the frozen contract surface for independent audit.
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const ROOT = dirname(HERE);
+const ROOT = dirname(dirname(dirname(HERE)));
 const CONFIG_PATH = join(ROOT, "contracts", "run_trace_harness_config.v3.11.json");
 const CONFIG = JSON.parse(readFileSync(CONFIG_PATH, "utf8"));
 const MODELS = CONFIG.candidate_model_ids;

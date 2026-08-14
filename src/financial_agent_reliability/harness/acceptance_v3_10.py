@@ -40,6 +40,7 @@ from contracts.run_trace_validator_v3_8 import build_run_id, content_sha256, fil
 from contracts.run_trace_validator_v3_10 import validate_run_trace_v310
 from contracts.validate_case_data import content_sha256 as stage2_content_sha256
 from financial_agent_reliability.harness.acceptance_v3_7 import tool_schemas_v37
+from financial_agent_reliability.relocation import relocate, verify_frozen_pin
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[3]
@@ -1321,7 +1322,11 @@ def material_completeness_errors() -> list[str]:
         implementation = card.get("oracle", {}).get("implementation", "")
         implementation_path = ROOT / implementation.split(":")[0]
         if not implementation_path.is_file():
-            errors.append(f"missing oracle implementation:{case_id}:{implementation}")
+            # PER-86: 冻结用例的血缘记录仍写旧路径;实现已迁入 src 布局,
+            # 按迁移映射解析。
+            relocated_relative = relocate(implementation.split(":")[0])
+            if relocated_relative is None or not (ROOT / relocated_relative).is_file():
+                errors.append(f"missing oracle implementation:{case_id}:{implementation}")
         elif card.get("oracle", {}).get("implementation_sha256") and file_sha256(implementation_path) != card["oracle"]["implementation_sha256"]:
             errors.append(f"oracle implementation drift:{case_id}:{implementation}")
     return errors
@@ -1820,12 +1825,12 @@ def validate_contract_bundle(manifest: Mapping[str, Any] | None = None, *, run_g
         if bundle.get("bundle_sha256") != wanted:
             errors.append(f"v{version} bundle drift")
         for item in bundle.get("artifacts", []):
-            path = ROOT / item["path"]
-            if not path.is_file() or file_sha256(path) != item["sha256"]:
+            pinned_ok, _classification = verify_frozen_pin(ROOT, item["path"], item["sha256"])
+            if not pinned_ok:
                 errors.append(f"v{version} artifact drift:{item['path']}")
     for item in result.get("artifacts", []):
-        path = ROOT / item["path"]
-        if not path.is_file() or file_sha256(path) != item["sha256"]:
+        pinned_ok, _classification = verify_frozen_pin(ROOT, item["path"], item["sha256"])
+        if not pinned_ok:
             errors.append(f"v3.10 artifact drift:{item['path']}")
     if content_sha256(result.get("artifacts", [])) != result.get("bundle_sha256"):
         errors.append("v3.10 bundle mismatch")

@@ -13,6 +13,7 @@ from contracts.run_trace_validator import build_bundle_sha256, build_run_id, fil
 from contracts.run_trace_validator_v3_5 import validate_run_trace_v35
 from contracts.run_trace_validator_v3 import validate_grader_v3
 from financial_agent_reliability.harness.acceptance_v3 import canonical, content_sha256, grade_candidate
+from financial_agent_reliability.relocation import verify_frozen_pin
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[3]
@@ -69,12 +70,18 @@ def verify_manifest(manifest: dict[str, Any]) -> list[str]:
     if manifest.get("authorized_financial_runs") != 36 or manifest.get("full_810_matrix_authorized") is not False:
         errors.append("authorization scope invalid")
     for artifact in manifest.get("artifacts", []):
-        path = ROOT / artifact["path"]
-        if not path.is_file():
-            errors.append(f"missing artifact: {artifact['path']}")
-        elif file_sha256(path) != artifact["sha256"]:
-            errors.append(f"hash mismatch: {artifact['path']}")
-    expected = build_contract_manifest()["bundle_sha256"]
+        pinned_ok, classification = verify_frozen_pin(ROOT, artifact["path"], artifact["sha256"])
+        if not pinned_ok:
+            errors.append(f"{classification} artifact: {artifact['path']}")
+            continue
+    # PER-85-D6: v3.5 契约 bundle 为历史基线,其 bundle_sha256 无法再与重构后
+    # 布局的重新构建相等;改为按其冻结时的合成规则(继承的协议/金融 bundle
+    # artifacts + 自身 artifacts)校验承诺的自洽性。
+    protocol = json.loads(BASE_PROTOCOL_BUNDLE.read_text(encoding="utf-8"))
+    financial = json.loads(BASE_FINANCIAL_BUNDLE.read_text(encoding="utf-8"))
+    inherited = {item["path"]: item for item in [*protocol["artifacts"], *financial["artifacts"]]}
+    combined = [*inherited.values(), *manifest.get("artifacts", [])]
+    expected = build_bundle_sha256(combined)
     if manifest.get("bundle_sha256") != expected:
         errors.append("bundle hash mismatch")
     return errors

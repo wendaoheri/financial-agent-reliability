@@ -7,7 +7,7 @@ import { Agent } from "@mariozechner/pi-agent-core";
 
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const ROOT = dirname(HERE);
+const ROOT = dirname(dirname(dirname(HERE)));
 const CONFIG = JSON.parse(readFileSync(join(ROOT, "contracts", "run_trace_harness_config.v3.4.json"), "utf8"));
 const MODELS = new Set(CONFIG.candidate_model_ids);
 

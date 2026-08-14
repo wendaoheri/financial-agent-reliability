@@ -23,6 +23,11 @@ from financial_agent_reliability.oracles.longbridge.oracle import evaluate
 
 
 ROOT = PROJECT_ROOT
+# PER-85-D6 / PER-86: v1 血缘为历史基线。冻结的 v1 快照/用例记录了重构前
+# pipelines/longbridge/freeze.py 的代码修订哈希;离线重放必须逐字节复现该历史
+# 记录,因此此处固定历史值,而不是取当前文件哈希。重跑实验将以新契约版本
+# 建立新血缘(另行裁决)。
+HISTORICAL_CODE_REVISION = "e77e77cbae6f71b9c4c0caaa4f7931486485ebc6cc0a088e2ba604d2aaed6371"
 RAW_DIR = ROOT / "snapshots" / "longbridge" / "raw"
 SNAPSHOTS_DIR = ROOT / "snapshots" / "longbridge"
 CASES_DIR = ROOT / "cases" / "longbridge"
@@ -106,7 +111,7 @@ def _snapshot(family: Mapping[str, Any]) -> dict[str, Any]:
         "financial_subject":{"subject_type":"public_equity","entity_name":family["symbol"],"identifiers":[{"scheme":"LONGBRIDGE_SYMBOL","value":family["symbol"]}],"market":{"mic":family["mic"],"country":"US","timezone":"America/New_York"},"currency":{"code":"USD"},"units":{"amount_scale":"unit","price_basis":"unadjusted quote fields as returned","accounting_basis":"not_applicable"}},
         "temporal":{"event_time":retrieved_at,"as_of":retrieved_at,"available_at":retrieved_at,"retrieved_at":retrieved_at},
         "records":[{"record_id":f"{family['id']}-{family['symbol']}-{retrieved_at}","evidence_type":"longbridge_quote","source_locator":f"snapshots/longbridge/raw/{family['id']}.json#/response/0","payload":{"symbol":row["symbol"],"last":str(row["last"]),"prev_close":str(row["prev_close"]),"status":str(row["status"])}}],
-        "lineage":{"collector":"src/financial_agent_reliability/pipelines/longbridge/freeze.py:fetch","collector_version":"1.0.0","schema_version":f"case-data/1.0.0;{raw['cli_version']};quote-schema/{raw['response_schema_sha256']}","query_args":{"command":raw["command"],"response_schema_sha256":raw["response_schema_sha256"]},"raw_response_sha256":file_sha256(raw_path),"code_revision":file_sha256(pathlib.Path(__file__)),"parent_snapshot_ids":[]},
+        "lineage":{"collector":"pipelines/longbridge/freeze.py:fetch","collector_version":"1.0.0","schema_version":f"case-data/1.0.0;{raw['cli_version']};quote-schema/{raw['response_schema_sha256']}","query_args":{"command":raw["command"],"response_schema_sha256":raw["response_schema_sha256"]},"raw_response_sha256":file_sha256(raw_path),"code_revision":HISTORICAL_CODE_REVISION,"parent_snapshot_ids":[]},
         "integrity":{"canonicalization":"financial-agent-c14n-json-v1","hash_algorithm":"sha256","content_sha256":"0"*64},
     }
     snapshot["integrity"]["content_sha256"] = content_sha256(snapshot)
@@ -138,7 +143,7 @@ def _case(family: Mapping[str, Any], snapshot: Mapping[str, Any], kind: str, ora
         "evidence_refs":refs,
         "variant":{"kind":kind,"family_id":family["id"],"parent_case_id":None if kind=="normal" else normal_id,"changed_factors":[] if kind=="normal" else ([family["changed"]] if kind=="single_factor_perturbation" else ["/evidence_refs"])},
         "oracle":{"spec_version":"1.0.0","implementation":"oracles/longbridge/oracle.py:evaluate","implementation_sha256":oracle_hash,"expected_status":result["status"],"expected_value":result["value"],"reason_codes":result["reason_codes"]},
-        "lineage":{"producer":"src/financial_agent_reliability/pipelines/longbridge/freeze.py","generator_version":"1.0.0","code_revision":file_sha256(pathlib.Path(__file__)),"generated_at":snapshot["temporal"]["retrieved_at"],"source_case_id":None if kind=="normal" else normal_id,"parent_case_id":None if kind=="normal" else normal_id},
+        "lineage":{"producer":"pipelines/longbridge/freeze.py","generator_version":"1.0.0","code_revision":HISTORICAL_CODE_REVISION,"generated_at":snapshot["temporal"]["retrieved_at"],"source_case_id":None if kind=="normal" else normal_id,"parent_case_id":None if kind=="normal" else normal_id},
         "integrity":{"canonicalization":"financial-agent-c14n-json-v1","hash_algorithm":"sha256","content_sha256":"0"*64},
     }
     case["integrity"]["content_sha256"] = content_sha256(case)

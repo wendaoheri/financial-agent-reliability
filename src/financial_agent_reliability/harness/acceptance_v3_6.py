@@ -11,6 +11,7 @@ from decimal import Decimal, ROUND_HALF_EVEN, localcontext
 from typing import Any, Mapping
 
 from contracts.run_trace_validator_v3_6 import build_run_id, content_sha256, file_sha256
+from financial_agent_reliability.relocation import verify_frozen_pin
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[3]
@@ -421,12 +422,12 @@ def validate_contract_bundle(manifest: Mapping[str, Any] | None = None) -> list[
     if v35.get("bundle_sha256") != V35_BUNDLE_SHA256:
         errors.append("v3.5 bundle hash changed")
     for item in v35.get("artifacts", []):
-        path = ROOT / item["path"]
-        if not path.is_file() or file_sha256(path) != item["sha256"]:
+        pinned_ok, _classification = verify_frozen_pin(ROOT, item["path"], item["sha256"])
+        if not pinned_ok:
             errors.append(f"v3.5 artifact drift: {item['path']}")
     for item in manifest.get("artifacts", []):
-        path = ROOT / item["path"]
-        if not path.is_file() or file_sha256(path) != item["sha256"]:
+        pinned_ok, _classification = verify_frozen_pin(ROOT, item["path"], item["sha256"])
+        if not pinned_ok:
             errors.append(f"v3.6 artifact drift: {item['path']}")
     if content_sha256(manifest.get("artifacts", [])) != manifest.get("bundle_sha256"):
         errors.append("v3.6 bundle hash mismatch")

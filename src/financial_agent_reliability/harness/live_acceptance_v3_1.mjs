@@ -10,7 +10,7 @@ import { buildRunPromptV3, calculateV3, createSubmissionCollector, normalizePayl
 
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const ROOT = dirname(HERE);
+const ROOT = dirname(dirname(dirname(HERE)));
 const BASE_CONFIG = JSON.parse(readFileSync(join(ROOT, "contracts", "run_trace_harness_config.v3.json"), "utf8"));
 const CORRECTION_PATH = join(ROOT, "contracts", "run_trace_harness_config.v3.1.json");
 const CORRECTION = JSON.parse(readFileSync(CORRECTION_PATH, "utf8"));

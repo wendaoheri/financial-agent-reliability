@@ -14,6 +14,7 @@ from contracts.validate_case_data import (
 from financial_agent_reliability.oracles.longbridge.oracle import evaluate
 from financial_agent_reliability.oracles.longbridge.oracle_reference import recompute
 from financial_agent_reliability.pipelines.longbridge.freeze import FAMILIES, VARIANTS, check
+from financial_agent_reliability.relocation import verify_frozen_manifest
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -117,12 +118,21 @@ class LongbridgeCaseTests(unittest.TestCase):
             self.assertEqual(len(values), len(set(values)), field)
 
     def test_oracle_hashes_manifest_and_release_gate(self):
-        production = file_sha256(ROOT / "oracles" / "longbridge" / "oracle.py")
-        independent = file_sha256(ROOT / "oracles" / "longbridge" / "oracle_reference.py")
+        production = file_sha256(ROOT / "src" / "financial_agent_reliability" / "oracles" / "longbridge" / "oracle.py")
+        independent = file_sha256(ROOT / "src" / "financial_agent_reliability" / "oracles" / "longbridge" / "oracle_reference.py")
         for family in self.catalog["families"]:
             self.assertEqual(family["oracle"]["production_sha256"], production)
             self.assertEqual(family["oracle"]["independent_sha256"], independent)
-        verify_manifest(CATALOG_DIR / "frozen_manifest.v1.json")
+        # PER-85-D6: v1 manifest 为历史基线,其钉住的代码文件已迁入 src 布局;
+        # 按 PER-86 迁移映射解析,内容逐字节一致的按新位置校验,重构机械改写
+        # 的文件(freeze.py)与本测试文件由放行清单显式点名。
+        result = verify_frozen_manifest(
+            CATALOG_DIR / "frozen_manifest.v1.json",
+            project_root=ROOT,
+            extra_allow_changed=("../../tests/test_longbridge_cases.py",),
+        )
+        self.assertTrue(result["bundle_commitment_valid"])
+        self.assertEqual(result["errors"], [])
         self.assertFalse(self.catalog["release"]["candidate_runs_allowed"])
 
     def test_rejects_undeclared_second_factor(self):

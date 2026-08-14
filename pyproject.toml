@@ -1,7 +1,33 @@
 [project]
 name = "financial-agent-reliability"
-version = "0.1.0"
+version = "0.2.0"
+description = "金融 Agent 可靠性研究:可验证评测 harness、契约体系与冻结证据库"
 requires-python = ">=3.11"
 dependencies = [
     "jsonschema>=4.26.0",
+]
+
+[project.scripts]
+fareli-harness = "financial_agent_reliability.harness.cli:main"
+fareli-report = "financial_agent_reliability.reporting.report:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/financial_agent_reliability"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/financial_agent_reliability",
+    "tests",
+    "contracts",
+    "cases",
+    "catalog",
+    "snapshots",
+    "preregistration",
+    "docs",
+    "README.md",
+    "AGENTS.md",
 ]

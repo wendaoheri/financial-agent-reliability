@@ -21,6 +21,7 @@ from financial_agent_reliability.harness.acceptance_v3_7 import (
     tool_schemas_v37,
     validate_reason_code_set_v37,
 )
+from financial_agent_reliability.relocation import verify_frozen_pin
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[3]
@@ -307,12 +308,12 @@ def validate_contract_bundle(manifest: Mapping[str, Any] | None = None) -> list[
         if bundle.get("bundle_sha256") != wanted:
             errors.append(f"v{version} bundle drift")
         for item in bundle.get("artifacts", []):
-            path = ROOT / item["path"]
-            if not path.is_file() or file_sha256(path) != item["sha256"]:
+            pinned_ok, _classification = verify_frozen_pin(ROOT, item["path"], item["sha256"])
+            if not pinned_ok:
                 errors.append(f"v{version} artifact drift:{item['path']}")
     for item in result.get("artifacts", []):
-        path = ROOT / item["path"]
-        if not path.is_file() or file_sha256(path) != item["sha256"]:
+        pinned_ok, _classification = verify_frozen_pin(ROOT, item["path"], item["sha256"])
+        if not pinned_ok:
             errors.append(f"v3.8 artifact drift:{item['path']}")
     if content_sha256(result.get("artifacts", [])) != result.get("bundle_sha256"):
         errors.append("v3.8 bundle mismatch")

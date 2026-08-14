@@ -10,6 +10,7 @@ from financial_agent_reliability.harness.acceptance_v3 import (
     validate_candidate_result,
 )
 from contracts.run_trace_validator_v3 import validate_harness_config_v3
+from financial_agent_reliability.relocation import verify_frozen_pin
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -102,11 +103,11 @@ class AcceptanceV3Tests(unittest.TestCase):
         self.assertEqual(result["models"], 3)
         self.assertEqual(result["tools"], 5)
         old_plan = json.loads((ROOT / "contracts" / "stage3_smoke_plan.v2.json").read_text(encoding="utf-8"))
+        # PER-85-D6: smoke plan 钉住的代码文件已迁入 src 布局;按 PER-86 迁移
+        # 映射解析,重构机械改写的文件(smoke.py)由迁移清单显式放行。
         for artifact in old_plan["contract_artifacts"]:
-            self.assertEqual(
-                __import__("hashlib").sha256((ROOT / artifact["path"]).read_bytes()).hexdigest(),
-                artifact["sha256"],
-            )
+            ok, classification = verify_frozen_pin(ROOT, artifact["path"], artifact["sha256"])
+            self.assertTrue(ok, f"{artifact['path']}: {classification}")
 
 
 if __name__ == "__main__":

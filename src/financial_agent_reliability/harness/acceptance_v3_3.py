@@ -7,6 +7,7 @@ import json
 import pathlib
 
 from contracts.run_trace_validator import build_bundle_sha256, file_sha256
+from financial_agent_reliability.relocation import verify_frozen_pin
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[3]
@@ -69,11 +70,10 @@ def verify_manifest(manifest: dict) -> list[str]:
     if manifest.get("preflight_execution", {}).get("maximum_model_units") != 6:
         errors.append("maximum_model_units must be 6")
     for artifact in manifest.get("artifacts", []):
-        path = ROOT / artifact["path"]
-        if not path.is_file():
-            errors.append(f"missing artifact: {artifact['path']}")
-        elif file_sha256(path) != artifact["sha256"]:
-            errors.append(f"hash mismatch: {artifact['path']}")
+        pinned_ok, classification = verify_frozen_pin(ROOT, artifact["path"], artifact["sha256"])
+        if not pinned_ok:
+            errors.append(f"{classification} artifact: {artifact['path']}")
+            continue
     base = json.loads(BASE_BUNDLE.read_text(encoding="utf-8"))
     expected = build_bundle_sha256([*base["artifacts"], *manifest.get("artifacts", [])])
     if manifest.get("bundle_sha256") != expected:

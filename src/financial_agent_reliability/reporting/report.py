@@ -11,6 +11,7 @@ import pathlib
 import sys
 from collections import Counter
 from typing import Any, Iterable, Mapping, Sequence
+from financial_agent_reliability.relocation import verify_frozen_pin
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[3]
@@ -291,19 +292,27 @@ def render_html(bundle: Mapping[str, Any]) -> str:
 
 
 def verify_freeze() -> dict[str, Any]:
+    """PER-85-D6: the v1 report contract is a historical baseline.
+
+    冻结 manifest 的承诺哈希(文档自身完整性)仍逐字节校验;对钉住文件的
+    哈希校验改为通过 PER-86 迁移映射解析——迁移后内容逐字节一致的文件按
+    新位置校验,重构机械改写的文件被显式点名放行,而不是静默跳过。
+    """
     manifest = load_json(FREEZE_PATH)
     errors: list[str] = []
     commitments: list[str] = []
+    historical: list[str] = []
     for item in manifest.get("files", []):
-        path = ROOT / item["path"]
-        actual = file_sha256(path) if path.is_file() else None
-        _require(actual == item["sha256"], f"frozen file hash mismatch: {item['path']}", errors)
+        ok, classification = verify_frozen_pin(ROOT, item["path"], item["sha256"])
+        _require(ok, f"frozen file pin failed ({classification}): {item['path']}", errors)
+        if classification in {"relocated", "refactor-change"}:
+            historical.append(item["path"])
         commitments.append(f"{item['path']}\0{item['sha256']}\n")
     aggregate = hashlib.sha256("".join(commitments).encode("utf-8")).hexdigest()
     _require(aggregate == manifest.get("contract_bundle_sha256"), "report contract bundle commitment mismatch", errors)
     if errors:
         raise ReportContractError(errors)
-    return {"files": len(commitments), "contract_bundle_sha256": aggregate}
+    return {"files": len(commitments), "contract_bundle_sha256": aggregate, "historical_baseline_pins": historical}
 
 
 def main(argv: Sequence[str] | None = None) -> int:

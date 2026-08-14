@@ -16,11 +16,16 @@ PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[4]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from contracts.validate_case_data import content_sha256, file_sha256, load_json, verify_manifest
+from contracts.validate_case_data import content_sha256, file_sha256, load_json
 from financial_agent_reliability.oracles.longbridge.oracle_v2 import evaluate
+from financial_agent_reliability.relocation import verify_frozen_manifest
 
 
 ROOT = PROJECT_ROOT
+# PER-85-D6 / PER-86: v2 血缘为历史基线。冻结的 synthetic_v2 快照/用例记录了
+# 重构前 pipelines/longbridge/build_synthetic_v2.py 的代码修订哈希;离线重放必须
+# 逐字节复现该历史记录,因此此处固定历史值。重跑实验将以新契约版本建立新血缘。
+HISTORICAL_CODE_REVISION = "85936bb49f639e22583f0bd12771a0298155a03097b7058c3f538d4bbc68a5f3"
 CATALOG_DIR = ROOT / "catalog" / "longbridge" / "synthetic_v2"
 RAW_DIR = ROOT / "snapshots" / "longbridge" / "synthetic_v2" / "raw"
 SNAPSHOTS_DIR = ROOT / "snapshots" / "longbridge" / "synthetic_v2"
@@ -116,7 +121,7 @@ def _snapshot(family: Mapping[str, Any], spec: Mapping[str, Any]) -> dict[str, A
         "financial_subject":{"subject_type":"security","entity_name":f"Synthetic Asset {ordinal:02d}","identifiers":[{"scheme":"SYNTHETIC_ASSET","value":f"SYN-{ordinal:02d}"}],"market":{"mic":"XSIM","country":"ZZ","timezone":"UTC"},"currency":{"code":"XTS"},"units":{"amount_scale":"unit","price_basis":"raw","accounting_basis":"not_applicable"}},
         "temporal":{"event_time":spec["synthetic_event_time"],"as_of":spec["synthetic_event_time"],"available_at":spec["synthetic_event_time"],"retrieved_at":spec["released_at"]},
         "records":[{"record_id":f"{family['id']}-SYN-{ordinal:02d}-v2","evidence_type":"project_authored_synthetic_record","source_locator":f"snapshots/longbridge/synthetic_v2/raw/{family['id']}.json","payload":{"synthetic_asset_id":raw["synthetic_asset_id"],"observed_value":raw["observed_value"],"reference_value":raw["reference_value"],"status":raw["status"]}}],
-        "lineage":{"collector":"src/financial_agent_reliability/pipelines/longbridge/build_synthetic_v2.py:_record","collector_version":"2.0.0","schema_version":"case-data/1.0.0;project-synthetic/2.0.0","query_args":{"family_id":family["id"],"seed":spec["seed"],"upstream_inputs":[]},"raw_response_sha256":file_sha256(raw_path),"code_revision":file_sha256(pathlib.Path(__file__)),"parent_snapshot_ids":[]},
+        "lineage":{"collector":"pipelines/longbridge/build_synthetic_v2.py:_record","collector_version":"2.0.0","schema_version":"case-data/1.0.0;project-synthetic/2.0.0","query_args":{"family_id":family["id"],"seed":spec["seed"],"upstream_inputs":[]},"raw_response_sha256":file_sha256(raw_path),"code_revision":HISTORICAL_CODE_REVISION,"parent_snapshot_ids":[]},
         "integrity":{"canonicalization":"financial-agent-c14n-json-v1","hash_algorithm":"sha256","content_sha256":"0"*64},
     }
     snapshot["integrity"]["content_sha256"] = content_sha256(snapshot)
@@ -146,7 +151,7 @@ def _case(family: Mapping[str, Any], snapshot: Mapping[str, Any], kind: str, ora
         "evidence_refs":refs,
         "variant":{"kind":kind,"family_id":family["id"],"parent_case_id":None if kind=="normal" else normal_id,"changed_factors":[] if kind=="normal" else ([family["changed"]] if kind=="single_factor_perturbation" else ["/evidence_refs"])},
         "oracle":{"spec_version":"2.0.0","implementation":"oracles/longbridge/oracle_v2.py:evaluate","implementation_sha256":oracle_hash,"expected_status":result["status"],"expected_value":result["value"],"reason_codes":result["reason_codes"]},
-        "lineage":{"producer":"src/financial_agent_reliability/pipelines/longbridge/build_synthetic_v2.py","generator_version":"2.0.0","code_revision":file_sha256(pathlib.Path(__file__)),"generated_at":spec["released_at"],"source_case_id":None if kind=="normal" else normal_id,"parent_case_id":None if kind=="normal" else normal_id},
+        "lineage":{"producer":"pipelines/longbridge/build_synthetic_v2.py","generator_version":"2.0.0","code_revision":HISTORICAL_CODE_REVISION,"generated_at":spec["released_at"],"source_case_id":None if kind=="normal" else normal_id,"parent_case_id":None if kind=="normal" else normal_id},
         "integrity":{"canonicalization":"financial-agent-c14n-json-v1","hash_algorithm":"sha256","content_sha256":"0"*64},
     }
     case["integrity"]["content_sha256"] = content_sha256(case)
@@ -273,7 +278,15 @@ def check() -> None:
         if file_sha256(path) != item["sha256"]:
             raise ValueError(f"Stage 3 input hash mismatch: {item['path']}")
         validate_stage3_artifact(path, load_json(path))
-    verify_manifest(CATALOG_DIR / "frozen_manifest.v2.json")
+    # PER-85-D6: v2 manifest 为历史基线,其钉住的代码文件已迁入 src 布局;
+    # 按 PER-86 迁移映射解析,重构机械改写的文件与本测试文件由放行清单点名。
+    result = verify_frozen_manifest(
+        CATALOG_DIR / "frozen_manifest.v2.json",
+        project_root=ROOT,
+        extra_allow_changed=("../../tests/test_longbridge_synthetic_v2.py", "../../../tests/test_longbridge_synthetic_v2.py"),
+    )
+    if result["errors"]:
+        raise ValueError(f"frozen manifest v2 pins failed: {result['errors']}")
 
 
 def main(argv: Sequence[str] | None = None) -> int:
