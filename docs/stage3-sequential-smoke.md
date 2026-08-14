@@ -1,6 +1,6 @@
 ## Stage 3 顺序必要性验证
 
-本轮仅执行经 issue 评论授权的 36-run smoke，不执行 810-run 全量矩阵。运行单元从冻结的 `harness/run_manifest.v4.json` 中确定性选择，覆盖 12 个任务、两个 track、Gold/Silver 两个质量层级和三类变体；每个任务仅运行三个候选模型各一次。
+本轮仅执行经 issue 评论授权的 36-run smoke，不执行 810-run 全量矩阵。运行单元从冻结的 `src/financial_agent_reliability/harness/run_manifest.v4.json` 中确定性选择，覆盖 12 个任务、两个 track、Gold/Silver 两个质量层级和三类变体；每个任务仅运行三个候选模型各一次。
 
 候选模型 ID 固定为 `qwen3.8-max`、`glm-5.2`、`deepseek-v4-pro`。运行使用锁定的 `@mariozechner/pi-agent-core` 0.73.1、冻结 system prompt、四个 OpenAI function 工具 schema 和 `tool_choice=auto`。工具只读取冻结案例与证据、执行确定性计算或访问 run-local 模拟账本；不允许真实交易或生产系统写入。
 
@@ -13,6 +13,6 @@
 可复现命令：
 
 ```bash
-uv run python -m harness.cli build-smoke-plan --output contracts/stage3_smoke_plan.v2.json
-uv run python -m harness.cli smoke --plan contracts/stage3_smoke_plan.v2.json --correct-from-v1 runs/stage3/smoke-20260811-v1 --output-dir runs/stage3/smoke-20260811-v2 --freeze-destination runs/stage3/frozen-smoke-evidence-20260811-v2
+uv run python -m financial_agent_reliability.harness.cli build-smoke-plan --output contracts/stage3_smoke_plan.v2.json
+uv run python -m financial_agent_reliability.harness.cli smoke --plan contracts/stage3_smoke_plan.v2.json --correct-from-v1 runs/stage3/smoke-20260811-v1 --output-dir runs/stage3/smoke-20260811-v2 --freeze-destination runs/stage3/frozen-smoke-evidence-20260811-v2
 ```

@@ -17,13 +17,13 @@
 ```bash
 uv run python -m unittest tests.integration.test_harness_runtime -v
 npm run test:runtime
-uv run python -m harness.cli build-manifest --output harness/run_manifest.v3.json
+uv run python -m financial_agent_reliability.harness.cli build-manifest --output src/financial_agent_reliability/harness/run_manifest.v3.json
 uv run python -m unittest discover -s tests -v
 uv run python contracts/run_trace_validator.py verify-freeze
 uv run python contracts/run_trace_validator.py validate-fixtures
 ```
 
-`harness/run_manifest.v1.json` 因 legacy `single_factor_control` 消费路径作废；`harness/run_manifest.v2.json` 因早于 public v2 与 synthetic workflow v2 作废。两者仅保留为审计证据，不得进入 Stage 3。`run_manifest.v3.json` 固定为 30 案例族、90 任务（46 Gold / 44 Silver）、两轨 50/50、3 canonical execution variants、3 模型、3 重复，共 810 行；三个变体各 270 行，第三类只能是 `missing_or_anomalous_diagnostic`。随机区组种子为 `20260811`；每个 run ID 由完整 run identity、Harness 配置哈希与包含两个 v2 输入 bundle 的 immutable bundle 哈希确定。
+`src/financial_agent_reliability/harness/run_manifest.v1.json` 因 legacy `single_factor_control` 消费路径作废；`src/financial_agent_reliability/harness/run_manifest.v2.json` 因早于 public v2 与 synthetic workflow v2 作废。两者仅保留为审计证据，不得进入 Stage 3。`run_manifest.v3.json` 固定为 30 案例族、90 任务（46 Gold / 44 Silver）、两轨 50/50、3 canonical execution variants、3 模型、3 重复，共 810 行；三个变体各 270 行，第三类只能是 `missing_or_anomalous_diagnostic`。随机区组种子为 `20260811`；每个 run ID 由完整 run identity、Harness 配置哈希与包含两个 v2 输入 bundle 的 immutable bundle 哈希确定。
 
 ### 线上预检门
 

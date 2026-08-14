@@ -84,10 +84,10 @@ regrading it; v3.5–v3.9 frozen artifacts remain byte-exact
 
 ## Verification commands
 
-- `uv run python harness/acceptance_v3_10.py verify-contracts`
-- `uv run python harness/acceptance_v3_10.py verify-plan`
-- `uv run python harness/acceptance_v3_10.py scan-fixtures`
-- `uv run python harness/acceptance_v3_10.py gold-report`
+- `uv run python src/financial_agent_reliability/harness/acceptance_v3_10.py verify-contracts`
+- `uv run python src/financial_agent_reliability/harness/acceptance_v3_10.py verify-plan`
+- `uv run python src/financial_agent_reliability/harness/acceptance_v3_10.py scan-fixtures`
+- `uv run python src/financial_agent_reliability/harness/acceptance_v3_10.py gold-report`
 - `uv run python -m unittest tests.test_financial_acceptance_v3_10 -v`
 - `node --test tests/integration/financial_acceptance_v3_10.test.mjs`
 
