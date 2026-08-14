@@ -7,12 +7,16 @@
 
 ## 快速开始
 
-环境基线:Python 3.11(见 `.python-version`),一律使用 `uv` 管理。
+环境基线:Python 3.11(见 `.python-version`),一律使用 `uv` 管理。项目为标准
+src 布局的可安装包,`uv sync` 会以 editable 方式安装 `financial-agent-reliability`
+并注册 `fareli-harness` / `fareli-report` 两个控制台入口。
 
 ```bash
-uv sync                                   # 安装依赖(jsonschema 等)
-uv run python -m unittest discover -s tests -v   # 全量测试(261 个用例)
-npm run test:runtime                      # pi-agent-core 运行时边界测试(node --test)
+uv sync                                            # 安装依赖并安装本项目(editable)
+uv run python -m unittest discover -s tests -v     # 全量测试(261 个用例)
+npm run test:runtime                               # pi-agent-core 运行时边界测试(node --test)
+uv run fareli-harness --help                       # 评测 harness CLI
+uv run fareli-report --help                        # 报告契约 CLI
 ```
 
 付费模型评测仅在显式授权下进行,凭据只通过环境变量注入(见下文),正式运行只读
@@ -20,10 +24,28 @@ npm run test:runtime                      # pi-agent-core 运行时边界测试(
 
 ## 目录结构
 
-顶层目录按"证据血缘约束强度"分为三类。**改动任何目录前,先读 `AGENTS.md`
-的"冻结产物与证据血缘纪律"。**
+PER-85 用户裁决(D4/D5/D6)后,仓库分为**活的代码包**与**旧血缘历史基线**两层。
+改动任何目录前,先读 `AGENTS.md` 的"冻结产物与证据血缘纪律"。
 
-### ❄️ 冻结评测产物(内容不可修改、不可删除)
+### 📦 代码包(src 布局,唯一可编辑代码区)
+
+```
+src/financial_agent_reliability/
+├── harness/      评测 harness:验收契约各版本、bundle、checkpoint、脱敏、CLI 与 node 运行时(.mjs)
+├── graders/      基于冻结评分政策的确定性评分管线
+├── oracles/      Longbridge 案例 oracle(生产实现 + 独立参照实现)
+├── pipelines/    案例/快照冻结管线(Longbridge v1 与 clean-room synthetic v2)
+├── providers/    百炼 provider adapter 与 HTTP transport(模型中立、脱敏)
+├── reporting/    PER-27 报告契约校验与确定性渲染
+├── simulators/   确定性模拟账本
+└── relocation.py PER-86 迁移映射:旧血缘路径钉住的统一解析与显式放行清单
+```
+
+顶层导入名为 `financial_agent_reliability`。`contracts`、`cases.public` 等旧血缘
+Python 模块保留在仓库根,由包初始化时恢复 `sys.path` 后按原名导入;旧顶层包名
+(`harness` 等)仅由兼容别名层为冻结脚本保留。
+
+### ❄️ 旧血缘历史基线(内容不可修改、不可删除)
 
 | 目录 | 内容 |
 | --- | --- |
@@ -34,27 +56,21 @@ npm run test:runtime                      # pi-agent-core 运行时边界测试(
 | `evidence/` | 冻结证据 bundle(已提交的证据血缘记录) |
 | `audit/` | 独立审计脚本与审计报告 |
 | `reports/` | 阶段报告、交付报告与外部演示 |
+| `cases/`、`catalog/` | 冻结用例与目录(含记录依赖源码哈希的 frozen manifest) |
 
-### 🔒 证据血缘钉住(路径与 sha256 记录在冻结产物中,不得移动或编辑)
-
-| 目录/文件 | 原因 |
-| --- | --- |
-| `harness/` | 评测 harness;历史版本文件的哈希记录在冻结 bundle 中 |
-| `cases/`、`catalog/` | 用例与目录;冻结 manifest 记录用例文件及依赖源码的哈希 |
-| `oracles/`、`reporting/` | 路径被冻结契约引用并参与哈希校验 |
-| `tests/fixtures/`、`tests/expected/` | 被冻结审计脚本与 bundle 直接引用 |
-| `docs/` 中部分文件、`package.json`、`pyproject.toml`、`uv.lock` | 被冻结契约/配置按根相对路径记录(v3.7 bundle 钉住后两者) |
+按 PER-85-D6,这些目录的内容保留为历史基线:其路径/哈希钉住不再构成重构与
+验收的阻塞,由 `financial_agent_reliability/relocation.py` 统一解析——迁移后
+逐字节一致的文件按新位置校验,因重构机械改写的文件由放行清单逐条点名,不静默
+跳过。所有实验将重跑,重跑产物以新契约版本建立新血缘(新版本发布由交付负责人
+裁决)。
 
 ### 📝 常规目录
 
 | 目录 | 内容 |
 | --- | --- |
 | `docs/` | 契约说明、运营文档;`docs/research/` 为研究起点文档 |
-| `tests/` | 测试套件(血缘钉住的部分除外) |
+| `tests/` | 测试套件(unittest + node --test;fixture 与期望输出在其下) |
 | `vendor/` | 离线 vendored 运行时归档(pi-agent-core 0.73.1) |
-
-顶层布局本身是证据血缘的一部分:冻结审计脚本以 `Path(__file__).parents[1]`
-解析仓库根,并按根相对路径引用兄弟目录,因此上述目录均保留在仓库根的第一层。
 
 ## 环境变量(凭据纪律)
 
