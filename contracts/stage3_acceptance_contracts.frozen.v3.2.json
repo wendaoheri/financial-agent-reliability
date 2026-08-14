@@ -1,0 +1,39 @@
+{
+  "contract_type": "stage3_acceptance_contract_correction_bundle",
+  "contract_version": "3.2.0",
+  "status": "frozen_before_preflight",
+  "base_bundle": {
+    "path": "contracts/stage3_acceptance_contracts.frozen.v3.1.json",
+    "sha256": "ac559eb90a93aa2bc42ef8b0a12e4097f7a13ede0b0036beccc75415dc0c5daf",
+    "bundle_sha256": "7ba47cd90526bcc13cf4ee9382e795d5cb5aba08719725f8c93b9cfee298dd44"
+  },
+  "rationale": "preserve failed v3.1 exactly and add one fixed model-neutral repair round when no valid submission is recorded",
+  "artifacts": [
+    {
+      "path": "contracts/run_trace_harness_config.v3.2.json",
+      "sha256": "e0c161873fb7cca0a1e081233625d73341288b80f60a983c1bec52b0b5506a91"
+    },
+    {
+      "path": "contracts/run_trace.schema.v3.2.json",
+      "sha256": "7a371d3138503b59f6e8cde44b0a325b3610b14c9b58583645621e75cf94dba2"
+    },
+    {
+      "path": "harness/live_acceptance_v3_2.mjs",
+      "sha256": "52c516317d62860fffd077fcf7d6766adb13fc57d68d348a7a15a96990b834b6"
+    },
+    {
+      "path": "harness/acceptance_v3_2.py",
+      "sha256": "201bdd192d61a7695a89386af97c9c7e1f9a17553383707b9d99c8f16311fb85"
+    },
+    {
+      "path": "tests/integration/acceptance_v3_2.test.mjs",
+      "sha256": "b3e32e20f16b979176ead5f0dbaf0576b0512266247d11b9eee89c764f711c9a"
+    },
+    {
+      "path": "runs/stage3/acceptance-20260811-v3.1/preflight.v3.1.json",
+      "sha256": "cd4b96a7785d8b0c56bb1432c05a4b57695e19866dbbec0ac95849fe13cab1c5"
+    }
+  ],
+  "bundle_sha256": "8a269e939917bc9476319a14f191104c89291eaff2a9afd5692d652f77bf35c9",
+  "model_specific_changes": false
+}

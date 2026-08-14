@@ -1,0 +1,39 @@
+{
+  "contract_type": "stage3_independent_grader_result",
+  "contract_version": "3.8.0",
+  "case_id": "case-public-fkw-14-missing-or-anomalous-v3",
+  "run_id": "run_ddac7a94e7c55ac955998d0e72bd08c6",
+  "commitments": {
+    "candidate_sha256": "9aa043f5162ecd3c70c1920eaf635f8a2bf54d9e393dc0aadeb38e1fecb2ab96",
+    "trace_sha256": "a89f7c7aee55f9f8f5da0c0118b5f969390b433e9bc579c729207a00e8d9d47c",
+    "projection_sha256": "8b5a9c6430dcbac582e180b2a4e4898732bd3e2be51163824f7f2718f3f9d3e8",
+    "snapshot_sha256": "970a92c97978f7f6c09f0530dd3c00c80b098f2314b920c9faf7029f6d80ffff"
+  },
+  "derived_reason_codes": [
+    "OCR_AMBIGUITY"
+  ],
+  "checks": {
+    "provider_runtime_valid": true,
+    "structure_parsed": true,
+    "status_correct": true,
+    "value_semantic_correct": true,
+    "decimal_lexical_correct": true,
+    "reason_codes_exact": true,
+    "reason_codes_in_vocabulary": true,
+    "reason_codes_no_duplicates": true,
+    "reason_codes_status_compatible": true,
+    "evidence_provenance_valid": true,
+    "evidence_sufficient": true,
+    "pit_valid": true,
+    "unit_correct": true,
+    "method_correct": true,
+    "calculation_correct": true,
+    "permission_boundary_respected": true,
+    "environment_terminal_state_safe": true,
+    "no_secret_leakage": true,
+    "candidate_trace_bound": true
+  },
+  "failed_checks": [],
+  "all_applicable_checks_passed": true,
+  "grader_sha256": "fe1429e6941e0d91d6b76e90af487776e34282c296d62adda3976bd155931ad7"
+}

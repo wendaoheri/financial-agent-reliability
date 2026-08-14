@@ -1,0 +1,80 @@
+{
+  "contract_type": "stage3_financial_acceptance_execution_bundle",
+  "contract_version": "3.8.0",
+  "status": "frozen_offline_validated",
+  "supersedes": {
+    "path": "contracts/stage3_acceptance_contracts.frozen.v3.7.json",
+    "sha256": "9be10affeed2a69c0ce0eb6af0442dc0d2788ab9e6e434fc8aa0a2471d56fec6",
+    "v3_7_bundle_sha256": "354e8413e5f3d65351c819a84344435451a27c6b50be7982b77d9f76804bfc44"
+  },
+  "preserved": {
+    "v3_5_bundle_sha256": "d24948f9f36639600fc3d206d83cedd98970b11317282fdfdb92ecbc9d2c9cb8",
+    "v3_6_bundle_sha256": "afd1a163d9d205449b8e90c15086b21b42b831571ac20c8066c916c31874c959",
+    "v3_7_bundle_sha256": "354e8413e5f3d65351c819a84344435451a27c6b50be7982b77d9f76804bfc44",
+    "retroactive_regrading": false
+  },
+  "paid_calls_authorized": false,
+  "artifacts": [
+    {
+      "path": "contracts/candidate_output_contracts.v3.8.json",
+      "sha256": "16dc3467129494580860be557d392aedfdc082c272d3385f77e97999e2336b35"
+    },
+    {
+      "path": "contracts/candidate_submission_wire_contract.v3.8.json",
+      "sha256": "e46e6cb603f6f99a957b6109db993e67da868d61883eee0e04a835f60efe5a75"
+    },
+    {
+      "path": "contracts/reason_codes.v3.8.json",
+      "sha256": "7253d1069b866e4d05eee8afb073971ccf8f229ed9708bcd48d673f463b929f1"
+    },
+    {
+      "path": "contracts/run_trace_harness_config.v3.8.json",
+      "sha256": "8f6ab9b76492248d4d0d841b8beb5fdbe679537ed7664c43e0b33f6dd2bf8712"
+    },
+    {
+      "path": "contracts/run_trace.schema.v3.8.json",
+      "sha256": "4230c4a4741a17f03fb2750000eaeeeec3fa382b89b391515fa9619fa151f445"
+    },
+    {
+      "path": "contracts/stage3_independent_grader_result.schema.v3.8.json",
+      "sha256": "540ac1e38e6aaf9ff22e17c9fe1b549a7b175757f40375a03edbdf32c4d175d4"
+    },
+    {
+      "path": "contracts/run_trace_validator_v3_8.py",
+      "sha256": "526d8f6661ebdb2db28de562a3bae9e41cc39bb385ebbdd7533a9743bf136c2d"
+    },
+    {
+      "path": "harness/acceptance_v3_8.py",
+      "sha256": "ec1a8346c4fc83c93be44ccd89cd222f05e1ffc321afef6c29284a4b043c6ef7"
+    },
+    {
+      "path": "harness/live_acceptance_v3_8.mjs",
+      "sha256": "5f15402d5517b4f20f14b787ce2547fcc80cecd177cbac71744005d1a67bf843"
+    },
+    {
+      "path": "contracts/stage3_acceptance_plan.v3.8.json",
+      "sha256": "a98423bd0406a87e8b898695ca4644f54c04f41054fe9afeddd6153e9ea251d7"
+    },
+    {
+      "path": "tests/test_financial_acceptance_v3_8.py",
+      "sha256": "fc4051c01142bc370e101294631fc0daedc4445050a05502db172b869ac6d6b3"
+    },
+    {
+      "path": "tests/integration/financial_acceptance_v3_8.test.mjs",
+      "sha256": "9a36004cb8dfb6ffa90dba51782120f84b3f1a969242f851c976d4c623c02ac1"
+    },
+    {
+      "path": "tests/fixtures/acceptance_v3_8/grader.baseline.json",
+      "sha256": "c014713495b1bf1feceacce455c6e8a28d02198d868aecf1181ca1ebda1da3a2"
+    },
+    {
+      "path": "tests/fixtures/acceptance_v3_8/trace.ledger_restored.json",
+      "sha256": "36228d02d3cb8d21412a073b7911b95b40fe8cd1796b39463a948ecc8221cd9c"
+    },
+    {
+      "path": "tests/fixtures/acceptance_v3_8/trace.multi_request_retry.json",
+      "sha256": "cb75d3eba1d0871365632b5e0045c1fafc08f373569dd9d9288efdea08ad7889"
+    }
+  ],
+  "bundle_sha256": "39a0853cbe3febdf2b721dfa2aae7c417a2aff1f1f21bb69583b51b6d719f609"
+}

@@ -1,0 +1,16 @@
+{
+  "contract_type": "stage3_acceptance_runtime_summary",
+  "contract_version": "3.5.0",
+  "plan_sha256": "acf720b9267b2b27e2c6b082dab47150baed929093985e59d79ac0ec60e10057",
+  "counts": {
+    "planned": 36,
+    "traces": 36,
+    "succeeded": 30,
+    "failed": 6,
+    "invalidated": 0,
+    "structured": 30
+  },
+  "provider_requests": 96,
+  "cost_usd": null,
+  "cost_status": "provider_response_does_not_supply_cost"
+}

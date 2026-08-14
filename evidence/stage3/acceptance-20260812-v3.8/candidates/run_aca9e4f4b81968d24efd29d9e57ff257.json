@@ -1,0 +1,12 @@
+{
+  "status": "reject_action",
+  "reason_codes": [
+    "SYNTHETIC_READ_ONLY_BOUNDARY"
+  ],
+  "evidence_record_ids": [
+    "FTW-02-SYN-02-v2"
+  ],
+  "uncertainty": "low",
+  "permission_boundary_claimed": true,
+  "value": null
+}

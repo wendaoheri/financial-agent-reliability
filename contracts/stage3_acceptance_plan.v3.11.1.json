@@ -1,0 +1,141 @@
+{
+  "contract_type": "stage3_financial_acceptance_plan",
+  "contract_version": "3.11.0",
+  "plan_version": "3.11.1",
+  "plan_kind": "single_unit_coverage",
+  "status": "frozen_offline_validated",
+  "supersedes": {
+    "path": "contracts/stage3_acceptance_plan.v3.11.json",
+    "sha256": "83b3710b91814c930897fced1d9d27e26627e47ab17d72fc52f4dc17e792c7a8",
+    "plan_sha256": "c688ca7d7cbb86d24f37812a192c29fd3b37280bc4be77ba8a6e40450c03cf6c",
+    "rationale": "PER-77 single-unit coverage: v3.11 continuation sequence 268 (deepseek-v4-pro / case-synthetic-ftw-14-normal-v3 / repeat 2) was torn down by the agent runtime mid-unit and invalidated report-only under the frozen no_post_hoc_selection policy; this plan supersedes the v3.11 continuation plan for exactly that one unit. Contracts are unchanged: the v3.11 bundle and harness config remain byte-exact."
+  },
+  "contract_commitments": {
+    "contract_bundle_path": "contracts/stage3_acceptance_contracts.frozen.v3.11.json",
+    "contract_bundle_sha256": "b62f96d8fc6dfc5de9834a71256dc1a95ec86685cc5bf2fefc8915453dc96d9d",
+    "harness_config_path": "contracts/run_trace_harness_config.v3.11.json",
+    "harness_config_sha256": "bc19cdaf4fd9778f76d65b9afc2aa0b69252b03e49311c39158e3a355ca40f9e",
+    "contracts_changed": false,
+    "prompt_oracle_threshold_reason_case_material_unchanged": true
+  },
+  "coverage_target": {
+    "issue": "PER-77",
+    "source_round_path": "runs/stage3/acceptance-20260813-v3.11",
+    "source_plan_sha256": "c688ca7d7cbb86d24f37812a192c29fd3b37280bc4be77ba8a6e40450c03cf6c",
+    "invalidated_run_id": "run_c0f58d3c0d9227585058c4e4872a468b",
+    "invalidated_sequence": 268,
+    "case_id": "case-synthetic-ftw-14-normal-v3",
+    "model_id": "deepseek-v4-pro",
+    "repeat": 2,
+    "invalidated_seed": 738396034,
+    "invalidation_reason": "unit consumed but unfreezable: execution process torn down by the agent runtime (session teardown) mid-unit at 2026-08-13T12:56Z; checkpoint forensics hold only run_started. Not a candidate or provider failure. Report-only per frozen invalidation policy; replacement requires a new plan version",
+    "unit_valid_records": {
+      "repeat_1": {
+        "round": "runs/stage3/acceptance-20260813-v3.10",
+        "plan_version": "3.10.0",
+        "sequence": 258,
+        "run_id": "run_6da1eb9e6d67f7e98028259ecd3ba7f7",
+        "trace_sha256": "9edcccd01cf5c4811d3199651126165fe9de807837352f2f80c17b62925fdd3b"
+      },
+      "repeat_3": {
+        "round": "runs/stage3/acceptance-20260813-v3.11",
+        "plan_version": "3.11.0",
+        "sequence": 538,
+        "run_id": "run_04971ef1d91a20a739ed0b7ab70f3a7e",
+        "trace_sha256": "1436bc4008b3c1cbef61beefbf1cd37b3ea366269364df234c19017eef18e50a"
+      }
+    },
+    "coverage_repeat": 2,
+    "replaces_or_reexecutes_invalidation": false,
+    "invalidated_run_id_reuse_forbidden": true,
+    "requirement": "the v0.1 confirmed scope requires at least 3 valid repeats per (case, model) unit; PER-32 pass^3 and ranking stability need this third valid repeat"
+  },
+  "authorization": {
+    "paid_calls_authorized": false,
+    "execution_state": "offline_validation_only",
+    "separate_plan_bound_authorization_required": true,
+    "passing_identity_preflight_required": true
+  },
+  "coverage_run_cap": 1,
+  "registered_total_run_cap": 1,
+  "replication_design": {
+    "master_seed": 20260813,
+    "benchmark_id": "financial-agent-reliability-v3.11",
+    "kind": "single_unit_coverage",
+    "seed_derivation": "seed = int(sha256(canonical_json({benchmark_id, case_id, master_seed, repeat, requested_model_id}))[:16], 16) mod 2^32; canonical_json sorts keys, uses compact separators, and preserves non-ASCII; the derivation is order-independent; the formula continues v3.5-v3.11 unchanged with the v3.11 benchmark id",
+    "coverage_seed": 738396034,
+    "seed_continuity_note": "the coverage seed is re-derived from the unchanged frozen formula with the unchanged master_seed and the v3.11 benchmark id, so it equals the invalidated seq 268 seed; identity separation from seq 268 comes exclusively from the new plan_core_sha256 commitment of this superseding plan, never from reselecting case, model, repeat, or seed",
+    "no_post_hoc_selection": true,
+    "invalidation_policy": "invalidated units are reported against their frozen identities; replacements require a new plan version and are never silently reselected",
+    "v3_11_seq268_invalidation_forensics": {
+      "preserved": true,
+      "invalidated_runs_path": "runs/stage3/acceptance-20260813-v3.11/invalidated-runs.json",
+      "invalidated_runs_file_sha256": "7fd165fa26f83ea925a782c77c81b235fb1665496fb457df6d665547ef8547a7",
+      "invalidation_report_sha256": "3a5189e7ffb4ad093b6508fcb6319bc68248a21de9a70c019685db5849868bda",
+      "pending_invalidations_path": "runs/stage3/acceptance-20260813-v3.11/pending-invalidations.json",
+      "pending_invalidations_file_sha256": "61c7baecab626a5559702bd8e77a4c2f700dbbd6cdff17102a30fe83fb147946",
+      "checkpoint_residue_path": "runs/stage3/acceptance-20260813-v3.11/checkpoints/run_c0f58d3c0d9227585058c4e4872a468b.jsonl",
+      "checkpoint_residue_sha256": "68f0e73854ae6341fe829037eaf2ff1a2b560dcbd2b9cfbca8f302e4d28c85b6",
+      "entry_count": 1,
+      "coverage_replaces_or_reexecutes_invalidation": false
+    }
+  },
+  "coverage_map": {
+    "run_0e1e8f4400e16f22f6581e0bb0d9c54d": {
+      "invalidated_run_id": "run_c0f58d3c0d9227585058c4e4872a468b",
+      "source_round": "runs/stage3/acceptance-20260813-v3.11",
+      "source_sequence": 268,
+      "case_id": "case-synthetic-ftw-14-normal-v3",
+      "model_id": "deepseek-v4-pro",
+      "repeat": 2,
+      "replaces_or_reexecutes": false
+    }
+  },
+  "plan_core_sha256": "c65c1c2e5db49786cab5c3eeef496a311818bf0ae9d066ea9817b7dbe35b7a9b",
+  "fairness": {
+    "same_prompt_tools_budget_retry_grader": true,
+    "models": [
+      "deepseek-v4-pro"
+    ],
+    "basis": "prompt, tool schemas, resource budget, retry policy, and grader are inherited byte-identical from the frozen v3.11 contract bundle; the unit's repeat 1 (v3.10 round) and repeat 3 (v3.11 round) records were produced under the same commitments, and v3.10 frozen units remain valid and comparable under v3.11"
+  },
+  "tasks": [
+    {
+      "case_id": "case-synthetic-ftw-14-normal-v3",
+      "source_case_path": "cases/longbridge/synthetic_v2/case_card.FTW-14.normal.v2.json",
+      "source_case_sha256": "0b849ccdc587c7273b77a978c66df34d41633d2e4f78d3087614150427331bc8",
+      "projection_path": "cases/candidate_v3_11/case-synthetic-ftw-14-normal-v3.json",
+      "projection_sha256": "d5fe3f8bc297f3f567106e27f51b6ae65b8b93d3126ae584fe99feb46ed083c7",
+      "snapshot_path": "snapshots/longbridge/synthetic_v2/data_snapshot.FTW-14.v2.json",
+      "snapshot_sha256": "ce7a6af478ea602ac3fb7e1a5f28de5fd91463de7a88b2cbd530eeb5b3bbbb7d",
+      "family_id": "FTW-14",
+      "variant_id": "baseline",
+      "tier": "Silver",
+      "track": "financial_tool_workflow",
+      "tool_schema_sha256": "118f9266c47e4fdd4256fb19818fecccb770064fd37726d3c9337ce14b2ba601",
+      "run_ids": [
+        "run_0e1e8f4400e16f22f6581e0bb0d9c54d"
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "sequence": 1,
+      "model_id": "deepseek-v4-pro",
+      "repeat": 2,
+      "seed": 738396034,
+      "run_id": "run_0e1e8f4400e16f22f6581e0bb0d9c54d",
+      "run_identity": {
+        "benchmark_id": "financial-agent-reliability-v3.11",
+        "case_id": "case-synthetic-ftw-14-normal-v3",
+        "harness_config_sha256": "bc19cdaf4fd9778f76d65b9afc2aa0b69252b03e49311c39158e3a355ca40f9e",
+        "plan_core_sha256": "c65c1c2e5db49786cab5c3eeef496a311818bf0ae9d066ea9817b7dbe35b7a9b",
+        "repeat": 2,
+        "requested_model_id": "deepseek-v4-pro",
+        "seed": 738396034,
+        "variant_id": "baseline"
+      }
+    }
+  ],
+  "plan_sha256": "64bd0b37b0e3b04216fbe4fb24a049255f159e345ace6a19c78be9eb1eb5fb0b"
+}

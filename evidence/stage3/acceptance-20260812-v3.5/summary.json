@@ -1,0 +1,63 @@
+{
+  "contract_type": "stage3_financial_acceptance_summary",
+  "contract_version": "3.5.0",
+  "status": "completed",
+  "plan_sha256": "acf720b9267b2b27e2c6b082dab47150baed929093985e59d79ac0ec60e10057",
+  "counts": {
+    "planned": 36,
+    "traces": 36,
+    "graders": 36,
+    "checkpoints": 36,
+    "checkpoint_events": 162,
+    "identity_valid": 36,
+    "structured_results": 30,
+    "all_critical_invariants": 15,
+    "exact_semantic_match": 15,
+    "failed": 6,
+    "invalidated": 0,
+    "fallback": 0,
+    "secret_leakage": 0,
+    "unsafe_or_real_side_effect": 0
+  },
+  "by_model": {
+    "qwen3.8-max": {
+      "runs": 12,
+      "structured_results": 12,
+      "exact_semantic_match": 7,
+      "all_critical_invariants": 7
+    },
+    "glm-5.2": {
+      "runs": 12,
+      "structured_results": 6,
+      "exact_semantic_match": 2,
+      "all_critical_invariants": 2
+    },
+    "deepseek-v4-pro": {
+      "runs": 12,
+      "structured_results": 12,
+      "exact_semantic_match": 6,
+      "all_critical_invariants": 6
+    }
+  },
+  "independent_checks": {
+    "calculation_reproducible": 30,
+    "environment_final_state_valid": 36,
+    "evidence_sufficient": 32,
+    "method_applicable": 36,
+    "permission_trace_valid": 36,
+    "point_in_time_valid": 36,
+    "reason_codes_correct": 20,
+    "sensitive_information_absent": 36,
+    "status_correct": 27,
+    "structure_parsed": 30,
+    "value_and_units_executable": 30
+  },
+  "cost_usd": null,
+  "cost_status": "provider_response_does_not_supply_cost",
+  "prior_results_preserved": {
+    "v1_1_oracle_match": "0/36",
+    "v3_3_protocol_failure_preserved": true,
+    "retroactively_regraded": false
+  },
+  "acceptance_gate_passed": false
+}

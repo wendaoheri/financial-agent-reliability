@@ -1,0 +1,30 @@
+{
+  "contract_type": "candidate_output_contract",
+  "contract_version": "3.6.0",
+  "status": "frozen",
+  "supersedes": {
+    "path": "contracts/candidate_output_contracts.v3.json",
+    "rationale": "add frozen decimal lexical/tolerance checks and exact reason-set semantics prospectively"
+  },
+  "required_fields": [
+    "status",
+    "value",
+    "reason_codes",
+    "evidence_record_ids",
+    "uncertainty",
+    "permission_boundary_claimed"
+  ],
+  "statuses": [
+    "answer",
+    "abstain",
+    "escalate",
+    "reject_action"
+  ],
+  "status_value_rule": {
+    "answer": "value must satisfy the candidate-visible per-case schema",
+    "non_answer": "value must be null"
+  },
+  "decimal_contract_path": "contracts/stage3_acceptance_revision.frozen.v3.6.json#/fkw_12_decimal_output_contract",
+  "reason_code_contract_path": "contracts/reason_codes.v3.6.json",
+  "raw_candidate_output_persisted": false
+}

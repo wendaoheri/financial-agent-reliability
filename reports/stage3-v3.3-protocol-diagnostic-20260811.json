@@ -1,0 +1,80 @@
+{
+  "report_type": "stage3_protocol_diagnostic",
+  "report_version": "3.3.0",
+  "date": "2026-08-11",
+  "contract": {
+    "bundle_sha256": "c0030bfafca48bac9790f73deea5c856ce3e152e13a0a9a0c2d4fac7da00b949",
+    "manifest_file_sha256": "6464b4737de3e15a743760c48d86ec2b5ca19b6811e4156ec261a3bf93d11e09",
+    "harness_config_sha256": "20103db6b4d534b19f19b94f098c75336cbe9e8fcc8199aa29bbc86a0dbccd46",
+    "run_trace_schema_sha256": "66f32f4b65abf99d249eceb3aabff4693c56a0034ca98d483c86b4359b44cace"
+  },
+  "execution": {
+    "model_units": 6,
+    "provider_requests": 16,
+    "acceptance_runs_started": 0,
+    "cost_usd": null,
+    "cost_status": "provider_response_does_not_supply_cost"
+  },
+  "artifacts": {
+    "auto_strict": {
+      "sha256": "21822681aad05873194b32f04ca79b6f36f77dd0a35b91303b9bbc578d15c75d",
+      "passed": 2,
+      "blocked": 1
+    },
+    "forced_strict": {
+      "sha256": "47f2a62982aafb5f5913553660f8c7c9065104079b36525abc9e769cc57c011d",
+      "passed": 1,
+      "blocked": 2
+    },
+    "sequence": {
+      "sha256": "d63b8d6881c233d1197e3a5cbd95fad7b019d06c8b6a6108dd77bd2e0f30d561",
+      "decision": "strict_protocol_compatibility_blocked"
+    }
+  },
+  "auto_strict_results": [
+    {
+      "model_id": "qwen3.8-max",
+      "identity_valid": true,
+      "status": "blocked",
+      "read_calls_validated": 1,
+      "submit_calls_observed": 5,
+      "submit_calls_validated": 0,
+      "pre_execution_rejections": 5,
+      "error_category": "field_type",
+      "error_path": "/value",
+      "repair_rounds_used": 1,
+      "model_requests": 6
+    },
+    {
+      "model_id": "glm-5.2",
+      "identity_valid": true,
+      "status": "passed",
+      "submit_calls_observed": 1,
+      "submit_calls_validated": 1,
+      "model_requests": 2
+    },
+    {
+      "model_id": "deepseek-v4-pro",
+      "identity_valid": true,
+      "status": "passed",
+      "submit_calls_observed": 1,
+      "submit_calls_validated": 1,
+      "model_requests": 2
+    }
+  ],
+  "conclusions": {
+    "direct_evidence": "qwen3.8-max autonomously called submit_candidate_result five times; all five were rejected before execution at /value as field_type",
+    "inference": "the primary observed difference is strict nested tool-argument schema compatibility, not absence of tool selection",
+    "not_established": "financial reasoning failure"
+  },
+  "verification": {
+    "python_tests": {"passed": 124, "failed": 0},
+    "node_tests": {"passed": 20, "failed": 0},
+    "secret_value_matches": 0,
+    "forbidden_pattern_matches": 0,
+    "raw_arguments_persisted": false,
+    "raw_validation_errors_persisted": false,
+    "raw_provider_responses_persisted": false,
+    "real_side_effects": false
+  }
+}

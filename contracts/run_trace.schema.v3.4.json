@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/run_trace.schema.v3.4.json",
+  "title": "Stage 3 Run Trace v3.4",
+  "type": "object",
+  "required": ["contract_type", "contract_version", "tool_calls", "repair", "redaction"],
+  "properties": {
+    "contract_type": {"const": "run_trace"},
+    "contract_version": {"const": "3.4.0"},
+    "tool_calls": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["event", "tool_call_id", "tool_name"],
+        "properties": {
+          "event": {"enum": ["attempt", "end"]},
+          "tool_call_id": {"type": "string"},
+          "tool_name": {"type": "string"},
+          "arguments_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "argument_shape": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["path", "type"],
+              "properties": {
+                "path": {"type": "string"},
+                "type": {"enum": ["missing", "null", "boolean", "string", "number", "array", "object"]}
+              },
+              "additionalProperties": false
+            }
+          },
+          "unknown_field_count": {"type": "integer", "minimum": 0},
+          "validation_status": {"enum": ["pending", "validated", "rejected_pre_execution"]},
+          "error_category": {"type": ["string", "null"]},
+          "error_path": {"type": ["string", "null"]},
+          "is_error": {"type": "boolean"},
+          "result_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        },
+        "not": {
+          "anyOf": [
+            {"required": ["arguments"]},
+            {"required": ["raw_error"]},
+            {"required": ["result"]}
+          ]
+        }
+      }
+    },
+    "repair": {
+      "type": "object",
+      "required": ["maximum_rounds", "rounds_used", "reserved_model_requests", "model_specific"],
+      "properties": {
+        "maximum_rounds": {"const": 1},
+        "rounds_used": {"type": "integer", "minimum": 0, "maximum": 1},
+        "reserved_model_requests": {"const": 2},
+        "model_specific": {"const": false}
+      }
+    },
+    "redaction": {
+      "type": "object",
+      "required": ["raw_arguments_persisted", "raw_validation_errors_persisted", "raw_provider_response_persisted"],
+      "properties": {
+        "raw_arguments_persisted": {"const": false},
+        "raw_validation_errors_persisted": {"const": false},
+        "raw_provider_response_persisted": {"const": false}
+      }
+    }
+  },
+  "x-supersedes": {
+    "schema": "contracts/run_trace.schema.v3.3.json",
+    "rationale": "record only allowlisted JSON types and unknown-field counts so schema failures can be diagnosed without raw argument persistence"
+  }
+}

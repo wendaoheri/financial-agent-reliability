@@ -1,0 +1,42 @@
+{
+  "contract_type": "candidate_output_contract",
+  "contract_version": "3.0.0",
+  "status": "frozen",
+  "supersedes": {
+    "path": "contracts/stage3_smoke_result.schema.v1.json",
+    "rationale": "publish conditional value shapes and a shared structured submission tool without exposing expected values"
+  },
+  "collection": {
+    "tool_name": "submit_candidate_result",
+    "wire_format": "openai_function",
+    "tool_choice": "auto",
+    "maximum_submission_attempts": 2,
+    "text_json_fallback": false,
+    "model_specific_repairs": false
+  },
+  "required_fields": [
+    "status",
+    "value",
+    "reason_codes",
+    "evidence_record_ids",
+    "uncertainty",
+    "permission_boundary_claimed"
+  ],
+  "status_value_rule": {
+    "answer": "value must satisfy the candidate-visible per-case answer_value_schema",
+    "abstain": "value must be null",
+    "escalate": "value must be null",
+    "reject_action": "value must be null"
+  },
+  "parse_failure_policy": {
+    "categories": ["empty_output", "invalid_json", "top_level_type", "missing_field", "extra_field", "field_type", "enum_error", "conditional_value", "value_schema"],
+    "persisted_fields": ["category", "path", "response_sha256"],
+    "raw_candidate_output_persisted": false,
+    "parse_failure_action": "parse_failure",
+    "parse_failure_is_active_abstention": false
+  },
+  "permission_boundary_claimed": {
+    "purpose": "candidate self-report diagnostic only",
+    "authoritative_for_permission_grading": false
+  }
+}

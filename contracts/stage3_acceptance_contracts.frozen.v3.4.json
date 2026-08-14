@@ -1,0 +1,60 @@
+{
+  "contract_type": "stage3_acceptance_contract_correction_bundle",
+  "contract_version": "3.4.0",
+  "status": "frozen_before_preflight",
+  "base_bundle": {
+    "path": "contracts/stage3_acceptance_contracts.frozen.v3.3.json",
+    "sha256": "6464b4737de3e15a743760c48d86ec2b5ca19b6811e4156ec261a3bf93d11e09",
+    "bundle_sha256": "c0030bfafca48bac9790f73deea5c856ce3e152e13a0a9a0c2d4fac7da00b949"
+  },
+  "rationale": "use Bailian Qwen thinking controls explicitly, remove the invalid forced-tool diagnostic, and replace the model-facing nullable union with split answer/non-answer functions",
+  "preflight_execution": {
+    "variants": [
+      "auto_split_submission"
+    ],
+    "maximum_model_units": 3,
+    "acceptance_runs_authorized": false
+  },
+  "artifacts": [
+    {
+      "path": "contracts/run_trace_harness_config.v3.4.json",
+      "sha256": "40d050e2f942234dc69318f6c5f28dfcaf6ae7fbc845f8a2872915cc2500f5ce"
+    },
+    {
+      "path": "contracts/candidate_submission_wire_contract.v3.4.json",
+      "sha256": "8e9e933f7b037a13f7331453da17a968fba60099ef7611f4e62892d251c857f1"
+    },
+    {
+      "path": "contracts/run_trace.schema.v3.4.json",
+      "sha256": "6554e419594a5c36c3c32bbdcbc4a32030e9b127539a6e2b9e86c331118c25f6"
+    },
+    {
+      "path": "docs/contracts/bailian-function-calling-v3.4.md",
+      "sha256": "09324b562160042d4be0b8334ba2a49a860b19b53501b05a9877f6088bd71dc4"
+    },
+    {
+      "path": "harness/pi_runtime_v3_4.mjs",
+      "sha256": "53388e751a82badd29e76a5643fe550a227e2d23957e9078554ebd47107161ed"
+    },
+    {
+      "path": "harness/live_acceptance_v3_4.mjs",
+      "sha256": "44679eb4732d28b464694d4e8fd59efa4f263ad6b149f5ba9fcacc8668b0b9e3"
+    },
+    {
+      "path": "harness/acceptance_v3_4.py",
+      "sha256": "ed3fd1bf8a68086521c6b29a29e91302bbbe2c96a902e879bc8b582139b65756"
+    },
+    {
+      "path": "tests/integration/acceptance_v3_4.test.mjs",
+      "sha256": "81940e7f7e77179fd0ce3ea0365f83354f57e54e91bf88acebdc5b7d58b65f82"
+    },
+    {
+      "path": "tests/test_acceptance_v3_4.py",
+      "sha256": "3e38c07784f618e61122a4f976cdde883349153a52e0afeb56cd40006dcd55ee"
+    }
+  ],
+  "bundle_sha256": "720b95a1d1897bb0b77ebcc756fd7e30efc20e28cfd0ecbc83def2942e7a2edb",
+  "candidate_visible_model_specific_changes": false,
+  "provider_adapter_model_specific_controls": true,
+  "retroactive_regrading": false
+}

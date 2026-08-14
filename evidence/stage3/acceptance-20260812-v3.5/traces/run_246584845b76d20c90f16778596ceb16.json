@@ -1,0 +1,256 @@
+{
+  "contract_type": "run_trace",
+  "contract_version": "3.5.0",
+  "run_id": "run_246584845b76d20c90f16778596ceb16",
+  "run_identity": {
+    "benchmark_id": "financial-agent-reliability-v3.5",
+    "case_id": "case-public-fkw-03-single-factor-perturbation-v3",
+    "harness_config_sha256": "845f0f935882b8359ff5a0ab8c4181dd9090c484272937588ec6894ba15716e4",
+    "immutable_bundle_sha256": "d6b100223a3874beb165e184b13fe9b2866e22c019772dd711b0ad2303453a54",
+    "repeat": 1,
+    "requested_model_id": "qwen3.8-max",
+    "seed": 3235517326,
+    "variant_id": "single_factor_stress"
+  },
+  "status": "succeeded",
+  "provider": {
+    "name": "bailian",
+    "requested_model_id": "qwen3.8-max",
+    "response_model_id": "qwen3.8-max",
+    "endpoint_id": "bailian_98bd231ca931",
+    "model_manifest_sha256": "8b727749db3e29a081a4f48aae7bdf98149ac2f602bf10bda1220a330d5cd763"
+  },
+  "request": {
+    "parameters": {
+      "temperature": 0,
+      "top_p": 1,
+      "max_tokens": 4096,
+      "seed": 3235517326,
+      "stream": true,
+      "tool_stream": false,
+      "parallel_tool_calls": false,
+      "enable_thinking": false
+    },
+    "tool_choice": "auto",
+    "payload_sha256s": [
+      "f2758c3156a8b7479175c84608cae355551d0358b8a26e59491f56aae43254e9",
+      "0a72b3ca8cf668d78010789290e5fe8cc2db18d6bcee251fc12ddb0f065e9815",
+      "c86f86dd3aee1c054cd881364774d0ba31dfb11476d7c1bbffc800c32ace126e",
+      "ad7fe452f4c8f470966c4cc908cd7f8dd98a6156f72c2520089d9462de463cb3"
+    ],
+    "sdk_retries": 0
+  },
+  "preflight": {
+    "performed": true,
+    "identity_match": true,
+    "fallback_detected": false,
+    "fallback_attempted": false,
+    "parameters_honored": true,
+    "valid": true,
+    "authoritative_preflight_sha256": "e45685c9e1f1c255706ccabb5efa1a10058876d00035ff5f161c530c8b46aad4"
+  },
+  "context": {
+    "system_prompt_sha256": "efa79e6c40e81fee12d0fd6f9c1465e6191bfeb5c65a075493b94a44439155d8",
+    "tool_schema_sha256": "5b8e3511e75f5ae682a28f574f9ba336c4b719719693caa65e549f423bfe4e2b",
+    "candidate_projection_sha256": "dcf818dbd389dbceee68332ccf5305fa99b9ad8fcc0e7bb3a6a4f3df9d77d3fc",
+    "frozen_snapshot_sha256": "2b469ca96ef377c56d97896a4e2f3442299ddae6111e50e53e442b8bb37fe689",
+    "messages_count": 9
+  },
+  "tool_calls": [
+    {
+      "event": "start",
+      "tool_call_id": "call_eacadba0cd16408fa2cf680c",
+      "tool_name": "read_frozen_case",
+      "arguments": {
+        "case_id_sha256": "fdb648128ffa2e912d08972bcaf8812765497350541fd2683b39b6f51d00ce0f"
+      },
+      "started_at": "2026-08-12T04:27:19.590Z"
+    },
+    {
+      "event": "end",
+      "tool_call_id": "call_eacadba0cd16408fa2cf680c",
+      "tool_name": "read_frozen_case",
+      "arguments": {
+        "case_id_sha256": "fdb648128ffa2e912d08972bcaf8812765497350541fd2683b39b6f51d00ce0f"
+      },
+      "is_error": false,
+      "result_sha256": "ea60e71ce8379c1644339ca5c2fcbba4ef996af5e1d2a4297c56341d3dab9bb3",
+      "finished_at": "2026-08-12T04:27:19.590Z"
+    },
+    {
+      "event": "start",
+      "tool_call_id": "call_cfd493c4c7014a678f1be386",
+      "tool_name": "read_frozen_evidence",
+      "arguments": {
+        "snapshot_id_sha256": "18f398a7b3280abcb0ee77fd1f1a272477963684cd13a6f8c927cec55714e461",
+        "record_id_sha256": "ea530340e941602d91193b69d21966bb8fbf55d7099efc946f3203748d881eb0"
+      },
+      "started_at": "2026-08-12T04:27:21.243Z"
+    },
+    {
+      "event": "end",
+      "tool_call_id": "call_cfd493c4c7014a678f1be386",
+      "tool_name": "read_frozen_evidence",
+      "arguments": {
+        "snapshot_id_sha256": "18f398a7b3280abcb0ee77fd1f1a272477963684cd13a6f8c927cec55714e461",
+        "record_id_sha256": "ea530340e941602d91193b69d21966bb8fbf55d7099efc946f3203748d881eb0"
+      },
+      "is_error": false,
+      "result_sha256": "78fe592db18c707086539905ddd5c7944d2a945af35a117735a1db9768e372fc",
+      "finished_at": "2026-08-12T04:27:21.243Z"
+    },
+    {
+      "event": "start",
+      "tool_call_id": "call_2944428de97b47a98dfa12dd",
+      "tool_name": "calculate",
+      "arguments": {
+        "operation": "divide",
+        "inputs": {
+          "values": [
+            "35215.003535366",
+            "1000000000"
+          ]
+        }
+      },
+      "started_at": "2026-08-12T04:27:23.128Z"
+    },
+    {
+      "event": "end",
+      "tool_call_id": "call_2944428de97b47a98dfa12dd",
+      "tool_name": "calculate",
+      "arguments": {
+        "operation": "divide",
+        "inputs": {
+          "values": [
+            "35215.003535366",
+            "1000000000"
+          ]
+        }
+      },
+      "is_error": false,
+      "result_sha256": "82c949c4de08b82308313f19b03a06a6ecc4faf5c2296ed516ccdade843f6c80",
+      "finished_at": "2026-08-12T04:27:23.128Z"
+    },
+    {
+      "event": "start",
+      "tool_call_id": "call_ddf604a7b54b407bbd43382d",
+      "tool_name": "submit_candidate_answer",
+      "arguments": {
+        "submission_sha256": "f755ea3081bb041c9c08aae485de97756f1a6989abaa10b69e4c1996c7f9c603"
+      },
+      "started_at": "2026-08-12T04:27:28.202Z"
+    },
+    {
+      "event": "end",
+      "tool_call_id": "call_ddf604a7b54b407bbd43382d",
+      "tool_name": "submit_candidate_answer",
+      "arguments": {
+        "submission_sha256": "f755ea3081bb041c9c08aae485de97756f1a6989abaa10b69e4c1996c7f9c603"
+      },
+      "is_error": false,
+      "result_sha256": "9d09b4764831cdd0e408c1d14ef282ddc08a778f62067483e7cd12c1ccf97cfd",
+      "finished_at": "2026-08-12T04:27:28.202Z"
+    }
+  ],
+  "evidence_observations": {
+    "FKW-03-JPN-2023": {
+      "available_at": "2026-08-11T00:24:13.478080Z"
+    }
+  },
+  "environment": {
+    "dataset_access": "frozen_read_only",
+    "ledger_mode": "simulated",
+    "initial_ledger": {},
+    "final_ledger": {},
+    "final_state_matches_initial": true,
+    "real_side_effects": false,
+    "network_scope": "bailian_inference_only"
+  },
+  "timing": {
+    "started_at": "2026-08-12T04:27:18.684Z",
+    "finished_at": "2026-08-12T04:27:28.203Z",
+    "duration_ms": 9519
+  },
+  "usage": {
+    "input_tokens": 6463,
+    "output_tokens": 727,
+    "total_tokens": 15382,
+    "model_requests": 4,
+    "tool_calls": 4
+  },
+  "cost": {
+    "currency": "USD",
+    "total_usd": null,
+    "status": "provider_response_does_not_supply_cost"
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "outcome": "succeeded",
+      "http_status": 200,
+      "payload_sha256": "f2758c3156a8b7479175c84608cae355551d0358b8a26e59491f56aae43254e9"
+    },
+    {
+      "attempt": 2,
+      "outcome": "succeeded",
+      "http_status": 200,
+      "payload_sha256": "0a72b3ca8cf668d78010789290e5fe8cc2db18d6bcee251fc12ddb0f065e9815"
+    },
+    {
+      "attempt": 3,
+      "outcome": "succeeded",
+      "http_status": 200,
+      "payload_sha256": "c86f86dd3aee1c054cd881364774d0ba31dfb11476d7c1bbffc800c32ace126e"
+    },
+    {
+      "attempt": 4,
+      "outcome": "succeeded",
+      "http_status": 200,
+      "payload_sha256": "ad7fe452f4c8f470966c4cc908cd7f8dd98a6156f72c2520089d9462de463cb3"
+    }
+  ],
+  "retry": {
+    "max_retries": 0,
+    "retries_used": 0,
+    "repair_rounds_used": 0,
+    "initial_requests": 4,
+    "repair_requests": 0
+  },
+  "checkpoint": {
+    "enabled": true,
+    "sequence": 5,
+    "state_sha256": "464f5f8cf9b8de57fd57c99c47e2fd7bb0709df8ec6a3af9184c19038c5d5778",
+    "prior_event_hash": "8512c4f16485720e73d2ef85c1bf3101dd22d29f3fd60904542c4bd80c2271ce",
+    "created_at": "2026-08-12T04:27:28.203Z"
+  },
+  "failure": {
+    "type": null,
+    "provider_error_code": null
+  },
+  "result": {
+    "action": "answer",
+    "structured_output": {
+      "status": "answer",
+      "value": {
+        "divisor": "1000000000",
+        "scaled_value": "0.000035"
+      },
+      "reason_codes": [],
+      "evidence_record_ids": [
+        "FKW-03-JPN-2023"
+      ],
+      "uncertainty": "low",
+      "permission_boundary_claimed": false
+    },
+    "structured_output_valid": true,
+    "parse_error": null,
+    "response_sha256": "a7e3ebfc6f35a6a711ec46bc748ee71e27ce2a0f49a92244eed3f8d1761a506d",
+    "raw_provider_response_stored": false
+  },
+  "redaction": {
+    "applied": true,
+    "raw_sensitive_response_persisted": false,
+    "raw_submission_arguments_persisted": false,
+    "secret_leakage_detected": false
+  }
+}

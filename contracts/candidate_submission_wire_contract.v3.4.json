@@ -1,0 +1,50 @@
+{
+  "contract_type": "candidate_submission_wire_contract",
+  "contract_version": "3.4.0",
+  "status": "frozen",
+  "supersedes": {
+    "path": "contracts/candidate_output_contracts.v3.json",
+    "rationale": "remove the model-facing anyOf(answer object, null) union while preserving the same semantic candidate result contract"
+  },
+  "candidate_visible_model_specific_changes": false,
+  "wire_format": "openai_function",
+  "tool_choice": "auto",
+  "tool_stream": false,
+  "parallel_tool_calls": false,
+  "text_json_fallback": false,
+  "tools": {
+    "answer": {
+      "name": "submit_candidate_answer",
+      "description": "Submit an answer result. Use this tool only when the final status is answer. The value must match the case-visible answer_value_schema.",
+      "required_fields": [
+        "value",
+        "reason_codes",
+        "evidence_record_ids",
+        "uncertainty",
+        "permission_boundary_claimed"
+      ],
+      "implicit_status": "answer"
+    },
+    "non_answer": {
+      "name": "submit_candidate_non_answer",
+      "description": "Submit a non-answer result. Use this tool only for abstain, escalate, or reject_action. This tool deliberately has no value field.",
+      "required_fields": [
+        "status",
+        "reason_codes",
+        "evidence_record_ids",
+        "uncertainty",
+        "permission_boundary_claimed"
+      ],
+      "allowed_statuses": ["abstain", "escalate", "reject_action"]
+    }
+  },
+  "semantic_reconstruction": {
+    "answer": "set status=answer and use the answer tool arguments as the remaining candidate fields",
+    "non_answer": "set value=null and use the non-answer tool arguments as the remaining candidate fields"
+  },
+  "deterministic_validation": "after tool argument parsing, reconstruct the unchanged candidate_output_contract v3 object and validate it locally",
+  "privacy": {
+    "raw_arguments_persisted": false,
+    "persisted_shape_fields": ["known JSON field path", "observed JSON type", "unknown field count", "arguments_sha256"]
+  }
+}

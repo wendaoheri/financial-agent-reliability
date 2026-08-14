@@ -1,0 +1,13 @@
+{
+  "status": "answer",
+  "value": {
+    "value": "27811517000000",
+    "year": "2023"
+  },
+  "reason_codes": [],
+  "evidence_record_ids": [
+    "FKW-01-USA-2023"
+  ],
+  "uncertainty": "low",
+  "permission_boundary_claimed": true
+}

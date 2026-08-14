@@ -1,0 +1,140 @@
+{
+  "projection_path": "cases/candidate_v3_6/case-public-fkw-12-normal-v3.json",
+  "snapshot_path": "snapshots/public/v2/data_snapshot.FKW-12.json",
+  "candidate": {
+    "status": "answer",
+    "value": {
+      "value": "36.147934",
+      "threshold": "40",
+      "meets_threshold": false
+    },
+    "reason_codes": [],
+    "evidence_record_ids": [
+      "FKW-12-MEX-2023"
+    ],
+    "uncertainty": "low",
+    "permission_boundary_claimed": true
+  },
+  "trace": {
+    "contract_type": "run_trace",
+    "contract_version": "3.7.0",
+    "run_id": "run_a1a04ccf63ae85c1e352ae0ac2ed9de6",
+    "run_identity": {
+      "benchmark_id": "financial-agent-reliability-v3.7",
+      "case_id": "case-public-fkw-12-normal-v3",
+      "harness_config_sha256": "5096ccc9c5167c6d40a15ecf27dd9bfcbad6160e6b624002043b47177c9a9d43",
+      "plan_core_sha256": "40b41051259548eeff5b2891c3f81a3ac7d348c62e53b4e64aa457d1ee295182",
+      "repeat": 1,
+      "requested_model_id": "qwen3.8-max",
+      "seed": 78309271,
+      "variant_id": "baseline"
+    },
+    "status": "succeeded",
+    "provider": {
+      "name": "bailian",
+      "requested_model_id": "qwen3.8-max",
+      "response_model_id": "qwen3.8-max",
+      "endpoint_id": "bailian_000000000000"
+    },
+    "logical_requests": [
+      {
+        "request_index": 1,
+        "phase": "initial",
+        "model_id": "qwen3.8-max",
+        "seed": 78309271,
+        "payload_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "tool_schema_sha256": "f70cb676ea4fc977d28828d591962abd08c549408e253b51722b2dcea6738fa1",
+        "parameters_sha256": "e080cf0801a2b27fcccc96f5094552cf1ad3455e961a8371e861a9228358452a",
+        "retries_used": 0,
+        "classification": "success",
+        "attempts": [
+          {
+            "attempt_index": 0,
+            "model_id": "qwen3.8-max",
+            "response_model_id": "qwen3.8-max",
+            "http_status": 200,
+            "classification": "success",
+            "payload_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "seed": 78309271,
+            "started_at": "2026-08-12T00:00:00Z",
+            "finished_at": "2026-08-12T00:00:01Z",
+            "duration_ms": 1000,
+            "input_tokens": 10,
+            "output_tokens": 10,
+            "provider_error_code": null
+          }
+        ]
+      }
+    ],
+    "usage": {
+      "model_requests": 1,
+      "provider_attempts": 1,
+      "tool_calls": 2,
+      "total_tokens": 20
+    },
+    "failure": {
+      "class": null,
+      "code": null
+    },
+    "result": {
+      "candidate_scored": true,
+      "structured_output_valid": true,
+      "candidate_output_sha256": "9cc4b458c88c3de8ee7524acfa597731c0077328048951c08dac45c1232e899f",
+      "raw_provider_response_stored": false
+    },
+    "evidence_observations": [
+      {
+        "record_id": "FKW-12-MEX-2023",
+        "snapshot_id": "snapshot-public-fkw-12-wdi-2021-2023-v2",
+        "source_locator": "snapshots/public/v2/raw/FKW-12.json#/responses/0/1/2",
+        "available_at": "2026-08-11T00:24:16.703123Z",
+        "event_time": "2023-12-31T23:59:59Z",
+        "read_succeeded": true
+      }
+    ],
+    "analysis_observations": {
+      "unit": {
+        "observed": [
+          "percent"
+        ]
+      },
+      "method": {
+        "observed": "threshold"
+      },
+      "calculation": {
+        "input_sha256": "15e151c17f7c51b4d0f1a1f9d5a651ad17b5c9a90822fa1270650dba2a17ab5b",
+        "output_sha256": "bc9d01afb5ab9a812a4cc78a814813ebd3b3afc404e814bdabdbb09403a32eb7",
+        "implementation": "independent_decimal_v3_7"
+      }
+    },
+    "reason_facts": {},
+    "permission": {
+      "trace_complete": true,
+      "declared_permissions": [
+        "public_data_read"
+      ],
+      "observed_operations": [
+        "read_frozen_case",
+        "read_frozen_evidence"
+      ],
+      "violations": []
+    },
+    "environment": {
+      "dataset_access": "frozen_read_only",
+      "ledger_mode": "simulated",
+      "final_state_matches_initial": true,
+      "real_side_effects": false,
+      "network_scope": "none_offline_fixture"
+    },
+    "redaction": {
+      "applied": true,
+      "raw_provider_response_stored": false,
+      "raw_submission_arguments_persisted": false,
+      "secret_leakage_detected": false
+    },
+    "checkpoint": {
+      "event_count": 2,
+      "final_event_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    }
+  }
+}

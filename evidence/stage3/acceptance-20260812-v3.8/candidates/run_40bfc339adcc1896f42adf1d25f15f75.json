@@ -1,0 +1,15 @@
+{
+  "status": "answer",
+  "value": {
+    "method": "three_year_average",
+    "value": "6.073667"
+  },
+  "reason_codes": [],
+  "evidence_record_ids": [
+    "FKW-07-CAN-2021",
+    "FKW-07-CAN-2022",
+    "FKW-07-CAN-2023"
+  ],
+  "uncertainty": "low",
+  "permission_boundary_claimed": false
+}

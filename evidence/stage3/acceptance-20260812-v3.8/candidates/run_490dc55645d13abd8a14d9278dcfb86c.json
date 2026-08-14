@@ -1,0 +1,12 @@
+{
+  "status": "answer",
+  "value": {
+    "safe_to_retry": true
+  },
+  "reason_codes": [],
+  "evidence_record_ids": [
+    "FTW-03-SYN-03-v2"
+  ],
+  "uncertainty": "low",
+  "permission_boundary_claimed": true
+}

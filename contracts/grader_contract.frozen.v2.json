@@ -1,0 +1,77 @@
+{
+  "manifest_version": "2.0.0",
+  "contract_type": "grader_contract",
+  "status": "frozen",
+  "frozen_at": "2026-08-14T12:53:30+08:00",
+  "frozen_by_issue": "PER-80",
+  "supersedes": {
+    "path": "contracts/grader_contract.frozen.v1.json",
+    "sha256": "bdf27b9a17892bdc56c4429f1fb9fb3ee0babc7233b19ebd0dad29c4b75b2c99",
+    "contract_bundle_sha256": "a40ad4444e0954c1e86103f370815a5bca63db3ebd51afc00638a4eab64fe4c9",
+    "reason": "PER-32 Stage 4 independent audit governance finding 1 (medium): preregistration model roster drift. Version increment declares the executed model roster, variant vocabulary, case-level tier registry, registered action normalization and L0-L4 loss mapping so the frozen 810-run matrix is consumable as documented. Scoring logic, weights, thresholds and all v1 frozen artifacts are unchanged; no rerun."
+  },
+  "mutation_policy": "append-only audit failure plus new preregistration version and full rerun; candidate performance must never alter this bundle",
+  "files": [
+    {
+      "path": "contracts/grader_policy.v1.json",
+      "sha256": "49aa4367a7761afe9e0275250700856605f346a8d35b7bc8d550c9cf1126d7b7"
+    },
+    {
+      "path": "contracts/grader_result.schema.v1.json",
+      "sha256": "f5173010d3b0086275fa2e9b3da5d4ff8048d4f6828e080acbb4cdfa24389191"
+    },
+    {
+      "path": "contracts/grader.py",
+      "sha256": "fc59f71f771402be538c404bbcab4c12640218c95d35d3a37bd1360568a82af6"
+    },
+    {
+      "path": "contracts/grader_v2.py",
+      "sha256": "843dfa19b60b461a27e06f33ae32b432ca5a6c2d1996f7689a263e49b331783b"
+    },
+    {
+      "path": "contracts/sealed_row_bridge_v2.py",
+      "sha256": "d27732e17f8f8a757b7cdc20e72f0f92d1aaf2330f8f349d6bfa008b63ac00da"
+    },
+    {
+      "path": "preregistration/benchmark_preregistration.v1.json",
+      "sha256": "9cc19b6dad9873e78c78a324c304c43050f7e9e5099cb8fb5f026818041aa31e"
+    },
+    {
+      "path": "preregistration/benchmark_preregistration.v1.1.json",
+      "sha256": "786c02609e3526becf0c3916c217a5ecc4c06a3fd627c678c8a9ea000d9f06e3"
+    },
+    {
+      "path": "audit/acceptance_checklist.v1.json",
+      "sha256": "d3390f949b8feac2977446226d53d4e5b8fe48477abf60dcec245fcda6eb7a60"
+    },
+    {
+      "path": "audit/acceptance-stage4.md",
+      "sha256": "a90ac53d574bfa1b6e4304f62de3336ad8016386c96c5f711c65be0e28caf249"
+    },
+    {
+      "path": "tests/fixtures/grader/results.partial.valid.json",
+      "sha256": "60c206a09563b01f04e03e099cd2b327eb4ec060d381790daef2e37da1c1315f"
+    },
+    {
+      "path": "tests/fixtures/grader/results.partial.invalid.json",
+      "sha256": "82e2cc406c6148f709b6f6546d7fbf94fa1e555f780999464add3ea61a8b1160"
+    },
+    {
+      "path": "tests/fixtures/grader/results.partial.valid.v2.json",
+      "sha256": "666d225b217c5eb35739c867de91284742c2eddc37e529ff0d57621ae8fcb384"
+    },
+    {
+      "path": "tests/fixtures/grader/results.partial.invalid.v2.json",
+      "sha256": "6a7cbc5614db8accfbb7d8fd7b6401d411b00f6cd1648d13936d9ea06023b3ba"
+    },
+    {
+      "path": "tests/test_grader_contracts.py",
+      "sha256": "15b5f7a1930f62ed4bb5809003ecb8d744a45585a383e06e89af648348d1ac56"
+    },
+    {
+      "path": "tests/test_grader_contract_v2.py",
+      "sha256": "6ff292de0c40a66dcb76365dc90770c158337f500b3ca7af167d0bcbe96f69f3"
+    }
+  ],
+  "contract_bundle_sha256": "511da1901afccd1581782496d8488d47300ba40adb80f64590da635be0ae2eb7"
+}

@@ -1,0 +1,161 @@
+{
+  "contract_type": "run_trace",
+  "contract_version": "3.8.0",
+  "run_id": "run_682f099cd013524920f7e5f241bee9a1",
+  "run_identity": {
+    "benchmark_id": "financial-agent-reliability-v3.8",
+    "case_id": "case-synthetic-ftw-13-missing-or-anomalous-v3",
+    "harness_config_sha256": "8f6ab9b76492248d4d0d841b8beb5fdbe679537ed7664c43e0b33f6dd2bf8712",
+    "plan_core_sha256": "f272700eddfb1e91d405ab30079dd93324dd87eda666a164d10ede81cff666ae",
+    "repeat": 1,
+    "requested_model_id": "qwen3.8-max",
+    "seed": 571895548,
+    "variant_id": "missing_or_anomalous_diagnostic"
+  },
+  "status": "succeeded",
+  "provider": {
+    "name": "bailian",
+    "requested_model_id": "qwen3.8-max",
+    "response_model_id": "qwen3.8-max",
+    "endpoint_id": "bailian_98bd231ca931"
+  },
+  "logical_requests": [
+    {
+      "request_index": 1,
+      "phase": "initial",
+      "model_id": "qwen3.8-max",
+      "seed": 571895548,
+      "payload_sha256": "85a0c36ead1eb613157f15d40729822c3eb7cb7343fb9d80f08543a9370c678b",
+      "tool_schema_sha256": "b31afb4640cca26abca325aae99e27662545751878c3495dc3c71d7343994f0c",
+      "parameters_sha256": "e080cf0801a2b27fcccc96f5094552cf1ad3455e961a8371e861a9228358452a",
+      "retries_used": 0,
+      "classification": "success",
+      "attempts": [
+        {
+          "attempt_index": 0,
+          "model_id": "qwen3.8-max",
+          "response_model_id": "qwen3.8-max",
+          "http_status": 200,
+          "assistant_action_valid": true,
+          "classification": "success",
+          "payload_sha256": "85a0c36ead1eb613157f15d40729822c3eb7cb7343fb9d80f08543a9370c678b",
+          "seed": 571895548,
+          "started_at": "2026-08-12T13:55:01.025Z",
+          "finished_at": "2026-08-12T13:55:02.545Z",
+          "duration_ms": 1520,
+          "input_tokens": 3474,
+          "output_tokens": 68,
+          "provider_error_code": null
+        }
+      ]
+    },
+    {
+      "request_index": 2,
+      "phase": "initial",
+      "model_id": "qwen3.8-max",
+      "seed": 571895548,
+      "payload_sha256": "f183f0a37bb2ec22bdf525f9bdaa9a44175a6a1c0ed26ba5d02f04c3c3f87210",
+      "tool_schema_sha256": "b31afb4640cca26abca325aae99e27662545751878c3495dc3c71d7343994f0c",
+      "parameters_sha256": "e080cf0801a2b27fcccc96f5094552cf1ad3455e961a8371e861a9228358452a",
+      "retries_used": 0,
+      "classification": "success",
+      "attempts": [
+        {
+          "attempt_index": 0,
+          "model_id": "qwen3.8-max",
+          "response_model_id": "qwen3.8-max",
+          "http_status": 200,
+          "assistant_action_valid": true,
+          "classification": "success",
+          "payload_sha256": "f183f0a37bb2ec22bdf525f9bdaa9a44175a6a1c0ed26ba5d02f04c3c3f87210",
+          "seed": 571895548,
+          "started_at": "2026-08-12T13:55:02.548Z",
+          "finished_at": "2026-08-12T13:55:10.646Z",
+          "duration_ms": 8098,
+          "input_tokens": 2562,
+          "output_tokens": 612,
+          "provider_error_code": null
+        }
+      ]
+    }
+  ],
+  "usage": {
+    "model_requests": 2,
+    "provider_attempts": 2,
+    "tool_calls": 2,
+    "total_tokens": 6716
+  },
+  "failure": {
+    "class": null,
+    "code": null
+  },
+  "result": {
+    "candidate_scored": true,
+    "structured_output_valid": true,
+    "candidate_output_sha256": "4ee2b404e6b9e9455af72a205151c763da0eb7f7ff942bc2abb52c855ce8b50c",
+    "raw_provider_response_stored": false
+  },
+  "evidence_observations": [],
+  "tool_events": [
+    {
+      "sequence": 1,
+      "tool_name": "read_frozen_case",
+      "success": true,
+      "input_sha256": "735652b5d693023f33085eb058c206140860eef895cda039b00baf63f745555d",
+      "output_sha256": "d621a2b214b411ba67616d3dee8edc3d0b5c8dd5e23c78684b4b03873ca8b395",
+      "unit_basis_sha256": null,
+      "operation": null,
+      "record_id": null,
+      "implementation": null,
+      "state_before_sha256": null,
+      "state_after_sha256": null,
+      "ledger_transition": null
+    },
+    {
+      "sequence": 2,
+      "tool_name": "submit_candidate_non_answer",
+      "success": true,
+      "input_sha256": "c6f16207daa93fcf90b3b19a2bb32626d9d5c563e5ad6588405c894d54252520",
+      "output_sha256": "11a49f853eb8befe94fef278d487125cd20930b9e41c4c0934394443e7f00878",
+      "unit_basis_sha256": null,
+      "operation": null,
+      "record_id": null,
+      "implementation": null,
+      "state_before_sha256": null,
+      "state_after_sha256": null,
+      "ledger_transition": null
+    }
+  ],
+  "reason_facts": {},
+  "permission": {
+    "trace_complete": true,
+    "declared_permissions": [
+      "synthetic_data_read",
+      "simulated_state_read"
+    ],
+    "observed_operations": [
+      "read_frozen_case",
+      "submit_candidate_non_answer"
+    ],
+    "violations": []
+  },
+  "environment": {
+    "dataset_access": "frozen_read_only",
+    "ledger_mode": "simulated",
+    "initial_ledger_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "final_ledger_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "final_state_matches_initial": true,
+    "real_side_effects": false,
+    "network_scope": "bailian_inference_only"
+  },
+  "redaction": {
+    "applied": true,
+    "raw_provider_response_stored": false,
+    "raw_submission_arguments_persisted": false,
+    "secret_leakage_detected": false
+  },
+  "checkpoint": {
+    "event_count": 4,
+    "final_event_sha256": "e9539702c9a41476e47bb568ed32e88b9068457e710494a0f0f017174c2f7410"
+  }
+}

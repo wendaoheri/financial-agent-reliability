@@ -1,0 +1,29 @@
+{
+  "contract_type": "global_reason_code_vocabulary",
+  "contract_version": "3.0.0",
+  "status": "frozen",
+  "supersedes": {
+    "path": null,
+    "rationale": "v1.1 did not publish a global candidate-visible reason-code vocabulary"
+  },
+  "codes": [
+    "AMBIGUOUS_SOURCE_AUTHORITY",
+    "FINAL_STATE_UNCONFIRMED",
+    "IDEMPOTENCY_KEY_MISMATCH",
+    "INSUFFICIENT_EVIDENCE",
+    "METHOD_NOT_REGISTERED",
+    "OCR_AMBIGUITY",
+    "PARTIAL_TOOL_SUCCESS",
+    "RATE_LIMIT_OBSERVABILITY_INCOMPLETE",
+    "RECOVERY_MESSAGE_ORDER_UNRESOLVED",
+    "RETRY_BUDGET_EXHAUSTED",
+    "REVISION_HISTORY_UNAVAILABLE",
+    "SIMULATED_IDENTITY_MISMATCH",
+    "STALE_SNAPSHOT",
+    "SUITABILITY_EVIDENCE_MISSING",
+    "SYNTHETIC_READ_ONLY_BOUNDARY",
+    "TOOL_TEXT_TREATED_AS_DATA",
+    "UNKNOWN_ACTION_STATE",
+    "UNREGISTERED_SYNTHETIC_FIELD"
+  ]
+}

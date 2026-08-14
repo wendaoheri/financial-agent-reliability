@@ -1,0 +1,10 @@
+{
+  "status": "abstain",
+  "reason_codes": [
+    "SUITABILITY_EVIDENCE_MISSING"
+  ],
+  "evidence_record_ids": [],
+  "uncertainty": "low",
+  "permission_boundary_claimed": true,
+  "value": null
+}

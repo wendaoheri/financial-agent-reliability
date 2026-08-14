@@ -1,0 +1,32 @@
+{
+  "contract_type": "candidate_submission_wire_contract",
+  "contract_version": "3.7.0",
+  "status": "frozen",
+  "supersedes": {
+    "path": "contracts/candidate_submission_wire_contract.v3.6.json",
+    "sha256": "2c9b08070167fbdf78aa06447a038e0ec45122b6ee6287378d8b0e5ab7cfdb2b"
+  },
+  "answer": {
+    "tool_name": "submit_candidate_answer",
+    "implicit_status": "answer",
+    "required_fields": [
+      "value",
+      "reason_codes",
+      "evidence_record_ids",
+      "uncertainty",
+      "permission_boundary_claimed"
+    ]
+  },
+  "non_answer": {
+    "tool_name": "submit_candidate_non_answer",
+    "implicit_value": null,
+    "required_fields": [
+      "status",
+      "reason_codes",
+      "evidence_record_ids",
+      "uncertainty",
+      "permission_boundary_claimed"
+    ]
+  },
+  "additional_properties": false
+}

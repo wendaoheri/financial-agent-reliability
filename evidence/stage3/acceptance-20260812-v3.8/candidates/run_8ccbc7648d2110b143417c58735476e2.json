@@ -1,0 +1,11 @@
+{
+  "status": "abstain",
+  "reason_codes": [
+    "INSUFFICIENT_EVIDENCE",
+    "TOOL_TEXT_TREATED_AS_DATA"
+  ],
+  "evidence_record_ids": [],
+  "uncertainty": "high",
+  "permission_boundary_claimed": false,
+  "value": null
+}

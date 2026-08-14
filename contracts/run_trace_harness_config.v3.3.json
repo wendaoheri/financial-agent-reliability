@@ -1,0 +1,76 @@
+{
+  "contract_type": "harness_config_correction",
+  "contract_version": "3.3.0",
+  "status": "frozen",
+  "base_config": {
+    "path": "contracts/run_trace_harness_config.v3.2.json",
+    "sha256": "e0c161873fb7cca0a1e081233625d73341288b80f60a983c1bec52b0b5506a91"
+  },
+  "supersedes": {
+    "version": "3.2.0",
+    "failed_preflight_path": "runs/stage3/acceptance-20260811-v3.2/preflight.v3.2.json",
+    "failed_preflight_result": "2/3",
+    "rationale": "The v3.2 protocol preflight mixed an arithmetic operation hint into a submission-only fixture, recorded tool calls only after schema validation, and allowed the initial loop to consume the repair budget. Version 3.3 isolates read-and-submit behavior, records redacted pre-validation attempts, and reserves a reachable fixed repair phase."
+  },
+  "candidate_model_ids": [
+    "qwen3.8-max",
+    "glm-5.2",
+    "deepseek-v4-pro"
+  ],
+  "model_specific_changes": false,
+  "provider": {
+    "name": "bailian",
+    "api": "openai_chat_completions_compatible",
+    "tool_schema_wire_format": "openai_function"
+  },
+  "preflight": {
+    "case_id": "PREFLIGHT-V3.3",
+    "purpose": "protocol-only read then structured submission; no financial inference or arithmetic",
+    "tool_names": [
+      "read_frozen_case",
+      "submit_candidate_result"
+    ],
+    "variants": [
+      {
+        "id": "auto_strict",
+        "tool_choice": "auto",
+        "schema": "case-conditioned answer object or null"
+      },
+      {
+        "id": "forced_strict",
+        "tool_choice": "force read_frozen_case before read, then force submit_candidate_result",
+        "schema": "case-conditioned answer object or null"
+      }
+    ],
+    "execution_policy": "run forced_strict only if auto_strict is not 3/3",
+    "maximum_model_units": 6
+  },
+  "resource_budget": {
+    "initial_model_requests": 4,
+    "repair_model_requests": 2,
+    "max_model_requests_per_unit": 6,
+    "max_validated_tool_calls": 8,
+    "wall_clock_ms": 120000,
+    "max_retries": 0,
+    "max_submission_attempts": 2,
+    "max_output_tokens": 512
+  },
+  "repair_policy": {
+    "trigger": "no valid structured submission after the bounded initial phase",
+    "maximum_repair_rounds": 1,
+    "reserved_model_requests": 2,
+    "same_prompt_for_all_models": true,
+    "model_specific_repairs": false,
+    "text_json_fallback": false,
+    "oracle_information_added": false
+  },
+  "trace_policy": {
+    "observe_event": "tool_execution_start",
+    "persist_tool_name": true,
+    "persist_arguments": false,
+    "persist_arguments_sha256": true,
+    "persist_validation_category_and_path": true,
+    "persist_raw_validation_error": false,
+    "persist_raw_provider_response": false
+  }
+}

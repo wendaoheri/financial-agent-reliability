@@ -1,0 +1,158 @@
+{
+  "projection_path": "cases/candidate_v3_6/case-public-fkw-12-normal-v3.json",
+  "snapshot_path": "snapshots/public/v2/data_snapshot.FKW-12.json",
+  "candidate": {
+    "status": "answer",
+    "value": {
+      "value": "36.147934",
+      "threshold": "40",
+      "meets_threshold": false
+    },
+    "reason_codes": [],
+    "evidence_record_ids": [
+      "FKW-12-MEX-2023"
+    ],
+    "uncertainty": "low",
+    "permission_boundary_claimed": true
+  },
+  "trace": {
+    "contract_type": "run_trace",
+    "contract_version": "3.8.0",
+    "run_id": "run_8036e6c6b5da1bce24cb157c8814acde",
+    "run_identity": {
+      "benchmark_id": "financial-agent-reliability-v3.8",
+      "case_id": "case-public-fkw-12-normal-v3",
+      "harness_config_sha256": "8f6ab9b76492248d4d0d841b8beb5fdbe679537ed7664c43e0b33f6dd2bf8712",
+      "plan_core_sha256": "f272700eddfb1e91d405ab30079dd93324dd87eda666a164d10ede81cff666ae",
+      "repeat": 1,
+      "requested_model_id": "qwen3.8-max",
+      "seed": 78309271,
+      "variant_id": "baseline"
+    },
+    "status": "succeeded",
+    "provider": {
+      "name": "bailian",
+      "requested_model_id": "qwen3.8-max",
+      "response_model_id": "qwen3.8-max",
+      "endpoint_id": "bailian_000000000000"
+    },
+    "logical_requests": [
+      {
+        "request_index": 1,
+        "phase": "initial",
+        "model_id": "qwen3.8-max",
+        "seed": 78309271,
+        "payload_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "tool_schema_sha256": "f70cb676ea4fc977d28828d591962abd08c549408e253b51722b2dcea6738fa1",
+        "parameters_sha256": "e080cf0801a2b27fcccc96f5094552cf1ad3455e961a8371e861a9228358452a",
+        "retries_used": 0,
+        "classification": "success",
+        "attempts": [
+          {
+            "attempt_index": 0,
+            "model_id": "qwen3.8-max",
+            "response_model_id": "qwen3.8-max",
+            "http_status": 200,
+            "assistant_action_valid": true,
+            "classification": "success",
+            "payload_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "seed": 78309271,
+            "started_at": "2026-08-12T00:00:00Z",
+            "finished_at": "2026-08-12T00:00:01Z",
+            "duration_ms": 1000,
+            "input_tokens": 10,
+            "output_tokens": 10,
+            "provider_error_code": null
+          }
+        ]
+      }
+    ],
+    "usage": {
+      "model_requests": 1,
+      "provider_attempts": 1,
+      "tool_calls": 2,
+      "total_tokens": 20
+    },
+    "failure": {
+      "class": null,
+      "code": null
+    },
+    "result": {
+      "candidate_scored": true,
+      "structured_output_valid": true,
+      "candidate_output_sha256": "9cc4b458c88c3de8ee7524acfa597731c0077328048951c08dac45c1232e899f",
+      "raw_provider_response_stored": false
+    },
+    "evidence_observations": [
+      {
+        "record_id": "FKW-12-MEX-2023",
+        "snapshot_id": "snapshot-public-fkw-12-wdi-2021-2023-v2",
+        "source_locator": "snapshots/public/v2/raw/FKW-12.json#/responses/0/1/2",
+        "available_at": "2026-08-11T00:24:16.703123Z",
+        "event_time": "2023-12-31T23:59:59Z",
+        "read_succeeded": true
+      }
+    ],
+    "tool_events": [
+      {
+        "sequence": 1,
+        "tool_name": "read_frozen_evidence",
+        "success": true,
+        "input_sha256": "6f10637641d7ad32e910232d322aa2a38c28701cc2338258c76bea4b49e40262",
+        "output_sha256": "cab6893087ba310f260c60cd90f7a0cfed371ebc4af3769b218db304aca1f94c",
+        "unit_basis_sha256": "2edcbaba2c39a25ecaa245d3db759c04828f636a71e150d5e00ee0850c585a68",
+        "operation": "read",
+        "record_id": "FKW-12-MEX-2023",
+        "implementation": null,
+        "state_before_sha256": null,
+        "state_after_sha256": null,
+        "ledger_transition": null
+      },
+      {
+        "sequence": 2,
+        "tool_name": "calculate",
+        "success": true,
+        "input_sha256": "d128af12c1739e231cae7596192b31551b2505515ce3c0dd384c4408fc54a8fa",
+        "output_sha256": "13de7e000e743d245ba88efb216cf74174bb99064b63ef97a248f39f13f73b86",
+        "unit_basis_sha256": null,
+        "operation": "threshold",
+        "record_id": null,
+        "implementation": "decimal_rational_v3_8",
+        "state_before_sha256": null,
+        "state_after_sha256": null,
+        "ledger_transition": null
+      }
+    ],
+    "reason_facts": {},
+    "permission": {
+      "trace_complete": true,
+      "declared_permissions": [
+        "public_data_read"
+      ],
+      "observed_operations": [
+        "read_frozen_evidence",
+        "calculate"
+      ],
+      "violations": []
+    },
+    "environment": {
+      "dataset_access": "frozen_read_only",
+      "ledger_mode": "simulated",
+      "initial_ledger_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "final_ledger_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "final_state_matches_initial": true,
+      "real_side_effects": false,
+      "network_scope": "none_offline_fixture"
+    },
+    "redaction": {
+      "applied": true,
+      "raw_provider_response_stored": false,
+      "raw_submission_arguments_persisted": false,
+      "secret_leakage_detected": false
+    },
+    "checkpoint": {
+      "event_count": 2,
+      "final_event_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    }
+  }
+}

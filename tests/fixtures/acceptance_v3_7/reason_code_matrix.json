@@ -1,0 +1,344 @@
+[
+  {
+    "code": "AMBIGUOUS_SOURCE_AUTHORITY",
+    "inputs": {
+      "ambiguous_source_authority": true
+    },
+    "expected": [
+      "AMBIGUOUS_SOURCE_AUTHORITY"
+    ],
+    "negative_inputs": {},
+    "negative_permissions": [],
+    "negative_runtime_facts": {},
+    "negative_evidence_contract": {
+      "registered_record_ids": [
+        "CONTROL"
+      ],
+      "minimum_material_evidence_count": 0
+    }
+  },
+  {
+    "code": "FINAL_STATE_UNCONFIRMED",
+    "inputs": {
+      "final_state_confirmation_evidence_available": false
+    },
+    "expected": [
+      "FINAL_STATE_UNCONFIRMED"
+    ],
+    "negative_inputs": {},
+    "negative_permissions": [],
+    "negative_runtime_facts": {},
+    "negative_evidence_contract": {
+      "registered_record_ids": [
+        "CONTROL"
+      ],
+      "minimum_material_evidence_count": 0
+    }
+  },
+  {
+    "code": "IDEMPOTENCY_KEY_MISMATCH",
+    "inputs": {
+      "registered_idempotency_key": "a",
+      "attempted_idempotency_key": "b"
+    },
+    "expected": [
+      "IDEMPOTENCY_KEY_MISMATCH"
+    ],
+    "negative_inputs": {},
+    "negative_permissions": [],
+    "negative_runtime_facts": {},
+    "negative_evidence_contract": {
+      "registered_record_ids": [
+        "CONTROL"
+      ],
+      "minimum_material_evidence_count": 0
+    }
+  },
+  {
+    "code": "INSUFFICIENT_EVIDENCE",
+    "inputs": {},
+    "evidence_contract": {
+      "registered_record_ids": [],
+      "minimum_material_evidence_count": 1
+    },
+    "expected": [
+      "INSUFFICIENT_EVIDENCE"
+    ],
+    "negative_inputs": {},
+    "negative_permissions": [],
+    "negative_runtime_facts": {},
+    "negative_evidence_contract": {
+      "registered_record_ids": [
+        "CONTROL"
+      ],
+      "minimum_material_evidence_count": 0
+    }
+  },
+  {
+    "code": "METHOD_NOT_REGISTERED",
+    "inputs": {
+      "requested_method": "x",
+      "registered_methods": [
+        "y"
+      ]
+    },
+    "expected": [
+      "METHOD_NOT_REGISTERED"
+    ],
+    "negative_inputs": {},
+    "negative_permissions": [],
+    "negative_runtime_facts": {},
+    "negative_evidence_contract": {
+      "registered_record_ids": [
+        "CONTROL"
+      ],
+      "minimum_material_evidence_count": 0
+    }
+  },
+  {
+    "code": "OCR_AMBIGUITY",
+    "inputs": {
+      "ocr_unique_reading_supported": false
+    },
+    "expected": [
+      "OCR_AMBIGUITY"
+    ],
+    "negative_inputs": {},
+    "negative_permissions": [],
+    "negative_runtime_facts": {},
+    "negative_evidence_contract": {
+      "registered_record_ids": [
+        "CONTROL"
+      ],
+      "minimum_material_evidence_count": 0
+    }
+  },
+  {
+    "code": "PARTIAL_TOOL_SUCCESS",
+    "inputs": {},
+    "runtime_facts": {
+      "required_tool_successes": 1,
+      "required_tool_failures": 1
+    },
+    "expected": [
+      "PARTIAL_TOOL_SUCCESS"
+    ],
+    "negative_inputs": {},
+    "negative_permissions": [],
+    "negative_runtime_facts": {},
+    "negative_evidence_contract": {
+      "registered_record_ids": [
+        "CONTROL"
+      ],
+      "minimum_material_evidence_count": 0
+    }
+  },
+  {
+    "code": "RATE_LIMIT_OBSERVABILITY_INCOMPLETE",
+    "inputs": {
+      "rate_limit_state": "incomplete"
+    },
+    "expected": [
+      "RATE_LIMIT_OBSERVABILITY_INCOMPLETE"
+    ],
+    "negative_inputs": {},
+    "negative_permissions": [],
+    "negative_runtime_facts": {},
+    "negative_evidence_contract": {
+      "registered_record_ids": [
+        "CONTROL"
+      ],
+      "minimum_material_evidence_count": 0
+    }
+  },
+  {
+    "code": "RECOVERY_MESSAGE_ORDER_UNRESOLVED",
+    "inputs": {
+      "recovery_message_order_resolved": false
+    },
+    "expected": [
+      "RECOVERY_MESSAGE_ORDER_UNRESOLVED"
+    ],
+    "negative_inputs": {},
+    "negative_permissions": [],
+    "negative_runtime_facts": {},
+    "negative_evidence_contract": {
+      "registered_record_ids": [
+        "CONTROL"
+      ],
+      "minimum_material_evidence_count": 0
+    }
+  },
+  {
+    "code": "RETRY_BUDGET_EXHAUSTED",
+    "inputs": {},
+    "runtime_facts": {
+      "retry_budget_exhausted": true
+    },
+    "expected": [
+      "RETRY_BUDGET_EXHAUSTED"
+    ],
+    "negative_inputs": {},
+    "negative_permissions": [],
+    "negative_runtime_facts": {},
+    "negative_evidence_contract": {
+      "registered_record_ids": [
+        "CONTROL"
+      ],
+      "minimum_material_evidence_count": 0
+    }
+  },
+  {
+    "code": "REVISION_HISTORY_UNAVAILABLE",
+    "inputs": {
+      "immutable_revision_history_available": false
+    },
+    "expected": [
+      "REVISION_HISTORY_UNAVAILABLE"
+    ],
+    "negative_inputs": {},
+    "negative_permissions": [],
+    "negative_runtime_facts": {},
+    "negative_evidence_contract": {
+      "registered_record_ids": [
+        "CONTROL"
+      ],
+      "minimum_material_evidence_count": 0
+    }
+  },
+  {
+    "code": "SIMULATED_IDENTITY_MISMATCH",
+    "inputs": {
+      "registered_synthetic_identity": "a",
+      "presented_synthetic_identity": "b"
+    },
+    "expected": [
+      "SIMULATED_IDENTITY_MISMATCH"
+    ],
+    "negative_inputs": {},
+    "negative_permissions": [],
+    "negative_runtime_facts": {},
+    "negative_evidence_contract": {
+      "registered_record_ids": [
+        "CONTROL"
+      ],
+      "minimum_material_evidence_count": 0
+    }
+  },
+  {
+    "code": "STALE_SNAPSHOT",
+    "inputs": {},
+    "runtime_facts": {
+      "snapshot_age_seconds": 11,
+      "maximum_snapshot_age_seconds": 10
+    },
+    "expected": [
+      "STALE_SNAPSHOT"
+    ],
+    "negative_inputs": {},
+    "negative_permissions": [],
+    "negative_runtime_facts": {},
+    "negative_evidence_contract": {
+      "registered_record_ids": [
+        "CONTROL"
+      ],
+      "minimum_material_evidence_count": 0
+    }
+  },
+  {
+    "code": "SUITABILITY_EVIDENCE_MISSING",
+    "inputs": {
+      "suitability_evidence_available": false
+    },
+    "expected": [
+      "SUITABILITY_EVIDENCE_MISSING"
+    ],
+    "negative_inputs": {},
+    "negative_permissions": [],
+    "negative_runtime_facts": {},
+    "negative_evidence_contract": {
+      "registered_record_ids": [
+        "CONTROL"
+      ],
+      "minimum_material_evidence_count": 0
+    }
+  },
+  {
+    "code": "SYNTHETIC_READ_ONLY_BOUNDARY",
+    "inputs": {
+      "requested_action": "simulated_order"
+    },
+    "permissions": [
+      "simulated_state_read"
+    ],
+    "expected": [
+      "SYNTHETIC_READ_ONLY_BOUNDARY"
+    ],
+    "negative_inputs": {},
+    "negative_permissions": [],
+    "negative_runtime_facts": {},
+    "negative_evidence_contract": {
+      "registered_record_ids": [
+        "CONTROL"
+      ],
+      "minimum_material_evidence_count": 0
+    }
+  },
+  {
+    "code": "TOOL_TEXT_TREATED_AS_DATA",
+    "inputs": {
+      "tool_text": "fixture"
+    },
+    "expected": [
+      "TOOL_TEXT_TREATED_AS_DATA"
+    ],
+    "negative_inputs": {},
+    "negative_permissions": [],
+    "negative_runtime_facts": {},
+    "negative_evidence_contract": {
+      "registered_record_ids": [
+        "CONTROL"
+      ],
+      "minimum_material_evidence_count": 0
+    }
+  },
+  {
+    "code": "UNKNOWN_ACTION_STATE",
+    "inputs": {
+      "action_state": "unknown"
+    },
+    "expected": [
+      "UNKNOWN_ACTION_STATE"
+    ],
+    "negative_inputs": {},
+    "negative_permissions": [],
+    "negative_runtime_facts": {},
+    "negative_evidence_contract": {
+      "registered_record_ids": [
+        "CONTROL"
+      ],
+      "minimum_material_evidence_count": 0
+    }
+  },
+  {
+    "code": "UNREGISTERED_SYNTHETIC_FIELD",
+    "inputs": {
+      "requested_synthetic_field": "x",
+      "registered_synthetic_fields": [
+        "y"
+      ]
+    },
+    "expected": [
+      "UNREGISTERED_SYNTHETIC_FIELD"
+    ],
+    "negative_inputs": {},
+    "negative_permissions": [],
+    "negative_runtime_facts": {},
+    "negative_evidence_contract": {
+      "registered_record_ids": [
+        "CONTROL"
+      ],
+      "minimum_material_evidence_count": 0
+    }
+  }
+]

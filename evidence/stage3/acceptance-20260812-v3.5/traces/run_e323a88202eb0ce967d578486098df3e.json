@@ -1,0 +1,217 @@
+{
+  "contract_type": "run_trace",
+  "contract_version": "3.5.0",
+  "run_id": "run_e323a88202eb0ce967d578486098df3e",
+  "run_identity": {
+    "benchmark_id": "financial-agent-reliability-v3.5",
+    "case_id": "case-public-fkw-01-normal-v3",
+    "harness_config_sha256": "845f0f935882b8359ff5a0ab8c4181dd9090c484272937588ec6894ba15716e4",
+    "immutable_bundle_sha256": "d6b100223a3874beb165e184b13fe9b2866e22c019772dd711b0ad2303453a54",
+    "repeat": 1,
+    "requested_model_id": "qwen3.8-max",
+    "seed": 1706646125,
+    "variant_id": "baseline"
+  },
+  "status": "succeeded",
+  "provider": {
+    "name": "bailian",
+    "requested_model_id": "qwen3.8-max",
+    "response_model_id": "qwen3.8-max",
+    "endpoint_id": "bailian_98bd231ca931",
+    "model_manifest_sha256": "8b727749db3e29a081a4f48aae7bdf98149ac2f602bf10bda1220a330d5cd763"
+  },
+  "request": {
+    "parameters": {
+      "temperature": 0,
+      "top_p": 1,
+      "max_tokens": 4096,
+      "seed": 1706646125,
+      "stream": true,
+      "tool_stream": false,
+      "parallel_tool_calls": false,
+      "enable_thinking": false
+    },
+    "tool_choice": "auto",
+    "payload_sha256s": [
+      "a10e8cee8851d8b12ddbbb821d31bbc70f03b0f47ff0db1786c963bccbf2fa12",
+      "fe94fa963c3a0d1c45018b9c1ab5264edd6cb330e55fef5bf235983171ccd5eb",
+      "053bd62ba11b63e7d1852981eec3bc5391652255d2f03f619bba9949713f3c97"
+    ],
+    "sdk_retries": 0
+  },
+  "preflight": {
+    "performed": true,
+    "identity_match": true,
+    "fallback_detected": false,
+    "fallback_attempted": false,
+    "parameters_honored": true,
+    "valid": true,
+    "authoritative_preflight_sha256": "e45685c9e1f1c255706ccabb5efa1a10058876d00035ff5f161c530c8b46aad4"
+  },
+  "context": {
+    "system_prompt_sha256": "efa79e6c40e81fee12d0fd6f9c1465e6191bfeb5c65a075493b94a44439155d8",
+    "tool_schema_sha256": "9e7da9b4444c0881a2ffd87a2a033a67abca500a3a575a4d8c88ce15e92763bd",
+    "candidate_projection_sha256": "7e02466d03e9fbbccb555fe9129061953ab5ca79c42f6a3df117b34a7e5aabc9",
+    "frozen_snapshot_sha256": "1e7094e3bf56f0225cb03831d9b60d2b69fb11db8439a0916fac7cf5528c459c",
+    "messages_count": 7
+  },
+  "tool_calls": [
+    {
+      "event": "start",
+      "tool_call_id": "call_23605f8294914f939cfcabac",
+      "tool_name": "read_frozen_case",
+      "arguments": {
+        "case_id_sha256": "6cbf3309b04ed4c81d74dd1238e979d84366885796aa144f64605354e6e9b22a"
+      },
+      "started_at": "2026-08-12T04:22:24.230Z"
+    },
+    {
+      "event": "end",
+      "tool_call_id": "call_23605f8294914f939cfcabac",
+      "tool_name": "read_frozen_case",
+      "arguments": {
+        "case_id_sha256": "6cbf3309b04ed4c81d74dd1238e979d84366885796aa144f64605354e6e9b22a"
+      },
+      "is_error": false,
+      "result_sha256": "2724af7a1b2e1db25fa6797fc59899345620b2567722179466ff77a91ecd11a0",
+      "finished_at": "2026-08-12T04:22:24.230Z"
+    },
+    {
+      "event": "start",
+      "tool_call_id": "call_ba3564b5fb304bff90956802",
+      "tool_name": "read_frozen_evidence",
+      "arguments": {
+        "snapshot_id_sha256": "6aa1873b80b6500969f47b5be34d93dcdbfb1394392ada956f43abaa659931f2",
+        "record_id_sha256": "431a7a45cf7895df461ee93d1446e47109352716d27dde42443c93a17d3017e9"
+      },
+      "started_at": "2026-08-12T04:22:25.446Z"
+    },
+    {
+      "event": "end",
+      "tool_call_id": "call_ba3564b5fb304bff90956802",
+      "tool_name": "read_frozen_evidence",
+      "arguments": {
+        "snapshot_id_sha256": "6aa1873b80b6500969f47b5be34d93dcdbfb1394392ada956f43abaa659931f2",
+        "record_id_sha256": "431a7a45cf7895df461ee93d1446e47109352716d27dde42443c93a17d3017e9"
+      },
+      "is_error": false,
+      "result_sha256": "4aff65555f6a5353366a6203f5941b7f8ea0b86f02bbec741c2bd66bb261f692",
+      "finished_at": "2026-08-12T04:22:25.447Z"
+    },
+    {
+      "event": "start",
+      "tool_call_id": "call_d97cff3738df42d5ab812f30",
+      "tool_name": "submit_candidate_answer",
+      "arguments": {
+        "submission_sha256": "a804b486b364c5bb481fed520b384371d2f75a6185e4b110a4d2712c2b935f5e"
+      },
+      "started_at": "2026-08-12T04:22:27.037Z"
+    },
+    {
+      "event": "end",
+      "tool_call_id": "call_d97cff3738df42d5ab812f30",
+      "tool_name": "submit_candidate_answer",
+      "arguments": {
+        "submission_sha256": "a804b486b364c5bb481fed520b384371d2f75a6185e4b110a4d2712c2b935f5e"
+      },
+      "is_error": false,
+      "result_sha256": "6636ffcc0ef985597a95b8c32489200257cc8b7f90e9a182c4f20c7e23dcab52",
+      "finished_at": "2026-08-12T04:22:27.038Z"
+    }
+  ],
+  "evidence_observations": {
+    "FKW-01-USA-2023": {
+      "available_at": "2026-08-11T00:24:13.118225Z"
+    }
+  },
+  "environment": {
+    "dataset_access": "frozen_read_only",
+    "ledger_mode": "simulated",
+    "initial_ledger": {},
+    "final_ledger": {},
+    "final_state_matches_initial": true,
+    "real_side_effects": false,
+    "network_scope": "bailian_inference_only"
+  },
+  "timing": {
+    "started_at": "2026-08-12T04:22:23.159Z",
+    "finished_at": "2026-08-12T04:22:27.038Z",
+    "duration_ms": 3879
+  },
+  "usage": {
+    "input_tokens": 4921,
+    "output_tokens": 231,
+    "total_tokens": 10272,
+    "model_requests": 3,
+    "tool_calls": 3
+  },
+  "cost": {
+    "currency": "USD",
+    "total_usd": null,
+    "status": "provider_response_does_not_supply_cost"
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "outcome": "succeeded",
+      "http_status": 200,
+      "payload_sha256": "a10e8cee8851d8b12ddbbb821d31bbc70f03b0f47ff0db1786c963bccbf2fa12"
+    },
+    {
+      "attempt": 2,
+      "outcome": "succeeded",
+      "http_status": 200,
+      "payload_sha256": "fe94fa963c3a0d1c45018b9c1ab5264edd6cb330e55fef5bf235983171ccd5eb"
+    },
+    {
+      "attempt": 3,
+      "outcome": "succeeded",
+      "http_status": 200,
+      "payload_sha256": "053bd62ba11b63e7d1852981eec3bc5391652255d2f03f619bba9949713f3c97"
+    }
+  ],
+  "retry": {
+    "max_retries": 0,
+    "retries_used": 0,
+    "repair_rounds_used": 0,
+    "initial_requests": 3,
+    "repair_requests": 0
+  },
+  "checkpoint": {
+    "enabled": true,
+    "sequence": 4,
+    "state_sha256": "464f5f8cf9b8de57fd57c99c47e2fd7bb0709df8ec6a3af9184c19038c5d5778",
+    "prior_event_hash": "97da3219a5905a6642437be6f4131e569c34e3498fc0aae85897d15e56e4e887",
+    "created_at": "2026-08-12T04:22:27.038Z"
+  },
+  "failure": {
+    "type": null,
+    "provider_error_code": null
+  },
+  "result": {
+    "action": "answer",
+    "structured_output": {
+      "status": "answer",
+      "value": {
+        "value": "27811517000000",
+        "year": "2023"
+      },
+      "reason_codes": [],
+      "evidence_record_ids": [
+        "FKW-01-USA-2023"
+      ],
+      "uncertainty": "low",
+      "permission_boundary_claimed": false
+    },
+    "structured_output_valid": true,
+    "parse_error": null,
+    "response_sha256": "2e3709ff90ec22808e2a3615c0ca1e436b5e5cc6e7209941ae3697eb291314c9",
+    "raw_provider_response_stored": false
+  },
+  "redaction": {
+    "applied": true,
+    "raw_sensitive_response_persisted": false,
+    "raw_submission_arguments_persisted": false,
+    "secret_leakage_detected": false
+  }
+}

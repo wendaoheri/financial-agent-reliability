@@ -1,0 +1,230 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "run_trace.schema.v3.6.json",
+  "title": "Run Trace v3.6",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_type",
+    "contract_version",
+    "run_id",
+    "run_identity",
+    "status",
+    "provider",
+    "attempts",
+    "retry",
+    "failure",
+    "result",
+    "permission",
+    "environment",
+    "redaction"
+  ],
+  "properties": {
+    "contract_type": {
+      "const": "run_trace"
+    },
+    "contract_version": {
+      "const": "3.6.0"
+    },
+    "run_id": {
+      "type": "string",
+      "pattern": "^run_[0-9a-f]{32}$"
+    },
+    "run_identity": {
+      "type": "object"
+    },
+    "status": {
+      "enum": [
+        "succeeded",
+        "candidate_failed",
+        "invalid_provider_or_runtime",
+        "invalidated"
+      ]
+    },
+    "provider": {
+      "type": "object"
+    },
+    "attempts": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "attempt",
+          "retry_index",
+          "model_id",
+          "http_status",
+          "no_response",
+          "provider_error_class",
+          "provider_error_code",
+          "stream_termination_reason",
+          "content_bytes",
+          "tool_call_bytes",
+          "payload_sha256",
+          "seed",
+          "tool_schema_sha256",
+          "parameters_sha256",
+          "started_at",
+          "finished_at",
+          "duration_ms",
+          "token_usage",
+          "last_valid_tool_turn",
+          "valid_assistant_action",
+          "valid_submission"
+        ],
+        "properties": {
+          "attempt": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2
+          },
+          "retry_index": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "model_id": {
+            "enum": [
+              "qwen3.8-max",
+              "glm-5.2",
+              "deepseek-v4-pro"
+            ]
+          },
+          "http_status": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "no_response": {
+            "type": "boolean"
+          },
+          "provider_error_class": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "provider_error_code": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "stream_termination_reason": {
+            "type": "string"
+          },
+          "content_bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "tool_call_bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "payload_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "seed": {
+            "type": "integer"
+          },
+          "tool_schema_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "parameters_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "finished_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "duration_ms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "token_usage": {
+            "type": "object"
+          },
+          "last_valid_tool_turn": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "valid_assistant_action": {
+            "type": "boolean"
+          },
+          "valid_submission": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "retry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "maximum_retries",
+        "retries_used",
+        "same_payload_replay",
+        "retry_after_seconds",
+        "backoff_seconds_applied",
+        "backoff_source"
+      ],
+      "properties": {
+        "maximum_retries": {
+          "const": 1
+        },
+        "retries_used": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "same_payload_replay": {
+          "type": "boolean"
+        },
+        "retry_after_seconds": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "backoff_seconds_applied": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 30
+        },
+        "backoff_source": {
+          "enum": [
+            "retry_after",
+            "default",
+            "not_applicable"
+          ]
+        }
+      }
+    },
+    "failure": {
+      "type": "object"
+    },
+    "result": {
+      "type": "object"
+    },
+    "permission": {
+      "type": "object"
+    },
+    "environment": {
+      "type": "object"
+    },
+    "redaction": {
+      "type": "object"
+    }
+  }
+}

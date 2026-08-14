@@ -1,0 +1,128 @@
+{
+  "contract_type": "run_trace",
+  "contract_version": "3.5.0",
+  "run_id": "run_25c749962bf44a48633dfa3f16c18be9",
+  "run_identity": {
+    "benchmark_id": "financial-agent-reliability-v3.5",
+    "case_id": "case-synthetic-ftw-02-single-factor-perturbation-v3",
+    "harness_config_sha256": "845f0f935882b8359ff5a0ab8c4181dd9090c484272937588ec6894ba15716e4",
+    "immutable_bundle_sha256": "d6b100223a3874beb165e184b13fe9b2866e22c019772dd711b0ad2303453a54",
+    "repeat": 1,
+    "requested_model_id": "glm-5.2",
+    "seed": 2539120201,
+    "variant_id": "single_factor_stress"
+  },
+  "status": "failed",
+  "provider": {
+    "name": "bailian",
+    "requested_model_id": "glm-5.2",
+    "response_model_id": "glm-5.2",
+    "endpoint_id": "bailian_98bd231ca931",
+    "model_manifest_sha256": "8b727749db3e29a081a4f48aae7bdf98149ac2f602bf10bda1220a330d5cd763"
+  },
+  "request": {
+    "parameters": {
+      "temperature": 0,
+      "top_p": 1,
+      "max_tokens": 4096,
+      "seed": 2539120201,
+      "stream": true,
+      "tool_stream": false,
+      "parallel_tool_calls": false,
+      "enable_thinking": null
+    },
+    "tool_choice": "auto",
+    "payload_sha256s": [
+      "51854e48910fdb8d91bf8f58bd00006b4c697b3efd2195460b95ff9eac8ad2fe"
+    ],
+    "sdk_retries": 0
+  },
+  "preflight": {
+    "performed": true,
+    "identity_match": true,
+    "fallback_detected": false,
+    "fallback_attempted": false,
+    "parameters_honored": false,
+    "valid": false,
+    "authoritative_preflight_sha256": "e45685c9e1f1c255706ccabb5efa1a10058876d00035ff5f161c530c8b46aad4"
+  },
+  "context": {
+    "system_prompt_sha256": "efa79e6c40e81fee12d0fd6f9c1465e6191bfeb5c65a075493b94a44439155d8",
+    "tool_schema_sha256": "16a0736d6b9860dff8747fabac5821849b6bd4474ab014cec1c6afae6fa18aa4",
+    "candidate_projection_sha256": "c58d7745974b27e75fc28f68085daa52fdacce928591ffef7aaae35bd314c233",
+    "frozen_snapshot_sha256": "dbf71ad6729053376b5e14a07adb7cc98e4e7cad1bfa996c0dc103d8b9274a63",
+    "messages_count": 2
+  },
+  "tool_calls": [],
+  "evidence_observations": {},
+  "environment": {
+    "dataset_access": "frozen_read_only",
+    "ledger_mode": "simulated",
+    "initial_ledger": {},
+    "final_ledger": {},
+    "final_state_matches_initial": true,
+    "real_side_effects": false,
+    "network_scope": "bailian_inference_only"
+  },
+  "timing": {
+    "started_at": "2026-08-12T04:25:39.204Z",
+    "finished_at": "2026-08-12T04:25:39.694Z",
+    "duration_ms": 490
+  },
+  "usage": {
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "total_tokens": 0,
+    "model_requests": 1,
+    "tool_calls": 0
+  },
+  "cost": {
+    "currency": "USD",
+    "total_usd": null,
+    "status": "provider_response_does_not_supply_cost"
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "outcome": "failed",
+      "http_status": null,
+      "payload_sha256": "51854e48910fdb8d91bf8f58bd00006b4c697b3efd2195460b95ff9eac8ad2fe"
+    }
+  ],
+  "retry": {
+    "max_retries": 0,
+    "retries_used": 0,
+    "repair_rounds_used": 0,
+    "initial_requests": 1,
+    "repair_requests": 0
+  },
+  "checkpoint": {
+    "enabled": true,
+    "sequence": 1,
+    "state_sha256": "15ec1f5b479366e5df26682be41539992097a9d08e05d26a5b3b3eae0ea28f9c",
+    "prior_event_hash": "2ebb1c10684aaffdcff76efed05c1b90ea07c673248fbfa00c79792dd69a16bb",
+    "created_at": "2026-08-12T04:25:39.693Z"
+  },
+  "failure": {
+    "type": "provider_unavailable",
+    "provider_error_code": null
+  },
+  "result": {
+    "action": "parse_failure",
+    "structured_output": null,
+    "structured_output_valid": false,
+    "parse_error": {
+      "category": "empty_output",
+      "path": "/",
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "raw_provider_response_stored": false
+  },
+  "redaction": {
+    "applied": true,
+    "raw_sensitive_response_persisted": false,
+    "raw_submission_arguments_persisted": false,
+    "secret_leakage_detected": false
+  }
+}

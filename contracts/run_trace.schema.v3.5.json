@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/run_trace.schema.v3.5.json",
+  "title": "Stage 3 Financial Acceptance Run Trace v3.5",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract_type","contract_version","run_id","run_identity","status","provider","request","preflight","context","tool_calls","evidence_observations","environment","timing","usage","cost","attempts","retry","checkpoint","failure","result","redaction"],
+  "properties": {
+    "contract_type": {"const": "run_trace"},
+    "contract_version": {"const": "3.5.0"},
+    "run_id": {"type":"string","pattern":"^run_[0-9a-f]{32}$"},
+    "run_identity": {"type":"object"},
+    "status": {"enum":["succeeded","failed","invalidated"]},
+    "provider": {"type":"object"},
+    "request": {"type":"object"},
+    "preflight": {"type":"object"},
+    "context": {"type":"object"},
+    "tool_calls": {"type":"array"},
+    "evidence_observations": {"type":"object"},
+    "environment": {"type":"object","required":["dataset_access","ledger_mode","final_state_matches_initial","real_side_effects"]},
+    "timing": {"type":"object"},
+    "usage": {"type":"object"},
+    "cost": {"type":"object"},
+    "attempts": {"type":"array","minItems":1},
+    "retry": {"type":"object","required":["max_retries","retries_used","repair_rounds_used","initial_requests","repair_requests"]},
+    "checkpoint": {"type":"object"},
+    "failure": {"type":"object"},
+    "result": {"type":"object","required":["action","structured_output","structured_output_valid","parse_error","response_sha256","raw_provider_response_stored"]},
+    "redaction": {"type":"object","required":["raw_sensitive_response_persisted","raw_submission_arguments_persisted","secret_leakage_detected"]}
+  },
+  "x-supersedes": {
+    "schema": "contracts/run_trace.schema.v3.json",
+    "rationale": "record the Bailian request controls, bounded generic repair phase, and split-submission redaction policy for new v3.5 financial runs"
+  }
+}

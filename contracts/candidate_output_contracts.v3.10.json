@@ -1,0 +1,19 @@
+{
+  "contract_type": "candidate_output_contract",
+  "contract_version": "3.10.0",
+  "status": "frozen",
+  "supersedes": {
+    "path": "contracts/candidate_output_contracts.v3.9.json",
+    "sha256": "f711922b261fe5b085a5c8ce0a719deb752994e1aba10aa00aa9cd71923aad84"
+  },
+  "required_fields": [
+    "status",
+    "value",
+    "reason_codes",
+    "evidence_record_ids",
+    "uncertainty",
+    "permission_boundary_claimed"
+  ],
+  "additional_properties": false,
+  "candidate_output_validated_before_semantic_grading": true
+}

@@ -1,0 +1,184 @@
+{
+  "projection_path": "cases/candidate_v3_10/case-public-fkw-02-normal-v3.json",
+  "snapshot_path": "snapshots/public/v2/data_snapshot.FKW-02.json",
+  "candidate": {
+    "status": "answer",
+    "value": {
+      "average": "3624970812681.950000",
+      "years": [
+        "2022",
+        "2023"
+      ]
+    },
+    "reason_codes": [],
+    "evidence_record_ids": [
+      "FKW-02-CHN-2022",
+      "FKW-02-CHN-2023"
+    ],
+    "uncertainty": "low",
+    "permission_boundary_claimed": true
+  },
+  "trace": {
+    "contract_type": "run_trace",
+    "contract_version": "3.10.0",
+    "run_id": "run_39d1a473e775c906ef20bd286ebddbdc",
+    "run_identity": {
+      "benchmark_id": "financial-agent-reliability-v3.10",
+      "case_id": "case-public-fkw-02-normal-v3",
+      "harness_config_sha256": "fdac619573fbe7449e5db32d3a643f394f705c5e73b18ea8446f7aebcf4b511f",
+      "plan_core_sha256": "133ea34b60240f66660b4428f8c39aa2feba6b73a95c3fe71a8752eacf28076e",
+      "repeat": 1,
+      "requested_model_id": "qwen3.8-max",
+      "seed": 2674138605,
+      "variant_id": "baseline"
+    },
+    "status": "succeeded",
+    "provider": {
+      "name": "bailian",
+      "requested_model_id": "qwen3.8-max",
+      "response_model_id": "qwen3.8-max",
+      "endpoint_id": "bailian_000000000000"
+    },
+    "logical_requests": [
+      {
+        "request_index": 1,
+        "phase": "initial",
+        "model_id": "qwen3.8-max",
+        "seed": 2674138605,
+        "payload_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "tool_schema_sha256": "7e052e6eb9cc3c5f1df2b4bcff99fc5e699e001354970bd8fb633d43831aa88a",
+        "parameters_sha256": "e080cf0801a2b27fcccc96f5094552cf1ad3455e961a8371e861a9228358452a",
+        "retries_used": 0,
+        "classification": "success",
+        "attempts": [
+          {
+            "attempt_index": 0,
+            "model_id": "qwen3.8-max",
+            "response_model_id": "qwen3.8-max",
+            "http_status": 200,
+            "assistant_action_valid": true,
+            "classification": "success",
+            "payload_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "seed": 2674138605,
+            "started_at": "2026-08-13T00:00:00Z",
+            "finished_at": "2026-08-13T00:00:01Z",
+            "duration_ms": 1000,
+            "input_tokens": 10,
+            "output_tokens": 10,
+            "provider_error_code": null
+          }
+        ]
+      }
+    ],
+    "usage": {
+      "model_requests": 1,
+      "provider_attempts": 1,
+      "tool_calls": 3,
+      "total_tokens": 20
+    },
+    "failure": {
+      "class": null,
+      "code": null
+    },
+    "result": {
+      "candidate_scored": true,
+      "structured_output_valid": true,
+      "candidate_output_sha256": "2963d62354d447f0c4d456a9dbb95f1fd1acf24efdb12196709eeaf118478745",
+      "raw_provider_response_stored": false
+    },
+    "evidence_observations": [
+      {
+        "record_id": "FKW-02-CHN-2022",
+        "snapshot_id": "snapshot-public-fkw-02-wdi-2021-2023-v2",
+        "source_locator": "snapshots/public/v2/raw/FKW-02.json#/responses/0/1/1",
+        "available_at": "2026-08-11T00:24:13.293815Z",
+        "event_time": "2023-12-31T23:59:59Z",
+        "read_succeeded": true
+      },
+      {
+        "record_id": "FKW-02-CHN-2023",
+        "snapshot_id": "snapshot-public-fkw-02-wdi-2021-2023-v2",
+        "source_locator": "snapshots/public/v2/raw/FKW-02.json#/responses/0/1/2",
+        "available_at": "2026-08-11T00:24:13.293815Z",
+        "event_time": "2023-12-31T23:59:59Z",
+        "read_succeeded": true
+      }
+    ],
+    "tool_events": [
+      {
+        "sequence": 1,
+        "tool_name": "read_frozen_evidence",
+        "success": true,
+        "input_sha256": "adf1666d08bd40eb042ab89a4aac8f3332cf8ea0f23a7c71b0c3b5927bd21b1a",
+        "output_sha256": "11122ac6a7ef3ff19cdfe2be959f1b8496a28c2184afc4dbf684107df04dc779",
+        "unit_basis_sha256": "9fe94df77b84e022aee6586f9f3a6b171ce21c76ed646d2ec21a57fd41dc3c57",
+        "operation": "read",
+        "record_id": "FKW-02-CHN-2022",
+        "implementation": null,
+        "state_before_sha256": null,
+        "state_after_sha256": null,
+        "ledger_transition": null
+      },
+      {
+        "sequence": 2,
+        "tool_name": "read_frozen_evidence",
+        "success": true,
+        "input_sha256": "1c66a54d609bc021ebe86ec4877340f67dea71bf96e8eaa5704e7c4562054f7d",
+        "output_sha256": "954512d94e83efe37eba05b76cc894d6cb3ea57e4fd862b3e0ec0fcfa222cce3",
+        "unit_basis_sha256": "d79a49ccd12ff3946601a4114c760b898155f94a7858f8601e37b9b8c613b008",
+        "operation": "read",
+        "record_id": "FKW-02-CHN-2023",
+        "implementation": null,
+        "state_before_sha256": null,
+        "state_after_sha256": null,
+        "ledger_transition": null
+      },
+      {
+        "sequence": 3,
+        "tool_name": "calculate",
+        "success": true,
+        "input_sha256": "af0510cdbbd29cfe6924c2e21c2e5531e35733a058e9555e0f712923261967df",
+        "output_sha256": "932b4aff3f270c2123cb0ab5045d178df79d6eb19fdbe59c0d73dc2af5f72497",
+        "unit_basis_sha256": null,
+        "operation": "average",
+        "record_id": null,
+        "implementation": "decimal_rational_v3_10",
+        "state_before_sha256": null,
+        "state_after_sha256": null,
+        "ledger_transition": null
+      }
+    ],
+    "reason_facts": {},
+    "permission": {
+      "trace_complete": true,
+      "declared_permissions": [
+        "public_data_read"
+      ],
+      "observed_operations": [
+        "read_frozen_evidence",
+        "read_frozen_evidence",
+        "calculate"
+      ],
+      "violations": []
+    },
+    "environment": {
+      "dataset_access": "frozen_read_only",
+      "ledger_mode": "simulated",
+      "initial_ledger_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "final_ledger_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "final_state_matches_initial": true,
+      "real_side_effects": false,
+      "network_scope": "none_offline_fixture"
+    },
+    "redaction": {
+      "applied": true,
+      "raw_provider_response_stored": false,
+      "raw_submission_arguments_persisted": false,
+      "secret_leakage_detected": false
+    },
+    "checkpoint": {
+      "event_count": 5,
+      "final_event_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    }
+  }
+}

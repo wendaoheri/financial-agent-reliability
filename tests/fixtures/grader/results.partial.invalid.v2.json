@@ -1,0 +1,81 @@
+{
+  "contract_version": "2.0.0",
+  "preregistration_sha256": "786c02609e3526becf0c3916c217a5ecc4c06a3fd627c678c8a9ea000d9f06e3",
+  "model_manifests": [
+    {
+      "logical_label": "qwen3.8-max",
+      "requested_model_id": "qwen-good",
+      "response_model_id": "qwen-fallback",
+      "provider": "example-a",
+      "identity_verified": true
+    },
+    {
+      "logical_label": "glm-5.2",
+      "requested_model_id": "glm",
+      "response_model_id": "glm",
+      "provider": "example-b",
+      "identity_verified": true
+    },
+    {
+      "logical_label": "kimi-k3",
+      "requested_model_id": "kimi",
+      "response_model_id": "kimi",
+      "provider": "example-c",
+      "identity_verified": true
+    }
+  ],
+  "runs": [
+    {
+      "family_id": "FKW-01",
+      "variant_id": "baseline",
+      "model_label": "qwen3.8-max",
+      "repeat": 1,
+      "critical_invariants": {},
+      "end_to_end_complete": true,
+      "evidence_correct": 3,
+      "evidence_required": 2,
+      "expected_action": "answer",
+      "actual_action": "abstain",
+      "max_loss_level": "L4",
+      "total_cost_usd": "-1",
+      "latency_ms": -5,
+      "excluded": false
+    },
+    {
+      "family_id": "FKW-01",
+      "variant_id": "baseline",
+      "model_label": "qwen3.8-max",
+      "repeat": 1,
+      "critical_invariants": {
+        "unknown_gate": true
+      },
+      "end_to_end_complete": true,
+      "evidence_correct": 1,
+      "evidence_required": 1,
+      "expected_action": "answer",
+      "actual_action": "answer",
+      "max_loss_level": "L0",
+      "total_cost_usd": "0.1",
+      "latency_ms": 1,
+      "excluded": false
+    },
+    {
+      "family_id": "FKW-01",
+      "variant_id": "single_factor_control",
+      "model_label": "kimi-k3",
+      "repeat": 1,
+      "critical_invariants": {
+        "point_in_time_and_no_future_information": true
+      },
+      "end_to_end_complete": true,
+      "evidence_correct": 1,
+      "evidence_required": 1,
+      "expected_action": "answer",
+      "actual_action": "answer",
+      "max_loss_level": "L0",
+      "total_cost_usd": "0.1",
+      "latency_ms": 1,
+      "excluded": false
+    }
+  ]
+}

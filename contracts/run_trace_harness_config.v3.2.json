@@ -1,0 +1,12 @@
+{
+  "contract_type":"harness_config_correction",
+  "contract_version":"3.2.0",
+  "status":"frozen",
+  "base_config":{"path":"contracts/run_trace_harness_config.v3.1.json","sha256":"1b3b34a94641fe827c189af5feefbb86ef8d02a2ec3f237dfdee63a36fdf10a8"},
+  "supersedes":{"version":"3.1.0","failed_preflight_path":"runs/stage3/acceptance-20260811-v3.1/preflight.v3.1.json","failed_preflight_result":"2/3","rationale":"One exact-identity model read the case but made no submission under auto tool choice. Add one fixed model-neutral repair round only when no valid structured submission was recorded."},
+  "provider":{"name":"bailian","tool_schema_wire_format":"openai_function","tool_choice":"auto"},
+  "candidate_model_ids":["qwen3.8-max","glm-5.2","deepseek-v4-pro"],
+  "tool_names":["read_frozen_case","read_frozen_evidence","calculate","simulated_ledger","submit_candidate_result"],
+  "resource_budget":{"max_model_requests":8,"max_tool_calls":24,"wall_clock_ms":120000,"max_retries":0,"max_submission_attempts":2},
+  "repair_policy":{"trigger":"no valid structured submission recorded after the initial agent loop","maximum_repair_rounds":1,"same_prompt_for_all_models":true,"model_specific_repairs":false,"text_json_fallback":false,"oracle_information_added":false}
+}

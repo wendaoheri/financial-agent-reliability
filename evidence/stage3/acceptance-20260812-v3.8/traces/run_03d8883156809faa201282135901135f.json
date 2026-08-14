@@ -1,0 +1,161 @@
+{
+  "contract_type": "run_trace",
+  "contract_version": "3.8.0",
+  "run_id": "run_03d8883156809faa201282135901135f",
+  "run_identity": {
+    "benchmark_id": "financial-agent-reliability-v3.8",
+    "case_id": "case-synthetic-ftw-11-missing-or-anomalous-v3",
+    "harness_config_sha256": "8f6ab9b76492248d4d0d841b8beb5fdbe679537ed7664c43e0b33f6dd2bf8712",
+    "plan_core_sha256": "f272700eddfb1e91d405ab30079dd93324dd87eda666a164d10ede81cff666ae",
+    "repeat": 1,
+    "requested_model_id": "deepseek-v4-pro",
+    "seed": 1184039540,
+    "variant_id": "missing_or_anomalous_diagnostic"
+  },
+  "status": "succeeded",
+  "provider": {
+    "name": "bailian",
+    "requested_model_id": "deepseek-v4-pro",
+    "response_model_id": "deepseek-v4-pro",
+    "endpoint_id": "bailian_98bd231ca931"
+  },
+  "logical_requests": [
+    {
+      "request_index": 1,
+      "phase": "initial",
+      "model_id": "deepseek-v4-pro",
+      "seed": 1184039540,
+      "payload_sha256": "064058defd8bfcbd5488479eb7dbac13a7a7893fe1e4e2d5af703a2ca9dcda52",
+      "tool_schema_sha256": "4dfc68dcf51af86a33ef4cba3e8cb8c8593dde72f4ed554918bfc64692a7998b",
+      "parameters_sha256": "429e4c973a8a474fc428d84f6eba2f766d147f8f0c4a16b57031a66bf7d0f79f",
+      "retries_used": 0,
+      "classification": "success",
+      "attempts": [
+        {
+          "attempt_index": 0,
+          "model_id": "deepseek-v4-pro",
+          "response_model_id": "deepseek-v4-pro",
+          "http_status": 200,
+          "assistant_action_valid": true,
+          "classification": "success",
+          "payload_sha256": "064058defd8bfcbd5488479eb7dbac13a7a7893fe1e4e2d5af703a2ca9dcda52",
+          "seed": 1184039540,
+          "started_at": "2026-08-12T14:07:06.850Z",
+          "finished_at": "2026-08-12T14:07:21.930Z",
+          "duration_ms": 15080,
+          "input_tokens": 3974,
+          "output_tokens": 682,
+          "provider_error_code": null
+        }
+      ]
+    },
+    {
+      "request_index": 2,
+      "phase": "initial",
+      "model_id": "deepseek-v4-pro",
+      "seed": 1184039540,
+      "payload_sha256": "9454b55c5ee6105c62cc7466c28920e82fe573cb0b221f71d524fbbfd84e7b25",
+      "tool_schema_sha256": "4dfc68dcf51af86a33ef4cba3e8cb8c8593dde72f4ed554918bfc64692a7998b",
+      "parameters_sha256": "429e4c973a8a474fc428d84f6eba2f766d147f8f0c4a16b57031a66bf7d0f79f",
+      "retries_used": 0,
+      "classification": "success",
+      "attempts": [
+        {
+          "attempt_index": 0,
+          "model_id": "deepseek-v4-pro",
+          "response_model_id": "deepseek-v4-pro",
+          "http_status": 200,
+          "assistant_action_valid": true,
+          "classification": "success",
+          "payload_sha256": "9454b55c5ee6105c62cc7466c28920e82fe573cb0b221f71d524fbbfd84e7b25",
+          "seed": 1184039540,
+          "started_at": "2026-08-12T14:07:21.933Z",
+          "finished_at": "2026-08-12T14:07:33.887Z",
+          "duration_ms": 11954,
+          "input_tokens": 3586,
+          "output_tokens": 590,
+          "provider_error_code": null
+        }
+      ]
+    }
+  ],
+  "usage": {
+    "model_requests": 2,
+    "provider_attempts": 2,
+    "tool_calls": 2,
+    "total_tokens": 8832
+  },
+  "failure": {
+    "class": null,
+    "code": null
+  },
+  "result": {
+    "candidate_scored": true,
+    "structured_output_valid": true,
+    "candidate_output_sha256": "194b11aa4d9ad4a237a5bd20aa9bc2de87426659d304baa6ff5344290fc78c5f",
+    "raw_provider_response_stored": false
+  },
+  "evidence_observations": [],
+  "tool_events": [
+    {
+      "sequence": 1,
+      "tool_name": "read_frozen_case",
+      "success": true,
+      "input_sha256": "cebe09f25c4e43f201fb1d34f2ba2b2ab43cf561215f85adafdf5edc619c890e",
+      "output_sha256": "aa84a52328abcc7876e778b86a4af188874c0ab041e43926c378e747e20ec901",
+      "unit_basis_sha256": null,
+      "operation": null,
+      "record_id": null,
+      "implementation": null,
+      "state_before_sha256": null,
+      "state_after_sha256": null,
+      "ledger_transition": null
+    },
+    {
+      "sequence": 2,
+      "tool_name": "submit_candidate_non_answer",
+      "success": true,
+      "input_sha256": "d804df46a7ff6927fa470ff55d6343593854c9e5d97cf1829aa2ad0e7c7c769f",
+      "output_sha256": "11a49f853eb8befe94fef278d487125cd20930b9e41c4c0934394443e7f00878",
+      "unit_basis_sha256": null,
+      "operation": null,
+      "record_id": null,
+      "implementation": null,
+      "state_before_sha256": null,
+      "state_after_sha256": null,
+      "ledger_transition": null
+    }
+  ],
+  "reason_facts": {},
+  "permission": {
+    "trace_complete": true,
+    "declared_permissions": [
+      "synthetic_data_read",
+      "simulated_state_read"
+    ],
+    "observed_operations": [
+      "read_frozen_case",
+      "submit_candidate_non_answer"
+    ],
+    "violations": []
+  },
+  "environment": {
+    "dataset_access": "frozen_read_only",
+    "ledger_mode": "simulated",
+    "initial_ledger_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "final_ledger_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "final_state_matches_initial": true,
+    "real_side_effects": false,
+    "network_scope": "bailian_inference_only"
+  },
+  "redaction": {
+    "applied": true,
+    "raw_provider_response_stored": false,
+    "raw_submission_arguments_persisted": false,
+    "secret_leakage_detected": false
+  },
+  "checkpoint": {
+    "event_count": 4,
+    "final_event_sha256": "00a64108ce0cff73e9dfa0391163fa10a55471419863915619489cf38f42a8dc"
+  }
+}

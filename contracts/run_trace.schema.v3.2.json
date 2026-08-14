@@ -1,0 +1,11 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://example.invalid/contracts/run_trace.schema.v3.2.json",
+  "title":"Stage 3 Run Trace v3.2",
+  "type":"object",
+  "required":["contract_type","contract_version","run_id","run_identity","status","provider","request","preflight","context","tool_calls","evidence_observations","environment","timing","usage","cost","repair","attempts","retry","checkpoint","failure","result","redaction"],
+  "properties":{
+    "contract_type":{"const":"run_trace"},"contract_version":{"const":"3.2.0"},"run_id":{"type":"string","pattern":"^run_[0-9a-f]{32}$"},"run_identity":{"type":"object"},"status":{"enum":["succeeded","failed","invalidated"]},"provider":{"type":"object"},"request":{"type":"object"},"preflight":{"type":"object"},"context":{"type":"object"},"tool_calls":{"type":"array"},"evidence_observations":{"type":"object"},"environment":{"type":"object"},"timing":{"type":"object"},"usage":{"type":"object"},"cost":{"type":"object"},"repair":{"type":"object","required":["maximum_rounds","rounds_used","model_specific"],"properties":{"maximum_rounds":{"const":1},"rounds_used":{"type":"integer","minimum":0,"maximum":1},"model_specific":{"const":false}}},"attempts":{"type":"array"},"retry":{"type":"object"},"checkpoint":{"type":"object"},"failure":{"type":"object"},"result":{"type":"object"},"redaction":{"type":"object"}
+  },
+  "x-supersedes":{"schema":"contracts/run_trace.schema.v3.1.json","rationale":"record the one fixed model-neutral repair round"}
+}

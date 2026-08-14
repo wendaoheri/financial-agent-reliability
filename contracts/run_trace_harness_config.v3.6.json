@@ -1,0 +1,101 @@
+{
+  "contract_type": "financial_acceptance_harness_config",
+  "contract_version": "3.6.0",
+  "status": "frozen_offline_validated",
+  "supersedes": {
+    "path": "contracts/run_trace_harness_config.v3.5.json",
+    "sha256": "845f0f935882b8359ff5a0ab8c4181dd9090c484272937588ec6894ba15716e4",
+    "bundle_sha256": "d24948f9f36639600fc3d206d83cedd98970b11317282fdfdb92ecbc9d2c9cb8",
+    "rationale": "prospectively repair decimal, reason-code, and provider-failure contracts without regrading v3.5"
+  },
+  "candidate_model_ids": [
+    "qwen3.8-max",
+    "glm-5.2",
+    "deepseek-v4-pro"
+  ],
+  "candidate_visible_model_specific_changes": false,
+  "provider": {
+    "name": "bailian",
+    "api": "openai_chat_completions_compatible",
+    "common_request_controls": {
+      "tool_choice": "auto",
+      "tool_stream": false,
+      "parallel_tool_calls": false,
+      "stream": true,
+      "stream_options.include_usage": true
+    },
+    "qwen3.8-max": {
+      "enable_thinking": false
+    },
+    "other_models_receive_qwen_parameters": false
+  },
+  "runtime": {
+    "package": "@mariozechner/pi-agent-core",
+    "version": "0.73.1",
+    "tool_execution": "sequential"
+  },
+  "system_prompt": "You are a model-neutral financial benchmark agent. Use only frozen candidate-visible facts and declared tools. Never access real accounts or place real trades. Derive status and reason codes from the visible contracts. Submit through exactly one answer or non-answer tool.",
+  "tool_names": [
+    "read_frozen_case",
+    "read_frozen_evidence",
+    "calculate",
+    "simulated_ledger",
+    "submit_candidate_answer",
+    "submit_candidate_non_answer"
+  ],
+  "submission_contract": {
+    "path": "contracts/candidate_submission_wire_contract.v3.6.json",
+    "answer_status_implicit": true,
+    "non_answer_value_implicit_null": true
+  },
+  "context_contract": {
+    "input_mode": "v3.6_candidate_projection_and_frozen_evidence_only",
+    "provider_specific_prompt_addenda": false,
+    "memory_between_runs": false,
+    "same_prompt_tools_budget_retry_grader_for_all_models": true
+  },
+  "resource_budget": {
+    "initial_model_requests": 6,
+    "repair_model_requests": 2,
+    "max_model_requests": 8,
+    "max_tool_calls": 24,
+    "max_context_tokens": 32768,
+    "max_output_tokens": 4096,
+    "wall_clock_ms": 120000,
+    "max_submission_attempts": 2,
+    "max_cost_usd": "1.000000"
+  },
+  "provider_retry_policy": {
+    "maximum_provider_retries_per_failed_request": 1,
+    "maximum_attempts_per_request": 2,
+    "semantic_failure_retries": 0,
+    "same_payload_seed_tools_parameters": true,
+    "retry_after_cap_seconds": 30,
+    "default_backoff_seconds": 2,
+    "first_valid_response_wins": true,
+    "selective_rerun": false
+  },
+  "invalidation_and_scoring": {
+    "provider_exhausted_status": "invalid_provider_or_runtime",
+    "candidate_scored": false,
+    "provider_reliability_denominator": true,
+    "imputation": false,
+    "withhold_ranking_on_asymmetric_or_below_minimum_coverage": true
+  },
+  "execution": {
+    "case_count": 12,
+    "models_per_case": 3,
+    "repeats_per_cell": 1,
+    "planned_run_cap": 36,
+    "paid_calls_authorized": false,
+    "offline_validation_only": true,
+    "full_matrix_authorized": false
+  },
+  "security": {
+    "dataset_access": "frozen_read_only",
+    "ledger_mode": "simulated",
+    "real_trading_permitted": false,
+    "raw_provider_response_persistence": false,
+    "raw_submission_arguments_persistence": false
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "contract_type": "harness_config_correction",
+  "contract_version": "3.1.0",
+  "status": "frozen",
+  "base_config": {
+    "path": "contracts/run_trace_harness_config.v3.json",
+    "sha256": "b68e28aeedd9e682ef53d09d11bcd1a8787693d26ef4358063e3ee95c077ad5b",
+    "effective_fields_unchanged": ["runtime","provider","candidate_model_ids","system_prompt","context_contract","request_parameters","resource_budget","checkpoint_policy","security"]
+  },
+  "supersedes": {
+    "version": "3.0.0",
+    "failed_preflight_path": "runs/stage3/acceptance-20260811-v3/preflight.v3.json",
+    "failed_preflight_result": "1/3",
+    "rationale": "The generic empty value schema did not communicate the per-case answer value schema on the OpenAI-compatible wire. Two exact-identity models repeatedly submitted a non-object value. v3.1 injects the published per-case value schema plus an explicit null branch; no expected value or status is added."
+  },
+  "provider": {"name":"bailian","tool_schema_wire_format":"openai_function","tool_choice":"auto"},
+  "candidate_model_ids": ["qwen3.8-max","glm-5.2","deepseek-v4-pro"],
+  "tool_names": ["read_frozen_case","read_frozen_evidence","calculate","simulated_ledger","submit_candidate_result"],
+  "dynamic_submit_schema": {
+    "value": "anyOf(candidate-visible answer_value_schema, null)",
+    "status": ["answer","abstain","escalate","reject_action"],
+    "reason_codes": "global v3 vocabulary",
+    "evidence_record_ids": "candidate-visible registered record identifiers",
+    "expected_status_or_value_exposed": false,
+    "same_schema_for_all_models_within_each_case": true
+  },
+  "resource_budget": {"max_model_requests":8,"max_tool_calls":24,"wall_clock_ms":120000,"max_retries":0,"max_submission_attempts":2},
+  "repair_policy": {"generic_tool_validation_feedback":true,"maximum_submission_attempts":2,"model_specific_repairs":false,"text_json_fallback":false}
+}

@@ -1,0 +1,43 @@
+{
+  "contract_type": "stage3_identity_preflight",
+  "contract_version": "3.8.0",
+  "plan_sha256": "636d94fbb6d08d58adfd018dfba6115bb44ac193480a5380e3228c623a4c3d22",
+  "endpoint_id": "bailian_98bd231ca931",
+  "results": [
+    {
+      "model_id": "qwen3.8-max",
+      "response_model_id": "qwen3.8-max",
+      "parameters_sha256": "e080cf0801a2b27fcccc96f5094552cf1ad3455e961a8371e861a9228358452a",
+      "tool_schema_sha256": "faa663d49704a907cb38cbd41a08225671fd6897ada89984fa3c8ab0b0821d4f",
+      "parameters_honored": true,
+      "tool_capability_passed": true,
+      "passed": true
+    },
+    {
+      "model_id": "glm-5.2",
+      "response_model_id": "glm-5.2",
+      "parameters_sha256": "429e4c973a8a474fc428d84f6eba2f766d147f8f0c4a16b57031a66bf7d0f79f",
+      "tool_schema_sha256": "faa663d49704a907cb38cbd41a08225671fd6897ada89984fa3c8ab0b0821d4f",
+      "parameters_honored": true,
+      "tool_capability_passed": true,
+      "passed": true
+    },
+    {
+      "model_id": "deepseek-v4-pro",
+      "response_model_id": "deepseek-v4-pro",
+      "parameters_sha256": "429e4c973a8a474fc428d84f6eba2f766d147f8f0c4a16b57031a66bf7d0f79f",
+      "tool_schema_sha256": "faa663d49704a907cb38cbd41a08225671fd6897ada89984fa3c8ab0b0821d4f",
+      "parameters_honored": true,
+      "tool_capability_passed": true,
+      "passed": true
+    }
+  ],
+  "counts": {
+    "requested": 3,
+    "passed": 3,
+    "blocked": 0
+  },
+  "decision": "passed_3_of_3",
+  "raw_provider_response_stored": false,
+  "preflight_sha256": "f2f001f9df3e9b3dfc6eec8234cc46f86471d129d424140ddd2bf33a92c732b0"
+}

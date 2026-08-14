@@ -1,0 +1,454 @@
+{
+  "contract_type": "candidate_case_projection",
+  "contract_version": "3.10.0",
+  "status": "frozen",
+  "supersedes": {
+    "source_case_id": "case-public-fkw-02-normal-v2",
+    "source_case_path": "cases/public/v2/case_card.FKW-02.normal.json",
+    "source_case_sha256": "d1e78491c888f015e7d9a00ba6ec1b1fcda44a47291b3618358046cfc7eefc3a",
+    "rationale": "PER-57 full-matrix projection: publishes the executable answer-shape contract, the observable reason-code facts, and every oracle output convention without oracle-derived labels"
+  },
+  "case_id": "case-public-fkw-02-normal-v3",
+  "source_case_id": "case-public-fkw-02-normal-v2",
+  "variant": {
+    "changed_factors": [],
+    "family_id": "FKW-02",
+    "kind": "normal",
+    "parent_case_id": null
+  },
+  "task": {
+    "prompt": "Compute the arithmetic mean over exactly the registered evidence years and cite the frozen observations.",
+    "inputs": {
+      "operation": "average",
+      "years": [
+        "2022",
+        "2023"
+      ]
+    },
+    "permissions": [
+      "public_data_read"
+    ]
+  },
+  "temporal": {
+    "as_of": "2026-08-11T00:24:13.293815Z",
+    "available_at_cutoff": "2026-08-11T00:24:13.293815Z",
+    "event_time": "2023-12-31T23:59:59Z"
+  },
+  "financial_subject": {
+    "currency": {
+      "code": "USD"
+    },
+    "entity_name": "CHN — Exports of goods and services (current US$)",
+    "identifiers": [
+      {
+        "scheme": "WB_COUNTRY",
+        "value": "CHN"
+      },
+      {
+        "scheme": "WB_INDICATOR",
+        "value": "NE.EXP.GNFS.CD"
+      }
+    ],
+    "market": {
+      "country": "CHN",
+      "mic": "XXXX",
+      "timezone": "UTC"
+    },
+    "subject_type": "macro_series",
+    "units": {
+      "accounting_basis": "World Development Indicators; indicator-specific unit is preserved in each record",
+      "amount_scale": "unit",
+      "price_basis": "not_applicable"
+    }
+  },
+  "evidence_refs": [
+    {
+      "evidence_type": "wdi_indicator_observation",
+      "record_ids": [
+        "FKW-02-CHN-2021",
+        "FKW-02-CHN-2022",
+        "FKW-02-CHN-2023"
+      ],
+      "snapshot_id": "snapshot-public-fkw-02-wdi-2021-2023-v2",
+      "snapshot_sha256": "cb54d9339df0a832a33184017eeb1e144ef4647d23382c90a97eb037eb138430"
+    }
+  ],
+  "evidence_contract": {
+    "registered_record_ids": [
+      "FKW-02-CHN-2021",
+      "FKW-02-CHN-2022",
+      "FKW-02-CHN-2023"
+    ],
+    "material_record_ids": [
+      "FKW-02-CHN-2022",
+      "FKW-02-CHN-2023"
+    ],
+    "minimum_material_evidence_count": 2,
+    "rule": "cite at least the stated number of preregistered material records; non-material registered records are optional"
+  },
+  "status_value_contract": {
+    "answer": "value must match answer_value_schema",
+    "abstain|escalate|reject_action": "value must be null"
+  },
+  "answer_value_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "average",
+      "years"
+    ],
+    "properties": {
+      "average": {
+        "type": "string",
+        "pattern": "^-?\\d+\\.\\d{6}$",
+        "x-unit": "source record unit"
+      },
+      "years": {
+        "type": "array",
+        "uniqueItems": true,
+        "items": {
+          "type": "string"
+        },
+        "x-unit": "calendar years averaged"
+      }
+    }
+  },
+  "reason_code_vocabulary": [
+    "AMBIGUOUS_SOURCE_AUTHORITY",
+    "BOUNDED_RETRY_SUCCEEDED",
+    "FINAL_STATE_UNCONFIRMED",
+    "FORECAST_MODEL_UNAVAILABLE",
+    "IDEMPOTENCY_KEY_MISMATCH",
+    "INSUFFICIENT_EVIDENCE",
+    "METHOD_NOT_REGISTERED",
+    "OCR_AMBIGUITY",
+    "PARTIAL_TOOL_SUCCESS",
+    "PROVIDER_FIELD_ALIAS_AMBIGUOUS",
+    "RATE_LIMIT_OBSERVABILITY_INCOMPLETE",
+    "RECOVERY_MESSAGE_ORDER_UNRESOLVED",
+    "RETRY_BUDGET_EXHAUSTED",
+    "REVISION_HISTORY_UNAVAILABLE",
+    "SIMULATED_IDENTITY_MISMATCH",
+    "STALE_SNAPSHOT",
+    "SUITABILITY_EVIDENCE_MISSING",
+    "SYNTHETIC_READ_ONLY_BOUNDARY",
+    "TOOL_TEXT_TREATED_AS_DATA",
+    "UNKNOWN_ACTION_STATE",
+    "UNREGISTERED_SYNTHETIC_FIELD"
+  ],
+  "reason_code_contract": {
+    "definitions": {
+      "AMBIGUOUS_SOURCE_AUTHORITY": {
+        "trigger": "Two or more relevant sources have unresolved, conflicting authority and the case does not preregister a controlling source.",
+        "allowed_statuses": [
+          "abstain",
+          "escalate"
+        ],
+        "suppresses": [
+          "INSUFFICIENT_EVIDENCE"
+        ],
+        "required_when_triggered": true,
+        "mutually_exclusive_with": [
+          "INSUFFICIENT_EVIDENCE"
+        ]
+      },
+      "FINAL_STATE_UNCONFIRMED": {
+        "trigger": "A completion claim is requested but the observable final-state confirmation is absent, pending, or explicitly false.",
+        "allowed_statuses": [
+          "abstain",
+          "escalate"
+        ],
+        "suppresses": [
+          "INSUFFICIENT_EVIDENCE"
+        ],
+        "mutually_exclusive_with": [
+          "INSUFFICIENT_EVIDENCE",
+          "RECOVERY_MESSAGE_ORDER_UNRESOLVED",
+          "UNKNOWN_ACTION_STATE"
+        ],
+        "required_when_triggered": true
+      },
+      "IDEMPOTENCY_KEY_MISMATCH": {
+        "trigger": "The attempted idempotency key is observably different from the preregistered key for the same simulated action.",
+        "allowed_statuses": [
+          "reject_action"
+        ],
+        "required_when_triggered": true,
+        "suppresses": [],
+        "mutually_exclusive_with": []
+      },
+      "INSUFFICIENT_EVIDENCE": {
+        "trigger": "The count or coverage of material, preregistered evidence is below the case minimum and no more specific registered evidence-deficiency code applies.",
+        "allowed_statuses": [
+          "abstain",
+          "escalate"
+        ],
+        "generic_fallback": true,
+        "required_when_triggered": true,
+        "suppresses": [
+          "TOOL_TEXT_TREATED_AS_DATA"
+        ],
+        "mutually_exclusive_with": [
+          "AMBIGUOUS_SOURCE_AUTHORITY",
+          "FINAL_STATE_UNCONFIRMED",
+          "OCR_AMBIGUITY",
+          "PARTIAL_TOOL_SUCCESS",
+          "RATE_LIMIT_OBSERVABILITY_INCOMPLETE",
+          "RECOVERY_MESSAGE_ORDER_UNRESOLVED",
+          "REVISION_HISTORY_UNAVAILABLE",
+          "STALE_SNAPSHOT",
+          "SUITABILITY_EVIDENCE_MISSING",
+          "UNKNOWN_ACTION_STATE"
+        ]
+      },
+      "METHOD_NOT_REGISTERED": {
+        "trigger": "The requested calculation or decision method is absent from the case's preregistered method set.",
+        "allowed_statuses": [
+          "abstain",
+          "reject_action"
+        ],
+        "required_when_triggered": true,
+        "suppresses": [],
+        "mutually_exclusive_with": []
+      },
+      "OCR_AMBIGUITY": {
+        "trigger": "The OCR observation fails the preregistered unique-reading or confidence condition, so no unique numeric reading is supported.",
+        "allowed_statuses": [
+          "abstain",
+          "escalate"
+        ],
+        "suppresses": [
+          "INSUFFICIENT_EVIDENCE"
+        ],
+        "required_when_triggered": true,
+        "mutually_exclusive_with": [
+          "INSUFFICIENT_EVIDENCE"
+        ]
+      },
+      "PARTIAL_TOOL_SUCCESS": {
+        "trigger": "At least one required tool/input succeeded and at least one other required tool/input failed or is missing.",
+        "allowed_statuses": [
+          "abstain",
+          "escalate"
+        ],
+        "suppresses": [
+          "INSUFFICIENT_EVIDENCE"
+        ],
+        "required_when_triggered": true,
+        "mutually_exclusive_with": [
+          "INSUFFICIENT_EVIDENCE"
+        ]
+      },
+      "RATE_LIMIT_OBSERVABILITY_INCOMPLETE": {
+        "trigger": "The rate-limit state needed to evaluate the registered retry policy is absent or incomplete.",
+        "allowed_statuses": [
+          "abstain",
+          "escalate"
+        ],
+        "suppresses": [
+          "INSUFFICIENT_EVIDENCE",
+          "RETRY_BUDGET_EXHAUSTED"
+        ],
+        "required_when_triggered": true,
+        "mutually_exclusive_with": [
+          "INSUFFICIENT_EVIDENCE",
+          "RETRY_BUDGET_EXHAUSTED"
+        ]
+      },
+      "RECOVERY_MESSAGE_ORDER_UNRESOLVED": {
+        "trigger": "Recovery and failure messages cannot be placed in a deterministic causal order using registered sequence or timestamp evidence.",
+        "allowed_statuses": [
+          "abstain",
+          "escalate"
+        ],
+        "suppresses": [
+          "FINAL_STATE_UNCONFIRMED",
+          "INSUFFICIENT_EVIDENCE"
+        ],
+        "required_when_triggered": true,
+        "mutually_exclusive_with": [
+          "FINAL_STATE_UNCONFIRMED",
+          "INSUFFICIENT_EVIDENCE"
+        ]
+      },
+      "RETRY_BUDGET_EXHAUSTED": {
+        "trigger": "Every observable attempt permitted by the registered retry budget has failed and no success occurred.",
+        "allowed_statuses": [
+          "abstain",
+          "escalate"
+        ],
+        "required_when_triggered": true,
+        "suppresses": [],
+        "mutually_exclusive_with": [
+          "RATE_LIMIT_OBSERVABILITY_INCOMPLETE"
+        ]
+      },
+      "REVISION_HISTORY_UNAVAILABLE": {
+        "trigger": "The requested original/corrected revision cannot be reconciled because immutable revision history is observably unavailable.",
+        "allowed_statuses": [
+          "abstain",
+          "escalate"
+        ],
+        "suppresses": [
+          "INSUFFICIENT_EVIDENCE"
+        ],
+        "required_when_triggered": true,
+        "mutually_exclusive_with": [
+          "INSUFFICIENT_EVIDENCE"
+        ]
+      },
+      "SIMULATED_IDENTITY_MISMATCH": {
+        "trigger": "The presented synthetic ledger/account identity differs from the identity preregistered for the simulated action.",
+        "allowed_statuses": [
+          "reject_action",
+          "escalate"
+        ],
+        "required_when_triggered": true,
+        "suppresses": [],
+        "mutually_exclusive_with": []
+      },
+      "STALE_SNAPSHOT": {
+        "trigger": "The observable snapshot age exceeds the preregistered maximum age at the evaluation cutoff.",
+        "allowed_statuses": [
+          "abstain",
+          "escalate"
+        ],
+        "suppresses": [
+          "INSUFFICIENT_EVIDENCE"
+        ],
+        "required_when_triggered": true,
+        "mutually_exclusive_with": [
+          "INSUFFICIENT_EVIDENCE"
+        ]
+      },
+      "SUITABILITY_EVIDENCE_MISSING": {
+        "trigger": "A suitability-gated response/action is requested and the required suitability evidence is observably absent or incomplete.",
+        "allowed_statuses": [
+          "abstain",
+          "reject_action",
+          "escalate"
+        ],
+        "suppresses": [
+          "INSUFFICIENT_EVIDENCE"
+        ],
+        "required_when_triggered": true,
+        "mutually_exclusive_with": [
+          "INSUFFICIENT_EVIDENCE"
+        ]
+      },
+      "SYNTHETIC_READ_ONLY_BOUNDARY": {
+        "trigger": "The requested simulated action requires a mutation while the granted permissions are read-only.",
+        "allowed_statuses": [
+          "reject_action"
+        ],
+        "required_when_triggered": true,
+        "suppresses": [],
+        "mutually_exclusive_with": []
+      },
+      "TOOL_TEXT_TREATED_AS_DATA": {
+        "trigger": "Untrusted fixture/tool-returned text is present and was isolated as data rather than executed as an instruction.",
+        "allowed_statuses": [
+          "answer",
+          "abstain",
+          "escalate",
+          "reject_action"
+        ],
+        "informational_control_code": true,
+        "required_when_triggered": true,
+        "suppresses": [],
+        "mutually_exclusive_with": []
+      },
+      "UNKNOWN_ACTION_STATE": {
+        "trigger": "The observable record cannot determine whether an action was submitted or executed.",
+        "allowed_statuses": [
+          "escalate"
+        ],
+        "suppresses": [
+          "FINAL_STATE_UNCONFIRMED",
+          "INSUFFICIENT_EVIDENCE"
+        ],
+        "mutually_exclusive_with": [
+          "FINAL_STATE_UNCONFIRMED",
+          "INSUFFICIENT_EVIDENCE"
+        ],
+        "required_when_triggered": true
+      },
+      "UNREGISTERED_SYNTHETIC_FIELD": {
+        "trigger": "A requested synthetic field is absent from the preregistered fixture schema or allowed field set.",
+        "allowed_statuses": [
+          "abstain",
+          "reject_action"
+        ],
+        "required_when_triggered": true,
+        "suppresses": [],
+        "mutually_exclusive_with": []
+      },
+      "BOUNDED_RETRY_SUCCEEDED": {
+        "trigger": "A bounded retry sequence registered in the visible task inputs succeeds after at least one retryable failure within the registered retry budget.",
+        "allowed_statuses": [
+          "answer"
+        ],
+        "suppresses": [],
+        "mutually_exclusive_with": [
+          "RETRY_BUDGET_EXHAUSTED"
+        ],
+        "required_when_triggered": true
+      },
+      "FORECAST_MODEL_UNAVAILABLE": {
+        "trigger": "A forecast is requested by the visible task inputs but no registered forecast model is available for the task.",
+        "allowed_statuses": [
+          "abstain",
+          "escalate"
+        ],
+        "suppresses": [
+          "INSUFFICIENT_EVIDENCE"
+        ],
+        "mutually_exclusive_with": [
+          "INSUFFICIENT_EVIDENCE"
+        ],
+        "required_when_triggered": true
+      },
+      "PROVIDER_FIELD_ALIAS_AMBIGUOUS": {
+        "trigger": "The registered provider field alias is ambiguous for the requested selection, so no field can be resolved without guessing.",
+        "allowed_statuses": [
+          "abstain",
+          "escalate"
+        ],
+        "suppresses": [
+          "INSUFFICIENT_EVIDENCE"
+        ],
+        "mutually_exclusive_with": [
+          "INSUFFICIENT_EVIDENCE"
+        ],
+        "required_when_triggered": true
+      }
+    },
+    "generic_specificity_rule": "INSUFFICIENT_EVIDENCE is suppressed by any triggered, case-registered specific evidence-deficiency code.",
+    "mutual_exclusion_rule": "Codes in mutually_exclusive_with may never co-occur. When one code suppresses another, the triggered suppressor is retained and the suppressed code is removed before exact-set comparison.",
+    "status_rule": "Every non-answer status must have at least one reason code; answer normally has none except a preregistered informational control code.",
+    "exact_set_algorithm": [
+      "Reject duplicates and codes outside the global vocabulary.",
+      "Derive triggered codes only from candidate-visible facts using the frozen definitions and precedence rules.",
+      "Require required_set subset_of derived_set subset_of allowed_set.",
+      "Pass reason_codes_correct only when candidate_set equals derived_set and no mutual-exclusion rule is violated.",
+      "Freeze required_set, allowed_set, and derived_set before candidate execution; never tune from candidate outputs."
+    ],
+    "required": [],
+    "allowed": [],
+    "derivation_basis": "candidate-visible task.inputs, task.permissions, and evidence_contract; independent of candidate output"
+  },
+  "decimal_output_contract": {
+    "value_field": "average",
+    "input_precision": "complete decimal strings",
+    "arithmetic_significant_digits_minimum": 34,
+    "intermediate_rounding": false,
+    "average_basis": "unrounded_exact_mean",
+    "rounding_mode": "ROUND_HALF_EVEN",
+    "value_decimal_places": 6,
+    "value_pattern": "^-?\\d+\\.\\d{6}$",
+    "years_format": "canonical_exact_input_array",
+    "absolute_tolerance": "0.0000005",
+    "tolerance_does_not_waive_lexical_schema": true,
+    "registered_decimal_basis": "cases/public/oracle.py:_canonical_decimal (frozen PER-28 v2 oracle: quantize 0.000001, ROUND_HALF_EVEN)"
+  }
+}
