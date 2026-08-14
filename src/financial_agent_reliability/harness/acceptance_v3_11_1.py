@@ -41,9 +41,9 @@ import pathlib
 from typing import Any
 
 from contracts.run_trace_validator_v3_8 import build_run_id, content_sha256, file_sha256
-from harness.acceptance_v3_7 import tool_schemas_v37
-from harness.acceptance_v3_10 import VARIANT_IDS, case_card_index, projection_case_id, read_json, write_json
-from harness.acceptance_v3_11 import (
+from financial_agent_reliability.harness.acceptance_v3_7 import tool_schemas_v37
+from financial_agent_reliability.harness.acceptance_v3_10 import VARIANT_IDS, case_card_index, projection_case_id, read_json, write_json
+from financial_agent_reliability.harness.acceptance_v3_11 import (
     BENCHMARK_ID,
     CONFIG_PATH,
     BUNDLE_PATH,
@@ -56,7 +56,7 @@ from harness.acceptance_v3_11 import (
 )
 
 
-ROOT = pathlib.Path(__file__).resolve().parents[1]
+ROOT = pathlib.Path(__file__).resolve().parents[3]
 PLAN_PATH = ROOT / "contracts/stage3_acceptance_plan.v3.11.1.json"
 PROJECTION_DIR = ROOT / "cases/candidate_v3_11"
 V311_RUN_DIR = ROOT / "runs/stage3/acceptance-20260813-v3.11"

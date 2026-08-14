@@ -4,7 +4,7 @@ import pathlib
 import unittest
 
 from contracts.run_trace_validator_v3_9 import HarnessContractV39Error, validate_run_trace_v39
-from harness.acceptance_v3_9 import (
+from financial_agent_reliability.harness.acceptance_v3_9 import (
     build_contract_manifest,
     build_offline_plan,
     content_sha256,

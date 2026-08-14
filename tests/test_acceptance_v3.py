@@ -3,7 +3,7 @@ import json
 import pathlib
 import unittest
 
-from harness.acceptance_v3 import (
+from financial_agent_reliability.harness.acceptance_v3 import (
     PARSE_ERROR_CATEGORIES,
     grade_candidate,
     validate_calculate_arguments,

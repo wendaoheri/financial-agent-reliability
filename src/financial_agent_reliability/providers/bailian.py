@@ -10,7 +10,7 @@ from typing import Any, Callable, Mapping
 from urllib.parse import urlsplit
 
 
-ROOT = pathlib.Path(__file__).resolve().parents[1]
+ROOT = pathlib.Path(__file__).resolve().parents[3]
 CONFIG_PATH = ROOT / "contracts" / "run_trace_harness_config.v2.json"
 EXPECTED_MODELS = ("qwen3.8-max", "glm-5.2", "deepseek-v4-pro")
 

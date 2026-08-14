@@ -13,7 +13,7 @@ from typing import Any, Mapping
 from contracts.run_trace_validator_v3_6 import build_run_id, content_sha256, file_sha256
 
 
-ROOT = pathlib.Path(__file__).resolve().parents[1]
+ROOT = pathlib.Path(__file__).resolve().parents[3]
 REVISION = ROOT / "contracts" / "stage3_acceptance_revision.frozen.v3.6.json"
 V35_PLAN = ROOT / "contracts" / "stage3_acceptance_plan.v3.5.json"
 V35_BUNDLE = ROOT / "contracts" / "stage3_acceptance_contracts.frozen.v3.5.json"
@@ -400,7 +400,7 @@ def _write_fixtures(plan: Mapping[str, Any]) -> None:
 
 
 def _artifact_paths() -> list[pathlib.Path]:
-    paths = [REVISION, ROOT / "contracts" / "candidate_output_contracts.v3.6.json", ROOT / "contracts" / "candidate_submission_wire_contract.v3.6.json", ROOT / "contracts" / "reason_codes.v3.6.json", CONFIG_PATH, ROOT / "contracts" / "run_trace.schema.v3.6.json", ROOT / "contracts" / "stage3_independent_grader_result.schema.v3.6.json", ROOT / "contracts" / "run_trace_validator_v3_6.py", ROOT / "harness" / "acceptance_v3_6.py", ROOT / "harness" / "live_acceptance_v3_6.mjs", PLAN_PATH, ROOT / "tests" / "test_financial_acceptance_v3_6.py", ROOT / "tests" / "integration" / "financial_acceptance_v3_6.test.mjs"]
+    paths = [REVISION, ROOT / "contracts" / "candidate_output_contracts.v3.6.json", ROOT / "contracts" / "candidate_submission_wire_contract.v3.6.json", ROOT / "contracts" / "reason_codes.v3.6.json", CONFIG_PATH, ROOT / "contracts" / "run_trace.schema.v3.6.json", ROOT / "contracts" / "stage3_independent_grader_result.schema.v3.6.json", ROOT / "contracts" / "run_trace_validator_v3_6.py", ROOT / "src" / "financial_agent_reliability" / "harness" / "acceptance_v3_6.py", ROOT / "src" / "financial_agent_reliability" / "harness" / "live_acceptance_v3_6.mjs", PLAN_PATH, ROOT / "tests" / "test_financial_acceptance_v3_6.py", ROOT / "tests" / "integration" / "financial_acceptance_v3_6.test.mjs"]
     return paths + sorted(OUTPUT_DIR.glob("*.json")) + sorted(FIXTURE_DIR.glob("*.json"))
 
 

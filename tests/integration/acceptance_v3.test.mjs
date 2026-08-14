@@ -7,7 +7,7 @@ import {
   calculateV3,
   createSubmissionCollector,
   normalizePayloadV3,
-} from "../../harness/live_acceptance_v3.mjs";
+} from "../../src/financial_agent_reliability/harness/live_acceptance_v3.mjs";
 
 
 const config = JSON.parse(readFileSync(new URL("../../contracts/run_trace_harness_config.v3.json", import.meta.url), "utf8"));

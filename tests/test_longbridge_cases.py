@@ -11,9 +11,9 @@ from contracts.validate_case_data import (
     validate_variant_relation,
     verify_manifest,
 )
-from oracles.longbridge.oracle import evaluate
-from oracles.longbridge.oracle_reference import recompute
-from pipelines.longbridge.freeze import FAMILIES, VARIANTS, check
+from financial_agent_reliability.oracles.longbridge.oracle import evaluate
+from financial_agent_reliability.oracles.longbridge.oracle_reference import recompute
+from financial_agent_reliability.pipelines.longbridge.freeze import FAMILIES, VARIANTS, check
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]

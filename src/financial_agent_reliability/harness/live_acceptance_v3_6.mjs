@@ -7,7 +7,7 @@ import {
 } from "./live_acceptance_v3_5.mjs";
 
 
-const CONFIG = JSON.parse(readFileSync(new URL("../contracts/run_trace_harness_config.v3.6.json", import.meta.url), "utf8"));
+const CONFIG = JSON.parse(readFileSync(new URL("../../../contracts/run_trace_harness_config.v3.6.json", import.meta.url), "utf8"));
 
 
 export function normalizePayloadV36(source, seed) {

@@ -12,7 +12,7 @@ import {
   executeFrozenPlanV39,
   executeIdentityPreflightV39,
   normalizePayloadV39,
-} from "../../harness/live_acceptance_v3_9.mjs";
+} from "../../src/financial_agent_reliability/harness/live_acceptance_v3_9.mjs";
 
 const config = JSON.parse(readFileSync(new URL("../../contracts/run_trace_harness_config.v3.9.json", import.meta.url), "utf8"));
 const plan = JSON.parse(readFileSync(new URL("../../contracts/stage3_acceptance_plan.v3.9.json", import.meta.url), "utf8"));

@@ -39,10 +39,10 @@ from contracts.run_trace_validator_v3_7 import canonical, scan_persisted_value_f
 from contracts.run_trace_validator_v3_8 import build_run_id, content_sha256, file_sha256
 from contracts.run_trace_validator_v3_10 import validate_run_trace_v310
 from contracts.validate_case_data import content_sha256 as stage2_content_sha256
-from harness.acceptance_v3_7 import tool_schemas_v37
+from financial_agent_reliability.harness.acceptance_v3_7 import tool_schemas_v37
 
 
-ROOT = pathlib.Path(__file__).resolve().parents[1]
+ROOT = pathlib.Path(__file__).resolve().parents[3]
 V39_BUNDLE = ROOT / "contracts/stage3_acceptance_contracts.frozen.v3.9.json"
 V39_PLAN = ROOT / "contracts/stage3_acceptance_plan.v3.9.json"
 CONFIG_PATH = ROOT / "contracts/run_trace_harness_config.v3.10.json"
@@ -1787,8 +1787,8 @@ def _artifact_paths() -> list[pathlib.Path]:
     return [
         OUTPUT_PATH, WIRE_PATH, REASON_PATH, CONFIG_PATH, TRACE_SCHEMA_PATH, GRADER_SCHEMA_PATH,
         ROOT / "contracts/run_trace_validator_v3_10.py",
-        ROOT / "harness/acceptance_v3_10.py",
-        ROOT / "harness/live_acceptance_v3_10.mjs",
+        ROOT / "src/financial_agent_reliability/harness/acceptance_v3_10.py",
+        ROOT / "src/financial_agent_reliability/harness/live_acceptance_v3_10.mjs",
         PLAN_PATH,
         *sorted(PROJECTION_DIR.glob("*.json")),
         ROOT / "tests/test_financial_acceptance_v3_10.py",

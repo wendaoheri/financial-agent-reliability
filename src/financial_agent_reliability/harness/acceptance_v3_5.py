@@ -12,10 +12,10 @@ from typing import Any
 from contracts.run_trace_validator import build_bundle_sha256, build_run_id, file_sha256
 from contracts.run_trace_validator_v3_5 import validate_run_trace_v35
 from contracts.run_trace_validator_v3 import validate_grader_v3
-from harness.acceptance_v3 import canonical, content_sha256, grade_candidate
+from financial_agent_reliability.harness.acceptance_v3 import canonical, content_sha256, grade_candidate
 
 
-ROOT = pathlib.Path(__file__).resolve().parents[1]
+ROOT = pathlib.Path(__file__).resolve().parents[3]
 CONFIG = ROOT / "contracts" / "run_trace_harness_config.v3.5.json"
 BASE_PROTOCOL_BUNDLE = ROOT / "contracts" / "stage3_acceptance_contracts.frozen.v3.4.json"
 BASE_FINANCIAL_BUNDLE = ROOT / "contracts" / "stage3_acceptance_contracts.frozen.v3.json"
@@ -30,9 +30,9 @@ def build_contract_manifest() -> dict[str, Any]:
         CONFIG,
         ROOT / "contracts" / "run_trace.schema.v3.5.json",
         ROOT / "contracts" / "run_trace_validator_v3_5.py",
-        ROOT / "harness" / "pi_runtime_v3_5.mjs",
-        ROOT / "harness" / "live_acceptance_v3_5.mjs",
-        ROOT / "harness" / "acceptance_v3_5.py",
+        ROOT / "src" / "financial_agent_reliability" / "harness" / "pi_runtime_v3_5.mjs",
+        ROOT / "src" / "financial_agent_reliability" / "harness" / "live_acceptance_v3_5.mjs",
+        ROOT / "src" / "financial_agent_reliability" / "harness" / "acceptance_v3_5.py",
         ROOT / "tests" / "integration" / "financial_acceptance_v3_5.test.mjs",
         ROOT / "tests" / "test_financial_acceptance_v3_5.py",
     ]

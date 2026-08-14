@@ -10,7 +10,7 @@ import {
   executeWithProviderRetryV36,
   normalizePayloadV36,
   shouldRetryProviderAttemptV36,
-} from "../../harness/live_acceptance_v3_6.mjs";
+} from "../../src/financial_agent_reliability/harness/live_acceptance_v3_6.mjs";
 
 
 const config = JSON.parse(readFileSync(new URL("../../contracts/run_trace_harness_config.v3.6.json", import.meta.url), "utf8"));

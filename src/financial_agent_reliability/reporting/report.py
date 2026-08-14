@@ -13,8 +13,8 @@ from collections import Counter
 from typing import Any, Iterable, Mapping, Sequence
 
 
-ROOT = pathlib.Path(__file__).resolve().parents[1]
-SPEC_PATH = ROOT / "reporting" / "spec.report.v1.json"
+ROOT = pathlib.Path(__file__).resolve().parents[3]
+SPEC_PATH = ROOT / "src" / "financial_agent_reliability" / "reporting" / "spec.report.v1.json"
 FREEZE_PATH = ROOT / "contracts" / "report_contract.frozen.v1.json"
 SHA256_FIELDS = {
     "result_bundle_sha256", "grader_policy_sha256", "preregistration_sha256",

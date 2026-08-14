@@ -3,7 +3,7 @@ import json
 import pathlib
 import unittest
 
-from harness.acceptance_v3_6 import (
+from financial_agent_reliability.harness.acceptance_v3_6 import (
     build_contract_manifest,
     build_offline_plan,
     derive_reason_codes,

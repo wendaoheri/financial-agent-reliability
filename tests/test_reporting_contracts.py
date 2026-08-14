@@ -2,7 +2,7 @@ import copy
 import pathlib
 import unittest
 
-from reporting.report import (
+from financial_agent_reliability.reporting.report import (
     ReportContractError,
     load_json,
     render_html,

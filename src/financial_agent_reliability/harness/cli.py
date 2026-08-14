@@ -7,19 +7,19 @@ import json
 import os
 import pathlib
 
-from harness.matrix import build_run_manifest
-from harness.smoke import (
+from financial_agent_reliability.harness.matrix import build_run_manifest
+from financial_agent_reliability.harness.smoke import (
     freeze_smoke_evidence,
     run_live_smoke,
     seed_corrected_v1_block,
     validate_smoke_outputs,
     write_smoke_plan,
 )
-from harness.stage3 import freeze_preflight_evidence, run_live_preflights
-from providers.bailian import BailianSettings
+from financial_agent_reliability.harness.stage3 import freeze_preflight_evidence, run_live_preflights
+from financial_agent_reliability.providers.bailian import BailianSettings
 
 
-ROOT = pathlib.Path(__file__).resolve().parents[1]
+ROOT = pathlib.Path(__file__).resolve().parents[3]
 
 
 def main() -> int:

@@ -14,7 +14,7 @@ import {
   executeIdentityPreflightV310,
   firstRoundRunsV310,
   normalizePayloadV310,
-} from "../../harness/live_acceptance_v3_10.mjs";
+} from "../../src/financial_agent_reliability/harness/live_acceptance_v3_10.mjs";
 
 const config = JSON.parse(readFileSync(new URL("../../contracts/run_trace_harness_config.v3.10.json", import.meta.url), "utf8"));
 const plan = JSON.parse(readFileSync(new URL("../../contracts/stage3_acceptance_plan.v3.10.json", import.meta.url), "utf8"));

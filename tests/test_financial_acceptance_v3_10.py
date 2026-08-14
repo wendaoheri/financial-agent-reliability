@@ -4,7 +4,7 @@ import pathlib
 import unittest
 
 from contracts.run_trace_validator_v3_10 import HarnessContractV310Error, validate_run_trace_v310
-from harness.acceptance_v3_10 import (
+from financial_agent_reliability.harness.acceptance_v3_10 import (
     BENCHMARK_ID,
     FIRST_ROUND_RUN_CAP,
     MASTER_SEED,
@@ -26,8 +26,8 @@ from harness.acceptance_v3_10 import (
     validate_contract_bundle,
     ROOT,
 )
-from harness.acceptance_v3_7 import independent_expected_from_snapshot
-from harness.acceptance_v3_9 import build_offline_plan as build_offline_plan_v39
+from financial_agent_reliability.harness.acceptance_v3_7 import independent_expected_from_snapshot
+from financial_agent_reliability.harness.acceptance_v3_9 import build_offline_plan as build_offline_plan_v39
 
 
 FIXTURES = ROOT / "tests" / "fixtures" / "acceptance_v3_10"
@@ -346,7 +346,7 @@ class FinancialAcceptanceV310Tests(unittest.TestCase):
             validate_run_trace_v310(self.trace, scan_companions=[companion])
 
     def test_fixture_secret_scan_is_clean(self):
-        from harness.acceptance_v3_10 import scan_fixtures
+        from financial_agent_reliability.harness.acceptance_v3_10 import scan_fixtures
         self.assertEqual(scan_fixtures(), [])
         self.assertGreaterEqual(len(list(FIXTURES.glob("*.json"))), 8)
 

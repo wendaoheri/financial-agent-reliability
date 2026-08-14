@@ -15,13 +15,13 @@ from contracts.run_trace_validator import (
     content_sha256,
     file_sha256,
 )
-from harness.bundle import ImmutableBundle
-from harness.checkpoint import CheckpointStore
-from harness.redaction import redact
-from providers.bailian import BailianAdapter, Transport
+from financial_agent_reliability.harness.bundle import ImmutableBundle
+from financial_agent_reliability.harness.checkpoint import CheckpointStore
+from financial_agent_reliability.harness.redaction import redact
+from financial_agent_reliability.providers.bailian import BailianAdapter, Transport
 
 
-ROOT = pathlib.Path(__file__).resolve().parents[1]
+ROOT = pathlib.Path(__file__).resolve().parents[3]
 CONFIG_PATH = ROOT / "contracts" / "run_trace_harness_config.v2.json"
 MODEL_MANIFEST_PATH = ROOT / "contracts" / "model_manifest.frozen.v2.json"
 

@@ -9,7 +9,7 @@ import pathlib
 from contracts.run_trace_validator import build_bundle_sha256, file_sha256
 
 
-ROOT = pathlib.Path(__file__).resolve().parents[1]
+ROOT = pathlib.Path(__file__).resolve().parents[3]
 CONFIG = ROOT / "contracts" / "run_trace_harness_config.v3.3.json"
 BASE_CONFIG = ROOT / "contracts" / "run_trace_harness_config.v3.2.json"
 BASE_BUNDLE = ROOT / "contracts" / "stage3_acceptance_contracts.frozen.v3.2.json"
@@ -20,9 +20,9 @@ def build_contract_manifest() -> dict:
     paths = [
         CONFIG,
         ROOT / "contracts" / "run_trace.schema.v3.3.json",
-        ROOT / "harness" / "pi_runtime_v3_3.mjs",
-        ROOT / "harness" / "live_acceptance_v3_3.mjs",
-        ROOT / "harness" / "acceptance_v3_3.py",
+        ROOT / "src" / "financial_agent_reliability" / "harness" / "pi_runtime_v3_3.mjs",
+        ROOT / "src" / "financial_agent_reliability" / "harness" / "live_acceptance_v3_3.mjs",
+        ROOT / "src" / "financial_agent_reliability" / "harness" / "acceptance_v3_3.py",
         ROOT / "tests" / "integration" / "acceptance_v3_3.test.mjs",
         ROOT / "tests" / "test_acceptance_v3_3.py",
         ROOT / "runs" / "stage3" / "acceptance-20260811-v3.2" / "preflight.v3.2.json",

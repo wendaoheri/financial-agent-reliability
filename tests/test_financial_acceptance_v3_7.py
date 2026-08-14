@@ -5,7 +5,7 @@ import tempfile
 import unittest
 
 from contracts.run_trace_validator_v3_7 import HarnessContractV37Error, validate_run_trace_v37
-from harness.acceptance_v3_7 import (
+from financial_agent_reliability.harness.acceptance_v3_7 import (
     ALL_CHECKS,
     build_contract_manifest,
     build_offline_plan,

@@ -19,7 +19,7 @@ from typing import Any, Mapping
 from contracts.run_trace_validator import build_bundle_sha256, build_run_id
 
 
-ROOT = pathlib.Path(__file__).resolve().parents[1]
+ROOT = pathlib.Path(__file__).resolve().parents[3]
 OLD_PLAN = ROOT / "contracts" / "stage3_smoke_plan.v2.json"
 PROJECTION_DIR = ROOT / "cases" / "candidate_v3"
 REQUIRED_RESULT_FIELDS = {
@@ -366,9 +366,9 @@ def write_contract_manifest() -> pathlib.Path:
         ROOT / "contracts" / "run_trace.schema.v3.json",
         ROOT / "contracts" / "stage3_independent_grader_result.schema.v3.json",
         ROOT / "contracts" / "run_trace_validator_v3.py",
-        ROOT / "harness" / "acceptance_v3.py",
-        ROOT / "harness" / "live_acceptance_v3.mjs",
-        ROOT / "harness" / "pi_runtime_v3.mjs",
+        ROOT / "src" / "financial_agent_reliability" / "harness" / "acceptance_v3.py",
+        ROOT / "src" / "financial_agent_reliability" / "harness" / "live_acceptance_v3.mjs",
+        ROOT / "src" / "financial_agent_reliability" / "harness" / "pi_runtime_v3.mjs",
         ROOT / "tests" / "test_acceptance_v3.py",
         ROOT / "tests" / "integration" / "acceptance_v3.test.mjs",
         *sorted(PROJECTION_DIR.glob("*.json")),

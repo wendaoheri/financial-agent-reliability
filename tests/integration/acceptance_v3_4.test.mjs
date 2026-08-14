@@ -10,8 +10,8 @@ import {
   createDiagnosticRecorderV34,
   normalizePayloadV34,
   preflightProjectionV34,
-} from "../../harness/live_acceptance_v3_4.mjs";
-import { createPinnedAgentV34 } from "../../harness/pi_runtime_v3_4.mjs";
+} from "../../src/financial_agent_reliability/harness/live_acceptance_v3_4.mjs";
+import { createPinnedAgentV34 } from "../../src/financial_agent_reliability/harness/pi_runtime_v3_4.mjs";
 
 
 const config = JSON.parse(readFileSync(new URL("../../contracts/run_trace_harness_config.v3.4.json", import.meta.url), "utf8"));

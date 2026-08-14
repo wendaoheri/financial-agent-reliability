@@ -14,7 +14,7 @@ import {
   validatePreflightCoverage,
   verifyFrozenInputsCoverage,
 } from "../../audit/driver_v3_11_1_coverage.mjs";
-import { verifyCheckpointChain } from "../../harness/live_acceptance_v3_11.mjs";
+import { verifyCheckpointChain } from "../../src/financial_agent_reliability/harness/live_acceptance_v3_11.mjs";
 
 const plan = JSON.parse(readFileSync(new URL("../../contracts/stage3_acceptance_plan.v3.11.1.json", import.meta.url), "utf8"));
 const preflight = JSON.parse(readFileSync(new URL("../../runs/stage3/coverage-20260814-v3.11.1/preflight.json", import.meta.url), "utf8"));

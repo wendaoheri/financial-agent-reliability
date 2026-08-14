@@ -11,12 +11,12 @@ from datetime import datetime, timezone
 from typing import Any, Callable
 
 from contracts.run_trace_validator import file_sha256
-from harness.bundle import ImmutableBundle
-from providers.bailian import BailianSettings, build_all_adapters
-from providers.bailian_http import BailianHTTPTransport
+from financial_agent_reliability.harness.bundle import ImmutableBundle
+from financial_agent_reliability.providers.bailian import BailianSettings, build_all_adapters
+from financial_agent_reliability.providers.bailian_http import BailianHTTPTransport
 
 
-ROOT = pathlib.Path(__file__).resolve().parents[1]
+ROOT = pathlib.Path(__file__).resolve().parents[3]
 CONFIG_PATH = ROOT / "contracts" / "run_trace_harness_config.v2.json"
 MODEL_MANIFEST_PATH = ROOT / "contracts" / "model_manifest.frozen.v2.json"
 INVALIDATING_FAILURES = {
@@ -189,7 +189,7 @@ def freeze_preflight_evidence(
         "authoritative_counts": authoritative["counts"],
         "harness_config_sha256": file_sha256(CONFIG_PATH),
         "model_manifest_sha256": file_sha256(MODEL_MANIFEST_PATH),
-        "run_manifest_sha256": file_sha256(ROOT / "harness" / "run_manifest.v4.json"),
+        "run_manifest_sha256": file_sha256(ROOT / "src" / "financial_agent_reliability" / "harness" / "run_manifest.v4.json"),
     }
     with tempfile.TemporaryDirectory() as directory:
         source = pathlib.Path(directory) / "source"
@@ -201,7 +201,7 @@ def freeze_preflight_evidence(
         shutil.copyfile(MODEL_MANIFEST_PATH, source / "contracts" / MODEL_MANIFEST_PATH.name)
         shutil.copyfile(CONFIG_PATH, source / "contracts" / CONFIG_PATH.name)
         shutil.copyfile(
-            ROOT / "harness" / "run_manifest.v4.json",
+            ROOT / "src" / "financial_agent_reliability" / "harness" / "run_manifest.v4.json",
             source / "harness" / "run_manifest.v4.json",
         )
         (source / "execution_decision.json").write_text(

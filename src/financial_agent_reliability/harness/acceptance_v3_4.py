@@ -9,7 +9,7 @@ import pathlib
 from contracts.run_trace_validator import build_bundle_sha256, file_sha256
 
 
-ROOT = pathlib.Path(__file__).resolve().parents[1]
+ROOT = pathlib.Path(__file__).resolve().parents[3]
 CONFIG = ROOT / "contracts" / "run_trace_harness_config.v3.4.json"
 BASE_CONFIG = ROOT / "contracts" / "run_trace_harness_config.v3.3.json"
 BASE_BUNDLE = ROOT / "contracts" / "stage3_acceptance_contracts.frozen.v3.3.json"
@@ -22,9 +22,9 @@ def build_contract_manifest() -> dict:
         ROOT / "contracts" / "candidate_submission_wire_contract.v3.4.json",
         ROOT / "contracts" / "run_trace.schema.v3.4.json",
         ROOT / "docs" / "contracts" / "bailian-function-calling-v3.4.md",
-        ROOT / "harness" / "pi_runtime_v3_4.mjs",
-        ROOT / "harness" / "live_acceptance_v3_4.mjs",
-        ROOT / "harness" / "acceptance_v3_4.py",
+        ROOT / "src" / "financial_agent_reliability" / "harness" / "pi_runtime_v3_4.mjs",
+        ROOT / "src" / "financial_agent_reliability" / "harness" / "live_acceptance_v3_4.mjs",
+        ROOT / "src" / "financial_agent_reliability" / "harness" / "acceptance_v3_4.py",
         ROOT / "tests" / "integration" / "acceptance_v3_4.test.mjs",
         ROOT / "tests" / "test_acceptance_v3_4.py",
     ]

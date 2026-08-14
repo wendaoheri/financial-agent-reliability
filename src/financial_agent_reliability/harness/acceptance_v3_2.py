@@ -8,7 +8,7 @@ import pathlib
 import shutil
 
 from contracts.run_trace_validator import build_bundle_sha256, build_run_id, file_sha256
-from harness.acceptance_v3 import (
+from financial_agent_reliability.harness.acceptance_v3 import (
     ROOT,
     OLD_PLAN,
     PROJECTION_DIR,
@@ -28,8 +28,8 @@ def freeze_contracts() -> pathlib.Path:
     paths = [
         CORRECTION,
         ROOT / "contracts" / "run_trace.schema.v3.2.json",
-        ROOT / "harness" / "live_acceptance_v3_2.mjs",
-        ROOT / "harness" / "acceptance_v3_2.py",
+        ROOT / "src" / "financial_agent_reliability" / "harness" / "live_acceptance_v3_2.mjs",
+        ROOT / "src" / "financial_agent_reliability" / "harness" / "acceptance_v3_2.py",
         ROOT / "tests" / "integration" / "acceptance_v3_2.test.mjs",
         ROOT / "runs" / "stage3" / "acceptance-20260811-v3.1" / "preflight.v3.1.json",
     ]

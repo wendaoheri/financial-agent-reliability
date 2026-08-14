@@ -15,7 +15,7 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit, urlunsplit
 from urllib.request import Request, urlopen
 
-from providers.bailian import BailianSettings
+from financial_agent_reliability.providers.bailian import BailianSettings
 
 
 @dataclass(frozen=True)

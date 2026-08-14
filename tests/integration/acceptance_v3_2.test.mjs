@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
 
-import { genericRepairPromptV32 } from "../../harness/live_acceptance_v3_2.mjs";
+import { genericRepairPromptV32 } from "../../src/financial_agent_reliability/harness/live_acceptance_v3_2.mjs";
 
 
 const correction = JSON.parse(readFileSync(new URL("../../contracts/run_trace_harness_config.v3.2.json", import.meta.url), "utf8"));

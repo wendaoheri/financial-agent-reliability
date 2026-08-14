@@ -14,11 +14,11 @@ from typing import Any, Mapping
 
 from contracts.run_trace_validator import file_sha256
 from contracts.run_trace_validator_v2 import validate_run_trace_v2
-from harness.bundle import ImmutableBundle
+from financial_agent_reliability.harness.bundle import ImmutableBundle
 
 
-ROOT = pathlib.Path(__file__).resolve().parents[1]
-FULL_MANIFEST_PATH = ROOT / "harness" / "run_manifest.v4.json"
+ROOT = pathlib.Path(__file__).resolve().parents[3]
+FULL_MANIFEST_PATH = ROOT / "src" / "financial_agent_reliability" / "harness" / "run_manifest.v4.json"
 PREFLIGHT_PATH = ROOT / "runs" / "stage3" / "session-20260811" / "preflight.v4.json"
 CONFIG_PATH = ROOT / "contracts" / "run_trace_harness_config.v2.json"
 MODEL_MANIFEST_PATH = ROOT / "contracts" / "model_manifest.frozen.v2.json"
@@ -95,7 +95,7 @@ def build_smoke_plan(root: pathlib.Path = ROOT) -> dict[str, Any]:
     """Build the exact 12-task/36-run plan before any candidate result exists."""
 
     root = pathlib.Path(root)
-    manifest_path = root / "harness" / "run_manifest.v4.json"
+    manifest_path = root / "src" / "financial_agent_reliability" / "harness" / "run_manifest.v4.json"
     preflight_path = root / "runs" / "stage3" / "session-20260811" / "preflight.v4.json"
     manifest = _load(manifest_path)
     preflight = _load(preflight_path)
@@ -159,9 +159,9 @@ def build_smoke_plan(root: pathlib.Path = ROOT) -> dict[str, Any]:
         root / "contracts" / "run_trace.schema.v2.json",
         root / "contracts" / "run_trace_validator_v2.py",
         root / "contracts" / "stage3_smoke_result.schema.v1.json",
-        root / "harness" / "live_smoke.mjs",
-        root / "harness" / "pi_runtime.mjs",
-        root / "harness" / "smoke.py",
+        root / "src" / "financial_agent_reliability" / "harness" / "live_smoke.mjs",
+        root / "src" / "financial_agent_reliability" / "harness" / "pi_runtime.mjs",
+        root / "src" / "financial_agent_reliability" / "harness" / "smoke.py",
     ]
     core = {
         "contract_type": "stage3_sequential_necessity_smoke_plan",
@@ -232,7 +232,7 @@ def build_smoke_plan(root: pathlib.Path = ROOT) -> dict[str, Any]:
 
 def validate_smoke_plan(plan: Mapping[str, Any], root: pathlib.Path = ROOT) -> None:
     root = pathlib.Path(root)
-    manifest = _load(root / "harness" / "run_manifest.v4.json")
+    manifest = _load(root / "src" / "financial_agent_reliability" / "harness" / "run_manifest.v4.json")
     full_rows = {row["run_id"]: row for row in manifest["runs"]}
     rows = plan.get("runs") or []
     for row in rows:
@@ -381,7 +381,7 @@ def run_live_smoke(
     validate_smoke_plan(plan, root)
     command = [
         "node",
-        str(root / "harness" / "live_smoke.mjs"),
+        str(root / "src" / "financial_agent_reliability" / "harness" / "live_smoke.mjs"),
         "--plan",
         str(pathlib.Path(plan_path)),
         "--output-dir",

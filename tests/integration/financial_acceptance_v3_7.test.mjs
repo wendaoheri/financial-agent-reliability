@@ -13,7 +13,7 @@ import {
   executeIdentityPreflightV37,
   normalizePayloadV37,
   validateAuthorizationV37,
-} from "../../harness/live_acceptance_v3_7.mjs";
+} from "../../src/financial_agent_reliability/harness/live_acceptance_v3_7.mjs";
 
 const plan = JSON.parse(readFileSync(new URL("../../contracts/stage3_acceptance_plan.v3.7.json", import.meta.url), "utf8"));
 const fixtureAnswers = JSON.parse(readFileSync(new URL("../fixtures/acceptance_v3_7/candidate_answers.synthetic.json", import.meta.url), "utf8"));
@@ -70,7 +70,7 @@ test("CLI fails closed before credential loading when authorization is absent", 
   delete env.BENCH_BAILIAN_API_KEY;
   delete env.BENCH_BAILIAN_BASE_URL;
   delete env.BENCH_BAILIAN_MODEL_IDS;
-  const child = spawnSync(process.execPath, [fileURLToPath(new URL("../../harness/live_acceptance_v3_7.mjs", import.meta.url)), "--mode", "preflight", "--plan", fileURLToPath(new URL("../../contracts/stage3_acceptance_plan.v3.7.json", import.meta.url)), "--authorization", authPath, "--output", outputPath], { encoding: "utf8", env });
+  const child = spawnSync(process.execPath, [fileURLToPath(new URL("../../src/financial_agent_reliability/harness/live_acceptance_v3_7.mjs", import.meta.url)), "--mode", "preflight", "--plan", fileURLToPath(new URL("../../contracts/stage3_acceptance_plan.v3.7.json", import.meta.url)), "--authorization", authPath, "--output", outputPath], { encoding: "utf8", env });
   assert.equal(child.status, 2);
   assert.match(child.stderr, /separate paid preflight authorization/);
   assert.equal(existsSync(outputPath), false);

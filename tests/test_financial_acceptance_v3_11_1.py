@@ -11,7 +11,7 @@ import pathlib
 import unittest
 
 from contracts.run_trace_validator_v3_8 import build_run_id, content_sha256, file_sha256
-from harness.acceptance_v3_11 import (
+from financial_agent_reliability.harness.acceptance_v3_11 import (
     BENCHMARK_ID,
     BUNDLE_PATH,
     CONFIG_PATH,
@@ -19,7 +19,7 @@ from harness.acceptance_v3_11 import (
     derive_seed,
     validate_contract_bundle,
 )
-from harness.acceptance_v3_11_1 import (
+from financial_agent_reliability.harness.acceptance_v3_11_1 import (
     COVERAGE_CASE_ID,
     COVERAGE_MODEL_ID,
     COVERAGE_REPEAT,

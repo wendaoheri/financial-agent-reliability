@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
 
-import { buildSubmitSchemaV31 } from "../../harness/live_acceptance_v3_1.mjs";
+import { buildSubmitSchemaV31 } from "../../src/financial_agent_reliability/harness/live_acceptance_v3_1.mjs";
 
 
 const projection = JSON.parse(readFileSync(new URL("../../cases/candidate_v3/case-public-fkw-01-normal-v3.json", import.meta.url), "utf8"));

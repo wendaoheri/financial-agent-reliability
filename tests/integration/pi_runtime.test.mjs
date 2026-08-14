@@ -2,13 +2,13 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
 
-import { assertPinnedRuntime, createPinnedAgent } from "../../harness/pi_runtime.mjs";
+import { assertPinnedRuntime, createPinnedAgent } from "../../src/financial_agent_reliability/harness/pi_runtime.mjs";
 import {
   buildRunPrompt,
   gradeStructuredCandidate,
   normalizePayload,
   resolveResponseModelIdentity,
-} from "../../harness/live_smoke.mjs";
+} from "../../src/financial_agent_reliability/harness/live_smoke.mjs";
 
 
 const config = JSON.parse(

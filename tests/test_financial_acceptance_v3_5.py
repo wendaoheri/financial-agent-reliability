@@ -2,7 +2,7 @@ import json
 import pathlib
 import unittest
 
-from harness.acceptance_v3_5 import build_acceptance_plan, build_contract_manifest, verify_manifest
+from financial_agent_reliability.harness.acceptance_v3_5 import build_acceptance_plan, build_contract_manifest, verify_manifest
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]

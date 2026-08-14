@@ -12,9 +12,9 @@ from contracts.validate_case_data import (
     validate_variant_relation,
     verify_manifest,
 )
-from oracles.longbridge.oracle_reference_v2 import recompute
-from oracles.longbridge.oracle_v2 import evaluate
-from pipelines.longbridge.build_synthetic_v2 import (
+from financial_agent_reliability.oracles.longbridge.oracle_reference_v2 import recompute
+from financial_agent_reliability.oracles.longbridge.oracle_v2 import evaluate
+from financial_agent_reliability.pipelines.longbridge.build_synthetic_v2 import (
     CASES_DIR,
     CATALOG_DIR,
     FAMILIES,

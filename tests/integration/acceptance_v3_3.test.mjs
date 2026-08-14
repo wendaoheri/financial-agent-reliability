@@ -9,8 +9,8 @@ import {
   buildToolChoiceV33,
   createDiagnosticRecorderV33,
   preflightProjectionV33,
-} from "../../harness/live_acceptance_v3_3.mjs";
-import { createPinnedAgentV33 } from "../../harness/pi_runtime_v3_3.mjs";
+} from "../../src/financial_agent_reliability/harness/live_acceptance_v3_3.mjs";
+import { createPinnedAgentV33 } from "../../src/financial_agent_reliability/harness/pi_runtime_v3_3.mjs";
 
 
 const config = JSON.parse(

@@ -7,8 +7,8 @@ import { createPinnedAgentV3 } from "./pi_runtime_v3.mjs";
 import { createSubmissionCollector, normalizePayloadV3 } from "./live_acceptance_v3.mjs";
 
 
-const config = JSON.parse(readFileSync(new URL("../contracts/run_trace_harness_config.v3.json", import.meta.url), "utf8"));
-const reasonCodes = JSON.parse(readFileSync(new URL("../contracts/reason_codes.v3.json", import.meta.url), "utf8")).codes;
+const config = JSON.parse(readFileSync(new URL("../../../contracts/run_trace_harness_config.v3.json", import.meta.url), "utf8"));
+const reasonCodes = JSON.parse(readFileSync(new URL("../../../contracts/reason_codes.v3.json", import.meta.url), "utf8")).codes;
 const models = ["qwen3.8-max", "glm-5.2"];
 const sha256 = (value) => createHash("sha256").update(String(value)).digest("hex");
 const projection = {
@@ -64,6 +64,6 @@ for (let index = 0; index < models.length; index += 1) {
 }
 
 
-const artifact = { contract_type: "stage3_v3_preflight_diagnostic", contract_version: "1.0.0", source_preflight_sha256: sha256(readFileSync(new URL("../runs/stage3/acceptance-20260811-v3/preflight.v3.json", import.meta.url))), results, raw_provider_responses_persisted: false, candidate_text_persisted: false, credentials_persisted: false };
-writeFileSync(new URL("../runs/stage3/acceptance-20260811-v3/preflight-diagnostic.v1.json", import.meta.url), `${JSON.stringify(artifact, null, 2)}\n`, { mode: 0o600 });
+const artifact = { contract_type: "stage3_v3_preflight_diagnostic", contract_version: "1.0.0", source_preflight_sha256: sha256(readFileSync(new URL("../../../runs/stage3/acceptance-20260811-v3/preflight.v3.json", import.meta.url))), results, raw_provider_responses_persisted: false, candidate_text_persisted: false, credentials_persisted: false };
+writeFileSync(new URL("../../../runs/stage3/acceptance-20260811-v3/preflight-diagnostic.v1.json", import.meta.url), `${JSON.stringify(artifact, null, 2)}\n`, { mode: 0o600 });
 process.stdout.write(`${JSON.stringify(results)}\n`);

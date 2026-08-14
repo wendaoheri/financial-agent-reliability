@@ -14,7 +14,7 @@ from jsonschema import Draft202012Validator
 
 from contracts.run_trace_validator_v3_7 import canonical, scan_persisted_value_for_secrets
 from contracts.run_trace_validator_v3_8 import build_run_id, content_sha256, file_sha256, validate_run_trace_v38
-from harness.acceptance_v3_7 import (
+from financial_agent_reliability.harness.acceptance_v3_7 import (
     ALL_CHECKS as V37_CHECKS,
     derive_reason_codes_v37,
     independent_expected_from_snapshot,
@@ -23,7 +23,7 @@ from harness.acceptance_v3_7 import (
 )
 
 
-ROOT = pathlib.Path(__file__).resolve().parents[1]
+ROOT = pathlib.Path(__file__).resolve().parents[3]
 V37_BUNDLE = ROOT / "contracts/stage3_acceptance_contracts.frozen.v3.7.json"
 V37_PLAN = ROOT / "contracts/stage3_acceptance_plan.v3.7.json"
 CONFIG_PATH = ROOT / "contracts/run_trace_harness_config.v3.8.json"
@@ -290,7 +290,7 @@ def _fixture_trace(plan: Mapping[str, Any]) -> tuple[dict[str, Any], dict[str, A
 
 
 def _artifact_paths() -> list[pathlib.Path]:
-    return [OUTPUT_PATH, WIRE_PATH, REASON_PATH, CONFIG_PATH, TRACE_SCHEMA_PATH, GRADER_SCHEMA_PATH, ROOT / "contracts/run_trace_validator_v3_8.py", ROOT / "harness/acceptance_v3_8.py", ROOT / "harness/live_acceptance_v3_8.mjs", PLAN_PATH, ROOT / "tests/test_financial_acceptance_v3_8.py", ROOT / "tests/integration/financial_acceptance_v3_8.test.mjs"] + sorted(FIXTURE_DIR.glob("*.json"))
+    return [OUTPUT_PATH, WIRE_PATH, REASON_PATH, CONFIG_PATH, TRACE_SCHEMA_PATH, GRADER_SCHEMA_PATH, ROOT / "contracts/run_trace_validator_v3_8.py", ROOT / "src/financial_agent_reliability/harness/acceptance_v3_8.py", ROOT / "src/financial_agent_reliability/harness/live_acceptance_v3_8.mjs", PLAN_PATH, ROOT / "tests/test_financial_acceptance_v3_8.py", ROOT / "tests/integration/financial_acceptance_v3_8.test.mjs"] + sorted(FIXTURE_DIR.glob("*.json"))
 
 
 def build_contract_manifest() -> dict[str, Any]:

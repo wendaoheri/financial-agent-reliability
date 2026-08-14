@@ -22,7 +22,7 @@ from contracts.run_trace_validator_v3_7 import (
 )
 
 
-ROOT = pathlib.Path(__file__).resolve().parents[1]
+ROOT = pathlib.Path(__file__).resolve().parents[3]
 V35_BUNDLE = ROOT / "contracts" / "stage3_acceptance_contracts.frozen.v3.5.json"
 V36_BUNDLE = ROOT / "contracts" / "stage3_acceptance_contracts.frozen.v3.6.json"
 V36_PLAN = ROOT / "contracts" / "stage3_acceptance_plan.v3.6.json"
@@ -404,7 +404,7 @@ def build_offline_plan(*, write: bool = True) -> dict[str, Any]:
 
 
 def _artifact_paths() -> list[pathlib.Path]:
-    return [ROOT / "pyproject.toml", ROOT / "uv.lock", ROOT / "package.json", ROOT / "package-lock.json", OUTPUT_CONTRACT_PATH, WIRE_PATH, REASON_PATH, CONFIG_PATH, TRACE_SCHEMA_PATH, GRADER_SCHEMA_PATH, ROOT / "contracts" / "run_trace_validator_v3_7.py", ROOT / "harness" / "acceptance_v3_7.py", ROOT / "harness" / "live_acceptance_v3_7.mjs", PLAN_PATH, ROOT / "tests" / "test_financial_acceptance_v3_7.py", ROOT / "tests" / "integration" / "financial_acceptance_v3_7.test.mjs"] + sorted(FIXTURE_DIR.glob("*.json"))
+    return [ROOT / "pyproject.toml", ROOT / "uv.lock", ROOT / "package.json", ROOT / "package-lock.json", OUTPUT_CONTRACT_PATH, WIRE_PATH, REASON_PATH, CONFIG_PATH, TRACE_SCHEMA_PATH, GRADER_SCHEMA_PATH, ROOT / "contracts" / "run_trace_validator_v3_7.py", ROOT / "src" / "financial_agent_reliability" / "harness" / "acceptance_v3_7.py", ROOT / "src" / "financial_agent_reliability" / "harness" / "live_acceptance_v3_7.mjs", PLAN_PATH, ROOT / "tests" / "test_financial_acceptance_v3_7.py", ROOT / "tests" / "integration" / "financial_acceptance_v3_7.test.mjs"] + sorted(FIXTURE_DIR.glob("*.json"))
 
 
 def build_contract_manifest() -> dict[str, Any]:

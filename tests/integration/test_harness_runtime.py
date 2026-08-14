@@ -5,25 +5,25 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from graders.pipeline import GraderInputError, GraderPipeline
-from harness.bundle import ImmutableBundle
-from harness.checkpoint import CheckpointStore, CheckpointError
-from harness.matrix import build_run_manifest
-from harness.redaction import redact
-from harness.runner import OfflineHarness
-from harness.stage3 import freeze_preflight_evidence, run_live_preflights
-from harness.smoke import (
+from financial_agent_reliability.graders.pipeline import GraderInputError, GraderPipeline
+from financial_agent_reliability.harness.bundle import ImmutableBundle
+from financial_agent_reliability.harness.checkpoint import CheckpointStore, CheckpointError
+from financial_agent_reliability.harness.matrix import build_run_manifest
+from financial_agent_reliability.harness.redaction import redact
+from financial_agent_reliability.harness.runner import OfflineHarness
+from financial_agent_reliability.harness.stage3 import freeze_preflight_evidence, run_live_preflights
+from financial_agent_reliability.harness.smoke import (
     build_smoke_plan,
     correct_pi_identity_semantics,
     validate_smoke_plan,
 )
-from providers.bailian import BailianAdapter, BailianConfigError, BailianSettings
-from providers.bailian_http import (
+from financial_agent_reliability.providers.bailian import BailianAdapter, BailianConfigError, BailianSettings
+from financial_agent_reliability.providers.bailian_http import (
     BailianHTTPError,
     BailianHTTPTransport,
     build_chat_completions_payload,
 )
-from simulators.ledger import LedgerError, SimulatedLedger
+from financial_agent_reliability.simulators.ledger import LedgerError, SimulatedLedger
 from contracts.run_trace_validator import file_sha256
 from contracts.run_trace_validator_v2 import validate_run_trace_v2 as validate_run_trace
 

@@ -7,7 +7,7 @@ import {
   buildNonAnswerSchemaV35,
   buildRunPromptV35,
   normalizePayloadV35,
-} from "../../harness/live_acceptance_v3_5.mjs";
+} from "../../src/financial_agent_reliability/harness/live_acceptance_v3_5.mjs";
 
 
 const config = JSON.parse(readFileSync(new URL("../../contracts/run_trace_harness_config.v3.5.json", import.meta.url), "utf8"));
