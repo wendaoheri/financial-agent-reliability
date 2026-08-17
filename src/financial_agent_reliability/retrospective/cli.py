@@ -18,29 +18,10 @@ import json
 import sys
 from typing import Any, Sequence
 
-from financial_agent_reliability.retrospective.archive_map import build_archive_map
-from financial_agent_reliability.retrospective.engine import retrospect_batch
-from financial_agent_reliability.retrospective.invalidation_check import (
-    reconcile_invalidations,
-)
-from financial_agent_reliability.retrospective.lineage import build_lineage_index
-from financial_agent_reliability.retrospective.registry import (
-    BATCHES,
-    REPO_ROOT,
-    acceptance_batches,
-    batch_by_id,
-)
-from financial_agent_reliability.retrospective.report import (
-    run_full_retrospective,
-    write_evidence,
-)
-from financial_agent_reliability.retrospective.report_level import (
-    check_grader_bundle_freeze,
-    check_report_bundle_freeze,
-    export_ranking,
-    recompute_report_level,
-)
-from financial_agent_reliability.retrospective.model import UNTRACEABLE
+# PER-323 Stage 2:复盘模块的批次表与哈希口径仍绑定基线 v1(含已删除的
+# ``contracts`` 校验器导入)。基线空窗期内不在模块顶层导入它们,保证
+# ``fareli-retro`` 任何子命令都能先走到显式的 baseline_gap 门,而不是在
+# import 期崩溃。基线 v2(PER-328)重建后恢复直接导入。
 
 
 #: Flipped to False when baseline v2 (PER-328) freezes the rebuilt batch
@@ -92,6 +73,39 @@ def main(argv: Sequence[str] | None = None) -> int:
             }
         )
         return 2
+
+    return _dispatch(args)
+
+
+def _dispatch(args: argparse.Namespace) -> int:
+    """基线 v2 重建后的真实分派;空窗期内不可达(见 BASELINE_V2_PENDING)。
+
+    导入全部延迟到此处:这些模块仍绑定基线 v1(含已删除的 contracts
+    校验器),顶层导入会在空窗期直接崩溃。
+    """
+    from financial_agent_reliability.retrospective.archive_map import build_archive_map
+    from financial_agent_reliability.retrospective.engine import retrospect_batch
+    from financial_agent_reliability.retrospective.invalidation_check import (
+        reconcile_invalidations,
+    )
+    from financial_agent_reliability.retrospective.lineage import build_lineage_index
+    from financial_agent_reliability.retrospective.model import UNTRACEABLE
+    from financial_agent_reliability.retrospective.registry import (
+        BATCHES,
+        REPO_ROOT,
+        acceptance_batches,
+        batch_by_id,
+    )
+    from financial_agent_reliability.retrospective.report import (
+        run_full_retrospective,
+        write_evidence,
+    )
+    from financial_agent_reliability.retrospective.report_level import (
+        check_grader_bundle_freeze,
+        check_report_bundle_freeze,
+        export_ranking,
+        recompute_report_level,
+    )
 
     if args.command == "list":
         _emit(

@@ -104,7 +104,9 @@ buildRunPrompt / gradeStructuredCandidate)逐字迁入新文件
   断言替代被删校验器;血缘字段断言升级)、`tests/integration/pi_runtime.test.mjs`
   (改读 configs/ 与 candidate_checks.mjs)、`tests/test_reporting_contracts.py`
   (verify_freeze 用例改为在线 spec 自检)。
-- **新增**:`tests/test_inference_config.py`(契约 §7 全部离线测试点)。
+- **新增**:`tests/test_inference_config.py`(契约 §7 全部离线测试点)、
+  `tests/test_retrospective_gap.py`(基线空窗门回归守护:删除后复盘包改为惰性
+  导入,`fareli-retro` 各子命令显式 baseline_gap 而不是 import 期崩溃)。
 - **Stage 3 重写递延项(留档)**:oracle 重算与用例数据校验类用例
   (原 test_public_cases*/test_longbridge_*)需基线 v2 种子数据,按 M1 由 Stage 3
   (PER-328)随基线 v2 重写;递延决定与理由见交付评论。
