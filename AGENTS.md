@@ -25,7 +25,7 @@ PER-85 用户裁决(D4/D5/D6)后,布局分为"活的代码包"与"旧血缘历�
 | 📦 代码包(src 布局,唯一可编辑代码区) | `src/financial_agent_reliability/`(`harness`、`graders`、`oracles`、`pipelines`、`providers`、`reporting`、`simulators` 子包) |
 | 🧪 测试 | `tests/`(unittest)、`tests/integration/`(Python + node --test)、fixture/期望输出在 `tests/fixtures/`、`tests/expected/` |
 | ❄️ 旧血缘历史基线(内容不可修改、不可删除) | `contracts/`、`preregistration/`、`snapshots/`、`runs/`、`evidence/`、`audit/`、`reports/`、`catalog/`、`cases/` |
-| 📝 常规 | `docs/`(契约说明、运营文档、`docs/research/` 研究起点)、`vendor/`(离线运行时归档)、`attachments/`(gitignore,Multica 临时文件) |
+| 📝 常规 | `docs/`(契约说明、验收口径 `docs/contracts/`、复盘证据 `docs/retrospectives/`、运营文档、`docs/research/` 研究起点)、`vendor/`(离线运行时归档)、`attachments/`(gitignore,Multica 临时文件) |
 
 辅助文件:`pyproject.toml`、`uv.lock`、`.python-version`(Python);
 `package.json`、`package-lock.json`、`node_modules/`(gitignore)与
@@ -38,8 +38,10 @@ PER-85 用户裁决(D4/D5/D6)后,布局分为"活的代码包"与"旧血缘历�
 ## Frozen Artifacts and Evidence Lineage(冻结产物与证据血缘纪律)
 
 PER-85-D6:旧 v3.x 冻结血缘降级为**历史基线**——内容保留、不改不删,但其
-路径/哈希钉住不再构成重构与验收的阻塞;重跑实验以新契约版本建立新血缘
-(新契约版本发布须由评测交付负责人裁决)。在此前提下:
+路径/哈希钉住不再构成重构与验收的阻塞。按现行可复现口径(见下节),历史
+运行以轨迹日志复盘验收,暂不要求全量重跑;若未来裁决重启重跑,重跑产物
+以新契约版本建立新血缘、不回写旧 bundle(新契约版本发布须由评测交付负责
+人裁决)。在此前提下:
 
 1. **旧血缘内容不可修改、不可删除。** ❄️ 目录内的文件只能整体读取或原样
    引用;不得编辑、重写、"顺手清理"或删除其中任何文件,也不得向这些目录
@@ -76,7 +78,43 @@ PER-85-D6:旧 v3.x 冻结血缘降级为**历史基线**——内容保留、不
    演进一律发布新契约版本(附书面理由),不做追溯改写。
 7. **`runs/` 纪律。** `runs/` 整体 gitignore,冻结运行输出仅本地保存;
    已提交的证据血缘以 `evidence/` 的 bundle 为准。不要在 `runs/` 之外
-   散落运行产物。
+   散落运行产物。`runs/` 等 gitignore 目录不在 git 覆盖范围,其完整性
+   依据为 **bundle manifest 逐件 sha256 自证 + 独立重算**;git 零改动
+   验证仅对 tracked 目录主张(PER-320 审计 P1 纠正)。
+
+## Reproducibility and Traceability Acceptance Criteria(可复现性与可追溯性验收口径)
+
+- **现行验收标准**:评测运行验收与事后复盘以
+  `docs/contracts/scenario-conclusion-reproducibility-criteria.v1.md`(口径 v1,
+  PER-317 冻结;只增版本、不改写)为准。配套:Stage 1 历史轨迹盘点与差距报告
+  `docs/stage1-historical-trace-inventory-gap-report.v1.md`(PER-318);Stage 2
+  复盘工具链与证据 `src/financial_agent_reliability/retrospective/` 与
+  `docs/retrospectives/`(PER-319);Stage 3 独立审计报告
+  `docs/stage3-independent-audit-per320-report.v1.md`(PER-320,审计通过)。
+- **口径内容(PER-316-D1,用户已确认)**:验收口径 = 场景与结论可复现可追溯
+  (历史轨迹日志复盘)。场景输入可由冻结产物原样重建、逐件 sha256 对上;
+  评分与排名结论可由落盘轨迹与冻结评分件确定性重算推导、逐位一致。复盘
+  入口为证据 bundle 的 `bundle.manifest.json`,方法按口径文档第 3 节执行;
+  复盘命令为 `uv run fareli-retro run --all` 与 `uv run fareli-retro evidence`。
+- **代码级重放不作要求及其边界**(口径文档 1.3):不要求模型输出确定性重放、
+  不要求代码+环境依赖逐哈希重建重跑、不要求重新访问提供商端点或外部数据源。
+  继续要求的是:落盘证据内容完整(逐 sha256 校验)与评分/聚合的确定性重算。
+  放弃的是"重放执行",不放弃的是"证据完整 + 结论可重算"。
+- **协议门批次判读约束(PER-320 审计 P3)**:v3–v3.4 协议门批次与
+  frozen-preflight v1–v4 等 H1 标注批次按设计无验收运行,其定位是**协议/
+  身份门证据**;明文禁止将这些批次引用为评分/排名证据,其结论边界限于协议
+  与模型身份预检判定,复盘判定须逐批留痕(scope_note/H1 标注)。
+- **复盘证据稳定性限定(PER-320 审计 P4)**:`fareli-retro evidence` 产物的
+  字节级稳定性仅在**同一 HEAD** 下成立——证据内嵌 `git_commit` 锚点,跨
+  HEAD 再生成仅该字段变化,其余逐字节一致;引用稳定性结论时必须附"同一
+  HEAD"限定。
+- **runs/ 完整性口径(PER-320 审计 P1)**:见冻结纪律第 7 条——gitignore
+  目录的完整性以 bundle manifest 逐件 sha256 自证 + 独立重算为依据;git
+  零改动验证仅对 tracked 目录主张。
+- **PER-257-D10 收口**:契约 v4 世代方案(暂缓事项)按 PER-316 新口径
+  **收口关闭**——不再以代码级重放为设计目标;未来如需代码级重放,另行
+  立项。未来发布新契约世代时,须把口径文档第 2 节六节点字段作为最小集
+  纳入,或书面说明差异并另起口径版本(口径文档 4.4)。
 
 ## Python and Environment Management
 
@@ -85,8 +123,9 @@ PER-85-D6:旧 v3.x 冻结血缘降级为**历史基线**——内容保留、不
 - The supported Python baseline is 3.11, pinned in `.python-version`; the local
   environment lives in `.venv`.
 - 本项目是标准 src 布局的可安装包:`uv sync` 以 editable 方式安装
-  `financial-agent-reliability`(hatchling 后端),并生成两个控制台入口:
-  `fareli-harness`(评测 harness CLI)与 `fareli-report`(报告契约 CLI)。
+  `financial-agent-reliability`(hatchling 后端),并生成三个控制台入口:
+  `fareli-harness`(评测 harness CLI)、`fareli-report`(报告契约 CLI)与
+  `fareli-retro`(历史轨迹复盘 CLI,见上节验收口径)。
   PER-85-D6 解除了旧 v3.7 bundle 对 `pyproject.toml`/`uv.lock` 的钉住后,
   依赖与打包配置的变更不再需要契约豁免,但仍须走正常评审与锁定流程
   (`uv lock`),不手工编辑 `uv.lock`。
