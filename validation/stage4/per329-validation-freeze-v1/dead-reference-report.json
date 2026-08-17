@@ -1,0 +1,58 @@
+{
+  "deleted_roots_checked": [
+    "contracts",
+    "cases",
+    "catalog",
+    "snapshots",
+    "preregistration",
+    "evidence",
+    "audit",
+    "reports",
+    "runs"
+  ],
+  "deleted_roots_present": [],
+  "live_dead_references": [],
+  "retained_reference_classes": [
+    {
+      "class": "historical_provenance",
+      "examples": [
+        "README.md",
+        "docs/per323-stage2-deletion-record.md",
+        "docs/contracts/acceptance-criteria-v2.md"
+      ],
+      "reason": "Explicitly records deletion, supersession, or rollback lineage; it is not a runtime lookup."
+    },
+    {
+      "class": "baseline_v1_retrospective_gate",
+      "examples": [
+        "src/financial_agent_reliability/retrospective/registry.py",
+        "src/financial_agent_reliability/retrospective/report_level.py"
+      ],
+      "reason": "Legacy paths are intentionally retained behind the baseline_gap gate. The CLI returned the documented exit code 2 instead of dereferencing a removed root."
+    },
+    {
+      "class": "synthetic_report_fixture_reference",
+      "examples": [
+        "tests/fixtures/reporting/report.partial.valid.json",
+        "tests/expected/reporting/report.partial.valid.md"
+      ],
+      "reason": "Fixture-internal logical evidence references are contract test data, not repository filesystem dependencies."
+    },
+    {
+      "class": "supersession_metadata_or_docstring",
+      "examples": [
+        "configs/harness_contract.v1.json",
+        "src/financial_agent_reliability/harness/secret_scan.py"
+      ],
+      "reason": "Names the removed predecessor solely to preserve migration provenance."
+    }
+  ],
+  "runtime_evidence": {
+    "clean_clone_full_python_suite": "62/62 passed",
+    "clean_clone_runtime_suite": "6/6 passed",
+    "retrospective_cli": "baseline_gap, exit 2",
+    "status": "pass"
+  },
+  "scope": "Tracked runtime code, tests, active configs, baseline v2, README, manual guide, and acceptance criteria v2. Historical prose and synthetic logical references were classified rather than incorrectly removed.",
+  "status": "pass"
+}

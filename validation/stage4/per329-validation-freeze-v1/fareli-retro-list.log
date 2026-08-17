@@ -1,0 +1,6 @@
+{
+  "command": "list",
+  "exit_code": 2,
+  "reason": "baseline v1 lineage roots (runs/, evidence/, reports/, audit/) were removed by the PER-323 frozen cleanup list; the retrospective toolchain is rebuilt on baseline v2 (PER-328, Stage 3)",
+  "status": "baseline_gap"
+}

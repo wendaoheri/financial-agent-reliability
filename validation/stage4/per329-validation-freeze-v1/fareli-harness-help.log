@@ -1,0 +1,7 @@
+usage: fareli-harness [-h] {preflight,freeze-preflight} ...
+
+positional arguments:
+  {preflight,freeze-preflight}
+
+options:
+  -h, --help            show this help message and exit

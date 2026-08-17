@@ -1,0 +1,18 @@
+
+> financial-agent-reliability-harness@0.1.0 test:runtime
+> node --test tests/integration/pi_runtime.test.mjs
+
+✔ constructs the real pinned Agent with frozen prompt and sequential tools (1.40075ms)
+✔ rejects aliases before Agent construction (0.223708ms)
+✔ normalizes Bailian payload with every frozen parameter (0.154375ms)
+✔ structured smoke grader is deterministic and strict (0.661167ms)
+✔ run prompt contains no oracle answer (0.126125ms)
+✔ pi responseModel absence means the requested identity was unchanged (0.064208ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 129.642875
