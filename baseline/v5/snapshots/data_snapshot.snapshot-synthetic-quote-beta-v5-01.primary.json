@@ -1,0 +1,96 @@
+{
+  "access": {
+    "mode": "public_read_only",
+    "prohibited_scopes": [
+      "account",
+      "assets",
+      "cash",
+      "holdings",
+      "orders",
+      "positions",
+      "portfolio",
+      "trades"
+    ],
+    "query_args": {
+      "fixture_id": "synthetic-quote-beta-v3"
+    },
+    "query_name": "load_fixture"
+  },
+  "contract_type": "data_snapshot",
+  "contract_version": "5.0.0",
+  "financial_subject": {
+    "currency": {
+      "code": "USD"
+    },
+    "entity_name": "Synthetic Equity Beta",
+    "identifiers": [
+      {
+        "scheme": "SYNTHETIC_SECURITY_ID",
+        "value": "SYNTH-BETA"
+      }
+    ],
+    "market": {
+      "country": "US",
+      "mic": "XSIM",
+      "timezone": "UTC"
+    },
+    "subject_type": "synthetic_security",
+    "units": {
+      "accounting_basis": "not_applicable",
+      "amount_scale": "synthetic USD unit",
+      "price_basis": "synthetic_observed_value"
+    }
+  },
+  "integrity": {
+    "canonicalization": "financial-agent-c14n-json-v1",
+    "content_sha256": "25810c23acf3ec7a8c68da0ca4627bdd6c8d323a421226aa3f0cee8683581056",
+    "hash_algorithm": "sha256"
+  },
+  "lineage": {
+    "code_revision": "19860df0f7bb944339c21b4be5b9c7114d0f90bd",
+    "collector": "deterministic project-authored fixture; no external query",
+    "collector_version": "1.0.0",
+    "notes": "Illustrative synthetic data; not an observation of any real security or market.",
+    "parent_snapshot_ids": [],
+    "query_args": {
+      "fixture_id": "synthetic-quote-beta-v3"
+    },
+    "raw_response_sha256": "464c44f8d20094b66f8aa543e7ab83b96e7246ddb45e24b041eaa51b985cda83",
+    "schema_version": "case-data/4.0.0"
+  },
+  "records": [
+    {
+      "available_at": "2026-08-14T08:00:00Z",
+      "event_time": "2026-08-14T08:00:00Z",
+      "evidence_type": "synthetic_price_observation",
+      "payload": {
+        "fixture_status": "Normal",
+        "observed_value": "88.400",
+        "reference_value": "87.900",
+        "symbol": "SYNTH-BETA"
+      },
+      "record_id": "snapshot-synthetic-quote-beta-v5-01-quote-01",
+      "source_locator": "baseline/v5/build/captures/synthetic_quote_beta.fixture.json"
+    }
+  ],
+  "revision": 1,
+  "snapshot_id": "snapshot-synthetic-quote-beta-v5-01",
+  "source": {
+    "dataset": "Project-authored synthetic price fixture, SYNTH-BETA",
+    "license": {
+      "name": "CC0-1.0 project-authored synthetic fixture",
+      "redistributable": true,
+      "url": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "provider": "project_synthetic",
+    "source_type": "synthetic_fixture",
+    "uri": "baseline/v5/build/captures/synthetic_quote_beta.fixture.json"
+  },
+  "status": "frozen",
+  "temporal": {
+    "as_of": "2026-08-14T08:00:00Z",
+    "available_at": "2026-08-14T08:00:00Z",
+    "event_time": "2026-08-14T08:00:00Z",
+    "retrieved_at": "2026-08-17T12:30:00Z"
+  }
+}

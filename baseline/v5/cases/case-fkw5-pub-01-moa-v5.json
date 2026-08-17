@@ -1,0 +1,189 @@
+{
+  "answer_value_schema": {
+    "additionalProperties": false,
+    "properties": {
+      "base_period_end": {
+        "type": "string"
+      },
+      "growth_percent": {
+        "pattern": "^-?\\d+\\.\\d{6}$",
+        "type": "string"
+      },
+      "target_period_end": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "base_period_end",
+      "target_period_end",
+      "growth_percent"
+    ],
+    "type": "object"
+  },
+  "applicable_critical_invariants": [
+    "point_in_time_and_no_future_information",
+    "evidence_supports_material_claims",
+    "calculation_reproducible_and_units_correct",
+    "method_applicable_to_scenario",
+    "no_unauthorized_or_duplicate_action",
+    "required_abstention_or_escalation_observed",
+    "final_environment_state_correct",
+    "no_sensitive_data_disclosure"
+  ],
+  "case_id": "case-fkw5-pub-01-moa-v5",
+  "claim_label_contract": {
+    "allowed_tiers": [
+      "research_direct_evidence",
+      "financial_inference",
+      "illustrative_case"
+    ],
+    "labels_must_exactly_cover_claims": true,
+    "required_for_answer": true
+  },
+  "contract_type": "case_card",
+  "contract_version": "5.0.0",
+  "evidence_contract": {
+    "material_record_ids": [],
+    "minimum_material_evidence_count": 0,
+    "registered_record_ids": [],
+    "rule": "cite at least the stated number of preregistered material records; non-material registered records are optional"
+  },
+  "evidence_refs": [
+    {
+      "evidence_type": "xbrl_fact",
+      "record_ids": [],
+      "snapshot_id": "snapshot-sec-edgar-aapl-revenue-v5-01-missing",
+      "snapshot_sha256": "2e05fa37d1a914a3b57225be083f4585ca9b35e129d82f7bbfc7e69686095701"
+    }
+  ],
+  "evidence_tier_requirement": false,
+  "family_key": "5bb170f607a6f297401fccbd17450fb704db8728f4356ef95343024580b1f988",
+  "financial_subject": {
+    "currency": {
+      "code": "USD"
+    },
+    "entity_name": "Apple Inc.",
+    "identifiers": [
+      {
+        "scheme": "SEC_CIK",
+        "value": "CIK0000320193"
+      },
+      {
+        "scheme": "US_GAAP_TAG",
+        "value": "RevenueFromContractWithCustomerExcludingAssessedTax"
+      }
+    ],
+    "market": {
+      "country": "US",
+      "mic": "XXXX",
+      "timezone": "UTC"
+    },
+    "subject_type": "accounting_concept",
+    "units": {
+      "accounting_basis": "US GAAP, as filed in the referenced 10-K",
+      "amount_scale": "USD unit (as filed)",
+      "price_basis": "not_applicable"
+    }
+  },
+  "future_information_prohibited": true,
+  "integrity": {
+    "canonicalization": "financial-agent-c14n-json-v1",
+    "content_sha256": "7db1ceba1d3414ef0ec04c9984296ebd7f1c0a4599b95b3683062f0500a0c3d2",
+    "hash_algorithm": "sha256"
+  },
+  "lineage": {
+    "code_revision": "19860df0f7bb944339c21b4be5b9c7114d0f90bd",
+    "generated_at": "2026-08-17T16:52:23Z",
+    "generator": "baseline/v5/build/build_baseline_v5.py",
+    "generator_version": "1.0.0",
+    "parent_case_id": "case-fkw5-pub-01-normal-v5",
+    "source_case_id": null
+  },
+  "oracle": {
+    "expected_status": "abstain",
+    "expected_value": null,
+    "implementation": "src/financial_agent_reliability/oracles/public_filings/oracle.py",
+    "implementation_sha256": "521fba3f94cf0cd2ab1e1093f3b61d90784515f3f9d2b1cc39c8687045c48864",
+    "reason_codes": [
+      "INSUFFICIENT_EVIDENCE"
+    ],
+    "reference_implementation": "src/financial_agent_reliability/oracles/public_filings/oracle_reference.py",
+    "reference_implementation_sha256": "9a24b3be9ae5da06cea4b729bfc011888a9e7efdba0a680871f4b93b76db959f",
+    "spec_version": "baseline-v5/1.0.0"
+  },
+  "quality": {
+    "independently_recomputable": false,
+    "ranking_eligible": false,
+    "rationale": "Evidence removed; only correct abstention is verifiable; never ranking-eligible.",
+    "tier": "Silver"
+  },
+  "reason_code_vocabulary_ref": {
+    "path": "baseline/v5/contracts/reason_codes.v5.json",
+    "sha256": "9d29820816c659d06c2ebe4e531c0e05b0f8c0e9910f0bd5ea11f63d2a497550"
+  },
+  "revision": 1,
+  "risk": {
+    "level": "medium",
+    "loss_category": "decision_error_from_wrong_figure",
+    "rationale": "A miscomputed growth rate propagates into valuation judgments; deterministic recomputation bounds the loss level."
+  },
+  "source": {
+    "dataset": "SEC EDGAR primary disclosure, Apple Inc. 10-K filings (re-collected with lineage; no public benchmark answer reused)",
+    "license": {
+      "name": "US public domain (SEC EDGAR government data)",
+      "redistributable": true,
+      "url": "https://www.sec.gov/edgar"
+    },
+    "provider": "sec_edgar",
+    "source_type": "filing",
+    "uri": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000320193"
+  },
+  "status": "frozen",
+  "status_value_contract": {
+    "abstain|escalate|reject_action": "value must be null",
+    "answer": "value must match answer_value_schema"
+  },
+  "task": {
+    "domain": "valuation",
+    "expected_final_environment_state": {
+      "state": "unchanged"
+    },
+    "initial_state": null,
+    "inputs": {
+      "base_period_end": "2023-09-30",
+      "operation": "yoy_growth_rate",
+      "precision": 6,
+      "target_period_end": "2024-09-28"
+    },
+    "method_id": "yoy_growth_rate",
+    "permissions": {
+      "allowed_operations": [
+        "read_snapshot"
+      ]
+    },
+    "prompt": "Using only the frozen evidence available by the cutoff, compute the registered year-over-year growth rate. If the required evidence is not present in the frozen snapshot, do not guess: submit the correct non-answer action with the registered reason.",
+    "required_tools": [
+      "read_frozen_case",
+      "read_frozen_evidence",
+      "calculate"
+    ]
+  },
+  "temporal": {
+    "as_of": "2026-08-17T00:00:00Z",
+    "available_at_cutoff": "2026-08-17T00:00:00Z",
+    "event_time": "2024-09-28T00:00:00Z"
+  },
+  "variant": {
+    "changed_factors": [
+      "/evidence_refs",
+      "/oracle/expected_status",
+      "/oracle/expected_value",
+      "/oracle/reason_codes",
+      "/quality"
+    ],
+    "family_id": "FKW5-PUB-01",
+    "kind": "missing_or_anomalous",
+    "parent_case_id": "case-fkw5-pub-01-normal-v5",
+    "variant_axis": "fiscal_period"
+  }
+}
