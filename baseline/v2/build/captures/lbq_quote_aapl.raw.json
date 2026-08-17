@@ -1,0 +1,42 @@
+[
+  {
+    "change_percentage": "0.22",
+    "change_value": "0.670",
+    "high": "307.490",
+    "last": "305.930",
+    "low": "304.300",
+    "open": "306.000",
+    "overnight": {
+      "high": "307.470",
+      "last": "307.140",
+      "low": "305.120",
+      "prev_close": "305.930",
+      "timestamp": "2026-08-17T08:00:00Z",
+      "turnover": "30883977.000",
+      "volume": 100814
+    },
+    "post_market": {
+      "high": "306.000",
+      "last": "305.771",
+      "low": "305.505",
+      "prev_close": "305.930",
+      "timestamp": "2026-08-14T23:59:59Z",
+      "turnover": "649991638.704",
+      "volume": 2124699
+    },
+    "pre_market": {
+      "high": "307.470",
+      "last": "306.610",
+      "low": "305.670",
+      "prev_close": "305.930",
+      "timestamp": "2026-08-17T10:36:38Z",
+      "turnover": "35406161.819",
+      "volume": 115384
+    },
+    "prev_close": "305.260",
+    "status": "Normal",
+    "symbol": "AAPL.US",
+    "turnover": "8631197503.000",
+    "volume": 28229375
+  }
+]
