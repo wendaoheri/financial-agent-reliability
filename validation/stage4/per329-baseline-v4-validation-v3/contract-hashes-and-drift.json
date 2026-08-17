@@ -1,0 +1,17 @@
+{
+  "hashes": {
+    "acceptance_criteria_v2": "5dd9529df4f11411b6b6717335ca65b323212eacc90f5c8382143898a73997f2",
+    "acceptance_criteria_v3": "c3fcde8227e8934c76161a50756c4569f2ccf19f00d541a74699a9a5b8452eda",
+    "acceptance_criteria_v4": "baee53916aa82ffe229d2f76738c56ee8268a9d98ce60f92dfc5216cb82922e5",
+    "baseline_v2_manifest": "02b91c8bd80d1c3b80ed1dd924c45c3a454bcb4780a8edad9b7cbf15a6d6e428",
+    "baseline_v3_manifest": "9d3dfc758525b404d300903e6c11f975ef95b3a547ea2e2a8a676d7852a1d2fa",
+    "baseline_v4_manifest": "84bf582bcf14291e885274e6df2dd6a86f871ddb4d8c9e065db215e4080b2b4a",
+    "harness_contract": "0b0bc87402c620326fdd97d28820a1d523482b9609ce219ba1ecdcc471525f93",
+    "inference_config": "650cf25c89f628a538b645cb02d777bad36e96e14fc6369adb6ac8b1a92eb556"
+  },
+  "recomputed_bundle_sha256": "d9c8a169bb9e121ba33c5688f2c7cad8b165c1e21a44df437a620f305d512d6d",
+  "recorded_bundle_sha256": "d9c8a169bb9e121ba33c5688f2c7cad8b165c1e21a44df437a620f305d512d6d",
+  "status": "pass",
+  "v4_artifact_count": 36,
+  "v4_artifact_hash_mismatches": []
+}

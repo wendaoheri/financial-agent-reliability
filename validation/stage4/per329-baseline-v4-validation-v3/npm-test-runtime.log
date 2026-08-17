@@ -1,0 +1,50 @@
+
+> financial-agent-reliability-harness@0.1.0 test:runtime
+> node --test tests/integration/pi_runtime.test.mjs
+
+TAP version 13
+# Subtest: constructs the real pinned Agent with frozen prompt and sequential tools
+ok 1 - constructs the real pinned Agent with frozen prompt and sequential tools
+  ---
+  duration_ms: 0.803458
+  type: 'test'
+  ...
+# Subtest: rejects aliases before Agent construction
+ok 2 - rejects aliases before Agent construction
+  ---
+  duration_ms: 0.17325
+  type: 'test'
+  ...
+# Subtest: normalizes Bailian payload with every frozen parameter
+ok 3 - normalizes Bailian payload with every frozen parameter
+  ---
+  duration_ms: 0.122042
+  type: 'test'
+  ...
+# Subtest: structured smoke grader is deterministic and strict
+ok 4 - structured smoke grader is deterministic and strict
+  ---
+  duration_ms: 0.52925
+  type: 'test'
+  ...
+# Subtest: run prompt contains no oracle answer
+ok 5 - run prompt contains no oracle answer
+  ---
+  duration_ms: 0.13625
+  type: 'test'
+  ...
+# Subtest: pi responseModel absence means the requested identity was unchanged
+ok 6 - pi responseModel absence means the requested identity was unchanged
+  ---
+  duration_ms: 0.045541
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 100.94025
