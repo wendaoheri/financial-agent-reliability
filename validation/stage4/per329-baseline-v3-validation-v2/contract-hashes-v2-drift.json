@@ -1,0 +1,12 @@
+{
+  "hashes": {
+    "acceptance_criteria_v2": "5dd9529df4f11411b6b6717335ca65b323212eacc90f5c8382143898a73997f2",
+    "acceptance_criteria_v3": "c3fcde8227e8934c76161a50756c4569f2ccf19f00d541a74699a9a5b8452eda",
+    "baseline_v2_manifest": "02b91c8bd80d1c3b80ed1dd924c45c3a454bcb4780a8edad9b7cbf15a6d6e428",
+    "baseline_v3_manifest": "9d3dfc758525b404d300903e6c11f975ef95b3a547ea2e2a8a676d7852a1d2fa",
+    "harness_contract": "0b0bc87402c620326fdd97d28820a1d523482b9609ce219ba1ecdcc471525f93",
+    "inference_config": "650cf25c89f628a538b645cb02d777bad36e96e14fc6369adb6ac8b1a92eb556"
+  },
+  "status": "pass",
+  "v2_drift": {}
+}

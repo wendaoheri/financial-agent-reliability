@@ -1,0 +1,13 @@
+Using CPython 3.11.14
+Creating virtual environment at: .venv
+   Building financial-agent-reliability @ file:///private/tmp/per329-v3-cleanroom.NGXF4u/repo
+      Built financial-agent-reliability @ file:///private/tmp/per329-v3-cleanroom.NGXF4u/repo
+Prepared 1 package in 128ms
+Installed 7 packages in 3ms
+ + attrs==26.1.0
+ + financial-agent-reliability==0.2.0 (from file:///private/tmp/per329-v3-cleanroom.NGXF4u/repo)
+ + jsonschema==4.26.0
+ + jsonschema-specifications==2025.9.1
+ + referencing==0.37.0
+ + rpds-py==2026.6.3
+ + typing-extensions==4.16.0

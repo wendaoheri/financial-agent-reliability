@@ -1,0 +1,85 @@
+{
+  "baseline": {
+    "artifact_count": 36,
+    "bundle_sha256": "4001148c8c2cd4f972c1375a11a8b95eadd033033ff2b7c6a65f65f80a7e236d",
+    "frozen_commit": "6bfd9e65218bd9b56a6fe9d5e7d1266d0d553fc8",
+    "generation": "v3"
+  },
+  "commands": [
+    {
+      "command": "uv run python -m unittest tests.test_baseline_v3 tests.test_baseline_v3_grader_regressions tests.test_baseline_v3_runtime tests.integration.test_harness_runtime.ProviderAdapterTests -v",
+      "evidence": "focused-v3-runtime.log",
+      "exit_code": 0,
+      "result": "29 tests passed"
+    },
+    {
+      "command": "uv run python -m unittest discover -s tests -v",
+      "evidence": "python-unittest.log",
+      "exit_code": 0,
+      "result": "82 tests passed"
+    },
+    {
+      "command": "npm run test:runtime",
+      "evidence": "npm-test-runtime.log",
+      "exit_code": 0,
+      "result": "6 tests passed, 0 failed"
+    },
+    {
+      "command": "node --test tests/integration/*.test.mjs",
+      "evidence": "node-integration.log",
+      "exit_code": 0,
+      "result": "6 tests passed, 0 failed"
+    },
+    {
+      "command": "uv run python baseline/v3/validate_baseline_v3.py validate-bundle baseline/v3",
+      "evidence": "validate-bundle-v3.log",
+      "exit_code": 0,
+      "result": "ok"
+    },
+    {
+      "command": "uv run python baseline/v3/validate_baseline_v3.py verify-manifest baseline/v3",
+      "evidence": "verify-manifest-v3.log",
+      "exit_code": 0,
+      "result": "ok"
+    },
+    {
+      "command": "uv run fareli-harness preflight --output <path> (credential/config overrides explicitly unset)",
+      "evidence": "preflight-no-credential.log",
+      "exit_code": 1,
+      "result": "expected structured config_error before network; no output file"
+    },
+    {
+      "command": "uv run fareli-retro list",
+      "evidence": "fareli-retro-list.log",
+      "exit_code": 2,
+      "result": "documented baseline_gap; baseline v3 does not claim historical runs were rebuilt"
+    },
+    {
+      "command": "clean checkout: uv sync --frozen && npm ci",
+      "evidence": "cleanroom-uv-sync.log; cleanroom-npm-ci.log",
+      "exit_code": 0,
+      "result": "Python 3.11.14 environment and locked Node dependencies installed"
+    },
+    {
+      "command": "clean checkout: full Python, Node runtime/integration, v3 validate-bundle/verify-manifest",
+      "evidence": "cleanroom-python-unittest.log; cleanroom-npm-test-runtime.log; cleanroom-node-integration.log; cleanroom-validate-bundle-v3.log; cleanroom-verify-manifest-v3.log",
+      "exit_code": 0,
+      "result": "82/82, 6/6, 6/6, ok, ok"
+    },
+    {
+      "command": "git merge-base --is-ancestor <stage-sha> main",
+      "evidence": "main-ancestry.log",
+      "exit_code": 0,
+      "result": "PER-327 runtime fix, PER-328 baseline v3, and PER-329 execution commits are main ancestors"
+    }
+  ],
+  "contract_hashes": {
+    "acceptance_criteria_v3_sha256": "c3fcde8227e8934c76161a50756c4569f2ccf19f00d541a74699a9a5b8452eda",
+    "baseline_v3_manifest_file_sha256": "9d3dfc758525b404d300903e6c11f975ef95b3a547ea2e2a8a676d7852a1d2fa",
+    "grader_contract_bundle_sha256": "def93ba4461f49eeb7e7cba372d57d7c17f13a14282786166255016daf7355f7",
+    "harness_contract_sha256": "0b0bc87402c620326fdd97d28820a1d523482b9609ce219ba1ecdcc471525f93",
+    "inference_config_sha256": "650cf25c89f628a538b645cb02d777bad36e96e14fc6369adb6ac8b1a92eb556"
+  },
+  "issue": "PER-329",
+  "status": "pass"
+}
