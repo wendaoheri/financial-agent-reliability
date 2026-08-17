@@ -358,3 +358,8 @@ authorization_basis（授权评论/议题指引）、`artifacts[]`（逐文件 p
 
 冻结锚点：本文件以冻结提交（git commit，见 PER-317 交付评论）为冻结锚点；
 文件内容 sha256 随交付评论登记。此后修订一律另起新版本文件。
+
+
+---
+
+**PER-323 历史说明(2026-08-17,Stage 2 追加)**:本文引用的冻结目录路径(`contracts/`、`cases/`、`catalog/`、`snapshots/`、`preregistration/`、`evidence/`、`audit/`、`reports/` 及 gitignore 的 `runs/` 等基线 v1 目录)已按 PER-323 冻结清理清单 v1 删除;原文内容可按 `docs/per323-stage2-deletion-record.md` 所载各目录回滚索引 SHA 从 git 历史找回(`runs/` 的删除前归档见该记录 §2)。本文原文与结论作为历史记录保留,未改写。

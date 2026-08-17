@@ -7,6 +7,14 @@ Multica runtime block above remains authoritative for platform operations.
 本文件是盘点现行目录、命名、测试、产物冻结与密钥纪律后固化的可执行规范。
 与冻结产物冲突时,以证据血缘完整性为准。
 
+> **PER-323 过渡状态(2026-08-17,Stage 2)**:基线 v1 的 ❄️ 旧血缘历史基线已按
+> 项目所有者批准的方案 B 与冻结清理清单 v1 整体删除——下文「Frozen Artifacts」
+> 与口径 v1 各节自删除起转为**历史记录**(原文保留,Stage 3 口径 v2 冻结时
+> 统一改写,见清理清单 G6)。删除留痕与回滚索引:
+> `docs/per323-stage2-deletion-record.md`;手动执行:
+> `docs/manual-execution-guide.md`;推理 provider/模型由 `configs/inference.json`
+> 配置,运行时不变量在 `configs/harness_contract.v1.json`。
+
 ## Project Purpose
 
 - Treat `docs/research/金融Agent系统性失效问题研究报告.html` as the research
@@ -162,13 +170,18 @@ PER-85-D6:旧 v3.x 冻结血缘降级为**历史基线**——内容保留、不
 
 ## Secrets Discipline(密钥纪律)
 
-- 密钥**仅限环境变量**:`BENCH_BAILIAN_API_KEY`、`BENCH_BAILIAN_BASE_URL`、
-  `BENCH_BAILIAN_MODEL_IDS`。严禁写入源码、fixture、日志、报告、提交或提示词。
-- 候选模型 ID 固定为 `qwen-3.8-max`、`glm-5.2`、`deepseek-v4-pro`;模型身份
-  预检失败时如实报告 blocked,不得回退或冒名。
+- 密钥**仅限环境变量**:`BENCH_BAILIAN_API_KEY`(必填);
+  `BENCH_BAILIAN_BASE_URL` / `FARELI_BAILIAN_BASE_URL` 与
+  `FARELI_INFERENCE_CONFIG` 为可选覆盖。严禁写入源码、fixture、日志、报告、
+  提交或提示词。`BENCH_BAILIAN_MODEL_IDS` 已退役(过渡期严格一致校验,
+  PER-323 契约 §4.1)。
+- 候选模型 ID 以 `configs/inference.json` 为权威:`qwen3.8-max`(无连字符)、
+  `glm-5.2`、`deepseek-v4-pro`;模型身份预检失败时如实报告 blocked,不得回退
+  或冒名。
 - 日志与产物必须脱敏(`financial_agent_reliability.harness.redaction`);
-  `contracts.run_trace_validator_v3_7.scan_persisted_value_for_secrets` 是
-  持久化内容的密钥扫描契约门,不得绕过。
+  `financial_agent_reliability.harness.secret_scan.scan_persisted_value_for_secrets`
+  是持久化内容的密钥扫描契约门(PER-323 C4,模式集自旧冻结门逐字继承、
+  只增不减),不得绕过。
 
 ## Research and Data Discipline
 

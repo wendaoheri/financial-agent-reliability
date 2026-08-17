@@ -78,3 +78,8 @@ Gold 必须至少有一项证据、可由独立代码唯一重算且进入主排
 ## 失败策略与边界
 
 验证器聚合并拒绝：时点倒置、未来信息、缺少许可证或血缘、内容/引用/manifest hash 不符、未标 Gold/Silver、Gold 无证据或不可复算、Silver 进入主榜、Longbridge 越权访问、单因素变体改变多个关键因素。验证通过只证明契约与冻结约束成立，不证明来源事实本身正确；事实正确性仍须由独立采集、复算和审计负责。
+
+
+---
+
+**PER-323 历史说明(2026-08-17,Stage 2 追加)**:本文引用的冻结目录路径(`contracts/`、`cases/`、`catalog/`、`snapshots/`、`preregistration/`、`evidence/`、`audit/`、`reports/` 及 gitignore 的 `runs/` 等基线 v1 目录)已按 PER-323 冻结清理清单 v1 删除;原文内容可按 `docs/per323-stage2-deletion-record.md` 所载各目录回滚索引 SHA 从 git 历史找回(`runs/` 的删除前归档见该记录 §2)。本文原文与结论作为历史记录保留,未改写。

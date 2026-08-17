@@ -16,3 +16,8 @@
 uv run python -m financial_agent_reliability.harness.cli build-smoke-plan --output contracts/stage3_smoke_plan.v2.json
 uv run python -m financial_agent_reliability.harness.cli smoke --plan contracts/stage3_smoke_plan.v2.json --correct-from-v1 runs/stage3/smoke-20260811-v1 --output-dir runs/stage3/smoke-20260811-v2 --freeze-destination runs/stage3/frozen-smoke-evidence-20260811-v2
 ```
+
+
+---
+
+**PER-323 历史说明(2026-08-17,Stage 2 追加)**:本文引用的冻结目录路径(`contracts/`、`cases/`、`catalog/`、`snapshots/`、`preregistration/`、`evidence/`、`audit/`、`reports/` 及 gitignore 的 `runs/` 等基线 v1 目录)已按 PER-323 冻结清理清单 v1 删除;原文内容可按 `docs/per323-stage2-deletion-record.md` 所载各目录回滚索引 SHA 从 git 历史找回(`runs/` 的删除前归档见该记录 §2)。本文原文与结论作为历史记录保留,未改写。

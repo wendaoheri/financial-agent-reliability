@@ -36,3 +36,9 @@ uv run python contracts/run_trace_validator.py validate-fixtures
 工程推论：相同配置与 bundle 可稳定生成相同矩阵和 run ID；这不证明供应商线上会接受 seed、参数或工具调用，也不证明任何候选模型可靠。
 
 未验证：真实百炼 endpoint、候选身份、线上参数语义、流式协议兼容、token 成本和供应商故障行为。本阶段按验收要求不执行这些付费检查。
+补充:文中涉及的 `fareli-harness build-manifest` / `build-smoke-plan` / `smoke` 子命令与 `fareli-report verify-freeze` 已随基线 v1 退役(PER-323 清理清单 M2),文中相应本地复现步骤不再适用;现行手动执行路径以 `docs/manual-execution-guide.md` 为准。
+
+
+---
+
+**PER-323 历史说明(2026-08-17,Stage 2 追加)**:本文引用的冻结目录路径(`contracts/`、`cases/`、`catalog/`、`snapshots/`、`preregistration/`、`evidence/`、`audit/`、`reports/` 及 gitignore 的 `runs/` 等基线 v1 目录)已按 PER-323 冻结清理清单 v1 删除;原文内容可按 `docs/per323-stage2-deletion-record.md` 所载各目录回滚索引 SHA 从 git 历史找回(`runs/` 的删除前归档见该记录 §2)。本文原文与结论作为历史记录保留,未改写。

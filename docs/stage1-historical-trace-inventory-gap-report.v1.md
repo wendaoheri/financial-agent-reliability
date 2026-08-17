@@ -111,3 +111,8 @@
 2. 复盘工具必须内建:run_id 去重(L5)、双哈希口径(L6)、symlink 感知(L10)、批次类型标签(协议门批次 vs 验收批次 vs 冒烟 vs coverage)。
 3. 跨批次可比性已由契约 comparability 条款保障(v3.10→v3.11 仅 token 上限变化,prompt/oracle/评分阈值/用例材料不变);工具应保留该声明的引用。
 4. 结论合并点在 reports/stage5 报告层(v3.11.1 并入 v3.10 r1 + v3.11 r3 构成该单元 3 个有效重复);复盘工具应复刻该合并规则而不是改写任何批次 summary。
+
+
+---
+
+**PER-323 历史说明(2026-08-17,Stage 2 追加)**:本文引用的冻结目录路径(`contracts/`、`cases/`、`catalog/`、`snapshots/`、`preregistration/`、`evidence/`、`audit/`、`reports/` 及 gitignore 的 `runs/` 等基线 v1 目录)已按 PER-323 冻结清理清单 v1 删除;原文内容可按 `docs/per323-stage2-deletion-record.md` 所载各目录回滚索引 SHA 从 git 历史找回(`runs/` 的删除前归档见该记录 §2)。本文原文与结论作为历史记录保留,未改写。
