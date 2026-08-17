@@ -2,12 +2,13 @@
 
 PER-323 Stage 2 moved contract pins from the removed frozen directory to
 ``configs/harness_contract.v1.json`` and ``configs/inference.json``.
-PER-328 (Stage 3) froze the formal run-trace successor contract
-``baseline/v2/contracts/run_trace.schema.v4.json`` (design contract C5):
+PER-328 first froze ``baseline/v2/contracts/run_trace.schema.v4.json`` and later
+published the append-only v3 successor ``baseline/v3/contracts/run_trace.schema.v5.json``.
+Both generations carry the same identity hash fields:
 ``run_identity`` carries ``inference_config_sha256`` +
 ``harness_contract_sha256`` + ``immutable_bundle_sha256``, and this module
-emits ``contract_version`` 4.0.0 with benchmark_id
-``financial-agent-reliability-v2``.
+Callers select the frozen generation explicitly with ``baseline_generation``;
+the v2 default is retained only for compatibility with historical tests.
 """
 
 from __future__ import annotations
@@ -57,6 +58,7 @@ class OfflineHarness:
         sleeper: Callable[[float], None] | None = None,
         harness_contract_path: pathlib.Path = HARNESS_CONTRACT_PATH,
         inference_config_path: pathlib.Path = INFERENCE_CONFIG_PATH,
+        baseline_generation: str = "v2",
     ):
         self.adapter = adapter
         self.bundle = bundle
@@ -64,6 +66,11 @@ class OfflineHarness:
         self.sleeper = sleeper or (lambda _seconds: None)
         self.harness_contract_path = pathlib.Path(harness_contract_path)
         self.inference_config_path = pathlib.Path(inference_config_path)
+        if baseline_generation not in {"v2", "v3"}:
+            raise ValueError("baseline_generation must be 'v2' or 'v3'")
+        self.baseline_generation = baseline_generation
+        self.trace_contract_version = "4.0.0" if baseline_generation == "v2" else "5.0.0"
+        self.benchmark_id = f"financial-agent-reliability-{baseline_generation}"
         self.config = json.loads(self.harness_contract_path.read_text(encoding="utf-8"))
 
     def run(
@@ -85,7 +92,7 @@ class OfflineHarness:
         if frozen_input_path not in {item["path"] for item in relative_artifacts}:
             raise ValueError("frozen input is not committed in the immutable bundle")
         identity = {
-            "benchmark_id": "financial-agent-reliability-v2",
+            "benchmark_id": self.benchmark_id,
             "case_id": case_id,
             "variant_id": variant_id,
             "requested_model_id": self.adapter.model_id,
@@ -207,7 +214,7 @@ class OfflineHarness:
         )
         trace = {
             "contract_type": "run_trace",
-            "contract_version": "4.0.0",
+            "contract_version": self.trace_contract_version,
             "run_id": run_id,
             "run_identity": identity,
             "status": status,

@@ -67,8 +67,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "command": args.command,
                 "reason": (
                     "baseline v1 lineage roots (runs/, evidence/, reports/, audit/) were "
-                    "removed by the PER-323 frozen cleanup list; the retrospective "
-                    "baseline v3 rebuilds the evaluation baseline only and does not "
+                    "removed by the PER-323 frozen cleanup list; baseline v3 rebuilds "
+                    "evaluation inputs and contracts only and does not "
                     "rebuild historical run evidence"
                 ),
                 "exit_code": 2,

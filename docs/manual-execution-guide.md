@@ -17,7 +17,7 @@ Stage 1b 草案曾区分「裸检出 / 完整工作区」两档,差异全部来�
 
 | 能力 | 命令 |
 | --- | --- |
-| Python 全量测试(80 用例) | `uv run python -m unittest discover -s tests -v` |
+| Python 全量测试(82 用例) | `uv run python -m unittest discover -s tests -v` |
 | node 运行时边界(6 用例) | `npm run test:runtime` |
 | 集成 `.test.mjs` 全集 | `node --test tests/integration/*.test.mjs`(集合与上一行相同,F5/F8 已收口) |
 | baseline v3 校验 | `uv run python baseline/v3/validate_baseline_v3.py validate-bundle baseline/v3` 与 `verify-manifest baseline/v3` |
@@ -54,7 +54,7 @@ npm ci      # 按 package-lock.json 精确安装 @mariozechner/pi-agent-core@0.7
 ## 3. 路径 A:离线验证(无需任何凭据)
 
 ```bash
-uv run python -m unittest discover -s tests -v   # 实测:80 用例全部通过
+uv run python -m unittest discover -s tests -v   # 实测:82 用例全部通过
 npm run test:runtime                             # 实测:6/6 通过
 node --test tests/integration/*.test.mjs         # 实测:6/6 通过(与 npm 脚本同集合)
 uv run python baseline/v3/validate_baseline_v3.py validate-bundle baseline/v3   # 实测:ok
@@ -150,7 +150,7 @@ uv run fareli-harness preflight --output runs/preflight.<日期>.json
 | --- | --- |
 | `uv sync` | 成功,三入口注册 |
 | `npm ci` | pi-agent-core 0.73.1;allow-scripts 信息级警告 |
-| `uv run python -m unittest discover -s tests -v` | baseline v3 冻结提交全新检出 **80 用例全部通过(OK)** |
+| `uv run python -m unittest discover -s tests -v` | baseline v3 Stage 4 全新检出 **82 用例全部通过(OK)** |
 | `npm run test:runtime` | **6/6 通过** |
 | `node --test tests/integration/*.test.mjs` | **6/6 通过** |
 | `uv run python baseline/v3/validate_baseline_v3.py validate-bundle baseline/v3` | **ok** |
