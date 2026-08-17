@@ -81,6 +81,8 @@ class InferenceConfig:
     schema_version: str
     providers: tuple[ProviderConfig, ...]
     models: tuple[ModelConfig, ...]
+    source_path: pathlib.Path
+    source_sha256: str
 
     def provider(self, name: str) -> ProviderConfig:
         for provider in self.providers:
@@ -197,9 +199,10 @@ def load_inference_config(
     Raises :class:`InferenceConfigError` on any schema, cross-field, or
     secret-scan violation — before any network request can be constructed.
     """
-    config_path = _resolve_config_path(path, env)
+    config_path = _resolve_config_path(path, env).resolve()
     try:
-        raw = json.loads(config_path.read_text(encoding="utf-8"))
+        config_bytes = config_path.read_bytes()
+        raw = json.loads(config_bytes)
     except FileNotFoundError as exc:
         raise InferenceConfigError(f"inference config not found: {config_path}") from exc
     except json.JSONDecodeError as exc:
@@ -241,7 +244,13 @@ def load_inference_config(
             raise InferenceConfigError(
                 f"credential_env name is secret-shaped (rule R2): {provider.credential_env}"
             )
-    return InferenceConfig(schema_version=version, providers=providers, models=models)
+    return InferenceConfig(
+        schema_version=version,
+        providers=providers,
+        models=models,
+        source_path=config_path,
+        source_sha256=hashlib.sha256(config_bytes).hexdigest(),
+    )
 
 
 def _base_url_override_env_names(provider_name: str) -> tuple[str, ...]:

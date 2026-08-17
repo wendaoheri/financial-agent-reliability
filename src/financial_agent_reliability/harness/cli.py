@@ -49,12 +49,20 @@ def main(argv: list[str] | None = None) -> int:
         "--preflight", type=pathlib.Path, action="append", required=True
     )
     freeze_preflight.add_argument("--destination", type=pathlib.Path, required=True)
+    freeze_preflight.add_argument("--config", type=pathlib.Path, default=None)
     args = parser.parse_args(argv)
 
     if args.command == "preflight":
         try:
             config = load_inference_config(args.config, env=os.environ)
-            settings = BailianSettings.from_config(config, os.environ)
+            settings = tuple(
+                BailianSettings.from_config(config, os.environ, provider.name)
+                for provider in config.providers
+                if any(
+                    model.live_preflight_required
+                    for model in config.models_for_provider(provider.name)
+                )
+            )
         except (InferenceConfigError, BailianConfigError) as exc:
             return _emit_config_error(str(exc))
         result = run_live_preflights(settings, config=config)
@@ -67,6 +75,7 @@ def main(argv: list[str] | None = None) -> int:
                     "status": result["status"],
                     "counts": result["counts"],
                     "endpoint_id": result["endpoint_id"],
+                    "inference_config_path": result["inference_config_path"],
                     "inference_config_sha256": result["inference_config_sha256"],
                     "harness_contract_sha256": result["harness_contract_sha256"],
                     "output": args.output.as_posix(),
@@ -77,7 +86,13 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 0 if result["status"] == "passed" else 2
     if args.command == "freeze-preflight":
-        bundle = freeze_preflight_evidence(args.preflight, args.destination)
+        try:
+            config = load_inference_config(args.config, env=os.environ)
+        except InferenceConfigError as exc:
+            return _emit_config_error(str(exc))
+        bundle = freeze_preflight_evidence(
+            args.preflight, args.destination, config=config
+        )
         print(
             json.dumps(
                 {

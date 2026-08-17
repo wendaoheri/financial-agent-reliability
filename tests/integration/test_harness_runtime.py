@@ -11,6 +11,7 @@ the formal successor schema lands with baseline v2 (Stage 3, PER-328).
 """
 
 import json
+import hashlib
 import pathlib
 import tempfile
 import unittest
@@ -33,6 +34,38 @@ from financial_agent_reliability.simulators.ledger import LedgerError, Simulated
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
+
+
+def _raw_inference_config():
+    return json.loads((ROOT / "configs" / "inference.json").read_text(encoding="utf-8"))
+
+
+def _write_inference_config(directory, raw, name="custom-inference.json"):
+    path = pathlib.Path(directory) / name
+    path.write_text(json.dumps(raw), encoding="utf-8")
+    return path
+
+
+def _successful_transport_factory(calls=None, response_aliases=None):
+    calls = calls if calls is not None else []
+    response_aliases = response_aliases or {}
+
+    class FixtureTransport:
+        def __init__(self, settings, *, timeout_seconds):
+            self.settings = settings
+            self.timeout_seconds = timeout_seconds
+
+        def __call__(self, request, *, force_tool_call):
+            calls.append((self.settings.provider_name, request["model"]))
+            return {
+                "model": response_aliases.get(request["model"], request["model"]),
+                "accepted_parameters": list(request["parameters"]),
+                "tool_call_supported": force_tool_call,
+                "fallback_detected": False,
+                "usage": {"input_tokens": 1, "output_tokens": 1},
+            }
+
+    return FixtureTransport
 
 
 class ProviderAdapterTests(unittest.TestCase):
@@ -227,12 +260,134 @@ class ProviderAdapterTests(unittest.TestCase):
         self.assertNotIn(settings.api_key, rendered)
         self.assertNotIn(settings.base_url, rendered)
 
+    def test_live_preflight_groups_and_runs_a_second_provider(self):
+        raw = _raw_inference_config()
+        raw["providers"].append(
+            {
+                "name": "second",
+                "api": "openai_chat_completions_compatible",
+                "base_url": "https://second.example.invalid/v1",
+                "credential_env": "SECOND_PROVIDER_ACCESS",
+            }
+        )
+        raw["models"].append(
+            {"model_id": "second-model", "provider": "second", "roles": ["candidate"]}
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            config = load_inference_config(_write_inference_config(directory, raw), env={})
+            env = {
+                "BENCH_BAILIAN_API_KEY": "fixture-bailian",
+                "SECOND_PROVIDER_ACCESS": "fixture-second",
+            }
+            settings = tuple(
+                BailianSettings.from_config(config, env, provider.name)
+                for provider in config.providers
+            )
+            calls = []
+            result = run_live_preflights(
+                settings,
+                config=config,
+                transport_factory=_successful_transport_factory(calls),
+            )
+        self.assertEqual(result["counts"]["requested"], 4)
+        self.assertEqual({row["provider"] for row in result["models"]}, {"bailian", "second"})
+        self.assertIn(("second", "second-model"), calls)
+
+    def test_live_preflight_skips_false_flag_without_resolving_unused_provider(self):
+        raw = _raw_inference_config()
+        raw["models"][0]["live_preflight_required"] = False
+        raw["providers"].append(
+            {
+                "name": "unused",
+                "api": "openai_chat_completions_compatible",
+                "base_url": "https://unused.example.invalid/v1",
+                "credential_env": "UNUSED_PROVIDER_ACCESS",
+            }
+        )
+        raw["models"].append(
+            {
+                "model_id": "unused-model",
+                "provider": "unused",
+                "roles": ["candidate"],
+                "live_preflight_required": False,
+            }
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            config = load_inference_config(_write_inference_config(directory, raw), env={})
+            env = {"BENCH_BAILIAN_API_KEY": "fixture-bailian"}
+            settings = BailianSettings.from_config(config, env, "bailian")
+            calls = []
+            result = run_live_preflights(
+                settings,
+                config=config,
+                transport_factory=_successful_transport_factory(calls),
+            )
+        self.assertEqual(result["counts"]["requested"], 2)
+        self.assertNotIn("qwen3.8-max", {model for _provider, model in calls})
+        self.assertNotIn("unused-model", {model for _provider, model in calls})
+
+    def test_allowed_response_alias_uses_injected_model_config(self):
+        raw = _raw_inference_config()
+        raw["models"][0]["allowed_response_model_ids"] = ["qwen3.8-max", "qwen-alias"]
+        with tempfile.TemporaryDirectory() as directory:
+            config = load_inference_config(_write_inference_config(directory, raw), env={})
+            settings = BailianSettings.from_config(
+                config, {"BENCH_BAILIAN_API_KEY": "fixture"}
+            )
+            result = run_live_preflights(
+                settings,
+                config=config,
+                transport_factory=_successful_transport_factory(
+                    response_aliases={"qwen3.8-max": "qwen-alias"}
+                ),
+            )
+        alias_row = next(
+            row for row in result["models"] if row["requested_model_id"] == "qwen3.8-max"
+        )
+        self.assertEqual(alias_row["status"], "passed")
+        self.assertTrue(alias_row["identity_match"])
+        self.assertEqual(alias_row["response_model_id"], "qwen-alias")
+
+    def test_custom_config_path_and_hash_flow_into_report_and_frozen_bundle(self):
+        raw = _raw_inference_config()
+        with tempfile.TemporaryDirectory() as directory:
+            root = pathlib.Path(directory)
+            config_path = _write_inference_config(root, raw, "inference.custom.json")
+            config = load_inference_config(config_path, env={})
+            settings = BailianSettings.from_config(
+                config, {"BENCH_BAILIAN_API_KEY": "fixture"}
+            )
+            result = run_live_preflights(
+                settings,
+                config=config,
+                transport_factory=_successful_transport_factory(),
+            )
+            expected_sha = hashlib.sha256(config_path.read_bytes()).hexdigest()
+            self.assertEqual(result["inference_config_path"], config_path.resolve().as_posix())
+            self.assertEqual(result["inference_config_sha256"], expected_sha)
+            report = root / "preflight.json"
+            report.write_text(json.dumps(result), encoding="utf-8")
+            bundle = freeze_preflight_evidence(
+                [report], root / "frozen", config=config
+            )
+            decision = json.loads(
+                (bundle.root / "execution_decision.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(decision["inference_config_path"], config_path.resolve().as_posix())
+            self.assertEqual(decision["inference_config_sha256"], expected_sha)
+            self.assertEqual(
+                (bundle.root / "contracts" / "inference.json").read_bytes(),
+                config_path.read_bytes(),
+            )
+
     def test_blocked_preflights_freeze_reconciled_evidence_bundle(self):
         fixture = {
             "contract_type": "stage3_live_preflight",
             "contract_version": "1.1.0",
             "status": "blocked",
             "endpoint_id": "bailian_fixture",
+            "inference_config_path": load_inference_config().source_path.as_posix(),
+            "inference_config_sha256": load_inference_config().source_sha256,
             "counts": {"requested": 3, "passed": 0, "invalidated": 1, "blocked": 2},
             "models": [
                 {

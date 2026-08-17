@@ -20,7 +20,7 @@ from urllib.parse import urlsplit
 
 from financial_agent_reliability.inference_config import (
     InferenceConfig,
-    InferenceConfigError,
+    ModelConfig,
     ProviderConfig,
     endpoint_origin,
     load_inference_config,
@@ -55,6 +55,7 @@ def __getattr__(name: str) -> Any:
 
 @dataclass(frozen=True)
 class BailianSettings:
+    provider_name: str
     base_url: str = field(repr=False)
     api_key: str = field(repr=False)
     model_ids: tuple[str, ...]
@@ -84,6 +85,7 @@ class BailianSettings:
             raise BailianConfigError(f"missing required environment: {credential_env}")
         _origin, origin_hash = endpoint_origin(base_url)
         return cls(
+            provider_name=provider_name,
             base_url=base_url,
             api_key=api_key,
             model_ids=model_ids,
@@ -166,22 +168,32 @@ class BailianAdapter:
         config: InferenceConfig | None = None,
         parameters: Mapping[str, Any] | None = None,
         preflight_tool_instruction: str | None = None,
+        model_config: ModelConfig | None = None,
     ):
         if model_id not in settings.model_ids:
             raise BailianConfigError("adapter model ID is not in the configured exact identity set")
         self.settings = settings
         self.model_id = model_id
         self._harness = _load_harness_contract(harness_contract)
-        if parameters is None or preflight_tool_instruction is None:
+        if model_config is None or parameters is None or preflight_tool_instruction is None:
             config = config or load_inference_config()
-            provider = config.provider(PROVIDER_NAME)
+            provider = config.provider(settings.provider_name)
+            if model_config is None:
+                model_config = next(
+                    (item for item in config.models_for_provider(settings.provider_name)
+                     if item.model_id == model_id),
+                    None,
+                )
+                if model_config is None:
+                    raise BailianConfigError(
+                        "adapter model ID is not present under the settings provider"
+                    )
             if preflight_tool_instruction is None:
                 preflight_tool_instruction = provider.preflight_tool_instruction
             if parameters is None:
-                model = next(
-                    item for item in config.models if item.model_id == model_id
-                )
-                parameters = merged_parameters(config, model)
+                parameters = merged_parameters(config, model_config)
+        assert model_config is not None
+        self.model_config = model_config
         self._parameters: Mapping[str, Any] = dict(parameters)
         self._preflight_instruction = preflight_tool_instruction
 
@@ -264,16 +276,7 @@ class BailianAdapter:
         )
 
     def _allowed_response_model_ids(self) -> frozenset[str]:
-        try:
-            config = load_inference_config()
-            model = next(
-                (item for item in config.models if item.model_id == self.model_id), None
-            )
-            if model is not None:
-                return frozenset(model.allowed_response_model_ids)
-        except InferenceConfigError:
-            pass
-        return frozenset({self.model_id})
+        return frozenset(self.model_config.allowed_response_model_ids)
 
 
 def build_all_adapters(
@@ -283,9 +286,12 @@ def build_all_adapters(
     harness_contract: str | pathlib.Path | Mapping[str, Any] | None = None,
 ) -> tuple[BailianAdapter, ...]:
     config = config or load_inference_config()
-    provider = config.provider(PROVIDER_NAME)
+    provider_name = settings.provider_name
+    provider = config.provider(provider_name)
     adapters: list[BailianAdapter] = []
-    for model in config.models_for_provider(PROVIDER_NAME):
+    for model in config.models_for_provider(provider_name):
+        if not model.live_preflight_required:
+            continue
         adapters.append(
             BailianAdapter(
                 settings,
@@ -294,6 +300,7 @@ def build_all_adapters(
                 config=config,
                 parameters=merged_parameters(config, model),
                 preflight_tool_instruction=provider.preflight_tool_instruction,
+                model_config=model,
             )
         )
     return tuple(adapters)

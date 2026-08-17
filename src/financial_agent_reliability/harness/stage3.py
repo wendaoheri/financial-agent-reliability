@@ -20,12 +20,11 @@ from typing import Any, Callable
 from financial_agent_reliability.harness.bundle import ImmutableBundle
 from financial_agent_reliability.harness.hashing import file_sha256
 from financial_agent_reliability.inference_config import (
-    DEFAULT_CONFIG_PATH,
     InferenceConfig,
+    InferenceConfigError,
     load_inference_config,
 )
 from financial_agent_reliability.providers.bailian import (
-    PROVIDER_NAME,
     BailianSettings,
     build_all_adapters,
 )
@@ -34,7 +33,6 @@ from financial_agent_reliability.providers.bailian_http import BailianHTTPTransp
 
 ROOT = pathlib.Path(__file__).resolve().parents[3]
 HARNESS_CONTRACT_PATH = ROOT / "configs" / "harness_contract.v1.json"
-INFERENCE_CONFIG_PATH = DEFAULT_CONFIG_PATH
 INVALIDATING_FAILURES = {
     "identity_mismatch",
     "fallback_detected",
@@ -48,7 +46,7 @@ def _timestamp() -> str:
 
 
 def run_live_preflights(
-    settings: BailianSettings,
+    settings: BailianSettings | tuple[BailianSettings, ...],
     *,
     config: InferenceConfig | None = None,
     transport_factory: Callable[..., Any] = BailianHTTPTransport,
@@ -62,73 +60,106 @@ def run_live_preflights(
     models: list[dict[str, Any]] = []
     started_at = _timestamp()
 
-    for adapter in build_all_adapters(settings, config=config, harness_contract=harness_contract):
-        transport = transport_factory(
-            settings, timeout_seconds=float(budget["wall_clock_ms"]) / 1000
+    provider_settings = (settings,) if isinstance(settings, BailianSettings) else settings
+    required_provider_names = tuple(
+        provider.name
+        for provider in config.providers
+        if any(
+            model.live_preflight_required
+            for model in config.models_for_provider(provider.name)
         )
-        attempts: list[dict[str, Any]] = []
-        last_usage = {"input_tokens": 0, "output_tokens": 0}
-        result = None
-        for attempt_number in range(1, max_retries + 2):
-            attempt_ns = time.monotonic_ns()
-
-            def call(request: dict[str, Any]) -> dict[str, Any]:
-                nonlocal last_usage
-                response = dict(transport(request, force_tool_call=True))
-                raw_usage = response.get("usage") or {}
-                last_usage = {
-                    "input_tokens": int(raw_usage.get("input_tokens", 0)),
-                    "output_tokens": int(raw_usage.get("output_tokens", 0)),
-                }
-                return response
-
-            result = adapter.preflight(call)
-            duration_ms = max(0, (time.monotonic_ns() - attempt_ns) // 1_000_000)
-            attempts.append(
-                {
-                    "attempt": attempt_number,
-                    "duration_ms": duration_ms,
-                    "valid": result.valid,
-                    "failure_type": result.failure_type,
-                    "retryable": result.retryable,
-                }
-            )
-            if result.valid or not result.retryable or attempt_number > max_retries:
-                break
-            sleeper(backoffs[attempt_number - 1] / 1000)
-
-        assert result is not None
-        row_status = (
-            "passed"
-            if result.valid
-            else "invalidated"
-            if result.failure_type in INVALIDATING_FAILURES
-            else "blocked"
+    )
+    if tuple(item.provider_name for item in provider_settings) != required_provider_names:
+        raise InferenceConfigError(
+            "provider settings must match configured providers that require live preflight"
         )
-        models.append(
+    providers: list[dict[str, str]] = []
+    for provider_settings_item in provider_settings:
+        adapters = build_all_adapters(
+            provider_settings_item,
+            config=config,
+            harness_contract=harness_contract,
+        )
+        if not adapters:
+            continue
+        providers.append(
             {
-                "requested_model_id": adapter.model_id,
-                "response_model_id": result.response_model_id,
-                "status": row_status,
-                "identity_match": result.response_model_id == adapter.model_id,
-                "tool_call_supported": result.valid,
-                "parameters_accepted": result.failure_type != "parameters_ignored",
-                "parameter_evidence_limit": "HTTP acceptance detects rejection, not silent semantic ignoring",
-                "fallback_detected": result.failure_type == "fallback_detected",
-                "failure_type": result.failure_type,
-                "provider_error_code": result.provider_error_code,
-                "http_status": result.http_status,
-                "retryable": result.retryable,
-                "attempt_count": len(attempts),
-                "attempts": attempts,
-                "usage": {
-                    **last_usage,
-                    "total_tokens": last_usage["input_tokens"] + last_usage["output_tokens"],
-                },
-                "cost_usd": None,
-                "cost_status": "provider_response_does_not_supply_cost",
+                "name": provider_settings_item.provider_name,
+                "endpoint_id": provider_settings_item.endpoint_id,
             }
         )
+        for adapter in adapters:
+            transport = transport_factory(
+                provider_settings_item,
+                timeout_seconds=float(budget["wall_clock_ms"]) / 1000,
+            )
+            attempts: list[dict[str, Any]] = []
+            last_usage = {"input_tokens": 0, "output_tokens": 0}
+            result = None
+            for attempt_number in range(1, max_retries + 2):
+                attempt_ns = time.monotonic_ns()
+
+                def call(request: dict[str, Any]) -> dict[str, Any]:
+                    nonlocal last_usage
+                    response = dict(transport(request, force_tool_call=True))
+                    raw_usage = response.get("usage") or {}
+                    last_usage = {
+                        "input_tokens": int(raw_usage.get("input_tokens", 0)),
+                        "output_tokens": int(raw_usage.get("output_tokens", 0)),
+                    }
+                    return response
+
+                result = adapter.preflight(call)
+                duration_ms = max(0, (time.monotonic_ns() - attempt_ns) // 1_000_000)
+                attempts.append(
+                    {
+                        "attempt": attempt_number,
+                        "duration_ms": duration_ms,
+                        "valid": result.valid,
+                        "failure_type": result.failure_type,
+                        "retryable": result.retryable,
+                    }
+                )
+                if result.valid or not result.retryable or attempt_number > max_retries:
+                    break
+                sleeper(backoffs[attempt_number - 1] / 1000)
+
+            assert result is not None
+            row_status = (
+                "passed"
+                if result.valid
+                else "invalidated"
+                if result.failure_type in INVALIDATING_FAILURES
+                else "blocked"
+            )
+            models.append(
+                {
+                    "provider": provider_settings_item.provider_name,
+                    "endpoint_id": provider_settings_item.endpoint_id,
+                    "requested_model_id": adapter.model_id,
+                    "response_model_id": result.response_model_id,
+                    "status": row_status,
+                    "identity_match": result.response_model_id
+                    in adapter.model_config.allowed_response_model_ids,
+                    "tool_call_supported": result.valid,
+                    "parameters_accepted": result.failure_type != "parameters_ignored",
+                    "parameter_evidence_limit": "HTTP acceptance detects rejection, not silent semantic ignoring",
+                    "fallback_detected": result.failure_type == "fallback_detected",
+                    "failure_type": result.failure_type,
+                    "provider_error_code": result.provider_error_code,
+                    "http_status": result.http_status,
+                    "retryable": result.retryable,
+                    "attempt_count": len(attempts),
+                    "attempts": attempts,
+                    "usage": {
+                        **last_usage,
+                        "total_tokens": last_usage["input_tokens"]
+                        + last_usage["output_tokens"],
+                    },
+                    "cost_usd": None,
+                    "cost_status": "provider_response_does_not_supply_cost",
+                }
+            )
 
     counts = {
         "requested": len(models),
@@ -142,9 +173,11 @@ def run_live_preflights(
         "started_at": started_at,
         "finished_at": _timestamp(),
         "status": "passed" if counts["passed"] == counts["requested"] else "blocked",
-        "provider": PROVIDER_NAME,
-        "endpoint_id": settings.endpoint_id,
-        "inference_config_sha256": file_sha256(INFERENCE_CONFIG_PATH),
+        "provider": providers[0]["name"] if len(providers) == 1 else "multiple",
+        "providers": providers,
+        "endpoint_id": providers[0]["endpoint_id"] if len(providers) == 1 else None,
+        "inference_config_path": config.source_path.as_posix(),
+        "inference_config_sha256": config.source_sha256,
         "harness_contract_sha256": file_sha256(HARNESS_CONTRACT_PATH),
         "counts": counts,
         "models": models,
@@ -165,7 +198,9 @@ def freeze_preflight_evidence(
     if not preflight_paths:
         raise ValueError("at least one preflight report is required")
     config = config or load_inference_config()
-    expected_models = [model.model_id for model in config.models_for_provider(PROVIDER_NAME)]
+    expected_models = [
+        model.model_id for model in config.models if model.live_preflight_required
+    ]
     reports: list[tuple[pathlib.Path, dict[str, Any]]] = []
     provider_requests = 0
     usage = {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0}
@@ -174,6 +209,10 @@ def freeze_preflight_evidence(
         report = json.loads(path.read_text(encoding="utf-8"))
         if report.get("contract_type") != "stage3_live_preflight":
             raise ValueError(f"not a Stage 3 preflight report: {path.name}")
+        if report.get("inference_config_path") != config.source_path.as_posix():
+            raise ValueError(f"preflight config path reconciliation failed: {path.name}")
+        if report.get("inference_config_sha256") != config.source_sha256:
+            raise ValueError(f"preflight config hash reconciliation failed: {path.name}")
         rows = report.get("models") or []
         if [row.get("requested_model_id") for row in rows] != expected_models:
             raise ValueError(f"preflight model reconciliation failed: {path.name}")
@@ -210,7 +249,8 @@ def freeze_preflight_evidence(
         "matrix_plan_status": "baseline v1 matrix retired with PER-323 cleanup; baseline v2 (PER-328) redefines the run plan",
         "checkpoint_resume_available": True,
         "authoritative_counts": authoritative["counts"],
-        "inference_config_sha256": file_sha256(INFERENCE_CONFIG_PATH),
+        "inference_config_path": config.source_path.as_posix(),
+        "inference_config_sha256": config.source_sha256,
         "harness_contract_sha256": file_sha256(HARNESS_CONTRACT_PATH),
     }
     with tempfile.TemporaryDirectory() as directory:
@@ -219,7 +259,7 @@ def freeze_preflight_evidence(
         (source / "contracts").mkdir(parents=True)
         for index, (path, _report) in enumerate(reports, start=1):
             shutil.copyfile(path, source / "preflights" / f"preflight.{index:03d}.json")
-        shutil.copyfile(INFERENCE_CONFIG_PATH, source / "contracts" / INFERENCE_CONFIG_PATH.name)
+        shutil.copyfile(config.source_path, source / "contracts" / "inference.json")
         shutil.copyfile(
             HARNESS_CONTRACT_PATH, source / "contracts" / HARNESS_CONTRACT_PATH.name
         )
