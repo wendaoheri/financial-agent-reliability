@@ -57,19 +57,26 @@ class OfflineHarness:
         *,
         sleeper: Callable[[float], None] | None = None,
         harness_contract_path: pathlib.Path = HARNESS_CONTRACT_PATH,
-        inference_config_path: pathlib.Path = INFERENCE_CONFIG_PATH,
+        inference_config_path: pathlib.Path | None = None,
         baseline_generation: str = "v2",
+        trace_contract_version: str | None = None,
     ):
         self.adapter = adapter
         self.bundle = bundle
         self.checkpoint_directory = pathlib.Path(checkpoint_directory)
         self.sleeper = sleeper or (lambda _seconds: None)
         self.harness_contract_path = pathlib.Path(harness_contract_path)
-        self.inference_config_path = pathlib.Path(inference_config_path)
+        configured_path = inference_config_path or adapter.inference_config.source_path
+        self.inference_config_path = pathlib.Path(configured_path).resolve()
+        if file_sha256(self.inference_config_path) != adapter.inference_config.source_sha256:
+            raise ValueError("inference_config_path does not match the adapter's injected config")
         if baseline_generation not in {"v2", "v3"}:
             raise ValueError("baseline_generation must be 'v2' or 'v3'")
         self.baseline_generation = baseline_generation
-        self.trace_contract_version = "4.0.0" if baseline_generation == "v2" else "5.0.0"
+        historical_version = "4.0.0" if baseline_generation == "v2" else "5.0.0"
+        self.trace_contract_version = trace_contract_version or historical_version
+        if self.trace_contract_version not in {"4.0.0", "5.0.0", "6.0.0"}:
+            raise ValueError("trace_contract_version must be 4.0.0, 5.0.0, or 6.0.0")
         self.benchmark_id = f"financial-agent-reliability-{baseline_generation}"
         self.config = json.loads(self.harness_contract_path.read_text(encoding="utf-8"))
 
@@ -102,6 +109,8 @@ class OfflineHarness:
             "harness_contract_sha256": file_sha256(self.harness_contract_path),
             "immutable_bundle_sha256": self.bundle.bundle_sha256,
         }
+        if self.trace_contract_version == "6.0.0":
+            identity["inference_config_path"] = self.inference_config_path.as_posix()
         run_id = build_run_id(identity)
         checkpoint_path = self.checkpoint_directory / f"{run_id}.jsonl"
         resumed = checkpoint_path.is_file()
@@ -133,7 +142,7 @@ class OfflineHarness:
                 try:
                     candidate = inference_transport(request)
                     response_model = candidate.get("model")
-                    if response_model != self.adapter.model_id:
+                    if response_model not in self.adapter.model_config.allowed_response_model_ids:
                         failure_type = "identity_mismatch"
                         status = "invalidated"
                         terminal_failure = failure_type
@@ -212,26 +221,30 @@ class OfflineHarness:
             if response.get("model") is not None
             else (preflight.response_model_id or "unverified")
         )
+        provider = {
+            "name": self.adapter.settings.provider_name,
+            "requested_model_id": self.adapter.model_id,
+            "response_model_id": response_model,
+            "endpoint_id": self.adapter.settings.endpoint_id,
+            "inference_config_sha256": file_sha256(self.inference_config_path),
+        }
+        if self.trace_contract_version == "6.0.0":
+            provider["inference_config_path"] = self.inference_config_path.as_posix()
         trace = {
             "contract_type": "run_trace",
             "contract_version": self.trace_contract_version,
             "run_id": run_id,
             "run_identity": identity,
             "status": status,
-            "provider": {
-                "name": "bailian",
-                "requested_model_id": self.adapter.model_id,
-                "response_model_id": response_model,
-                "endpoint_id": self.adapter.settings.endpoint_id,
-                "inference_config_sha256": file_sha256(self.inference_config_path),
-            },
+            "provider": provider,
             "request": {
                 "parameters": dict(self.adapter.parameters),
                 "seed": seed,
             },
             "preflight": {
                 "performed": True,
-                "identity_match": preflight.response_model_id == self.adapter.model_id,
+                "identity_match": preflight.response_model_id
+                in self.adapter.model_config.allowed_response_model_ids,
                 "fallback_detected": preflight.failure_type == "fallback_detected",
                 "fallback_attempted": False,
                 "parameters_honored": preflight.failure_type != "parameters_ignored",
@@ -249,7 +262,7 @@ class OfflineHarness:
             "environment": {
                 "dataset_access": "frozen_read_only",
                 "ledger_mode": "simulated",
-                "network_scope": "bailian_inference_only",
+                "network_scope": "configured_provider_inference_only",
                 "touched_paths": [],
             },
             "timing": {

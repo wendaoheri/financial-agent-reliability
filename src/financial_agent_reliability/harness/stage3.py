@@ -199,7 +199,9 @@ def freeze_preflight_evidence(
         raise ValueError("at least one preflight report is required")
     config = config or load_inference_config()
     expected_models = [
-        model.model_id for model in config.models if model.live_preflight_required
+        (model.provider, model.model_id)
+        for model in config.models
+        if model.live_preflight_required
     ]
     reports: list[tuple[pathlib.Path, dict[str, Any]]] = []
     provider_requests = 0
@@ -214,11 +216,42 @@ def freeze_preflight_evidence(
         if report.get("inference_config_sha256") != config.source_sha256:
             raise ValueError(f"preflight config hash reconciliation failed: {path.name}")
         rows = report.get("models") or []
-        if [row.get("requested_model_id") for row in rows] != expected_models:
+        if [
+            (row.get("provider"), row.get("requested_model_id")) for row in rows
+        ] != expected_models:
             raise ValueError(f"preflight model reconciliation failed: {path.name}")
-        counts = report.get("counts") or {}
-        if counts.get("requested") != len(rows):
+        statuses = [row.get("status") for row in rows]
+        if any(status not in {"passed", "invalidated", "blocked"} for status in statuses):
+            raise ValueError(f"preflight row status invalid: {path.name}")
+        recomputed_counts = {
+            "requested": len(rows),
+            "passed": statuses.count("passed"),
+            "invalidated": statuses.count("invalidated"),
+            "blocked": statuses.count("blocked"),
+        }
+        counts = report.get("counts")
+        if counts != recomputed_counts:
             raise ValueError(f"preflight count reconciliation failed: {path.name}")
+        recomputed_status = (
+            "passed" if recomputed_counts["passed"] == recomputed_counts["requested"] else "blocked"
+        )
+        if report.get("status") != recomputed_status:
+            raise ValueError(f"preflight status reconciliation failed: {path.name}")
+        expected_providers = list(dict.fromkeys(provider for provider, _model in expected_models))
+        provider_entries = report.get("providers")
+        if (
+            not isinstance(provider_entries, list)
+            or not all(isinstance(entry, dict) for entry in provider_entries)
+            or [entry.get("name") for entry in provider_entries] != expected_providers
+        ):
+            raise ValueError(f"preflight provider reconciliation failed: {path.name}")
+        expected_provider_summary = (
+            expected_providers[0] if len(expected_providers) == 1 else "multiple"
+        )
+        if report.get("provider") != expected_provider_summary:
+            raise ValueError(f"preflight provider summary mismatch: {path.name}")
+        if recomputed_status != "passed":
+            raise ValueError(f"preflight model row hard gate failed: {path.name}")
         provider_requests += sum(int(row.get("attempt_count", 0)) for row in rows)
         for row in rows:
             row_usage = row.get("usage") or {}
@@ -230,12 +263,8 @@ def freeze_preflight_evidence(
     decision = {
         "contract_type": "stage3_execution_decision",
         "contract_version": "1.1.0",
-        "status": "blocked" if authoritative.get("status") != "passed" else "preflight_passed",
-        "stop_reason": (
-            "preflight_hard_gate_failed"
-            if authoritative.get("status") != "passed"
-            else None
-        ),
+        "status": "preflight_passed",
+        "stop_reason": None,
         "preflight_sessions": len(reports),
         "provider_requests": provider_requests,
         "usage": usage,

@@ -380,17 +380,23 @@ class ProviderAdapterTests(unittest.TestCase):
                 config_path.read_bytes(),
             )
 
-    def test_blocked_preflights_freeze_reconciled_evidence_bundle(self):
+    def test_blocked_preflights_cannot_cross_freeze_hard_gate(self):
+        config = load_inference_config()
         fixture = {
             "contract_type": "stage3_live_preflight",
             "contract_version": "1.1.0",
             "status": "blocked",
+            "provider": "bailian",
+            "providers": [
+                {"name": "bailian", "endpoint_id": "bailian_fixture"}
+            ],
             "endpoint_id": "bailian_fixture",
             "inference_config_path": load_inference_config().source_path.as_posix(),
             "inference_config_sha256": load_inference_config().source_sha256,
             "counts": {"requested": 3, "passed": 0, "invalidated": 1, "blocked": 2},
             "models": [
                 {
+                    "provider": "bailian",
                     "requested_model_id": model,
                     "status": "invalidated" if model == "glm-5.2" else "blocked",
                     "attempt_count": 1,
@@ -403,22 +409,10 @@ class ProviderAdapterTests(unittest.TestCase):
             root = pathlib.Path(directory)
             report = root / "preflight.json"
             report.write_text(json.dumps(fixture), encoding="utf-8")
-            bundle = freeze_preflight_evidence([report], root / "frozen")
-            self.assertEqual(bundle.verify(), bundle.bundle_sha256)
-            decision = json.loads(
-                (bundle.root / "execution_decision.json").read_text(encoding="utf-8")
-            )
-            self.assertEqual(decision["provider_requests"], 3)
-            self.assertEqual(decision["usage"]["total_tokens"], 9)
-            self.assertFalse(decision["smoke_started"])
-            self.assertFalse(decision["full_matrix_started"])
-            self.assertEqual(decision["planned_matrix_runs"], 0)
-            self.assertEqual(len(decision["inference_config_sha256"]), 64)
-            self.assertEqual(len(decision["harness_contract_sha256"]), 64)
-            # The frozen bundle carries the two live contracts as lineage.
-            artifact_paths = {path for path, _sha in bundle.artifacts}
-            self.assertIn("contracts/inference.json", artifact_paths)
-            self.assertIn("contracts/harness_contract.v1.json", artifact_paths)
+            with self.assertRaisesRegex(ValueError, "model row hard gate"):
+                freeze_preflight_evidence(
+                    [report], root / "frozen", config=config
+                )
 
 
 class ManifestAndRecoveryTests(unittest.TestCase):

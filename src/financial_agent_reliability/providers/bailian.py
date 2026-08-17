@@ -175,8 +175,8 @@ class BailianAdapter:
         self.settings = settings
         self.model_id = model_id
         self._harness = _load_harness_contract(harness_contract)
+        config = config or load_inference_config()
         if model_config is None or parameters is None or preflight_tool_instruction is None:
-            config = config or load_inference_config()
             provider = config.provider(settings.provider_name)
             if model_config is None:
                 model_config = next(
@@ -193,6 +193,7 @@ class BailianAdapter:
             if parameters is None:
                 parameters = merged_parameters(config, model_config)
         assert model_config is not None
+        self.inference_config = config
         self.model_config = model_config
         self._parameters: Mapping[str, Any] = dict(parameters)
         self._preflight_instruction = preflight_tool_instruction
