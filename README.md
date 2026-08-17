@@ -2,21 +2,24 @@
 
 围绕金融 Agent 从"会生成、能执行"到"能判断、能负责"之间的系统性断层开展研究,
 以《金融Agent系统性失效问题研究报告.html》(现位于 `docs/research/`)为研究起点,
-建设一套可验证、可复现的评测 harness、契约体系与冻结证据库,用于控制投研、估值、
+建设一套可验证的评测 harness、契约体系与冻结证据库,用于控制投研、估值、
 量化、风险管理等场景中的高损失错误、结构化可信错误、越权执行与责任真空。
+验收口径为**场景与结论可复现可追溯(历史轨迹日志复盘)**;代码级重放不作要求
+(见下文「可复现性与可追溯性验收口径」)。
 
 ## 快速开始
 
 环境基线:Python 3.11(见 `.python-version`),一律使用 `uv` 管理。项目为标准
 src 布局的可安装包,`uv sync` 会以 editable 方式安装 `financial-agent-reliability`
-并注册 `fareli-harness` / `fareli-report` 两个控制台入口。
+并注册 `fareli-harness` / `fareli-report` / `fareli-retro` 三个控制台入口。
 
 ```bash
 uv sync                                            # 安装依赖并安装本项目(editable)
-uv run python -m unittest discover -s tests -v     # 全量测试(261 个用例)
+uv run python -m unittest discover -s tests -v     # 全量测试(328 个用例)
 npm run test:runtime                               # pi-agent-core 运行时边界测试(node --test)
 uv run fareli-harness --help                       # 评测 harness CLI
 uv run fareli-report --help                        # 报告契约 CLI
+uv run fareli-retro --help                         # 历史轨迹复盘 CLI(验收口径见下文)
 ```
 
 付费模型评测仅在显式授权下进行,凭据只通过环境变量注入(见下文),正式运行只读
@@ -37,6 +40,7 @@ src/financial_agent_reliability/
 ├── pipelines/    案例/快照冻结管线(Longbridge v1 与 clean-room synthetic v2)
 ├── providers/    百炼 provider adapter 与 HTTP transport(模型中立、脱敏)
 ├── reporting/    PER-27 报告契约校验与确定性渲染
+├── retrospective/ 历史轨迹复盘工具链(fareli-retro:批次复盘、血缘索引、作废对账、排名导出与证据落盘)
 ├── simulators/   确定性模拟账本
 └── relocation.py PER-86 迁移映射:旧血缘路径钉住的统一解析与显式放行清单
 ```
@@ -52,7 +56,7 @@ Python 模块保留在仓库根,由包初始化时恢复 `sys.path` 后按原名
 | `contracts/` | 版本化验收契约、schema、冻结 bundle 及其 Python 校验器 |
 | `preregistration/` | 预注册文档(先于候选评测冻结) |
 | `snapshots/` | 冻结数据快照(评测输入的唯一事实来源) |
-| `runs/` | 运行输出(gitignore;冻结子集仅本地保存,证据以 `evidence/` 为准) |
+| `runs/` | 运行输出(gitignore;冻结子集仅本地保存,证据以 `evidence/` 为准;完整性由 bundle manifest 逐件 sha256 自证 + 独立重算) |
 | `evidence/` | 冻结证据 bundle(已提交的证据血缘记录) |
 | `audit/` | 独立审计脚本与审计报告 |
 | `reports/` | 阶段报告、交付报告与外部演示 |
@@ -61,8 +65,8 @@ Python 模块保留在仓库根,由包初始化时恢复 `sys.path` 后按原名
 按 PER-85-D6,这些目录的内容保留为历史基线:其路径/哈希钉住不再构成重构与
 验收的阻塞,由 `financial_agent_reliability/relocation.py` 统一解析——迁移后
 逐字节一致的文件按新位置校验,因重构机械改写的文件由放行清单逐条点名,不静默
-跳过。所有实验将重跑,重跑产物以新契约版本建立新血缘(新版本发布由交付负责人
-裁决)。
+跳过。历史运行以轨迹日志复盘验收,暂不全量重跑;若未来裁决重启重跑,重跑产物
+以新契约版本建立新血缘、不回写旧 bundle(新版本发布由交付负责人裁决)。
 
 ### 📝 常规目录
 
@@ -71,6 +75,34 @@ Python 模块保留在仓库根,由包初始化时恢复 `sys.path` 后按原名
 | `docs/` | 契约说明、运营文档;`docs/research/` 为研究起点文档 |
 | `tests/` | 测试套件(unittest + node --test;fixture 与期望输出在其下) |
 | `vendor/` | 离线 vendored 运行时归档(pi-agent-core 0.73.1) |
+
+## 可复现性与可追溯性验收口径
+
+现行验收标准为
+`docs/contracts/scenario-conclusion-reproducibility-criteria.v1.md`(口径 v1,
+PER-317 冻结;只增版本、不改写):评测运行验收与事后复盘以**场景与结论可复现
+可追溯(历史轨迹日志复盘)**为准——场景输入可由冻结产物原样重建(逐件 sha256
+对上),评分与排名结论可由落盘轨迹与冻结评分件确定性重算推导(逐位一致);
+**代码级重放不作要求**(不要求模型输出确定性重放、代码+环境依赖逐哈希重建
+重跑、提供商端点或外部数据源重放)。放弃的是"重放执行",不放弃的是"证据完整
++ 结论可重算"。
+
+承接 PER-320 独立审计(`docs/stage3-independent-audit-per320-report.v1.md`)
+的判读约束:
+
+- **协议门批次禁作评分证据(P3)**:v3–v3.4、frozen-preflight v1–v4 等 H1
+  标注批次按设计无验收运行,定位为协议/身份门证据;禁止引用为评分/排名证据。
+- **复盘证据稳定性限定(P4)**:`uv run fareli-retro evidence` 产物
+  (`docs/retrospectives/`)的字节级稳定性仅在**同一 HEAD** 下成立——证据
+  内嵌 `git_commit` 锚点,跨 HEAD 再生成仅该字段变化,其余逐字节一致。
+- **runs/ 完整性口径(P1)**:`runs/` 为 gitignore 目录,完整性依据为 bundle
+  manifest 逐件 sha256 自证 + 独立重算;git 零改动验证仅对 tracked 目录主张。
+- **契约 v4 世代方案收口(PER-257-D10)**:暂缓事项按本口径收口关闭,不再以
+  代码级重放为设计目标;未来如需代码级重放,另行立项。
+
+复盘命令:`uv run fareli-retro run --all`(逐批复盘)与
+`uv run fareli-retro evidence`(重生成复盘证据)。历史轨迹盘点见
+`docs/stage1-historical-trace-inventory-gap-report.v1.md`(PER-318)。
 
 ## 环境变量(凭据纪律)
 
