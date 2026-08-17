@@ -3,7 +3,8 @@
 Regression guard: with the baseline-v1 lineage roots removed, ``fareli-retro``
 must reach the explicit ``baseline_gap`` gate for every subcommand instead of
 crashing at import time (the retrospective modules still bind to the removed
-baseline until Stage 3 rebuilds them on baseline v2).
+baseline. Baseline v3 intentionally rebuilds evaluation inputs and contracts,
+not the deleted historical run evidence, so the gate remains active.
 """
 
 import io
@@ -25,8 +26,10 @@ class RetrospectiveGapTests(unittest.TestCase):
                 payload = json.loads(buffer.getvalue())
                 self.assertEqual(payload["status"], "baseline_gap")
                 self.assertIn("PER-323", payload["reason"])
+                self.assertIn("baseline v3", payload["reason"])
+                self.assertNotIn("rebuilt on baseline v2", payload["reason"])
 
-    def test_gate_is_active_until_baseline_v2_freezes(self):
+    def test_gate_remains_active_without_rebuilt_historical_run_evidence(self):
         self.assertTrue(BASELINE_V2_PENDING)
 
 
