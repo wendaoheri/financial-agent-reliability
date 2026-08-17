@@ -49,11 +49,11 @@
   },
   "integrity": {
     "canonicalization": "financial-agent-c14n-json-v1",
-    "content_sha256": "c1cd6d9809c596c97ca6eb1e3674c14b74db4bd2ac45a8ae88ffc5b0f2822a2c",
+    "content_sha256": "bb4e3512c2ec505fb74d7995925cfee28b4b6ccaa35df47ace3b70589d681880",
     "hash_algorithm": "sha256"
   },
   "lineage": {
-    "code_revision": "8721f102911ca2d18eb1e86bf0a85684f70fef1a",
+    "code_revision": "c9feb4f2bfa9296c70e5a6b154bf73a1c9b39e29",
     "collector": "manual curl with declared User-Agent (financial-agent-reliability-research)",
     "collector_version": "1.0.0",
     "notes": "missing_or_anomalous derivative: all records removed to evaluate correct abstention; Silver only, never ranking-eligible.",

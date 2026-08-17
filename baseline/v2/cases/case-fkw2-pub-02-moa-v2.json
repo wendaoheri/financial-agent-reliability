@@ -34,7 +34,7 @@
       "evidence_type": "xbrl_fact",
       "record_ids": [],
       "snapshot_id": "snapshot-sec-edgar-aapl-netincome-v2-01-missing",
-      "snapshot_sha256": "c25aef4c814bdba573914ae343d2cda0cb3fd5a10dd0de069659b2e39b450379"
+      "snapshot_sha256": "27f474609c4c520590339706a4513fdeb35db0cbb26d444c58e50633a1980eea"
     }
   ],
   "evidence_tier_requirement": false,
@@ -69,12 +69,12 @@
   "future_information_prohibited": true,
   "integrity": {
     "canonicalization": "financial-agent-c14n-json-v1",
-    "content_sha256": "4103cd6e6c9fb42a4253cab8ac3982c8f5795d4ff23467b7f64cf439cd3d733e",
+    "content_sha256": "bc30262a2d2ad2ed0c94f5d5c76e4973fa97d8a81bc3e504c6e4cd2457f8fff3",
     "hash_algorithm": "sha256"
   },
   "lineage": {
-    "code_revision": "8721f102911ca2d18eb1e86bf0a85684f70fef1a",
-    "generated_at": "2026-08-17T11:03:37Z",
+    "code_revision": "c9feb4f2bfa9296c70e5a6b154bf73a1c9b39e29",
+    "generated_at": "2026-08-17T11:05:28Z",
     "generator": "baseline/v2/build/build_baseline_v2.py",
     "generator_version": "1.0.0",
     "parent_case_id": "case-fkw2-pub-02-normal-v2",

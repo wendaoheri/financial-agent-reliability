@@ -63,7 +63,7 @@
       "sha256": "a3ff6a26de89e82ff81959bcff11af8874bdfc70f28f1767e9c2d97a9740a7d9"
     }
   ],
-  "frozen_at": "2026-08-17T11:03:37Z",
+  "frozen_at": "2026-08-17T11:05:28Z",
   "frozen_by_issue": "PER-328",
   "manifest_version": "3.0.0",
   "mutation_policy": "append-only audit failure plus new policy version and rerun of affected conclusions; candidate performance or demo-case outcomes must never alter this bundle",

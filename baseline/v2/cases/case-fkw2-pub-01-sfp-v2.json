@@ -51,7 +51,7 @@
         "FKW2-PUB-01-AAPL-FY2024"
       ],
       "snapshot_id": "snapshot-sec-edgar-aapl-revenue-v2-01",
-      "snapshot_sha256": "cebbfdf18d544c739d7cd4df00eaf6bfaa7513325b42b9217c17162967d1808f"
+      "snapshot_sha256": "504e7aa93e7046df2babf1c651b0e9a05f499ed4d816cfb03a84b9001442653b"
     }
   ],
   "evidence_tier_requirement": true,
@@ -86,12 +86,12 @@
   "future_information_prohibited": true,
   "integrity": {
     "canonicalization": "financial-agent-c14n-json-v1",
-    "content_sha256": "baabeffa270687b0bb339e02f369f5bd79b41a358c8768115758c92709007e59",
+    "content_sha256": "e1381aa4703a72b6ec22fe676e5d3d58ddf743e7f03e9e1e989274fab9fa86c9",
     "hash_algorithm": "sha256"
   },
   "lineage": {
-    "code_revision": "8721f102911ca2d18eb1e86bf0a85684f70fef1a",
-    "generated_at": "2026-08-17T11:03:37Z",
+    "code_revision": "c9feb4f2bfa9296c70e5a6b154bf73a1c9b39e29",
+    "generated_at": "2026-08-17T11:05:28Z",
     "generator": "baseline/v2/build/build_baseline_v2.py",
     "generator_version": "1.0.0",
     "parent_case_id": "case-fkw2-pub-01-normal-v2",

@@ -34,7 +34,7 @@
       "evidence_type": "quote_snapshot",
       "record_ids": [],
       "snapshot_id": "snapshot-longbridge-quote-700-v2-01-missing",
-      "snapshot_sha256": "a83226d3c06012872a3a28d0047f66cdc194162dc9c17f1c09670919735bff36"
+      "snapshot_sha256": "d28ffcfd36c626886ef686b9fb7af04285d9419f88b5a8e44aef7ffbad1389fd"
     }
   ],
   "evidence_tier_requirement": false,
@@ -65,12 +65,12 @@
   "future_information_prohibited": true,
   "integrity": {
     "canonicalization": "financial-agent-c14n-json-v1",
-    "content_sha256": "fc2ff75fd1f9649650a9dc9fb630c1b2686a94460b5849991208b70fd30b2e29",
+    "content_sha256": "ae83ba542472f907357620ff7f8897a0570753a6e97e7ca97127bb63594bbbe7",
     "hash_algorithm": "sha256"
   },
   "lineage": {
-    "code_revision": "8721f102911ca2d18eb1e86bf0a85684f70fef1a",
-    "generated_at": "2026-08-17T11:03:37Z",
+    "code_revision": "c9feb4f2bfa9296c70e5a6b154bf73a1c9b39e29",
+    "generated_at": "2026-08-17T11:05:28Z",
     "generator": "baseline/v2/build/build_baseline_v2.py",
     "generator_version": "1.0.0",
     "parent_case_id": "case-ftw2-lbq-02-normal-v2",

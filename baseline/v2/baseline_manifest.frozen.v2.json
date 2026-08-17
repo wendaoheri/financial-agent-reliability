@@ -5,12 +5,8 @@
       "sha256": "58bcafcbf78f26587130d1f729b6d247fc59076160b7f9ce9d2155e1104f06fa"
     },
     {
-      "path": "baseline/v2/__pycache__/validate_baseline_v2.cpython-311.pyc",
-      "sha256": "54fbc1abec7e4f53141585092b984dc6e3ea4d4939f6ba1152f32ccfa4797a6a"
-    },
-    {
       "path": "baseline/v2/build/build_baseline_v2.py",
-      "sha256": "9ab748da8270a04d1d79d02621d3117b2206a9338656915133cdae9e6430ecb0"
+      "sha256": "a4e9fe503de2625634d3ca0831e13142e0374d1bcae9e671542375c91936a90c"
     },
     {
       "path": "baseline/v2/build/capture_manifest.v2.json",
@@ -38,51 +34,51 @@
     },
     {
       "path": "baseline/v2/cases/case-fkw2-pub-01-moa-v2.json",
-      "sha256": "282002fc1a0d08ad941ba04132e72c86a2d9f86cff98026c858ba7bf180cf595"
+      "sha256": "0f82be65771ca32ce7d037abf9ef3f3e059dd5de9ff38dadea589f1468ede6da"
     },
     {
       "path": "baseline/v2/cases/case-fkw2-pub-01-normal-v2.json",
-      "sha256": "44d9c112be869eb0dd6029eee83b3b7adca4e06803df57c9c6e5fe64bd2e94b3"
+      "sha256": "c01c69e5387020a231f57e34d97eff33f5d681c7f9e273361efe0a36e524a7b6"
     },
     {
       "path": "baseline/v2/cases/case-fkw2-pub-01-sfp-v2.json",
-      "sha256": "c187be2bbe370f871dd8db320e8e53c9791f9a215e63473270392e6fd53114d6"
+      "sha256": "b22bd414bc2b1201054ec22449ee5fe1aca7325db7dc99ee9bfa7100ed9138f8"
     },
     {
       "path": "baseline/v2/cases/case-fkw2-pub-02-moa-v2.json",
-      "sha256": "4ccff5d6429da27e212503087d943fdb0279efdcfa8b1deb6c0488e362f3191b"
+      "sha256": "a11ed4c613af44709726044b12664f1258058bdd349f799ed7ac446802564111"
     },
     {
       "path": "baseline/v2/cases/case-fkw2-pub-02-normal-v2.json",
-      "sha256": "56c387629a6095c0fe4d673014b19a0d3114f73931854186cc679551c3e5cbd2"
+      "sha256": "5b3e8cadf9dec3154724d889cbc4c4d5914d569003e74473df6faa63568d1740"
     },
     {
       "path": "baseline/v2/cases/case-fkw2-pub-02-sfp-v2.json",
-      "sha256": "7d3761e7005f65af4e15b5f908c3aa5304e54c6cc2cbca88f4005322d15733d3"
+      "sha256": "2c14fa53aad73f216de23a6036a061fcfc84da44c5b6a91e0f164c8e8fab9e61"
     },
     {
       "path": "baseline/v2/cases/case-ftw2-lbq-01-moa-v2.json",
-      "sha256": "d4ebd32f12d5f0f35628be5e0b29824dd1bc4d1c8f3e5f6c10e07fc6e742366d"
+      "sha256": "5ad700521e4fcecf8bd5d2cf1cdd70baf9700f34c1044a97c8301f426e81767d"
     },
     {
       "path": "baseline/v2/cases/case-ftw2-lbq-01-normal-v2.json",
-      "sha256": "a10fe8f9e9d6209fab861093b5792197e017bc22de0cdbbd9de0fc6e089b0c24"
+      "sha256": "c360a68febe6772e0f5864c9d1b539ab29cdc843d0ae20ba000f6fff9e90e4e3"
     },
     {
       "path": "baseline/v2/cases/case-ftw2-lbq-01-sfp-v2.json",
-      "sha256": "c755a8d5fac5ca1b764a1dd9d6d60eae97960dbdd23e8921c8fa6d9dc95a5347"
+      "sha256": "08274d7d12422e1b0eac5ec29cdf4b671a1c774bf07f06ce311c5a33de38e41c"
     },
     {
       "path": "baseline/v2/cases/case-ftw2-lbq-02-moa-v2.json",
-      "sha256": "c34a91e68cd710221befd72116b07008d5599ebde66c131d14b05606419bbf70"
+      "sha256": "cb8db34dbc894325eb2ddbf1bb67eca2d8dba2c27ac93e2d2ea4e93e36c6e3ba"
     },
     {
       "path": "baseline/v2/cases/case-ftw2-lbq-02-normal-v2.json",
-      "sha256": "bb0a31315b6a1251a24b943865ca929b1af62b569c1c68513946747fca4df01b"
+      "sha256": "51b1f8d60c4d749ba7e5e974e3afe1a79fd7051479f6bed56e55ec3903e81e2d"
     },
     {
       "path": "baseline/v2/cases/case-ftw2-lbq-02-sfp-v2.json",
-      "sha256": "cb88408edf6afb150f69c6a48619cdc6d506fb24cfe8856bd9108f29d48700f1"
+      "sha256": "160afd61d8e37466358c522769802e493e4932c77a08e8132b5fab6509bd9b2d"
     },
     {
       "path": "baseline/v2/contracts/case_card.schema.v2.json",
@@ -98,7 +94,7 @@
     },
     {
       "path": "baseline/v2/contracts/grader_contract.frozen.v2.json",
-      "sha256": "5967f5b6c5af18598a12136cf06c5f79e19e102c0f1a73111d04247ecf8c6ba9"
+      "sha256": "f2c68eb286fe60619d7379278e16841b6e71de82a837a987578a6c5fff1c9ace"
     },
     {
       "path": "baseline/v2/contracts/reason_codes.v2.json",
@@ -114,35 +110,35 @@
     },
     {
       "path": "baseline/v2/snapshots/data_snapshot.snapshot-longbridge-quote-700-v2-01-missing.missing.json",
-      "sha256": "a83226d3c06012872a3a28d0047f66cdc194162dc9c17f1c09670919735bff36"
+      "sha256": "d28ffcfd36c626886ef686b9fb7af04285d9419f88b5a8e44aef7ffbad1389fd"
     },
     {
       "path": "baseline/v2/snapshots/data_snapshot.snapshot-longbridge-quote-700-v2-01.primary.json",
-      "sha256": "03bd3ea0625c713fc446ac8bcb61bdc645fe043c8d7ec230913a85a541798593"
+      "sha256": "903a4aeb779a7c0d9f4cd2e9d0509b9ddf9c3d58e9b38a07919d2ceec88425cd"
     },
     {
       "path": "baseline/v2/snapshots/data_snapshot.snapshot-longbridge-quote-aapl-v2-01-missing.missing.json",
-      "sha256": "b647178aaf0ef5027d8d18f88fb0e11e38a8025e9276a8cf3d08d54f467d4849"
+      "sha256": "c5bd38ebc3d2c0559d3727e6a1ae2f46f5562db5924b97f355603fe65038a45f"
     },
     {
       "path": "baseline/v2/snapshots/data_snapshot.snapshot-longbridge-quote-aapl-v2-01.primary.json",
-      "sha256": "cbb9f681f9164ffebcf3c49de21eee986cfbff8f032d2ce1b0bd66ec51ca858f"
+      "sha256": "307f534a38d67f3bfc38d38616a7184c0f37e7c7fe862cd0be0818125bbf2693"
     },
     {
       "path": "baseline/v2/snapshots/data_snapshot.snapshot-sec-edgar-aapl-netincome-v2-01-missing.missing.json",
-      "sha256": "c25aef4c814bdba573914ae343d2cda0cb3fd5a10dd0de069659b2e39b450379"
+      "sha256": "27f474609c4c520590339706a4513fdeb35db0cbb26d444c58e50633a1980eea"
     },
     {
       "path": "baseline/v2/snapshots/data_snapshot.snapshot-sec-edgar-aapl-netincome-v2-01.primary.json",
-      "sha256": "7d08ec3de49991a6b0c3efa074fe4a74d30c95650c757835c48ed6bc6d32003e"
+      "sha256": "634640f15eb18e4cdc36f8971374a0d8461192fd2f035af5c4e18043a26dc693"
     },
     {
       "path": "baseline/v2/snapshots/data_snapshot.snapshot-sec-edgar-aapl-revenue-v2-01-missing.missing.json",
-      "sha256": "2f35e656bbfac022776316fa0a9ddc08e47fe1c10c69cd8d6771adf1bde19257"
+      "sha256": "3fdd80983f3169251790c0c9b156eb7a2ca5fa0ae7e7aea3d1edb214e19a5769"
     },
     {
       "path": "baseline/v2/snapshots/data_snapshot.snapshot-sec-edgar-aapl-revenue-v2-01.primary.json",
-      "sha256": "cebbfdf18d544c739d7cd4df00eaf6bfaa7513325b42b9217c17162967d1808f"
+      "sha256": "504e7aa93e7046df2babf1c651b0e9a05f499ed4d816cfb03a84b9001442653b"
     },
     {
       "path": "baseline/v2/validate_baseline_v2.py",
@@ -150,10 +146,10 @@
     }
   ],
   "baseline_generation": "v2-minimal",
-  "bundle_sha256": "1c886c81146139ce9a005fb00db058c473c4be80cff2a5a8f052c68d0465b588",
+  "bundle_sha256": "e401ccce3496ace2a9da7ab6c063cbc28ff17bfa4496e655c674cbf10f49e34d",
   "contract_type": "baseline_manifest",
   "contract_version": "2.0.0",
-  "frozen_at": "2026-08-17T11:03:37Z",
+  "frozen_at": "2026-08-17T11:05:28Z",
   "frozen_by_issue": "PER-328",
   "status": "frozen"
 }

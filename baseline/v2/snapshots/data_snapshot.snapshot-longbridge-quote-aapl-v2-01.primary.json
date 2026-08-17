@@ -46,11 +46,11 @@
   },
   "integrity": {
     "canonicalization": "financial-agent-c14n-json-v1",
-    "content_sha256": "19cf499e1135ee2ef687ab24db3ebb98a2125902b5f69801e67bb517ed1a0427",
+    "content_sha256": "30510f5a4390f54a973a00284f5de64213f15d15133751276eb0223c5bd35cc5",
     "hash_algorithm": "sha256"
   },
   "lineage": {
-    "code_revision": "8721f102911ca2d18eb1e86bf0a85684f70fef1a",
+    "code_revision": "c9feb4f2bfa9296c70e5a6b154bf73a1c9b39e29",
     "collector": "Longbridge CLI 0.27.x public read-only quote query; no account, position, order, or trade scope accessed",
     "collector_version": "1.0.0",
     "notes": "last reflects the most recent regular-session trade (2026-08-14 US session); the raw payload carries no regular-session timestamp field, so snapshot as_of is conservatively bound to the post_market block timestamp, which upper-bounds the regular session.",

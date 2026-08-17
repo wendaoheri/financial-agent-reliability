@@ -49,11 +49,11 @@
   },
   "integrity": {
     "canonicalization": "financial-agent-c14n-json-v1",
-    "content_sha256": "a1a6966bf1eae110052ba9e32efeaf4ed4f09363307952b8a229c3d9f7ed117d",
+    "content_sha256": "71407cd7166fb870db8120c62a7df5043ce11d26f39d181eaeae4c2d4b7b17fd",
     "hash_algorithm": "sha256"
   },
   "lineage": {
-    "code_revision": "8721f102911ca2d18eb1e86bf0a85684f70fef1a",
+    "code_revision": "c9feb4f2bfa9296c70e5a6b154bf73a1c9b39e29",
     "collector": "manual curl with declared User-Agent (financial-agent-reliability-research)",
     "collector_version": "1.0.0",
     "notes": "Filing acceptance dates sourced from the SEC submissions capture (capture-sec-edgar-aapl-submissions-v1); available_at is the acceptance date at 00:00:00Z (conservative, date-level).",
