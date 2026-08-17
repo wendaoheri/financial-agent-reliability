@@ -2,8 +2,9 @@
 
 - 依据口径:`docs/contracts/scenario-conclusion-reproducibility-criteria.v1.md`(v1,PER-317 冻结)
 - 差距报告:`docs/stage1-historical-trace-inventory-gap-report.v1.md`(PER-318)
-- git 锚点:`2eee889994b607514257674b4cf512b188e5f543`
+- git 锚点:`f835b07368a6dbf0aa2e004e2cd7df3baa78a2c2`
 - 复盘方式:完全离线;只读冻结/本地产物;无模型调用、无网络、无交易
+- runs/ 完整性依据:runs/ 为 .gitignore 排除对象,git 不覆盖该目录:其完整性由 bundle manifest 逐件 sha256 自证(A1_manifest_integrity)+ 独立重算承担;git 零改动验证仅对 tracked 目录主张(contracts/、evidence/、audit/、reports/、snapshots/、cases/、catalog/、preregistration/)(PER-320 审计 P1 纠正)
 - 判定汇总:partially_traceable × 1;traceable × 19
 
 ## 逐批次判定

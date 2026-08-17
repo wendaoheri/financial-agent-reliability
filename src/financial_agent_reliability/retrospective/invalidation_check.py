@@ -28,10 +28,12 @@ def reconcile_invalidations(batch: BatchRecord) -> dict[str, Any]:
     result["applicable"] = True
     result["invalidated_run_ids_in_report"] = report_ids
     result["entry_count"] = len(entries)
-    if len(report_ids) != len(entries):
-        result.setdefault("problems", []).append("invalidation report has duplicate run_ids")
 
     problems: list[str] = []
+    # F3:重复 run_id 检出须并入同一 problems 列表(此前的 setdefault 写入
+    # 会被函数末尾的赋值覆盖丢弃)。
+    if len(report_ids) != len(entries):
+        problems.append("invalidation report has duplicate run_ids")
 
     # driver-progress 事件按 run_id 去重(L5)
     progress_path = batch_dir / "driver-progress.jsonl"

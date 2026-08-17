@@ -40,6 +40,16 @@ OUTPUT_DIR = REPO_ROOT / "docs" / "retrospectives"
 CRITERIA_PATH = "docs/contracts/scenario-conclusion-reproducibility-criteria.v1.md"
 GAP_REPORT_PATH = "docs/stage1-historical-trace-inventory-gap-report.v1.md"
 
+#: PER-320 审计 P1 表述纠正:runs/ 为 .gitignore 排除对象,git 不覆盖该目录,
+#: 其完整性不能以 git 验证主张;依据为 bundle manifest 逐件 sha256 自证
+#: (A1_manifest_integrity)+ 独立重算。git 零改动验证仅对 tracked 目录主张。
+RUNS_INTEGRITY_BASIS = (
+    "runs/ 为 .gitignore 排除对象,git 不覆盖该目录:其完整性由 bundle manifest "
+    "逐件 sha256 自证(A1_manifest_integrity)+ 独立重算承担;git 零改动验证仅对 "
+    "tracked 目录主张(contracts/、evidence/、audit/、reports/、snapshots/、"
+    "cases/、catalog/、preregistration/)"
+)
+
 
 def _git_head() -> str:
     try:
@@ -70,6 +80,7 @@ def run_full_retrospective() -> dict[str, Any]:
         "gap_report": GAP_REPORT_PATH,
         "git_commit": _git_head(),
         "offline": True,
+        "runs_integrity_basis": RUNS_INTEGRITY_BASIS,
         "batches": [item.to_dict() for item in retrospections],
         "verdict_counts": _verdict_counts(retrospections),
         "labels_registry": [
@@ -93,20 +104,51 @@ def _verdict_counts(items: list[BatchRetrospection]) -> dict[str, int]:
     return counts
 
 
-def write_evidence(output_dir: pathlib.Path | None = None) -> dict[str, str]:
+def resolve_evidence_output_dir(
+    output_dir: pathlib.Path | str | None,
+) -> pathlib.Path:
+    """F7:``evidence --out`` 路径策略。
+
+    相对路径按仓库根解析(与调用方 CWD 无关);最终路径必须落在仓库内
+    (证据是仓库内交付物,仓外路径也无法以仓库根相对路径登记),否则抛
+    ``ValueError`` 并给出明确错误——不再让下游 ``relative_to`` 崩溃。
+    """
+    if output_dir is None:
+        return OUTPUT_DIR
+    candidate = pathlib.Path(str(output_dir)).expanduser()
+    if not candidate.is_absolute():
+        candidate = REPO_ROOT / candidate
+    resolved = candidate.resolve()
+    repo_root = REPO_ROOT.resolve()
+    if resolved != repo_root and repo_root not in resolved.parents:
+        raise ValueError(
+            "evidence --out must stay inside the repository "
+            f"({repo_root}): got {resolved}"
+        )
+    return resolved
+
+
+def write_evidence(
+    output_dir: pathlib.Path | str | None = None,
+) -> dict[str, str]:
     """执行全量复盘 + 全部推导件,落盘并返回输出路径清单。"""
-    out = pathlib.Path(output_dir) if output_dir else OUTPUT_DIR
+    out = resolve_evidence_output_dir(output_dir)
+    repo_root = REPO_ROOT.resolve()
+
+    def _repo_relative(path: pathlib.Path) -> str:
+        return path.resolve().relative_to(repo_root).as_posix()
+
     index = run_full_retrospective()
     written: dict[str, str] = {}
 
     index_path = out / "retrospective-index.v1.json"
     _write_json(index_path, index)
-    written["index"] = index_path.relative_to(REPO_ROOT).as_posix()
+    written["index"] = _repo_relative(index_path)
 
     for item in index["batches"]:
         batch_path = out / "batches" / f"{item['batch_id']}.v1.json"
         _write_json(batch_path, item)
-        written[f"batch:{item['batch_id']}"] = batch_path.relative_to(REPO_ROOT).as_posix()
+        written[f"batch:{item['batch_id']}"] = _repo_relative(batch_path)
 
     derived = {
         "lineage": build_lineage_index(),
@@ -133,11 +175,11 @@ def write_evidence(output_dir: pathlib.Path | None = None) -> dict[str, str]:
     for key, payload in derived.items():
         path = out / names[key]
         _write_json(path, payload)
-        written[key] = path.relative_to(REPO_ROOT).as_posix()
+        written[key] = _repo_relative(path)
 
     report_path = out / "retrospective-report.v1.md"
     report_path.write_text(render_markdown(index, derived), encoding="utf-8")
-    written["report"] = report_path.relative_to(REPO_ROOT).as_posix()
+    written["report"] = _repo_relative(report_path)
     return written
 
 
@@ -149,6 +191,7 @@ def render_markdown(index: dict[str, Any], derived: dict[str, Any]) -> str:
     lines.append(f"- 差距报告:`{GAP_REPORT_PATH}`(PER-318)")
     lines.append(f"- git 锚点:`{index['git_commit']}`")
     lines.append("- 复盘方式:完全离线;只读冻结/本地产物;无模型调用、无网络、无交易")
+    lines.append(f"- runs/ 完整性依据:{RUNS_INTEGRITY_BASIS}(PER-320 审计 P1 纠正)")
     counts = index["verdict_counts"]
     lines.append(
         "- 判定汇总:" + ";".join(f"{key} × {value}" for key, value in sorted(counts.items()))

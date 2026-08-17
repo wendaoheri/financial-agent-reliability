@@ -120,6 +120,22 @@ def _protocol_gate_check(batch: BatchRecord) -> CheckResult:
     )
 
 
+def _missing_governance_documents(batch: BatchRecord) -> tuple[str, ...]:
+    """F2:治理文书缺失检测(M1 降级标注的导出依据)。
+
+    M1 由批内目录的事实导出——``preflight.json`` / ``authorization.run.json``
+    缺失即命中,不再按 ``batch_id`` 硬编码;任何验收/覆盖批次缺文书都会
+    落入同一检测。返回缺失文书的短名(固定顺序,保证输出稳定)。
+    """
+    documents = (
+        ("authorization.run.json", "authorization.run"),
+        ("preflight.json", "preflight"),
+    )
+    return tuple(
+        label for name, label in documents if not (batch.directory / name).is_file()
+    )
+
+
 def _governance_check(batch: BatchRecord, runs: Any) -> CheckResult:
     """治理节点(preflight/授权/冻结输入)汇总为单项检查。"""
     problems = list(runs.frozen_input_errors)
@@ -127,9 +143,14 @@ def _governance_check(batch: BatchRecord, runs: Any) -> CheckResult:
     preflight_problems = list(runs.preflight_errors)
     authorization_problems = list(runs.authorization_errors)
 
-    if batch.batch_id == "acceptance-v3.5":
-        # M1:历史批次授权记录缺失——按口径 3.4 降级标注而非失败。
-        degraded.append("M1:v3.5 授权记录缺失(authorization.run/preflight 均无)")
+    missing_documents = _missing_governance_documents(batch)
+    if missing_documents:
+        # M1:治理文书缺失——由检测导出降级标注(而非按 batch_id 硬编码),
+        # 按口径 3.4 降级而非失败。
+        short_id = batch.batch_id.removeprefix("acceptance-").removeprefix("coverage-")
+        degraded.append(
+            f"M1:{short_id} 授权记录缺失({'/'.join(missing_documents)} 均无)"
+        )
     problems.extend(preflight_problems)
     problems.extend(authorization_problems)
     problems.extend(runs.invalidation_notes)
@@ -152,8 +173,8 @@ def _governance_check(batch: BatchRecord, runs: Any) -> CheckResult:
             "preflight_errors": len(preflight_problems),
             "authorization_errors": len(authorization_problems),
             "invalidation_notes": len(runs.invalidation_notes),
-            # M1(v3.5 授权缺失)影响执行合规性声称 → 降级为部分可追溯。
-            "downgrade_affects_conclusion": batch.batch_id == "acceptance-v3.5",
+            # M1(治理文书缺失)影响执行合规性声称 → 降级为部分可追溯。
+            "downgrade_affects_conclusion": bool(missing_documents),
         },
     )
 
@@ -203,12 +224,22 @@ def retrospect_batch(batch: BatchRecord) -> BatchRetrospection:
         checks.append(scenario)
         runs = retrospect_runs(batch)
         run_statistics = dict(runs.metrics)
+        # F4:契约世代无 commitments/链锚字段时,anchor_problems=() 是 N/A
+        # 而非"anchors hold"空转通过——详情文本显式注记。
+        if runs.anchors_na:
+            anchor_note = (
+                "traces validate; grader recompute bit-equal; "
+                "chain-anchor re-verification N/A(该契约世代无 commitments/链锚字段,"
+                "anchor_problems=0 为不适用而非通过)"
+            )
+        else:
+            anchor_note = "traces validate; grader recompute bit-equal; anchors hold"
         checks.append(
             CheckResult(
                 name="A3_trace_and_B1_regrade",
                 status=FAIL if (runs.run_errors or runs.anchor_problems) else PASS,
                 details=tuple(list(runs.run_errors[:10]) + list(runs.anchor_problems[:10]))
-                or ("traces validate; grader recompute bit-equal; anchors hold",),
+                or (anchor_note,),
                 metrics={
                     "runs": len(runs.records),
                     "run_errors": len(runs.run_errors),

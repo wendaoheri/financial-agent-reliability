@@ -37,7 +37,7 @@
     },
     {
       "details": [
-        "traces validate; grader recompute bit-equal; anchors hold"
+        "traces validate; grader recompute bit-equal; chain-anchor re-verification N/A(该契约世代无 commitments/链锚字段,anchor_problems=0 为不适用而非通过)"
       ],
       "metrics": {
         "anchor_problems": 0,

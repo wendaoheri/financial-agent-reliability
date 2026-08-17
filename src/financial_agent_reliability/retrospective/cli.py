@@ -121,7 +121,12 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 0 if ok else 2
 
     if args.command == "evidence":
-        written = write_evidence(args.out)
+        try:
+            written = write_evidence(args.out)
+        except ValueError as exc:
+            # F7:路径策略违规(仓外/无法解析)——明确报错,不崩溃栈。
+            print(f"error: {exc}", file=sys.stderr)
+            return 2
         _emit(written)
         index = run_full_retrospective()
         return 2 if index["verdict_counts"].get(UNTRACEABLE) else 0

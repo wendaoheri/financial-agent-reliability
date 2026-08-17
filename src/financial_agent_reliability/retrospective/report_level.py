@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
-from typing import Any
+from typing import Any, Mapping
 
 from financial_agent_reliability.retrospective.registry import REPO_ROOT
 from financial_agent_reliability.retrospective.hashing import file_sha256
@@ -61,6 +61,32 @@ def check_report_bundle_freeze() -> dict[str, Any]:
     return {"ok": not problems, "problems": problems, "freeze": freeze}
 
 
+def compare_report_statistics(
+    score: Mapping[str, Any],
+    per32: Mapping[str, Any],
+    machine: Mapping[str, Any],
+) -> list[str]:
+    """B3 统计比对纯函数(F9:可离线单元测试,不依赖历史产物)。
+
+    重算统计 vs PER-32 签署统计 vs 发布件三方逐字段比对;
+    问题文案与落盘证据口径保持一致,不得随意改写。
+    """
+    problems: list[str] = []
+    for key in ("models", "pairwise_csr", "leader_gates", "ranking_reliable", "provisional_leader"):
+        if score.get(key) != per32.get(key):
+            problems.append(f"recomputed {key} != PER-32 signed statistics")
+    if machine.get("ranking_reliable") != score.get("ranking_reliable"):
+        problems.append("published ranking_reliable != recomputed")
+    if machine.get("leader_gates") != score.get("leader_gates"):
+        problems.append("published leader_gates != recomputed")
+    if machine.get("pairwise_csr") != score.get("pairwise_csr"):
+        problems.append("published pairwise_csr != recomputed")
+    leader_point = machine.get("provisional_leader_point_estimate", {})
+    if isinstance(leader_point, dict) and leader_point.get("model") != score.get("provisional_leader"):
+        problems.append("published provisional leader != recomputed")
+    return problems
+
+
 def recompute_report_level() -> dict[str, Any]:
     """B3:重建密封行 + 重评分 + 与落盘统计逐字段比对。"""
     bridge = _load_module("retrospective_sealed_bridge", "contracts/sealed_row_bridge_v2.py")
@@ -81,25 +107,9 @@ def recompute_report_level() -> dict[str, Any]:
 
     per32_path = REPO_ROOT / "audit" / "per32_part4_ranking_results.json"
     per32 = json.loads(per32_path.read_text(encoding="utf-8"))
-    for key in ("models", "pairwise_csr", "leader_gates", "ranking_reliable", "provisional_leader"):
-        ours = score.get(key)
-        theirs = per32.get(key)
-        if key == "models":
-            ours, theirs = score.get("models"), per32.get("models")
-        if ours != theirs:
-            problems.append(f"recomputed {key} != PER-32 signed statistics")
-
     machine_path = REPO_ROOT / "reports" / "stage5" / "machine_readable_results.v1.json"
     machine = json.loads(machine_path.read_text(encoding="utf-8"))
-    if machine.get("ranking_reliable") != score.get("ranking_reliable"):
-        problems.append("published ranking_reliable != recomputed")
-    if machine.get("leader_gates") != score.get("leader_gates"):
-        problems.append("published leader_gates != recomputed")
-    if machine.get("pairwise_csr") != score.get("pairwise_csr"):
-        problems.append("published pairwise_csr != recomputed")
-    leader_point = machine.get("provisional_leader_point_estimate", {})
-    if isinstance(leader_point, dict) and leader_point.get("model") != score.get("provisional_leader"):
-        problems.append("published provisional leader != recomputed")
+    problems.extend(compare_report_statistics(score, per32, machine))
 
     return {
         "ok": not problems,
@@ -113,12 +123,11 @@ def recompute_report_level() -> dict[str, Any]:
     }
 
 
-def export_ranking() -> dict[str, Any]:
-    """差距项 L3/A2:由重算统计导出显式排名(仅 Gold,诊断 Silver 不入榜)。"""
-    bridge = _load_module("retrospective_sealed_bridge", "contracts/sealed_row_bridge_v2.py")
-    from contracts.grader_v2 import score_results
+def ranking_entries(score: Mapping[str, Any]) -> list[dict[str, Any]]:
+    """L3/A2 排名条目导出纯函数(F9:可离线单元测试,不依赖历史产物)。
 
-    score = score_results(bridge.build_bundle())
+    按 Gold CSR 点估计降序、模型名升序断并列;缺失估计按 -1.0 排末位。
+    """
     entries = []
     for model, metrics in score.get("models", {}).items():
         csr = metrics.get("CSR", {})
@@ -135,6 +144,16 @@ def export_ranking() -> dict[str, Any]:
     entries.sort(key=lambda item: (-(item["gold_csr_estimate"] or -1.0), item["model"]))
     for rank, item in enumerate(entries, start=1):
         item["gold_csr_rank"] = rank
+    return entries
+
+
+def export_ranking() -> dict[str, Any]:
+    """差距项 L3/A2:由重算统计导出显式排名(仅 Gold,诊断 Silver 不入榜)。"""
+    bridge = _load_module("retrospective_sealed_bridge", "contracts/sealed_row_bridge_v2.py")
+    from contracts.grader_v2 import score_results
+
+    score = score_results(bridge.build_bundle())
+    entries = ranking_entries(score)
     return {
         "contract_type": "retrospective_ranking_export",
         "ranking_scope": score.get("ranking_scope"),

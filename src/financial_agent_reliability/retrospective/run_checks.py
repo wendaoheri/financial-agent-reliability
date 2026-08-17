@@ -47,6 +47,7 @@ class RunsCheck:
     anchor_problems: tuple[str, ...]
     metrics: dict[str, Any] = field(default_factory=dict)
     frozen_input_resolved: tuple[str, ...] = ()  # PER-85-D6 relocation 放行留痕
+    anchors_na: bool = False  # F4: 该契约世代无 commitments/链锚字段,链锚回验 N/A(非空转通过)
 
 
 def _reclassify_frozen_input_errors(
@@ -193,6 +194,34 @@ def _checkpoint_chain_events(path: pathlib.Path, run_id: str) -> tuple[int, list
     return count, errors
 
 
+def _verify_v35_bundle_pins(batch: BatchRecord) -> tuple[str, ...]:
+    """F2:v3.5 契约 bundle 钉住校验(此前无 reconcile 脚本,该校验空转)。
+
+    v3.5 没有配套冻结 reconcile 脚本,``frozen_input_errors`` 曾恒为空元组。
+    此处直接按 PER-85-D6 语义(``relocation.verify_frozen_pin``:原位一致 /
+    迁移逐字节一致 / 机械改写放行清单均算通过)逐件校验批内冻结 bundle
+    ``artifacts[]`` 的路径钉住;未通过者按 ``artifact drift:<path>`` 记录。
+    """
+    from financial_agent_reliability.relocation import verify_frozen_pin
+
+    pins: dict[str, str] = {}
+    bundle_paths = sorted(
+        batch.directory.glob("stage3_acceptance_contracts.frozen.*.json")
+    )
+    for bundle_path in bundle_paths:
+        try:
+            bundle = _read_json(bundle_path)
+        except (OSError, ValueError):
+            continue
+        for item in bundle.get("artifacts", []):
+            pins.setdefault(str(item["path"]), str(item["sha256"]))
+    return tuple(
+        f"artifact drift:{pin_path}"
+        for pin_path, expected in sorted(pins.items())
+        if not verify_frozen_pin(REPO_ROOT, pin_path, expected)[0]
+    )
+
+
 def _retrospect_v35(batch: BatchRecord, plan: Mapping[str, Any]) -> RunsCheck:
     """v3.5 批次:按冻结 grade_output 语义重放(无 reconcile 脚本)。"""
     from contracts.run_trace_validator_v3 import validate_grader_v3
@@ -283,7 +312,7 @@ def _retrospect_v35(batch: BatchRecord, plan: Mapping[str, Any]) -> RunsCheck:
     return RunsCheck(
         records=tuple(records),
         run_errors=tuple(run_errors),
-        frozen_input_errors=(),
+        frozen_input_errors=_verify_v35_bundle_pins(batch),
         preflight_errors=(),
         authorization_errors=(),
         invalidation_notes=(),
@@ -293,6 +322,8 @@ def _retrospect_v35(batch: BatchRecord, plan: Mapping[str, Any]) -> RunsCheck:
             "checkpoint_events": checkpoint_events_total,
             "regrade_engine": "acceptance_v3.grade_candidate(v3.5 semantics)",
         },
+        # F4:v3.5 世代无 commitments/链锚字段,anchor_problems=() 是 N/A 而非通过。
+        anchors_na=True,
     )
 
 
