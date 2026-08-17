@@ -1,0 +1,10 @@
+main=863fab3b207b38947a7414fc319e4612cdc20d8b
+origin_main=863fab3b207b38947a7414fc319e4612cdc20d8b
+baseline_v4_ancestor=0
+stage4_evidence_ancestor=0
+local_branches:
+(HEAD detached at 863fab3)
+main
+remote_branches:
+origin
+origin/main

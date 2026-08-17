@@ -57,3 +57,12 @@ Stage 5 独立审计复算。C-323-19 已作废 v3 的新验收结论；本报�
 
 原始命令输出与结构化核对结果均在本目录。`SHA256SUMS` 对除自身外的证据文件逐件登记；
 清单自身 hash 在 PER-329 完成评论中登记。主线祖先证明与分支清理结果在收敛后追加。
+
+## main 收敛
+
+`main` 已 fast-forward 并推送至 `863fab3b207b38947a7414fc319e4612cdc20d8b`；
+`main-ancestry.log` 证明上一轮 main、PER-327 二次整改、baseline v4 冻结、手动指南
+以及本轮首批验证证据均为其祖先。确认祖先关系后，已删除合并完成的本地
+`per327-second-audit-fixes`、`per328-baseline-v4`、`per329-baseline-v4-validation`
+及远端前两条分支；当前本地仅 `main`，远端仅 `origin/main`（另有 `origin/HEAD`
+符号引用）。最终清单与清理证据追加提交后再 fast-forward 到同一主线。
