@@ -71,6 +71,12 @@
       "evidence": "main-ancestry.log",
       "exit_code": 0,
       "result": "PER-327 runtime fix, PER-328 baseline v3, and PER-329 execution commits are main ancestors"
+    },
+    {
+      "command": "verify main/origin-main equality, then delete merged local and remote topic branches",
+      "evidence": "branch-cleanup.log",
+      "exit_code": 0,
+      "result": "main and origin/main equal 65685e2; only local main and remote origin/main remain (plus origin/HEAD symbolic ref)"
     }
   ],
   "contract_hashes": {
