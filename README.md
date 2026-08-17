@@ -5,12 +5,13 @@
 建设一套可验证的评测 harness、契约体系与证据库,用于控制投研、估值、
 量化、风险管理等场景中的高损失错误、结构化可信错误、越权执行与责任真空。
 
-> **PER-323 过渡状态(2026-08-17,Stage 2)**:基线 v1 的 ❄️ 旧血缘历史基线
+> **PER-323 状态(2026-08-17,Stage 3)**:基线 v1 的 ❄️ 旧血缘历史基线
 > (contracts/、cases/、catalog/、snapshots/、preregistration/、evidence/、
 > audit/、reports/、runs/)已按项目所有者批准的方案 B 与冻结清理清单 v1 删除,
 > 逐项留痕与回滚索引见 `docs/per323-stage2-deletion-record.md`。推理层已改造为
-> provider/模型可配置(`configs/inference.json`)。基线 v2 与口径 v2 验收标准由
-> Stage 3(PER-328)重建;重建完成前复盘工具链处于基线空窗期。手动执行见
+> provider/模型可配置(`configs/inference.json`)。基线 v2(最小可用:4 族 ×
+> 3 变体,见 `baseline/v2/`)与口径 v2(`docs/contracts/acceptance-criteria-v2.md`)
+> 已由 Stage 3(PER-328)重建,待交付负责人裁决冻结。手动执行见
 > `docs/manual-execution-guide.md`。
 
 ## 快速开始
@@ -23,7 +24,7 @@
 ```bash
 uv sync                                            # 安装依赖并安装本项目(editable)
 npm ci                                             # 安装 pi-agent-core 0.73.1(运行时边界)
-uv run python -m unittest discover -s tests -v     # 全量测试(40 个用例)
+uv run python -m unittest discover -s tests -v     # 全量测试(62 个用例)
 npm run test:runtime                               # pi-agent-core 运行时边界测试(node --test)
 uv run fareli-harness --help                       # 评测 harness CLI(preflight / freeze-preflight)
 uv run fareli-report --help                        # 报告契约 CLI(validate / render)
@@ -56,6 +57,18 @@ src/financial_agent_reliability/
 
 顶层导入名为 `financial_agent_reliability`。
 
+### 🧊 基线 v2(`baseline/v2/`,最小可用重建,Stage 3 PER-328)
+
+| 路径 | 内容 |
+| --- | --- |
+| `baseline/v2/cases/` | 12 张案例卡(4 族 × normal/single_factor_perturbation/missing_or_anomalous),公开 seed 优先(SEC EDGAR 公有领域披露)+ Longbridge 公开只读行情 |
+| `baseline/v2/snapshots/` | 4 个主数据快照 + 4 个缺证派生快照(弃权评测专用,Silver) |
+| `baseline/v2/contracts/` | case_card/data_snapshot schema v2、run_trace schema v4、理由码词表 v2、验证配置、grader 捆扎清单 |
+| `baseline/v2/grader/grader_policy.v2.json` | grader 政策:critical_success 公式、不变量词表、Gold-only 排名纪律、三层证据标注规则 |
+| `baseline/v2/build/` | 确定性构建器、采集清单与原始公开响应(sha256 血缘) |
+| `baseline/v2/validate_baseline_v2.py` | 无第三方依赖校验器:validate-bundle / verify-manifest / verify-trace |
+| `baseline/v2/baseline_manifest.frozen.v2.json` | 全基线逐件 sha256 与 bundle hash(单一入口) |
+
 ### ⚙️ 推理与运行时契约(`configs/`,随仓库提交、不含密钥)
 
 | 文件 | 内容 |
@@ -74,12 +87,23 @@ src/financial_agent_reliability/
 
 ## 可复现性与可追溯性验收口径
 
-**过渡状态**:口径 v1(`docs/contracts/scenario-conclusion-reproducibility-criteria.v1.md`,
+**口径 v2(基线 v2 世代)**:`docs/contracts/acceptance-criteria-v2.md`(PER-328
+重建,随基线 v2 冻结)。核心判定维度为时点与口径、证据血缘、结论验证、弃权与
+升级,均锚定为机器可执行的 critical invariants;研究结论须按三层标注
+(研究直接证据/金融推论/说明性案例)。基线 v2 校验入口:
+
+```bash
+python3 baseline/v2/validate_baseline_v2.py validate-bundle baseline/v2
+python3 baseline/v2/validate_baseline_v2.py verify-manifest baseline/v2
+```
+
+口径 v1(`docs/contracts/scenario-conclusion-reproducibility-criteria.v1.md`,
 PER-317 冻结)所依赖的冻结产物已随基线 v1 删除,口径 v1 自删除起失效,作为历史
-记录保留原文;口径 v2 与基线 v2 由 Stage 3(PER-328)重建并冻结。空窗期内不启动
-以口径 v1 为依据的新验收。历史留痕:Stage 1 差距报告(PER-318)、复盘证据
-(PER-319,`docs/retrospectives/`)、独立审计报告(PER-320)均保留原文并追加了
-PER-323 历史说明;复盘命令 `fareli-retro` 当前显式返回 `baseline_gap`(exit 2)。
+记录保留原文,不追溯推翻其有效期内的历史验收(PER-323 C-323-9)。历史留痕:
+Stage 1 差距报告(PER-318)、复盘证据(PER-319,`docs/retrospectives/`)、
+独立审计报告(PER-320)均保留原文并追加了 PER-323 历史说明;复盘命令
+`fareli-retro` 面向基线 v1 历史运行的复盘仍显式返回 `baseline_gap`(exit 2)
+——基线 v2 为最小可用版本,不恢复历史运行证据。
 
 ## 环境变量(凭据纪律)
 

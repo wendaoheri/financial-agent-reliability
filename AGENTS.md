@@ -7,10 +7,12 @@ Multica runtime block above remains authoritative for platform operations.
 本文件是盘点现行目录、命名、测试、产物冻结与密钥纪律后固化的可执行规范。
 与冻结产物冲突时,以证据血缘完整性为准。
 
-> **PER-323 过渡状态(2026-08-17,Stage 2)**:基线 v1 的 ❄️ 旧血缘历史基线已按
+> **PER-323 状态(2026-08-17,Stage 3)**:基线 v1 的 ❄️ 旧血缘历史基线已按
 > 项目所有者批准的方案 B 与冻结清理清单 v1 整体删除——下文「Frozen Artifacts」
-> 与口径 v1 各节自删除起转为**历史记录**(原文保留,Stage 3 口径 v2 冻结时
-> 统一改写,见清理清单 G6)。删除留痕与回滚索引:
+> 与口径 v1 各节自删除起转为**历史记录**(原文保留,不改写)。现行冻结世代为
+> **基线 v2**(`baseline/v2/`,最小可用重建,PER-328):冻结纪律与之一致——
+> 基线 v2 工件冻结后不改不删、修订只增版本;验收与复盘判读以口径 v2
+> (`docs/contracts/acceptance-criteria-v2.md`)为准。删除留痕与回滚索引:
 > `docs/per323-stage2-deletion-record.md`;手动执行:
 > `docs/manual-execution-guide.md`;推理 provider/模型由 `configs/inference.json`
 > 配置,运行时不变量在 `configs/harness_contract.v1.json`。

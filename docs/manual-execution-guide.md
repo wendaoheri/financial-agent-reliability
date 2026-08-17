@@ -14,14 +14,15 @@ Stage 1b 草案曾区分「裸检出 / 完整工作区」两档,差异全部来�
 
 | 能力 | 命令 |
 | --- | --- |
-| Python 全量测试(40 用例) | `uv run python -m unittest discover -s tests -v` |
+| Python 全量测试(62 用例) | `uv run python -m unittest discover -s tests -v` |
 | node 运行时边界(6 用例) | `npm run test:runtime` |
 | 集成 `.test.mjs` 全集 | `node --test tests/integration/*.test.mjs`(集合与上一行相同,F5/F8 已收口) |
+| 基线 v2 校验(Stage 3 起) | `python3 baseline/v2/validate_baseline_v2.py validate-bundle baseline/v2` 与 `verify-manifest baseline/v2` |
 | 预检(离线可演练错误路径) | `uv run fareli-harness preflight --output <path>` |
 
-复盘工具链(`fareli-retro`)与基线 v1 绑定,删除后处于**基线空窗期**:所有子命令
-显式返回 `{"status": "baseline_gap", ...}` 并以退出码 2 结束,待 Stage 3(PER-328)
-基线 v2 冻结后重建。这是预期行为,不是检出损坏。
+复盘工具链(`fareli-retro`)与基线 v1 的历史运行绑定;基线 v1 已删除且基线 v2
+为最小可用版本、不恢复历史运行证据,因此所有子命令显式返回
+`{"status": "baseline_gap", ...}` 并以退出码 2 结束。这是预期行为,不是检出损坏。
 
 ## 1. 前置环境
 
@@ -50,9 +51,11 @@ npm ci      # 按 package-lock.json 精确安装 @mariozechner/pi-agent-core@0.7
 ## 3. 路径 A:离线验证(无需任何凭据)
 
 ```bash
-uv run python -m unittest discover -s tests -v   # 实测:40 用例全部通过(OK)
+uv run python -m unittest discover -s tests -v   # 实测:62 用例全部通过(OK,Stage 3)
 npm run test:runtime                             # 实测:6/6 通过
 node --test tests/integration/*.test.mjs         # 实测:6/6 通过(与 npm 脚本同集合)
+python3 baseline/v2/validate_baseline_v2.py validate-bundle baseline/v2   # 实测:ok
+python3 baseline/v2/validate_baseline_v2.py verify-manifest baseline/v2   # 实测:ok
 ```
 
 三个控制台入口的离线行为:
@@ -139,7 +142,7 @@ uv run fareli-harness preflight --output runs/preflight.<日期>.json
 | --- | --- |
 | `uv sync` | 成功,三入口注册 |
 | `npm ci` | pi-agent-core 0.73.1;allow-scripts 信息级警告 |
-| `uv run python -m unittest discover -s tests -v` | **40 用例全部通过(OK)** |
+| `uv run python -m unittest discover -s tests -v` | Stage 2 实测 **40 用例通过**;Stage 3(PER-328)新增基线 v2 套件后为 **62 用例全部通过(OK)** |
 | `npm run test:runtime` | **6/6 通过** |
 | `node --test tests/integration/*.test.mjs` | **6/6 通过** |
 | `uv run fareli-harness preflight --output ...`(无凭据) | exit 1,结构化 `config_error`(F7 修复验证) |
