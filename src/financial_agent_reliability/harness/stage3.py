@@ -1,4 +1,11 @@
-"""Live Stage 3 preflight orchestration with bounded retries and safe evidence."""
+"""Live Stage 3 preflight orchestration with bounded retries and safe evidence.
+
+PER-323 Stage 2: contract pins moved from the removed frozen directory to
+``configs/harness_contract.v1.json`` (budgets, seed policy) and
+``configs/inference.json`` (provider/model lineage). Evidence bundles now
+carry those two contract hashes instead of the retired harness-config /
+model-manifest pins.
+"""
 
 from __future__ import annotations
 
@@ -10,15 +17,24 @@ import time
 from datetime import datetime, timezone
 from typing import Any, Callable
 
-from contracts.run_trace_validator import file_sha256
 from financial_agent_reliability.harness.bundle import ImmutableBundle
-from financial_agent_reliability.providers.bailian import BailianSettings, build_all_adapters
+from financial_agent_reliability.harness.hashing import file_sha256
+from financial_agent_reliability.inference_config import (
+    DEFAULT_CONFIG_PATH,
+    InferenceConfig,
+    load_inference_config,
+)
+from financial_agent_reliability.providers.bailian import (
+    PROVIDER_NAME,
+    BailianSettings,
+    build_all_adapters,
+)
 from financial_agent_reliability.providers.bailian_http import BailianHTTPTransport
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[3]
-CONFIG_PATH = ROOT / "contracts" / "run_trace_harness_config.v2.json"
-MODEL_MANIFEST_PATH = ROOT / "contracts" / "model_manifest.frozen.v2.json"
+HARNESS_CONTRACT_PATH = ROOT / "configs" / "harness_contract.v1.json"
+INFERENCE_CONFIG_PATH = DEFAULT_CONFIG_PATH
 INVALIDATING_FAILURES = {
     "identity_mismatch",
     "fallback_detected",
@@ -34,17 +50,19 @@ def _timestamp() -> str:
 def run_live_preflights(
     settings: BailianSettings,
     *,
+    config: InferenceConfig | None = None,
     transport_factory: Callable[..., Any] = BailianHTTPTransport,
     sleeper: Callable[[float], None] = time.sleep,
 ) -> dict[str, Any]:
-    config = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
-    budget = config["resource_budget"]
+    config = config or load_inference_config()
+    harness_contract = json.loads(HARNESS_CONTRACT_PATH.read_text(encoding="utf-8"))
+    budget = harness_contract["resource_budget"]
     max_retries = int(budget["max_retries"])
     backoffs = list(budget["retry_backoff_ms"])
     models: list[dict[str, Any]] = []
     started_at = _timestamp()
 
-    for adapter in build_all_adapters(settings):
+    for adapter in build_all_adapters(settings, config=config, harness_contract=harness_contract):
         transport = transport_factory(
             settings, timeout_seconds=float(budget["wall_clock_ms"]) / 1000
         )
@@ -120,14 +138,14 @@ def run_live_preflights(
     }
     return {
         "contract_type": "stage3_live_preflight",
-        "contract_version": "1.0.0",
+        "contract_version": "1.1.0",
         "started_at": started_at,
         "finished_at": _timestamp(),
         "status": "passed" if counts["passed"] == counts["requested"] else "blocked",
-        "provider": "bailian",
+        "provider": PROVIDER_NAME,
         "endpoint_id": settings.endpoint_id,
-        "harness_config_sha256": file_sha256(CONFIG_PATH),
-        "model_manifest_sha256": file_sha256(MODEL_MANIFEST_PATH),
+        "inference_config_sha256": file_sha256(INFERENCE_CONFIG_PATH),
+        "harness_contract_sha256": file_sha256(HARNESS_CONTRACT_PATH),
         "counts": counts,
         "models": models,
         "security": {
@@ -139,11 +157,15 @@ def run_live_preflights(
 
 
 def freeze_preflight_evidence(
-    preflight_paths: list[pathlib.Path], destination: pathlib.Path
+    preflight_paths: list[pathlib.Path],
+    destination: pathlib.Path,
+    *,
+    config: InferenceConfig | None = None,
 ) -> ImmutableBundle:
     if not preflight_paths:
         raise ValueError("at least one preflight report is required")
-    expected_models = ["qwen3.8-max", "glm-5.2", "deepseek-v4-pro"]
+    config = config or load_inference_config()
+    expected_models = [model.model_id for model in config.models_for_provider(PROVIDER_NAME)]
     reports: list[tuple[pathlib.Path, dict[str, Any]]] = []
     provider_requests = 0
     usage = {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0}
@@ -168,7 +190,7 @@ def freeze_preflight_evidence(
     authoritative = reports[-1][1]
     decision = {
         "contract_type": "stage3_execution_decision",
-        "contract_version": "1.0.0",
+        "contract_version": "1.1.0",
         "status": "blocked" if authoritative.get("status") != "passed" else "preflight_passed",
         "stop_reason": (
             "preflight_hard_gate_failed"
@@ -184,25 +206,22 @@ def freeze_preflight_evidence(
         "smoke_runs": 0,
         "full_matrix_started": False,
         "completed_matrix_runs": 0,
-        "planned_matrix_runs": 810,
+        "planned_matrix_runs": 0,
+        "matrix_plan_status": "baseline v1 matrix retired with PER-323 cleanup; baseline v2 (PER-328) redefines the run plan",
         "checkpoint_resume_available": True,
         "authoritative_counts": authoritative["counts"],
-        "harness_config_sha256": file_sha256(CONFIG_PATH),
-        "model_manifest_sha256": file_sha256(MODEL_MANIFEST_PATH),
-        "run_manifest_sha256": file_sha256(ROOT / "src" / "financial_agent_reliability" / "harness" / "run_manifest.v4.json"),
+        "inference_config_sha256": file_sha256(INFERENCE_CONFIG_PATH),
+        "harness_contract_sha256": file_sha256(HARNESS_CONTRACT_PATH),
     }
     with tempfile.TemporaryDirectory() as directory:
         source = pathlib.Path(directory) / "source"
         (source / "preflights").mkdir(parents=True)
         (source / "contracts").mkdir(parents=True)
-        (source / "harness").mkdir(parents=True)
         for index, (path, _report) in enumerate(reports, start=1):
             shutil.copyfile(path, source / "preflights" / f"preflight.{index:03d}.json")
-        shutil.copyfile(MODEL_MANIFEST_PATH, source / "contracts" / MODEL_MANIFEST_PATH.name)
-        shutil.copyfile(CONFIG_PATH, source / "contracts" / CONFIG_PATH.name)
+        shutil.copyfile(INFERENCE_CONFIG_PATH, source / "contracts" / INFERENCE_CONFIG_PATH.name)
         shutil.copyfile(
-            ROOT / "src" / "financial_agent_reliability" / "harness" / "run_manifest.v4.json",
-            source / "harness" / "run_manifest.v4.json",
+            HARNESS_CONTRACT_PATH, source / "contracts" / HARNESS_CONTRACT_PATH.name
         )
         (source / "execution_decision.json").write_text(
             json.dumps(decision, ensure_ascii=False, sort_keys=True, indent=2) + "\n",

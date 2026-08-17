@@ -11,12 +11,10 @@ import pathlib
 import sys
 from collections import Counter
 from typing import Any, Iterable, Mapping, Sequence
-from financial_agent_reliability.relocation import verify_frozen_pin
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[3]
 SPEC_PATH = ROOT / "src" / "financial_agent_reliability" / "reporting" / "spec.report.v1.json"
-FREEZE_PATH = ROOT / "contracts" / "report_contract.frozen.v1.json"
 SHA256_FIELDS = {
     "result_bundle_sha256", "grader_policy_sha256", "preregistration_sha256",
     "harness_config_sha256", "run_manifest_sha256", "data_snapshot_sha256",
@@ -291,30 +289,6 @@ def render_html(bundle: Mapping[str, Any]) -> str:
     return "<!doctype html>\n" + f'''<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Financial Agentic Index 报告</title><style>body{{font:16px/1.55 system-ui,sans-serif;max-width:1200px;margin:auto;padding:1rem}}.skip{{position:absolute;left:-9999px}}.skip:focus{{left:1rem;background:#fff;padding:.5rem}}table{{border-collapse:collapse;width:100%;display:block;overflow-x:auto;margin:1rem 0}}caption{{font-weight:700;text-align:left}}th,td{{border:1px solid #777;padding:.5rem;vertical-align:top}}code{{overflow-wrap:anywhere}}</style></head><body><a class="skip" href="#main">跳到主要内容</a><header><h1>Financial Agentic Index 报告</h1><p>报告 <code>{esc(identity['report_id'])}</code>；框架 <code>{esc(identity['framework_version'])}</code>；数据快照 <code>{esc(identity['data_snapshot_id'])}</code>；评测日期 {esc(identity['evaluation_date'])}。</p></header><main id="main"><section aria-labelledby="coverage"><h2 id="coverage">覆盖与有效性</h2><p>运行状态：<strong>{esc(coverage['state'])}</strong>。预期 {esc(coverage['expected_rows'])}，已记录 {esc(coverage['observed_rows'])}；失败、阻塞和缺失均显式保留。</p></section><section aria-labelledby="ranking"><h2 id="ranking">综合榜</h2>{rank_html}</section><section aria-labelledby="metrics"><h2 id="metrics">分项、可靠性、安全、成本、延迟与不确定性</h2>{model_html}</section><section aria-labelledby="failures"><h2 id="failures">失败与限制</h2><ul>{failure_html}{limitation_html}</ul></section><section aria-labelledby="demos"><h2 id="demos">说明性并排案例（不影响综合分）</h2>{''.join(demo_html)}</section><section aria-labelledby="repro"><h2 id="repro">复现与 provenance</h2><ol>{steps}</ol><p>机器可读结果 SHA-256：<code>{esc(bundle['provenance']['result_bundle_sha256'])}</code>。</p></section></main></body></html>\n'''
 
 
-def verify_freeze() -> dict[str, Any]:
-    """PER-85-D6: the v1 report contract is a historical baseline.
-
-    冻结 manifest 的承诺哈希(文档自身完整性)仍逐字节校验;对钉住文件的
-    哈希校验改为通过 PER-86 迁移映射解析——迁移后内容逐字节一致的文件按
-    新位置校验,重构机械改写的文件被显式点名放行,而不是静默跳过。
-    """
-    manifest = load_json(FREEZE_PATH)
-    errors: list[str] = []
-    commitments: list[str] = []
-    historical: list[str] = []
-    for item in manifest.get("files", []):
-        ok, classification = verify_frozen_pin(ROOT, item["path"], item["sha256"])
-        _require(ok, f"frozen file pin failed ({classification}): {item['path']}", errors)
-        if classification in {"relocated", "refactor-change"}:
-            historical.append(item["path"])
-        commitments.append(f"{item['path']}\0{item['sha256']}\n")
-    aggregate = hashlib.sha256("".join(commitments).encode("utf-8")).hexdigest()
-    _require(aggregate == manifest.get("contract_bundle_sha256"), "report contract bundle commitment mismatch", errors)
-    if errors:
-        raise ReportContractError(errors)
-    return {"files": len(commitments), "contract_bundle_sha256": aggregate, "historical_baseline_pins": historical}
-
-
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
@@ -324,18 +298,18 @@ def main(argv: Sequence[str] | None = None) -> int:
     render.add_argument("bundle")
     render.add_argument("--markdown", required=True)
     render.add_argument("--html", required=True)
-    commands.add_parser("verify-freeze")
     args = parser.parse_args(argv)
     try:
-        if args.command == "verify-freeze":
-            result = verify_freeze()
-        else:
-            bundle = load_json(args.bundle)
-            result = validate_report(bundle)
-            if args.command == "render":
-                pathlib.Path(args.markdown).write_text(render_markdown(bundle), encoding="utf-8")
-                pathlib.Path(args.html).write_text(render_html(bundle), encoding="utf-8")
-                result.update({"markdown": args.markdown, "html": args.html})
+        # PER-323 Stage 2: ``verify-freeze`` retired with the baseline-v1
+        # frozen report contract (``contracts/report_contract.frozen.v1.json``,
+        # removed per cleanup list v1 item A1); a baseline-v2 report contract
+        # is rebuilt with Stage 3 (PER-328).
+        bundle = load_json(args.bundle)
+        result = validate_report(bundle)
+        if args.command == "render":
+            pathlib.Path(args.markdown).write_text(render_markdown(bundle), encoding="utf-8")
+            pathlib.Path(args.html).write_text(render_html(bundle), encoding="utf-8")
+            result.update({"markdown": args.markdown, "html": args.html})
         print(json.dumps(result, ensure_ascii=False, indent=2))
         return 0
     except (OSError, ValueError, ReportContractError) as error:

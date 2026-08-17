@@ -3,16 +3,20 @@ import { readFileSync } from "node:fs";
 import { test } from "node:test";
 
 import { assertPinnedRuntime, createPinnedAgent } from "../../src/financial_agent_reliability/harness/pi_runtime.mjs";
+// PER-323 Stage 2: the pure checks moved from the retired baseline-v1
+// live_smoke.mjs into candidate_checks.mjs; the harness invariants come from
+// configs/harness_contract.v1.json (assertion semantics unchanged, cleanup
+// list M1/M3, design contract §5.5).
 import {
   buildRunPrompt,
   gradeStructuredCandidate,
   normalizePayload,
   resolveResponseModelIdentity,
-} from "../../src/financial_agent_reliability/harness/live_smoke.mjs";
+} from "../../src/financial_agent_reliability/harness/candidate_checks.mjs";
 
 
 const config = JSON.parse(
-  readFileSync(new URL("../../contracts/run_trace_harness_config.v2.json", import.meta.url), "utf8"),
+  readFileSync(new URL("../../configs/harness_contract.v1.json", import.meta.url), "utf8"),
 );
 
 

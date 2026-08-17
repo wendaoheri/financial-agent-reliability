@@ -1,4 +1,12 @@
-"""Offline-capable runner that emits the frozen run_trace v1 shape."""
+"""Offline-capable runner that emits the run_trace shape.
+
+PER-323 Stage 2: contract pins moved from the removed frozen directory to
+``configs/harness_contract.v1.json`` and ``configs/inference.json``. The
+``run_identity`` hash binding now carries ``inference_config_sha256`` +
+``harness_contract_sha256`` (design contract C5); the formal run-trace
+successor contract is frozen with baseline v2 (Stage 3, PER-328), so this
+module emits the transitional shape ``contract_version`` 2.1.0.
+"""
 
 from __future__ import annotations
 
@@ -10,20 +18,20 @@ from datetime import datetime, timezone
 from decimal import Decimal
 from typing import Any, Callable, Mapping
 
-from contracts.run_trace_validator import (
+from financial_agent_reliability.harness.bundle import ImmutableBundle
+from financial_agent_reliability.harness.checkpoint import CheckpointStore
+from financial_agent_reliability.harness.hashing import (
     build_run_id,
     content_sha256,
     file_sha256,
 )
-from financial_agent_reliability.harness.bundle import ImmutableBundle
-from financial_agent_reliability.harness.checkpoint import CheckpointStore
 from financial_agent_reliability.harness.redaction import redact
 from financial_agent_reliability.providers.bailian import BailianAdapter, Transport
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[3]
-CONFIG_PATH = ROOT / "contracts" / "run_trace_harness_config.v2.json"
-MODEL_MANIFEST_PATH = ROOT / "contracts" / "model_manifest.frozen.v2.json"
+HARNESS_CONTRACT_PATH = ROOT / "configs" / "harness_contract.v1.json"
+INFERENCE_CONFIG_PATH = ROOT / "configs" / "inference.json"
 
 
 def _timestamp() -> str:
@@ -45,12 +53,16 @@ class OfflineHarness:
         checkpoint_directory: pathlib.Path,
         *,
         sleeper: Callable[[float], None] | None = None,
+        harness_contract_path: pathlib.Path = HARNESS_CONTRACT_PATH,
+        inference_config_path: pathlib.Path = INFERENCE_CONFIG_PATH,
     ):
         self.adapter = adapter
         self.bundle = bundle
         self.checkpoint_directory = pathlib.Path(checkpoint_directory)
         self.sleeper = sleeper or (lambda _seconds: None)
-        self.config = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+        self.harness_contract_path = pathlib.Path(harness_contract_path)
+        self.inference_config_path = pathlib.Path(inference_config_path)
+        self.config = json.loads(self.harness_contract_path.read_text(encoding="utf-8"))
 
     def run(
         self,
@@ -77,7 +89,8 @@ class OfflineHarness:
             "requested_model_id": self.adapter.model_id,
             "repeat": repeat,
             "seed": seed,
-            "harness_config_sha256": file_sha256(CONFIG_PATH),
+            "inference_config_sha256": file_sha256(self.inference_config_path),
+            "harness_contract_sha256": file_sha256(self.harness_contract_path),
             "immutable_bundle_sha256": self.bundle.bundle_sha256,
         }
         run_id = build_run_id(identity)
@@ -192,7 +205,7 @@ class OfflineHarness:
         )
         trace = {
             "contract_type": "run_trace",
-            "contract_version": "2.0.0",
+            "contract_version": "2.1.0",
             "run_id": run_id,
             "run_identity": identity,
             "status": status,
@@ -201,14 +214,10 @@ class OfflineHarness:
                 "requested_model_id": self.adapter.model_id,
                 "response_model_id": response_model,
                 "endpoint_id": self.adapter.settings.endpoint_id,
-                "model_manifest_sha256": file_sha256(MODEL_MANIFEST_PATH),
+                "inference_config_sha256": file_sha256(self.inference_config_path),
             },
             "request": {
-                "parameters": {
-                    key: value
-                    for key, value in self.config["request_parameters"].items()
-                    if key != "seed_required"
-                },
+                "parameters": dict(self.adapter.parameters),
                 "seed": seed,
             },
             "preflight": {

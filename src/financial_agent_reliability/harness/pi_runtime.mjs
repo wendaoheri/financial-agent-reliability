@@ -8,10 +8,16 @@ import { Agent } from "@mariozechner/pi-agent-core";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = dirname(dirname(dirname(HERE)));
+// PER-323 Stage 2: harness invariants live in configs/harness_contract.v1.json;
+// the candidate model identity set is declared by configs/inference.json.
+// Both replace the removed contracts/run_trace_harness_config.v2.json pin.
 const CONFIG = JSON.parse(
-  readFileSync(join(ROOT, "contracts", "run_trace_harness_config.v2.json"), "utf8"),
+  readFileSync(join(ROOT, "configs", "harness_contract.v1.json"), "utf8"),
 );
-const MODELS = new Set(CONFIG.candidate_model_ids);
+const INFERENCE_CONFIG = JSON.parse(
+  readFileSync(join(ROOT, "configs", "inference.json"), "utf8"),
+);
+const MODELS = new Set(INFERENCE_CONFIG.models.map((model) => model.model_id));
 
 
 export function assertPinnedRuntime() {

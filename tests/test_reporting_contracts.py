@@ -8,7 +8,6 @@ from financial_agent_reliability.reporting.report import (
     render_html,
     render_markdown,
     validate_report,
-    verify_freeze,
 )
 
 
@@ -93,10 +92,17 @@ class ReportingContractTests(unittest.TestCase):
             self.assertIn(fragment, html)
         self.assertIn("不影响综合分", markdown)
 
-    def test_frozen_manifest_hashes_all_reporting_artifacts(self):
-        result = verify_freeze()
-        self.assertGreaterEqual(result["files"], 8)
-        self.assertRegex(result["contract_bundle_sha256"], r"^[0-9a-f]{64}$")
+    def test_spec_schema_is_present_and_well_formed(self):
+        # PER-323 Stage 2 migration: ``verify_freeze`` retired together with
+        # the baseline-v1 frozen report contract
+        # (``contracts/report_contract.frozen.v1.json``, cleanup list A1).
+        # The live spec remains the authoritative reporting contract.
+        spec_path = (
+            ROOT / "src" / "financial_agent_reliability" / "reporting" / "spec.report.v1.json"
+        )
+        spec = load_json(spec_path)
+        self.assertEqual(spec.get("contract_type"), "financial_agent_reporting_spec")
+        self.assertRegex(spec.get("contract_version", ""), r"^\d+\.\d+\.\d+$")
 
 
 if __name__ == "__main__":

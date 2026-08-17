@@ -43,6 +43,11 @@ from financial_agent_reliability.retrospective.report_level import (
 from financial_agent_reliability.retrospective.model import UNTRACEABLE
 
 
+#: Flipped to False when baseline v2 (PER-328) freezes the rebuilt batch
+#: registry and lineage roots; until then every subcommand reports the gap.
+BASELINE_V2_PENDING = True
+
+
 def _emit(payload: Any) -> None:
     print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
 
@@ -68,6 +73,25 @@ def main(argv: Sequence[str] | None = None) -> int:
     evidence_parser.add_argument("--out")
 
     args = parser.parse_args(argv)
+
+    if BASELINE_V2_PENDING:
+        # PER-323 Stage 2(cleanup list M2):baseline v1 的血缘根目录
+        # (runs/ evidence/ reports/ audit/)已按冻结清单删除,复盘工具链的批次表
+        # 与根路径绑定该基线,在 Stage 3(PER-328)基线 v2 重建前整体处于空窗期。
+        # 显式报「基线空窗」而不是静默失败或误报 untraceable。
+        _emit(
+            {
+                "status": "baseline_gap",
+                "command": args.command,
+                "reason": (
+                    "baseline v1 lineage roots (runs/, evidence/, reports/, audit/) were "
+                    "removed by the PER-323 frozen cleanup list; the retrospective "
+                    "toolchain is rebuilt on baseline v2 (PER-328, Stage 3)"
+                ),
+                "exit_code": 2,
+            }
+        )
+        return 2
 
     if args.command == "list":
         _emit(

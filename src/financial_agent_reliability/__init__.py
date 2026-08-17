@@ -1,8 +1,11 @@
 """Financial Agent Reliability benchmark harness.
 
 研究配套代码包:评测 harness、评分器、数据管线、provider 适配、
-模拟账本、oracle 与报告渲染。冻结评测产物(契约、快照、证据、审计)
-保留在仓库根的旧血缘目录中,见 README.md 与 AGENTS.md。
+模拟账本、oracle 与报告渲染。推理 provider/模型由 ``configs/inference.json``
+配置,运行时契约见 ``configs/harness_contract.v1.json``(PER-323)。
+基线 v1 的旧血缘目录已按 PER-323 冻结清理清单删除,基线 v2 由
+Stage 3(PER-328)重建;删除留痕与回滚索引见
+``docs/per323-stage2-deletion-record.md``。
 """
 
 from __future__ import annotations
@@ -11,8 +14,9 @@ import importlib
 import pathlib
 import sys
 
-# 冻结契约包 contracts/ 属于旧血缘历史基线,原地保留、不打包;代码包通过
-# 仓库根解析它,因此把仓库根加回 sys.path(等价于旧布局下从仓库根运行)。
+# 历史布局兼容:把仓库根加回 sys.path。基线 v1 时代用于从仓库根导入
+# contracts/ 等旧血缘包;这些目录已随 PER-323 清理删除,此段保留以维持
+# 既有导入行为不变。
 _PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[2]
 if str(_PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(_PROJECT_ROOT))
@@ -32,11 +36,10 @@ _LEGACY_ALIASES: tuple[str, ...] = (
 def _register_legacy_aliases() -> None:
     """PER-85-D6 兼容层:把旧顶层包名注册为新子包的别名。
 
-    旧冻结脚本(audit/、cases/ 下的构建器等)按 ``sys.path.insert(0, ROOT)``
-    之后 ``from harness.x import y`` 的方式导入。先导入本包,旧包名即可在
-    ``sys.modules`` 中命中,冻结脚本内容无需任何改动即可继续被导入执行。
-    注意:这只是导入兼容;旧脚本内部按重构前路径做的哈希/路径校验仍属于
-    历史基线(PER-85-D6),其验证结论按历史记录对待。
+    历史上旧冻结脚本按 ``sys.path.insert(0, ROOT)`` 之后
+    ``from harness.x import y`` 的方式导入;先导入本包,旧包名即可在
+    ``sys.modules`` 中命中。引用这些别名的冻结脚本已随基线 v1 删除
+    (PER-323),别名层本身保留以维持导入兼容行为不变。
     """
     for name in _LEGACY_ALIASES:
         full_name = f"{__name__}.{name}"

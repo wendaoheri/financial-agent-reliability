@@ -24,6 +24,10 @@ _VALUE_PATTERNS = (
     re.compile(r"(?i)bearer\s+[a-z0-9._~+/=-]{8,}"),
     re.compile(r"(?i)\bsk-[a-z0-9_-]{8,}"),
     re.compile(r"(?i)BENCH_BAILIAN_API_KEY\s*[=:]\s*[^\s]+"),
+    # PER-323 (§5.6): generic credential environment-variable assignments for
+    # any provider (FARELI_<PROVIDER>_API_KEY and similar). Extension only —
+    # the three patterns above are retained verbatim.
+    re.compile(r"(?i)\b[A-Z][A-Z0-9_]*(?:API_KEY|SECRET|TOKEN|PASSWORD|CREDENTIAL)\s*[=:]\s*[^\s]+"),
 )
 
 

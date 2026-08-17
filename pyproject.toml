@@ -23,11 +23,7 @@ packages = ["src/financial_agent_reliability"]
 include = [
     "src/financial_agent_reliability",
     "tests",
-    "contracts",
-    "cases",
-    "catalog",
-    "snapshots",
-    "preregistration",
+    "configs",
     "docs",
     "README.md",
     "AGENTS.md",

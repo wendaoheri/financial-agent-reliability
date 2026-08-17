@@ -1,0 +1,51 @@
+{
+  "contract_type": "inference_config",
+  "schema_version": "1.0.0",
+  "providers": [
+    {
+      "name": "bailian",
+      "description": "阿里云百炼 OpenAI 兼容端点(现行默认 provider,兼容 BENCH_BAILIAN_* 环境变量);base_url 为公开接入点地址,非密钥,可用 FARELI_BAILIAN_BASE_URL / BENCH_BAILIAN_BASE_URL 覆盖",
+      "api": "openai_chat_completions_compatible",
+      "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      "credential_env": "BENCH_BAILIAN_API_KEY",
+      "default_parameters": {
+        "temperature": "0.000000",
+        "top_p": "1.000000",
+        "max_tokens": 4096,
+        "stream": true
+      },
+      "tool_choice": "auto",
+      "timeout_seconds": 120,
+      "preflight_tool_instruction": "Call read_frozen_case with case_id PREFLIGHT."
+    }
+  ],
+  "models": [
+    {
+      "model_id": "qwen3.8-max",
+      "provider": "bailian",
+      "roles": ["candidate"],
+      "logical_label": "qwen3.8-max",
+      "identity_rule": "exact_response_match",
+      "allowed_response_model_ids": ["qwen3.8-max"],
+      "live_preflight_required": true
+    },
+    {
+      "model_id": "glm-5.2",
+      "provider": "bailian",
+      "roles": ["candidate"],
+      "logical_label": "glm-5.2",
+      "identity_rule": "exact_response_match",
+      "allowed_response_model_ids": ["glm-5.2"],
+      "live_preflight_required": true
+    },
+    {
+      "model_id": "deepseek-v4-pro",
+      "provider": "bailian",
+      "roles": ["candidate"],
+      "logical_label": "deepseek-v4-pro",
+      "identity_rule": "exact_response_match",
+      "allowed_response_model_ids": ["deepseek-v4-pro"],
+      "live_preflight_required": true
+    }
+  ]
+}

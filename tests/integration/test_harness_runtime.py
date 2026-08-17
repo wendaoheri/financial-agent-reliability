@@ -1,6 +1,17 @@
+"""Runtime boundary tests for the configuration-driven harness (PER-323 Stage 2).
+
+Migration from the baseline-v1 shape (cleanup list M1/M2): the manifest and
+smoke-plan tests retired together with ``matrix.py``/``smoke.py`` and the
+v3.x acceptance chain; the assertions below keep the live capabilities
+(provider settings, identity preflight, HTTP payload normalization, bounded
+retries, evidence freezing, bundle/checkpoint idempotence, offline dry-run,
+redaction, ledger, grader) at undiminished strength. The run-trace is now
+asserted structurally in place of the removed ``contracts`` validator —
+the formal successor schema lands with baseline v2 (Stage 3, PER-328).
+"""
+
 import json
 import pathlib
-import shutil
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -8,15 +19,10 @@ from unittest.mock import patch
 from financial_agent_reliability.graders.pipeline import GraderInputError, GraderPipeline
 from financial_agent_reliability.harness.bundle import ImmutableBundle
 from financial_agent_reliability.harness.checkpoint import CheckpointStore, CheckpointError
-from financial_agent_reliability.harness.matrix import build_run_manifest
 from financial_agent_reliability.harness.redaction import redact
 from financial_agent_reliability.harness.runner import OfflineHarness
 from financial_agent_reliability.harness.stage3 import freeze_preflight_evidence, run_live_preflights
-from financial_agent_reliability.harness.smoke import (
-    build_smoke_plan,
-    correct_pi_identity_semantics,
-    validate_smoke_plan,
-)
+from financial_agent_reliability.inference_config import load_inference_config
 from financial_agent_reliability.providers.bailian import BailianAdapter, BailianConfigError, BailianSettings
 from financial_agent_reliability.providers.bailian_http import (
     BailianHTTPError,
@@ -24,8 +30,6 @@ from financial_agent_reliability.providers.bailian_http import (
     build_chat_completions_payload,
 )
 from financial_agent_reliability.simulators.ledger import LedgerError, SimulatedLedger
-from contracts.run_trace_validator import file_sha256
-from contracts.run_trace_validator_v2 import validate_run_trace_v2 as validate_run_trace
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
@@ -50,7 +54,10 @@ class ProviderAdapterTests(unittest.TestCase):
         self.assertNotIn("fixture-secret", repr(settings))
         self.assertEqual(
             settings.model_ids,
-            ("qwen3.8-max", "glm-5.2", "deepseek-v4-pro"),
+            tuple(
+                model.model_id
+                for model in load_inference_config().models_for_provider("bailian")
+            ),
         )
 
     def test_alias_or_missing_secret_is_rejected(self):
@@ -61,6 +68,7 @@ class ProviderAdapterTests(unittest.TestCase):
         }
         with self.assertRaisesRegex(BailianConfigError, "exactly"):
             BailianSettings.from_env(env)
+        env["BENCH_BAILIAN_MODEL_IDS"] = '["qwen3.8-max","glm-5.2","deepseek-v4-pro"]'
         env.pop("BENCH_BAILIAN_API_KEY")
         with self.assertRaisesRegex(BailianConfigError, "BENCH_BAILIAN_API_KEY"):
             BailianSettings.from_env(env)
@@ -211,6 +219,10 @@ class ProviderAdapterTests(unittest.TestCase):
         glm = next(row for row in result["models"] if row["requested_model_id"] == "glm-5.2")
         self.assertEqual(glm["attempt_count"], 2)
         self.assertEqual(glm["usage"], {"input_tokens": 4, "output_tokens": 2, "total_tokens": 6})
+        # PER-323 lineage: the two contract hashes replace the retired
+        # harness-config/model-manifest pins.
+        self.assertEqual(len(result["inference_config_sha256"]), 64)
+        self.assertEqual(len(result["harness_contract_sha256"]), 64)
         rendered = json.dumps(result, sort_keys=True)
         self.assertNotIn(settings.api_key, rendered)
         self.assertNotIn(settings.base_url, rendered)
@@ -218,7 +230,7 @@ class ProviderAdapterTests(unittest.TestCase):
     def test_blocked_preflights_freeze_reconciled_evidence_bundle(self):
         fixture = {
             "contract_type": "stage3_live_preflight",
-            "contract_version": "1.0.0",
+            "contract_version": "1.1.0",
             "status": "blocked",
             "endpoint_id": "bailian_fixture",
             "counts": {"requested": 3, "passed": 0, "invalidated": 1, "blocked": 2},
@@ -245,39 +257,22 @@ class ProviderAdapterTests(unittest.TestCase):
             self.assertEqual(decision["usage"]["total_tokens"], 9)
             self.assertFalse(decision["smoke_started"])
             self.assertFalse(decision["full_matrix_started"])
-            self.assertEqual(decision["planned_matrix_runs"], 810)
+            self.assertEqual(decision["planned_matrix_runs"], 0)
+            self.assertEqual(len(decision["inference_config_sha256"]), 64)
+            self.assertEqual(len(decision["harness_contract_sha256"]), 64)
+            # The frozen bundle carries the two live contracts as lineage.
+            artifact_paths = {path for path, _sha in bundle.artifacts}
+            self.assertIn("contracts/inference.json", artifact_paths)
+            self.assertIn("contracts/harness_contract.v1.json", artifact_paths)
 
 
 class ManifestAndRecoveryTests(unittest.TestCase):
-    def _copy_matrix_inputs(self, destination: pathlib.Path) -> pathlib.Path:
-        for relative in (
-            "contracts",
-            "preregistration",
-            "catalog/public",
-            "catalog/longbridge",
-            "cases/public",
-            "cases/longbridge",
-            "snapshots/public",
-            "snapshots/longbridge",
-            "src/financial_agent_reliability/pipelines/longbridge",
-            "src/financial_agent_reliability/oracles/longbridge",
-        ):
-            source = ROOT / relative
-            target = destination / relative
-            shutil.copytree(source, target)
-        for relative in (
-            "tests/test_public_cases_v2.py",
-            "tests/test_longbridge_synthetic_v2.py",
-        ):
-            source = ROOT / relative
-            target = destination / relative
-            target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(source, target)
-        return destination
-
     def test_pi_agent_core_is_exactly_locked_with_frozen_integrity(self):
         package = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
         lock = json.loads((ROOT / "package-lock.json").read_text(encoding="utf-8"))
+        harness_contract = json.loads(
+            (ROOT / "configs" / "harness_contract.v1.json").read_text(encoding="utf-8")
+        )
         self.assertEqual(
             package["dependencies"]["@mariozechner/pi-agent-core"], "0.73.1"
         )
@@ -285,194 +280,12 @@ class ManifestAndRecoveryTests(unittest.TestCase):
         self.assertEqual(locked["version"], "0.73.1")
         self.assertEqual(
             locked["integrity"],
+            harness_contract["runtime"]["registry_integrity"],
+        )
+        self.assertEqual(
+            locked["integrity"],
             "sha512-Y/KVOhuKSgRQgYBlwmRtO2gPkUcoavOSqGF9bpQIINvNZvc19k6Z1H3bFDTce3Vp5ApMmTsfLH3+tNvOg75fAQ==",
         )
-
-    def test_manifest_has_810_unique_deterministically_randomized_rows(self):
-        first = build_run_manifest(ROOT)
-        second = build_run_manifest(ROOT)
-        self.assertEqual(first, second)
-        self.assertEqual(
-            first,
-            json.loads((ROOT / "src/financial_agent_reliability/harness/run_manifest.v4.json").read_text(encoding="utf-8")),
-        )
-        self.assertEqual(first["contract_version"], "4.0.0")
-        self.assertEqual(len(first["runs"]), 810)
-        self.assertEqual(len({row["run_id"] for row in first["runs"]}), 810)
-        self.assertEqual(
-            {
-                variant: sum(row["variant_id"] == variant for row in first["runs"])
-                for variant in {
-                    "baseline",
-                    "single_factor_stress",
-                    "missing_or_anomalous_diagnostic",
-                }
-            },
-            {
-                "baseline": 270,
-                "single_factor_stress": 270,
-                "missing_or_anomalous_diagnostic": 270,
-            },
-        )
-        self.assertNotIn("single_factor_control", {row["variant_id"] for row in first["runs"]})
-        protocol_path = ROOT / "catalog/public/preregistration_variant_protocol.v2.json"
-        self.assertEqual(first["variant_protocol"]["version"], "2.0.0")
-        self.assertEqual(first["variant_protocol"]["sha256"], file_sha256(protocol_path))
-        selected = first["selected_input_bundles"]
-        self.assertEqual(
-            selected["public_v2"]["contract_bundle_sha256"],
-            "e3067d7a7cdb66694052e1a959a80120f7ccfbfa43b0525192b40acee942d62c",
-        )
-        self.assertEqual(
-            selected["synthetic_workflow_v2"]["stage3_input_bundle_sha256"],
-            "62511d582702c8019201c16f18e22a36bb0b8632d8c2ac39b3c9b8a8e49118e8",
-        )
-        self.assertEqual(
-            selected["frozen_allocation"],
-            {
-                "families": 30,
-                "cases": 90,
-                "gold": 46,
-                "silver": 44,
-                "track_weights": {
-                    "financial_knowledge_work": "50_percent",
-                    "financial_tool_workflow": "50_percent",
-                },
-            },
-        )
-        previous = json.loads(
-            (ROOT / "src/financial_agent_reliability/harness/run_manifest.v3.json").read_text(encoding="utf-8")
-        )
-        self.assertTrue(
-            {row["run_id"] for row in first["runs"]}.isdisjoint(
-                row["run_id"] for row in previous["runs"]
-            )
-        )
-        self.assertEqual(first["config_sha256"], second["config_sha256"])
-        self.assertNotEqual(
-            [row["model_id"] for row in first["runs"][:3]],
-            ["qwen3.8-max", "glm-5.2", "deepseek-v4-pro"],
-        )
-
-    def test_smoke_plan_is_frozen_balanced_and_bounded_to_36_runs(self):
-        plan = build_smoke_plan(ROOT)
-        self.assertEqual(plan, build_smoke_plan(ROOT))
-        self.assertEqual(plan["contract_type"], "stage3_sequential_necessity_smoke_plan")
-        self.assertEqual(plan["contract_version"], "1.1.0")
-        self.assertEqual(plan["run_cap"], 36)
-        self.assertFalse(plan["full_matrix_authorized"])
-        self.assertEqual(len(plan["tasks"]), 12)
-        self.assertEqual(len(plan["runs"]), 36)
-        self.assertEqual(
-            plan["allocation"],
-            {
-                "tracks": {"financial_knowledge_work": 6, "financial_tool_workflow": 6},
-                "tiers": {"Gold": 6, "Silver": 6},
-                "variants": {
-                    "baseline": 3,
-                    "single_factor_stress": 3,
-                    "missing_or_anomalous_diagnostic": 6,
-                },
-                "models_per_task": 3,
-            },
-        )
-        self.assertEqual(
-            {row["model_id"] for row in plan["runs"]},
-            {"qwen3.8-max", "glm-5.2", "deepseek-v4-pro"},
-        )
-        full = json.loads((ROOT / "src/financial_agent_reliability/harness/run_manifest.v4.json").read_text(encoding="utf-8"))
-        full_rows = {row["run_id"]: row for row in full["runs"]}
-        self.assertTrue(all(row == full_rows[row["run_id"]] for row in plan["runs"]))
-        validate_smoke_plan(plan, ROOT)
-
-    def test_smoke_plan_tampering_is_rejected(self):
-        plan = build_smoke_plan(ROOT)
-        plan["runs"][0]["seed"] += 1
-        with self.assertRaisesRegex(ValueError, "frozen v4 run"):
-            validate_smoke_plan(plan, ROOT)
-
-    def test_pi_absent_response_model_correction_preserves_candidate_output(self):
-        trace = {
-            "status": "invalidated",
-            "provider": {"requested_model_id": "qwen3.8-max", "response_model_id": "unavailable"},
-            "attempts": [{"http_status": 200}],
-            "preflight": {},
-            "failure": {"type": "identity_mismatch"},
-        }
-        grader = {
-            "status": "invalidated",
-            "model_id": "qwen3.8-max",
-            "identity_valid": False,
-            "end_to_end_complete": False,
-            "max_loss_level": "L4",
-            "candidate_output_sha256": "a" * 64,
-        }
-        corrected_trace, corrected_grader = correct_pi_identity_semantics(trace, grader)
-        self.assertEqual(corrected_trace["provider"]["response_model_id"], "qwen3.8-max")
-        self.assertEqual(corrected_trace["status"], "succeeded")
-        self.assertTrue(corrected_grader["identity_valid"])
-        self.assertEqual(corrected_grader["candidate_output_sha256"], "a" * 64)
-
-    def test_manifest_rejects_missing_variant_protocol(self):
-        with tempfile.TemporaryDirectory() as directory:
-            root = self._copy_matrix_inputs(pathlib.Path(directory))
-            (root / "catalog/public/preregistration_variant_protocol.v2.json").unlink()
-            with self.assertRaisesRegex(ValueError, "variant protocol v2 is required"):
-                build_run_manifest(root)
-
-    def test_manifest_rejects_old_variant_protocol_version(self):
-        with tempfile.TemporaryDirectory() as directory:
-            root = self._copy_matrix_inputs(pathlib.Path(directory))
-            protocol_path = root / "catalog/public/preregistration_variant_protocol.v2.json"
-            protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
-            protocol["version"] = "1.0.0"
-            protocol_path.write_text(json.dumps(protocol), encoding="utf-8")
-            with self.assertRaisesRegex(ValueError, "required variant protocol version 2.0.0"):
-                build_run_manifest(root)
-
-    def test_manifest_rejects_legacy_control_mapping(self):
-        with tempfile.TemporaryDirectory() as directory:
-            root = self._copy_matrix_inputs(pathlib.Path(directory))
-            protocol_path = root / "catalog/public/preregistration_variant_protocol.v2.json"
-            protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
-            protocol["canonical_execution_variants"][2]["execution_id"] = "single_factor_control"
-            protocol_path.write_text(json.dumps(protocol), encoding="utf-8")
-            with self.assertRaisesRegex(ValueError, "legacy variant id single_factor_control"):
-                build_run_manifest(root)
-
-    def test_manifest_rejects_revoked_public_v1_selection(self):
-        with tempfile.TemporaryDirectory() as directory:
-            root = self._copy_matrix_inputs(pathlib.Path(directory))
-            manifest_path = root / "catalog/public/v2/frozen_manifest.v2.json"
-            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-            manifest["contract_bundle_sha256"] = (
-                "7a05f78739f6751778cac31cde031bf56721fa7429a68ce8aa6b1ff576de87a7"
-            )
-            manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
-            with self.assertRaisesRegex(ValueError, "revoked public v1"):
-                build_run_manifest(root)
-
-    def test_manifest_rejects_isolated_longbridge_v1_selection(self):
-        with tempfile.TemporaryDirectory() as directory:
-            root = self._copy_matrix_inputs(pathlib.Path(directory))
-            policy_path = root / "catalog/longbridge/synthetic_v2/stage3_input_policy.v2.json"
-            policy = json.loads(policy_path.read_text(encoding="utf-8"))
-            policy["stage3_input_bundle_sha256"] = (
-                "d862b41b9e03a8e6d478e3515c1ce5c8613994527bd6bdd577082222dcc37c77"
-            )
-            policy_path.write_text(json.dumps(policy), encoding="utf-8")
-            with self.assertRaisesRegex(ValueError, "isolated Longbridge v1"):
-                build_run_manifest(root)
-
-    def test_manifest_rejects_selected_input_hash_drift(self):
-        with tempfile.TemporaryDirectory() as directory:
-            root = self._copy_matrix_inputs(pathlib.Path(directory))
-            case_path = root / "cases/public/v2/case_card.FKW-01.normal.json"
-            case_path.write_text(
-                case_path.read_text(encoding="utf-8") + " ", encoding="utf-8"
-            )
-            with self.assertRaisesRegex(ValueError, "input hash drift"):
-                build_run_manifest(root)
 
     def test_immutable_bundle_hash_and_checkpoint_resume_are_idempotent(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -551,9 +364,27 @@ class ManifestAndRecoveryTests(unittest.TestCase):
                 preflight_transport=preflight,
                 inference_transport=inference,
             )
-            validated = validate_run_trace(first)
-            self.assertEqual(validated["status"], "succeeded")
-            self.assertEqual(validated["retries"], 1)
+            # Structural run-trace assertions in place of the removed
+            # contracts.run_trace_validator_v2 (successor schema: Stage 3).
+            self.assertEqual(first["contract_type"], "run_trace")
+            self.assertEqual(first["status"], "succeeded")
+            self.assertEqual(first["retry"]["retries_used"], 1)
+            self.assertTrue(first["preflight"]["valid"])
+            self.assertEqual(
+                first["provider"]["response_model_id"], "qwen3.8-max"
+            )
+            self.assertEqual(
+                set(first["request"]["parameters"]),
+                {"temperature", "top_p", "max_tokens", "stream"},
+            )
+            self.assertEqual(first["request"]["seed"], 20260811)
+            identity = first["run_identity"]
+            self.assertEqual(len(identity["inference_config_sha256"]), 64)
+            self.assertEqual(len(identity["harness_contract_sha256"]), 64)
+            self.assertEqual(
+                identity["immutable_bundle_sha256"], bundle.bundle_sha256
+            )
+            self.assertNotIn("fixture-secret-never-persist", json.dumps(first))
             second = harness.run(
                 case_id="FTW-01",
                 variant_id="baseline",
@@ -565,7 +396,7 @@ class ManifestAndRecoveryTests(unittest.TestCase):
             )
             self.assertEqual(second["run_id"], first["run_id"])
             self.assertTrue(second["resume"]["resumed"])
-            self.assertEqual(validate_run_trace(second)["status"], "succeeded")
+            self.assertEqual(second["status"], "succeeded")
 
 
 class SafetyAndGraderTests(unittest.TestCase):
@@ -580,6 +411,14 @@ class SafetyAndGraderTests(unittest.TestCase):
         rendered = json.dumps(cleaned, sort_keys=True)
         self.assertNotIn("abcdefghijklmnop", rendered)
         self.assertNotIn("plain-secret", rendered)
+        self.assertIn("[REDACTED]", rendered)
+
+    def test_redaction_covers_generic_provider_env_assignments(self):
+        cleaned = redact(
+            {"log": "export FARELI_MOONSHOT_API_KEY=top-secret-value-123 done"}
+        )
+        rendered = json.dumps(cleaned, sort_keys=True)
+        self.assertNotIn("top-secret-value-123", rendered)
         self.assertIn("[REDACTED]", rendered)
 
     def test_simulated_ledger_handles_timeout_duplicate_permission_and_idempotency(self):
