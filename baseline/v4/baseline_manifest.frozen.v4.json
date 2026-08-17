@@ -1,0 +1,160 @@
+{
+  "acceptance_criteria": {
+    "path": "docs/contracts/acceptance-criteria-v4.md",
+    "sha256": "baee53916aa82ffe229d2f76738c56ee8268a9d98ce60f92dfc5216cb82922e5"
+  },
+  "artifacts": [
+    {
+      "path": "baseline/v4/README.md",
+      "sha256": "1b5e517d8ed0af610ec84c47a7449069dd982afe88cf7cd6e7ae91ffc5116c26"
+    },
+    {
+      "path": "baseline/v4/build/build_baseline_v4.py",
+      "sha256": "be8c9624b97a58fd6ce2b4694332c1e2e63969d2978e2ec4443969fbdb7ec647"
+    },
+    {
+      "path": "baseline/v4/build/capture_manifest.v4.json",
+      "sha256": "a2157ed0501f57b451506abd3aa68e964006431841de55a14c907caeab5b8ac6"
+    },
+    {
+      "path": "baseline/v4/build/captures/edgar_aapl_netincome.raw.json",
+      "sha256": "9b6ac23b024662c95dc7b4088a448bf60a31ff672e2f328161c5ceda6a8b9915"
+    },
+    {
+      "path": "baseline/v4/build/captures/edgar_aapl_revenue.raw.json",
+      "sha256": "4495f7a16b4ade43dfa8041ac6477074122cbd5b88033e3e0f68b3f919e7ffbf"
+    },
+    {
+      "path": "baseline/v4/build/captures/edgar_aapl_submissions.raw.json",
+      "sha256": "9ce67c0a62345214dd42434cbacfa70dad226e679c6ce752281578b1cfd2fac4"
+    },
+    {
+      "path": "baseline/v4/build/captures/synthetic_quote_alpha.fixture.json",
+      "sha256": "175e617f5a59559aa20e5f02d24729357d88755267383ec5f11d7c92e2539c26"
+    },
+    {
+      "path": "baseline/v4/build/captures/synthetic_quote_beta.fixture.json",
+      "sha256": "464c44f8d20094b66f8aa543e7ab83b96e7246ddb45e24b041eaa51b985cda83"
+    },
+    {
+      "path": "baseline/v4/cases/case-fkw4-pub-01-moa-v4.json",
+      "sha256": "0e75c544a745a2b1381d4098ad780b828fb30526125ef777db17c73d42e1bd0c"
+    },
+    {
+      "path": "baseline/v4/cases/case-fkw4-pub-01-normal-v4.json",
+      "sha256": "7ed504b8eccd35ea507b54ce65763d474a9c9a9473c5fb06d88ce0824296447b"
+    },
+    {
+      "path": "baseline/v4/cases/case-fkw4-pub-01-sfp-v4.json",
+      "sha256": "240b11f7e1d4b230737394778d068ba2af4a6cab76271543b2bb70a70e44b810"
+    },
+    {
+      "path": "baseline/v4/cases/case-fkw4-pub-02-moa-v4.json",
+      "sha256": "bb1919fbcf685739244e0edf7fad277933afe29c07304d8498ed880edeb1c521"
+    },
+    {
+      "path": "baseline/v4/cases/case-fkw4-pub-02-normal-v4.json",
+      "sha256": "a93f762252c6b79317d0059937fc5e40f8bf87e7fd1255854d15d6bbcc8a84c1"
+    },
+    {
+      "path": "baseline/v4/cases/case-fkw4-pub-02-sfp-v4.json",
+      "sha256": "1aa71dcf6d2bb98f238deee381fc9ff0f48eb5aa1bed54858561098ba1a14c47"
+    },
+    {
+      "path": "baseline/v4/cases/case-ftw4-syn-01-moa-v4.json",
+      "sha256": "8620fcddc587669d44459fdc64ebf1cc0e546f5ebac6ddaa0152e9f7cded906e"
+    },
+    {
+      "path": "baseline/v4/cases/case-ftw4-syn-01-normal-v4.json",
+      "sha256": "7912369ac0703e68bab52d3c891b7409d84e567889a1aaa34e7c1238abd0e9ab"
+    },
+    {
+      "path": "baseline/v4/cases/case-ftw4-syn-01-sfp-v4.json",
+      "sha256": "81d9edabbc2e6524cf0b252941262eeaddd42e2e8d8cfa5f0b6d073c3dd48d5c"
+    },
+    {
+      "path": "baseline/v4/cases/case-ftw4-syn-02-moa-v4.json",
+      "sha256": "7b989dc91573d62bc3d7e251da2a0652a2a8dc03e7adcb57945c66d085318055"
+    },
+    {
+      "path": "baseline/v4/cases/case-ftw4-syn-02-normal-v4.json",
+      "sha256": "80e7698c442c3e3d859460febbec45bff9e36b5551b4254e8228881304f886b8"
+    },
+    {
+      "path": "baseline/v4/cases/case-ftw4-syn-02-sfp-v4.json",
+      "sha256": "d2ddf716b7dc513b027d36e50067943d31772791abc53105b57bdccddb8d682f"
+    },
+    {
+      "path": "baseline/v4/contracts/case_card.schema.v4.json",
+      "sha256": "713bddb7a78dbc033b712050d69772dea3f289f568ea4ae15ef854a851eee2b4"
+    },
+    {
+      "path": "baseline/v4/contracts/case_data_validation_config.v4.json",
+      "sha256": "ebafc6c3f3bc1927b8743d4ee77a37d769e51ac3b1d3db08891602c3a190b4eb"
+    },
+    {
+      "path": "baseline/v4/contracts/data_snapshot.schema.v4.json",
+      "sha256": "49761b2e860593f228ef5a91df6e886e5f8a972c28a1b26fba2d7756a4d94f57"
+    },
+    {
+      "path": "baseline/v4/contracts/grader_contract.frozen.v4.json",
+      "sha256": "4da19024b534c9aa3c3fc533d9a385fb0d3aba28b8c03667e9aee1666ef69468"
+    },
+    {
+      "path": "baseline/v4/contracts/reason_codes.v4.json",
+      "sha256": "5dfd2786fb2912318fec0eb2f82ee9ab495bc102d7e7a4dbc1c3448efe959aeb"
+    },
+    {
+      "path": "baseline/v4/contracts/run_trace.schema.v6.json",
+      "sha256": "9b09f4140211a084dc1cc01b2578286136cf434c4c7661f8736e671cbee23c2f"
+    },
+    {
+      "path": "baseline/v4/grader/grader_policy.v4.json",
+      "sha256": "1ecb228f82eb05bbfdf53cea5fde92d115b58a69752a8122caef59ca07ba0efb"
+    },
+    {
+      "path": "baseline/v4/snapshots/data_snapshot.snapshot-sec-edgar-aapl-netincome-v4-01-missing.missing.json",
+      "sha256": "41e6663423c5313fee0102e1c3955adb012ca9956a7178fb650e200bf82614e6"
+    },
+    {
+      "path": "baseline/v4/snapshots/data_snapshot.snapshot-sec-edgar-aapl-netincome-v4-01.primary.json",
+      "sha256": "fdf41e9d9071ebf0744c2778a6324b8f003e6017b70c6d185ecc8b1e02f51fdc"
+    },
+    {
+      "path": "baseline/v4/snapshots/data_snapshot.snapshot-sec-edgar-aapl-revenue-v4-01-missing.missing.json",
+      "sha256": "fdaa83a424582beaa8ab8d5321338fe58ba110a43de64a95a6f6e0fefa18bc1e"
+    },
+    {
+      "path": "baseline/v4/snapshots/data_snapshot.snapshot-sec-edgar-aapl-revenue-v4-01.primary.json",
+      "sha256": "212c68b9129e2b756620515bc104d0fce675f2e8142c260a72c418690d945e77"
+    },
+    {
+      "path": "baseline/v4/snapshots/data_snapshot.snapshot-synthetic-quote-alpha-v4-01-missing.missing.json",
+      "sha256": "2724e261e3f955f8878b26c52806357323074a09537390d355a9aeb73f4f5110"
+    },
+    {
+      "path": "baseline/v4/snapshots/data_snapshot.snapshot-synthetic-quote-alpha-v4-01.primary.json",
+      "sha256": "96fd464113a8c7d690bc1ee8478b3a7c1cb325a343c7d7c1500c8d4d3f530a7b"
+    },
+    {
+      "path": "baseline/v4/snapshots/data_snapshot.snapshot-synthetic-quote-beta-v4-01-missing.missing.json",
+      "sha256": "aafc6a886861a12a7e442c4569572be63d46dc345f96a1d80a6d9aba1ec959ca"
+    },
+    {
+      "path": "baseline/v4/snapshots/data_snapshot.snapshot-synthetic-quote-beta-v4-01.primary.json",
+      "sha256": "49e3159e2d6487a8ef8c5860e18cac5aff2649524361e1e8f720816687f7f615"
+    },
+    {
+      "path": "baseline/v4/validate_baseline_v4.py",
+      "sha256": "b31553a9b823146f337df99f38fa6a89a67072a06e7530743fc70e3caad4d430"
+    }
+  ],
+  "baseline_generation": "v4-second-audit-hard-gates",
+  "build_source_commit": "e379cdcf91ab403f77156cdbf0569ddee9b51efa",
+  "bundle_sha256": "d9c8a169bb9e121ba33c5688f2c7cad8b165c1e21a44df437a620f305d512d6d",
+  "contract_type": "baseline_manifest",
+  "contract_version": "4.0.0",
+  "frozen_at": "2026-08-17T13:18:45Z",
+  "frozen_by_issue": "PER-328",
+  "status": "frozen"
+}
