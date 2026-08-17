@@ -10,6 +10,7 @@ dependencies = [
 [project.scripts]
 fareli-harness = "financial_agent_reliability.harness.cli:main"
 fareli-report = "financial_agent_reliability.reporting.report:main"
+fareli-retro = "financial_agent_reliability.retrospective.cli:main"
 
 [build-system]
 requires = ["hatchling"]
