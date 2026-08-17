@@ -1,0 +1,77 @@
+{
+  "contract_bundle_sha256": "deeed28a5bbaaba537a2568df1c2636f93ec82916245893d712d808e80a3ce44",
+  "contract_type": "grader_contract",
+  "files": [
+    {
+      "path": "src/financial_agent_reliability/graders/pipeline.py",
+      "sha256": "7227b55e9e78496a4aa5288695e41246db8a763ed01f84608f309437494abbce"
+    },
+    {
+      "path": "src/financial_agent_reliability/graders/baseline_v2.py",
+      "sha256": "9218b7613faae2af7d0f4c8a4635a28cd48dc05808bd23a2feaedce019c3d0f2"
+    },
+    {
+      "path": "src/financial_agent_reliability/oracles/public_filings/oracle.py",
+      "sha256": "521fba3f94cf0cd2ab1e1093f3b61d90784515f3f9d2b1cc39c8687045c48864"
+    },
+    {
+      "path": "src/financial_agent_reliability/oracles/public_filings/oracle_reference.py",
+      "sha256": "9a24b3be9ae5da06cea4b729bfc011888a9e7efdba0a680871f4b93b76db959f"
+    },
+    {
+      "path": "src/financial_agent_reliability/oracles/longbridge/oracle.py",
+      "sha256": "fe648edd2b24c47bb179c830b025be34cae127adbf71f503de674e8897eefad7"
+    },
+    {
+      "path": "src/financial_agent_reliability/oracles/longbridge/oracle_reference.py",
+      "sha256": "66041e66bcb98be4c0420c2d88e24fb092c586a67f945cf92e2bf51257a8ed27"
+    },
+    {
+      "path": "src/financial_agent_reliability/harness/secret_scan.py",
+      "sha256": "ec3ebcb70759720db823c143d9104340d80985eff5d2de5b162de3fff2a304e9"
+    },
+    {
+      "path": "baseline/v2/grader/grader_policy.v2.json",
+      "sha256": "4174a9da1b2929d5a7e9a2740c42073ab758745811ed1ae2a162d2ae040819a8"
+    },
+    {
+      "path": "baseline/v2/contracts/case_card.schema.v2.json",
+      "sha256": "0baa865a5ee842e08c72713e6d23e76c2c220340901485608f62729e944f8e4f"
+    },
+    {
+      "path": "baseline/v2/contracts/data_snapshot.schema.v2.json",
+      "sha256": "1a6f361070a9bf9426e321e13b5b2392adab3dcb16eb3422aa0fb23397a701d7"
+    },
+    {
+      "path": "baseline/v2/contracts/reason_codes.v2.json",
+      "sha256": "5140fa88779a5290be8506ec97f3b37d8b456c0d431bde74b29780f8e48f0c2a"
+    },
+    {
+      "path": "baseline/v2/contracts/case_data_validation_config.v2.json",
+      "sha256": "6b775b0ccef3f3774c532031ee92df5b8ec3311226c78f49f49fc263b8423f2e"
+    },
+    {
+      "path": "baseline/v2/contracts/run_trace.schema.v4.json",
+      "sha256": "62c7227fe2fc4402f40a2b06bd0528c71af181c5120843e006f904617342c7d0"
+    },
+    {
+      "path": "baseline/v2/validate_baseline_v2.py",
+      "sha256": "d22ba640ac2c3c1d6affb0fdc1a6c46364cd3fd89b6064552768d60662304a6a"
+    },
+    {
+      "path": "tests/test_baseline_v2.py",
+      "sha256": "a3ff6a26de89e82ff81959bcff11af8874bdfc70f28f1767e9c2d97a9740a7d9"
+    }
+  ],
+  "frozen_at": "2026-08-17T11:03:37Z",
+  "frozen_by_issue": "PER-328",
+  "manifest_version": "3.0.0",
+  "mutation_policy": "append-only audit failure plus new policy version and rerun of affected conclusions; candidate performance or demo-case outcomes must never alter this bundle",
+  "status": "frozen",
+  "supersedes": {
+    "contract_bundle_sha256": "511da1901afccd1581782496d8488d47300ba40adb80f64590da635be0ae2eb7",
+    "path": "contracts/grader_contract.frozen.v2.json",
+    "reason": "PER-323 (C-323-5/C-323-7): baseline-v1 grader bundle removed with the frozen directories; baseline v2 re-establishes the minimal grader bundle with the v2 policy, v2 case-data contracts, the v4 run-trace schema, and the surviving plus new oracle implementations. Recoverable via the contracts/ rollback index SHA (commit 077fcb56).",
+    "sha256": "0a4d61d4421690a71f6cdf466a4390417a8737e06e8c144ba594e8644dc30804"
+  }
+}

@@ -1,0 +1,159 @@
+{
+  "artifacts": [
+    {
+      "path": "baseline/v2/README.md",
+      "sha256": "58bcafcbf78f26587130d1f729b6d247fc59076160b7f9ce9d2155e1104f06fa"
+    },
+    {
+      "path": "baseline/v2/__pycache__/validate_baseline_v2.cpython-311.pyc",
+      "sha256": "54fbc1abec7e4f53141585092b984dc6e3ea4d4939f6ba1152f32ccfa4797a6a"
+    },
+    {
+      "path": "baseline/v2/build/build_baseline_v2.py",
+      "sha256": "9ab748da8270a04d1d79d02621d3117b2206a9338656915133cdae9e6430ecb0"
+    },
+    {
+      "path": "baseline/v2/build/capture_manifest.v2.json",
+      "sha256": "454ed4c363c52a2424ca8fe562e4fae9258344cea5ac1cd889a41ad089cfade9"
+    },
+    {
+      "path": "baseline/v2/build/captures/edgar_aapl_netincome.raw.json",
+      "sha256": "9b6ac23b024662c95dc7b4088a448bf60a31ff672e2f328161c5ceda6a8b9915"
+    },
+    {
+      "path": "baseline/v2/build/captures/edgar_aapl_revenue.raw.json",
+      "sha256": "4495f7a16b4ade43dfa8041ac6477074122cbd5b88033e3e0f68b3f919e7ffbf"
+    },
+    {
+      "path": "baseline/v2/build/captures/edgar_aapl_submissions.raw.json",
+      "sha256": "9ce67c0a62345214dd42434cbacfa70dad226e679c6ce752281578b1cfd2fac4"
+    },
+    {
+      "path": "baseline/v2/build/captures/lbq_quote_700.raw.json",
+      "sha256": "fd68b18b2489c8ce941f3d13aaa2480144d3d363a496e2042e64f45acc011894"
+    },
+    {
+      "path": "baseline/v2/build/captures/lbq_quote_aapl.raw.json",
+      "sha256": "f19993ab304c81d1a580901b680923117d767b176b48176d250fa54ad17fca4e"
+    },
+    {
+      "path": "baseline/v2/cases/case-fkw2-pub-01-moa-v2.json",
+      "sha256": "282002fc1a0d08ad941ba04132e72c86a2d9f86cff98026c858ba7bf180cf595"
+    },
+    {
+      "path": "baseline/v2/cases/case-fkw2-pub-01-normal-v2.json",
+      "sha256": "44d9c112be869eb0dd6029eee83b3b7adca4e06803df57c9c6e5fe64bd2e94b3"
+    },
+    {
+      "path": "baseline/v2/cases/case-fkw2-pub-01-sfp-v2.json",
+      "sha256": "c187be2bbe370f871dd8db320e8e53c9791f9a215e63473270392e6fd53114d6"
+    },
+    {
+      "path": "baseline/v2/cases/case-fkw2-pub-02-moa-v2.json",
+      "sha256": "4ccff5d6429da27e212503087d943fdb0279efdcfa8b1deb6c0488e362f3191b"
+    },
+    {
+      "path": "baseline/v2/cases/case-fkw2-pub-02-normal-v2.json",
+      "sha256": "56c387629a6095c0fe4d673014b19a0d3114f73931854186cc679551c3e5cbd2"
+    },
+    {
+      "path": "baseline/v2/cases/case-fkw2-pub-02-sfp-v2.json",
+      "sha256": "7d3761e7005f65af4e15b5f908c3aa5304e54c6cc2cbca88f4005322d15733d3"
+    },
+    {
+      "path": "baseline/v2/cases/case-ftw2-lbq-01-moa-v2.json",
+      "sha256": "d4ebd32f12d5f0f35628be5e0b29824dd1bc4d1c8f3e5f6c10e07fc6e742366d"
+    },
+    {
+      "path": "baseline/v2/cases/case-ftw2-lbq-01-normal-v2.json",
+      "sha256": "a10fe8f9e9d6209fab861093b5792197e017bc22de0cdbbd9de0fc6e089b0c24"
+    },
+    {
+      "path": "baseline/v2/cases/case-ftw2-lbq-01-sfp-v2.json",
+      "sha256": "c755a8d5fac5ca1b764a1dd9d6d60eae97960dbdd23e8921c8fa6d9dc95a5347"
+    },
+    {
+      "path": "baseline/v2/cases/case-ftw2-lbq-02-moa-v2.json",
+      "sha256": "c34a91e68cd710221befd72116b07008d5599ebde66c131d14b05606419bbf70"
+    },
+    {
+      "path": "baseline/v2/cases/case-ftw2-lbq-02-normal-v2.json",
+      "sha256": "bb0a31315b6a1251a24b943865ca929b1af62b569c1c68513946747fca4df01b"
+    },
+    {
+      "path": "baseline/v2/cases/case-ftw2-lbq-02-sfp-v2.json",
+      "sha256": "cb88408edf6afb150f69c6a48619cdc6d506fb24cfe8856bd9108f29d48700f1"
+    },
+    {
+      "path": "baseline/v2/contracts/case_card.schema.v2.json",
+      "sha256": "0baa865a5ee842e08c72713e6d23e76c2c220340901485608f62729e944f8e4f"
+    },
+    {
+      "path": "baseline/v2/contracts/case_data_validation_config.v2.json",
+      "sha256": "6b775b0ccef3f3774c532031ee92df5b8ec3311226c78f49f49fc263b8423f2e"
+    },
+    {
+      "path": "baseline/v2/contracts/data_snapshot.schema.v2.json",
+      "sha256": "1a6f361070a9bf9426e321e13b5b2392adab3dcb16eb3422aa0fb23397a701d7"
+    },
+    {
+      "path": "baseline/v2/contracts/grader_contract.frozen.v2.json",
+      "sha256": "5967f5b6c5af18598a12136cf06c5f79e19e102c0f1a73111d04247ecf8c6ba9"
+    },
+    {
+      "path": "baseline/v2/contracts/reason_codes.v2.json",
+      "sha256": "5140fa88779a5290be8506ec97f3b37d8b456c0d431bde74b29780f8e48f0c2a"
+    },
+    {
+      "path": "baseline/v2/contracts/run_trace.schema.v4.json",
+      "sha256": "62c7227fe2fc4402f40a2b06bd0528c71af181c5120843e006f904617342c7d0"
+    },
+    {
+      "path": "baseline/v2/grader/grader_policy.v2.json",
+      "sha256": "4174a9da1b2929d5a7e9a2740c42073ab758745811ed1ae2a162d2ae040819a8"
+    },
+    {
+      "path": "baseline/v2/snapshots/data_snapshot.snapshot-longbridge-quote-700-v2-01-missing.missing.json",
+      "sha256": "a83226d3c06012872a3a28d0047f66cdc194162dc9c17f1c09670919735bff36"
+    },
+    {
+      "path": "baseline/v2/snapshots/data_snapshot.snapshot-longbridge-quote-700-v2-01.primary.json",
+      "sha256": "03bd3ea0625c713fc446ac8bcb61bdc645fe043c8d7ec230913a85a541798593"
+    },
+    {
+      "path": "baseline/v2/snapshots/data_snapshot.snapshot-longbridge-quote-aapl-v2-01-missing.missing.json",
+      "sha256": "b647178aaf0ef5027d8d18f88fb0e11e38a8025e9276a8cf3d08d54f467d4849"
+    },
+    {
+      "path": "baseline/v2/snapshots/data_snapshot.snapshot-longbridge-quote-aapl-v2-01.primary.json",
+      "sha256": "cbb9f681f9164ffebcf3c49de21eee986cfbff8f032d2ce1b0bd66ec51ca858f"
+    },
+    {
+      "path": "baseline/v2/snapshots/data_snapshot.snapshot-sec-edgar-aapl-netincome-v2-01-missing.missing.json",
+      "sha256": "c25aef4c814bdba573914ae343d2cda0cb3fd5a10dd0de069659b2e39b450379"
+    },
+    {
+      "path": "baseline/v2/snapshots/data_snapshot.snapshot-sec-edgar-aapl-netincome-v2-01.primary.json",
+      "sha256": "7d08ec3de49991a6b0c3efa074fe4a74d30c95650c757835c48ed6bc6d32003e"
+    },
+    {
+      "path": "baseline/v2/snapshots/data_snapshot.snapshot-sec-edgar-aapl-revenue-v2-01-missing.missing.json",
+      "sha256": "2f35e656bbfac022776316fa0a9ddc08e47fe1c10c69cd8d6771adf1bde19257"
+    },
+    {
+      "path": "baseline/v2/snapshots/data_snapshot.snapshot-sec-edgar-aapl-revenue-v2-01.primary.json",
+      "sha256": "cebbfdf18d544c739d7cd4df00eaf6bfaa7513325b42b9217c17162967d1808f"
+    },
+    {
+      "path": "baseline/v2/validate_baseline_v2.py",
+      "sha256": "d22ba640ac2c3c1d6affb0fdc1a6c46364cd3fd89b6064552768d60662304a6a"
+    }
+  ],
+  "baseline_generation": "v2-minimal",
+  "bundle_sha256": "1c886c81146139ce9a005fb00db058c473c4be80cff2a5a8f052c68d0465b588",
+  "contract_type": "baseline_manifest",
+  "contract_version": "2.0.0",
+  "frozen_at": "2026-08-17T11:03:37Z",
+  "frozen_by_issue": "PER-328",
+  "status": "frozen"
+}

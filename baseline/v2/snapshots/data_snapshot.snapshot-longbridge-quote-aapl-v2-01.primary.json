@@ -1,0 +1,102 @@
+{
+  "access": {
+    "mode": "public_read_only",
+    "prohibited_scopes": [
+      "account",
+      "assets",
+      "cash",
+      "holdings",
+      "orders",
+      "positions",
+      "portfolio",
+      "trades"
+    ],
+    "query_args": {
+      "command": "longbridge quote AAPL.US --format json",
+      "symbols": [
+        "AAPL.US"
+      ]
+    },
+    "query_name": "quote"
+  },
+  "contract_type": "data_snapshot",
+  "contract_version": "2.0.0",
+  "financial_subject": {
+    "currency": {
+      "code": "USD"
+    },
+    "entity_name": "Apple Inc.",
+    "identifiers": [
+      {
+        "scheme": "LONGPORT_SYMBOL",
+        "value": "AAPL.US"
+      }
+    ],
+    "market": {
+      "country": "US",
+      "mic": "XNAS",
+      "timezone": "America/New_York"
+    },
+    "subject_type": "security",
+    "units": {
+      "accounting_basis": "not_applicable",
+      "amount_scale": "USD unit (quote tick size)",
+      "price_basis": "regular_session_last"
+    }
+  },
+  "integrity": {
+    "canonicalization": "financial-agent-c14n-json-v1",
+    "content_sha256": "19cf499e1135ee2ef687ab24db3ebb98a2125902b5f69801e67bb517ed1a0427",
+    "hash_algorithm": "sha256"
+  },
+  "lineage": {
+    "code_revision": "8721f102911ca2d18eb1e86bf0a85684f70fef1a",
+    "collector": "Longbridge CLI 0.27.x public read-only quote query; no account, position, order, or trade scope accessed",
+    "collector_version": "1.0.0",
+    "notes": "last reflects the most recent regular-session trade (2026-08-14 US session); the raw payload carries no regular-session timestamp field, so snapshot as_of is conservatively bound to the post_market block timestamp, which upper-bounds the regular session.",
+    "parent_snapshot_ids": [],
+    "query_args": {
+      "command": "longbridge quote AAPL.US --format json",
+      "symbols": [
+        "AAPL.US"
+      ]
+    },
+    "raw_response_sha256": "f19993ab304c81d1a580901b680923117d767b176b48176d250fa54ad17fca4e",
+    "schema_version": "case-data/2.0.0"
+  },
+  "records": [
+    {
+      "available_at": "2026-08-14T23:59:59Z",
+      "event_time": "2026-08-14T23:59:59Z",
+      "evidence_type": "quote_snapshot",
+      "payload": {
+        "last": "305.930",
+        "prev_close": "305.260",
+        "symbol": "AAPL.US",
+        "trade_status": "Normal"
+      },
+      "record_id": "snapshot-longbridge-quote-aapl-v2-01-quote-01",
+      "source_locator": "baseline/v2/build/captures/lbq_quote_aapl.raw.json"
+    }
+  ],
+  "revision": 1,
+  "snapshot_id": "snapshot-longbridge-quote-aapl-v2-01",
+  "source": {
+    "dataset": "Longbridge public read-only quote, AAPL.US",
+    "license": {
+      "name": "Longbridge OpenAPI public read-only quote access; redistribution not presumed",
+      "redistributable": false,
+      "url": "https://open.longbridge.cn"
+    },
+    "provider": "longbridge",
+    "source_type": "market_data",
+    "uri": "https://open.longbridge.cn/docs/cli"
+  },
+  "status": "frozen",
+  "temporal": {
+    "as_of": "2026-08-14T23:59:59Z",
+    "available_at": "2026-08-14T23:59:59Z",
+    "event_time": "2026-08-14T23:59:59Z",
+    "retrieved_at": "2026-08-17T10:36:52Z"
+  }
+}

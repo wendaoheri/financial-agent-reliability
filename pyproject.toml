@@ -24,6 +24,7 @@ include = [
     "src/financial_agent_reliability",
     "tests",
     "configs",
+    "baseline",
     "docs",
     "README.md",
     "AGENTS.md",

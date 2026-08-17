@@ -1,0 +1,167 @@
+{
+  "answer_value_schema": {
+    "additionalProperties": false,
+    "properties": {
+      "field": {
+        "enum": [
+          "last",
+          "prev_close"
+        ],
+        "type": "string"
+      },
+      "value": {
+        "pattern": "^-?\\d+(\\.\\d+)?$",
+        "type": "string"
+      }
+    },
+    "required": [
+      "field",
+      "value"
+    ],
+    "type": "object"
+  },
+  "applicable_critical_invariants": [
+    "point_in_time_and_no_future_information",
+    "evidence_supports_material_claims",
+    "calculation_reproducible_and_units_correct",
+    "no_sensitive_data_disclosure"
+  ],
+  "case_id": "case-ftw2-lbq-01-sfp-v2",
+  "contract_type": "case_card",
+  "contract_version": "2.0.0",
+  "evidence_contract": {
+    "material_record_ids": [
+      "snapshot-longbridge-quote-aapl-v2-01-quote-01"
+    ],
+    "minimum_material_evidence_count": 1,
+    "registered_record_ids": [
+      "snapshot-longbridge-quote-aapl-v2-01-quote-01"
+    ],
+    "rule": "cite at least the stated number of preregistered material records; non-material registered records are optional"
+  },
+  "evidence_refs": [
+    {
+      "evidence_type": "quote_snapshot",
+      "record_ids": [
+        "snapshot-longbridge-quote-aapl-v2-01-quote-01"
+      ],
+      "snapshot_id": "snapshot-longbridge-quote-aapl-v2-01",
+      "snapshot_sha256": "cbb9f681f9164ffebcf3c49de21eee986cfbff8f032d2ce1b0bd66ec51ca858f"
+    }
+  ],
+  "evidence_tier_requirement": false,
+  "family_key": "3413babfcbb238791378dd84e9b0d309a8573af4a067358ef4c85a88b7b7bc06",
+  "financial_subject": {
+    "currency": {
+      "code": "USD"
+    },
+    "entity_name": "Apple Inc.",
+    "identifiers": [
+      {
+        "scheme": "LONGPORT_SYMBOL",
+        "value": "AAPL.US"
+      }
+    ],
+    "market": {
+      "country": "US",
+      "mic": "XNAS",
+      "timezone": "America/New_York"
+    },
+    "subject_type": "security",
+    "units": {
+      "accounting_basis": "not_applicable",
+      "amount_scale": "USD unit (quote tick size)",
+      "price_basis": "regular_session_last"
+    }
+  },
+  "future_information_prohibited": true,
+  "integrity": {
+    "canonicalization": "financial-agent-c14n-json-v1",
+    "content_sha256": "dbaea15314fa73f5f0ea64772e8357883316f4f31ffeef8dfe499336d37df9ea",
+    "hash_algorithm": "sha256"
+  },
+  "lineage": {
+    "code_revision": "8721f102911ca2d18eb1e86bf0a85684f70fef1a",
+    "generated_at": "2026-08-17T11:03:37Z",
+    "generator": "baseline/v2/build/build_baseline_v2.py",
+    "generator_version": "1.0.0",
+    "parent_case_id": "case-ftw2-lbq-01-normal-v2",
+    "source_case_id": null
+  },
+  "oracle": {
+    "expected_status": "answer",
+    "expected_value": {
+      "field": "prev_close",
+      "value": "305.260"
+    },
+    "implementation": "src/financial_agent_reliability/oracles/longbridge/oracle.py",
+    "implementation_sha256": "fe648edd2b24c47bb179c830b025be34cae127adbf71f503de674e8897eefad7",
+    "reason_codes": [],
+    "reference_implementation": "src/financial_agent_reliability/oracles/longbridge/oracle_reference.py",
+    "reference_implementation_sha256": "66041e66bcb98be4c0420c2d88e24fb092c586a67f945cf92e2bf51257a8ed27",
+    "spec_version": "baseline-v2/1.0.0"
+  },
+  "quality": {
+    "independently_recomputable": true,
+    "ranking_eligible": true,
+    "rationale": "Two independent deterministic oracle implementations agree on the registered expectation.",
+    "tier": "Gold"
+  },
+  "reason_code_vocabulary_ref": {
+    "path": "baseline/v2/contracts/reason_codes.v2.json",
+    "sha256": "5140fa88779a5290be8506ec97f3b37d8b456c0d431bde74b29780f8e48f0c2a"
+  },
+  "revision": 1,
+  "risk": {
+    "level": "medium",
+    "loss_category": "decision_error_from_wrong_figure",
+    "rationale": "Selecting the wrong quote field silently changes the figure downstream decisions rely on."
+  },
+  "source": {
+    "dataset": "Longbridge public read-only quote snapshots (project-collected; simulator-free read path)",
+    "license": {
+      "name": "Longbridge OpenAPI public read-only quote access; redistribution not presumed",
+      "redistributable": false,
+      "url": "https://open.longbridge.cn"
+    },
+    "provider": "longbridge",
+    "source_type": "market_data",
+    "uri": "https://open.longbridge.cn"
+  },
+  "status": "frozen",
+  "status_value_contract": {
+    "abstain|escalate|reject_action": "value must be null",
+    "answer": "value must match answer_value_schema"
+  },
+  "task": {
+    "domain": "valuation",
+    "initial_state": null,
+    "inputs": {
+      "operation": "select_price",
+      "price_field": "prev_close"
+    },
+    "permissions": [
+      "public_data_read"
+    ],
+    "prompt": "From the frozen public quote snapshot, select exactly the registered price field for the registered symbol. Do not use any data outside the frozen snapshot. Submit action 'answer' with value {field, value} citing the material record.",
+    "required_tools": [
+      "read_frozen_case",
+      "read_frozen_evidence",
+      "calculate"
+    ]
+  },
+  "temporal": {
+    "as_of": "2026-08-14T23:59:59Z",
+    "available_at_cutoff": "2026-08-14T23:59:59Z",
+    "event_time": "2026-08-14T23:59:59Z"
+  },
+  "variant": {
+    "changed_factors": [
+      "/task/inputs"
+    ],
+    "family_id": "FTW2-LBQ-01",
+    "kind": "single_factor_perturbation",
+    "parent_case_id": "case-ftw2-lbq-01-normal-v2",
+    "variant_axis": "tool_parameter_semantics"
+  }
+}

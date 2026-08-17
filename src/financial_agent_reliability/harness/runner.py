@@ -1,11 +1,13 @@
 """Offline-capable runner that emits the run_trace shape.
 
-PER-323 Stage 2: contract pins moved from the removed frozen directory to
-``configs/harness_contract.v1.json`` and ``configs/inference.json``. The
-``run_identity`` hash binding now carries ``inference_config_sha256`` +
-``harness_contract_sha256`` (design contract C5); the formal run-trace
-successor contract is frozen with baseline v2 (Stage 3, PER-328), so this
-module emits the transitional shape ``contract_version`` 2.1.0.
+PER-323 Stage 2 moved contract pins from the removed frozen directory to
+``configs/harness_contract.v1.json`` and ``configs/inference.json``.
+PER-328 (Stage 3) froze the formal run-trace successor contract
+``baseline/v2/contracts/run_trace.schema.v4.json`` (design contract C5):
+``run_identity`` carries ``inference_config_sha256`` +
+``harness_contract_sha256`` + ``immutable_bundle_sha256``, and this module
+emits ``contract_version`` 4.0.0 with benchmark_id
+``financial-agent-reliability-v2``.
 """
 
 from __future__ import annotations
@@ -83,7 +85,7 @@ class OfflineHarness:
         if frozen_input_path not in {item["path"] for item in relative_artifacts}:
             raise ValueError("frozen input is not committed in the immutable bundle")
         identity = {
-            "benchmark_id": "financial-agent-reliability-v1",
+            "benchmark_id": "financial-agent-reliability-v2",
             "case_id": case_id,
             "variant_id": variant_id,
             "requested_model_id": self.adapter.model_id,
@@ -205,7 +207,7 @@ class OfflineHarness:
         )
         trace = {
             "contract_type": "run_trace",
-            "contract_version": "2.1.0",
+            "contract_version": "4.0.0",
             "run_id": run_id,
             "run_identity": identity,
             "status": status,

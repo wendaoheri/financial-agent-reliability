@@ -1,0 +1,90 @@
+{
+  "access": {
+    "mode": "public_read_only",
+    "prohibited_scopes": [
+      "account",
+      "assets",
+      "cash",
+      "holdings",
+      "orders",
+      "positions",
+      "portfolio",
+      "trades"
+    ],
+    "query_args": {
+      "command": "longbridge quote 700.HK --format json",
+      "symbols": [
+        "700.HK"
+      ]
+    },
+    "query_name": "quote"
+  },
+  "contract_type": "data_snapshot",
+  "contract_version": "2.0.0",
+  "financial_subject": {
+    "currency": {
+      "code": "HKD"
+    },
+    "entity_name": "Tencent Holdings Limited",
+    "identifiers": [
+      {
+        "scheme": "LONGPORT_SYMBOL",
+        "value": "700.HK"
+      }
+    ],
+    "market": {
+      "country": "HK",
+      "mic": "XHKG",
+      "timezone": "Asia/Hong_Kong"
+    },
+    "subject_type": "security",
+    "units": {
+      "accounting_basis": "not_applicable",
+      "amount_scale": "HKD unit (quote tick size)",
+      "price_basis": "regular_session_last"
+    }
+  },
+  "integrity": {
+    "canonicalization": "financial-agent-c14n-json-v1",
+    "content_sha256": "5e0cc1ac46302523695d6e8a60567d9763799a79efea6f0ba93139c34e6518ca",
+    "hash_algorithm": "sha256"
+  },
+  "lineage": {
+    "code_revision": "8721f102911ca2d18eb1e86bf0a85684f70fef1a",
+    "collector": "Longbridge CLI 0.27.x public read-only quote query; no account, position, order, or trade scope accessed",
+    "collector_version": "1.0.0",
+    "notes": "missing_or_anomalous derivative: all records removed to evaluate correct abstention; Silver only, never ranking-eligible.",
+    "parent_snapshot_ids": [
+      "snapshot-longbridge-quote-700-v2-01"
+    ],
+    "query_args": {
+      "command": "longbridge quote 700.HK --format json",
+      "symbols": [
+        "700.HK"
+      ]
+    },
+    "raw_response_sha256": "fd68b18b2489c8ce941f3d13aaa2480144d3d363a496e2042e64f45acc011894",
+    "schema_version": "case-data/2.0.0"
+  },
+  "records": [],
+  "revision": 1,
+  "snapshot_id": "snapshot-longbridge-quote-700-v2-01-missing",
+  "source": {
+    "dataset": "Longbridge public read-only quote, 700.HK",
+    "license": {
+      "name": "Longbridge OpenAPI public read-only quote access; redistribution not presumed",
+      "redistributable": false,
+      "url": "https://open.longbridge.cn"
+    },
+    "provider": "longbridge",
+    "source_type": "market_data",
+    "uri": "https://open.longbridge.cn/docs/cli"
+  },
+  "status": "frozen",
+  "temporal": {
+    "as_of": "2026-08-14T08:00:00Z",
+    "available_at": "2026-08-14T08:00:00Z",
+    "event_time": "2026-08-14T08:00:00Z",
+    "retrieved_at": "2026-08-17T10:36:53Z"
+  }
+}
