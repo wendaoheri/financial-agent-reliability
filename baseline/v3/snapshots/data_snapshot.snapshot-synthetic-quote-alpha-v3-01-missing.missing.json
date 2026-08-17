@@ -1,0 +1,84 @@
+{
+  "access": {
+    "mode": "public_read_only",
+    "prohibited_scopes": [
+      "account",
+      "assets",
+      "cash",
+      "holdings",
+      "orders",
+      "positions",
+      "portfolio",
+      "trades"
+    ],
+    "query_args": {
+      "fixture_id": "synthetic-quote-alpha-v3"
+    },
+    "query_name": "load_fixture"
+  },
+  "contract_type": "data_snapshot",
+  "contract_version": "3.0.0",
+  "financial_subject": {
+    "currency": {
+      "code": "USD"
+    },
+    "entity_name": "Synthetic Equity Alpha",
+    "identifiers": [
+      {
+        "scheme": "SYNTHETIC_SECURITY_ID",
+        "value": "SYNTH-ALPHA"
+      }
+    ],
+    "market": {
+      "country": "US",
+      "mic": "XSIM",
+      "timezone": "UTC"
+    },
+    "subject_type": "synthetic_security",
+    "units": {
+      "accounting_basis": "not_applicable",
+      "amount_scale": "synthetic USD unit",
+      "price_basis": "synthetic_observed_value"
+    }
+  },
+  "integrity": {
+    "canonicalization": "financial-agent-c14n-json-v1",
+    "content_sha256": "5b9aa30a1030045d980c442e9000b40a55fa677582de224df3cf528b14b0b135",
+    "hash_algorithm": "sha256"
+  },
+  "lineage": {
+    "code_revision": "94afd7b42e40df02442848bf5e21a8078aae2f55",
+    "collector": "deterministic project-authored fixture; no external query",
+    "collector_version": "1.0.0",
+    "notes": "missing_or_anomalous derivative: all records removed to evaluate correct abstention; Silver only, never ranking-eligible.",
+    "parent_snapshot_ids": [
+      "snapshot-synthetic-quote-alpha-v3-01"
+    ],
+    "query_args": {
+      "fixture_id": "synthetic-quote-alpha-v3"
+    },
+    "raw_response_sha256": "175e617f5a59559aa20e5f02d24729357d88755267383ec5f11d7c92e2539c26",
+    "schema_version": "case-data/3.0.0"
+  },
+  "records": [],
+  "revision": 1,
+  "snapshot_id": "snapshot-synthetic-quote-alpha-v3-01-missing",
+  "source": {
+    "dataset": "Project-authored synthetic price fixture, SYNTH-ALPHA",
+    "license": {
+      "name": "CC0-1.0 project-authored synthetic fixture",
+      "redistributable": true,
+      "url": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "provider": "project_synthetic",
+    "source_type": "synthetic_fixture",
+    "uri": "baseline/v3/build/captures/synthetic_quote_alpha.fixture.json"
+  },
+  "status": "frozen",
+  "temporal": {
+    "as_of": "2026-08-14T23:59:59Z",
+    "available_at": "2026-08-14T23:59:59Z",
+    "event_time": "2026-08-14T23:59:59Z",
+    "retrieved_at": "2026-08-17T12:30:00Z"
+  }
+}

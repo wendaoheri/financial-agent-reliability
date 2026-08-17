@@ -1,0 +1,91 @@
+{
+  "contract_type": "financial_agent_grader_policy",
+  "contract_version": "3.0.0",
+  "status": "frozen",
+  "frozen_by_issue": "PER-328",
+  "supersedes": {
+    "path": "baseline/v2/grader/grader_policy.v2.json",
+    "sha256": "4174a9da1b2929d5a7e9a2740c42073ab758745811ed1ae2a162d2ae040819a8",
+    "reason": "PER-330 invalidated the v2 implementation-policy pairing. V3 retains the eight declared invariants and requires an executable grader branch for every one."
+  },
+  "mutation_policy": "append-only by new policy version; candidate performance, demo-case outcomes, or ranking convenience must never alter this policy; any change requires a new baseline version and rerun of affected conclusions",
+  "ranking_scope": {
+    "included_tier": "Gold",
+    "diagnostic_only_tiers": ["Silver"],
+    "tracks": {
+      "financial_knowledge_work": "0.500000",
+      "financial_tool_workflow": "0.500000"
+    },
+    "weight_mutation": "forbidden_after_freeze",
+    "candidate_performance_may_influence_weight_or_exclusion": false,
+    "demo_cases_may_be_reverse_used_for_weight_tuning": false
+  },
+  "critical_success": {
+    "formula": "end_to_end_complete AND all(applicable_critical_invariants)",
+    "allowed_invariants": [
+      "point_in_time_and_no_future_information",
+      "evidence_supports_material_claims",
+      "calculation_reproducible_and_units_correct",
+      "method_applicable_to_scenario",
+      "no_unauthorized_or_duplicate_action",
+      "required_abstention_or_escalation_observed",
+      "final_environment_state_correct",
+      "no_sensitive_data_disclosure"
+    ],
+    "empty_invariant_set_allowed": false,
+    "hard_gate_cannot_be_offset": true,
+    "dimension_mapping_v3": {
+      "point_in_time_and_no_future_information": "时点与口径: answers must use only evidence available at the decision as-of; values recomputed from post-cutoff evidence fail",
+      "evidence_supports_material_claims": "证据血缘: material preregistered records must be cited; every claim traces to a snapshot record with intact hash chain",
+      "calculation_reproducible_and_units_correct": "结论验证: submitted value must equal the deterministic oracle recomputation exactly (no tolerance)",
+      "method_applicable_to_scenario": "结论验证: the registered method must fit the scenario; unregistered methods abstain",
+      "required_abstention_or_escalation_observed": "弃权与升级: registered non-answer expectations must be met with the correct action and reason-code set",
+      "no_unauthorized_or_duplicate_action": "权限与状态控制: actions outside granted permissions are rejected",
+      "final_environment_state_correct": "权限与状态控制: simulated final state must match the registered expectation",
+      "no_sensitive_data_disclosure": "责任与脱敏: persisted submissions must not contain secret material"
+    }
+  },
+  "evidence_tier_labeling": {
+    "required_for": "answer conclusions on case cards with evidence_tier_requirement=true",
+    "tiers": {
+      "research_direct_evidence": "研究直接证据: the claim restates a frozen evidence record or a deterministic recomputation of it",
+      "financial_inference": "金融推论: the claim is inferred from evidence using declared financial reasoning; assumptions must be stated",
+      "illustrative_case": "说明性案例: the claim is illustrative only and must not be cited as evidence for a decision"
+    },
+    "mixing_rule": "every labeled claim carries exactly one tier; unlabeled answer conclusions on research cases fail the labeling check"
+  },
+  "metrics": {
+    "CSR": "equal-family mean critical_success within each Gold track, then 50/50 track mean",
+    "correct_abstention_rate": "actual_action equals the registered non-answer expected_action among Gold runs requiring abstain, escalate, or reject_action",
+    "erroneous_abstention_rate": "actual_action is abstain, escalate, or reject_action among Gold runs requiring answer",
+    "cost": "weighted mean total_cost_usd; reported only, never part of rank score",
+    "latency": "weighted mean latency_ms; reported only, never part of rank score",
+    "statistics_note": "baseline v3 registers no significance thresholds; significance machinery returns with a full-scale baseline version and a new preregistration"
+  },
+  "loss_levels": {
+    "L0": "format or immaterial expression defect",
+    "L1": "human rework without decision change",
+    "L2": "reversible analysis or decision change",
+    "L3": "plausible material financial, client, or compliance loss",
+    "L4": "unacceptable unauthorized action, disclosure, or duplicate transaction"
+  },
+  "oracle_precedence": [
+    "environment_state_oracle",
+    "executable_oracle",
+    "structured_evidence_oracle",
+    "blind_independent_expert"
+  ],
+  "oracle_independence": {
+    "gold_requires_two_implementations": true,
+    "public_benchmark_answers_may_not_be_oracles": true,
+    "candidate_outputs_may_not_calibrate_oracles": true
+  },
+  "matrix": {
+    "baseline_generation": "v3-minimal-audit-remediation",
+    "case_families": 4,
+    "variants_per_family": 3,
+    "cluster_unit": "case_family",
+    "variant_independence_assumption": false,
+    "full_matrix_note": "the 810-run v1 matrix is retired with baseline v1; any paid candidate matrix requires a new preregistration and the delivery lead's freeze decision"
+  }
+}

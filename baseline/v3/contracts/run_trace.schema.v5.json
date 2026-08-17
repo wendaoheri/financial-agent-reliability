@@ -1,0 +1,276 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "baseline/v3/contracts/run_trace.schema.v5.json",
+  "title": "Financial Agent Benchmark run_trace (baseline v3, generation v5)",
+  "description": "Successor of contracts/run_trace.schema.v3.11.json (latest of the baseline-v1 lineage; rollback SHA in supersedes), published with baseline v3 per PER-323 Stage-1c design contract C5. Contract-hash binding change: run_identity drops harness_config_sha256/plan_core_sha256 and carries inference_config_sha256 + harness_contract_sha256 + immutable_bundle_sha256, binding every run to configs/inference.json, configs/harness_contract.v1.json, and the immutable run bundle built from this baseline. Model and provider identities are configuration-driven (configs/inference.json) and therefore strings, not enums.",
+  "type": "object",
+  "required": [
+    "contract_type",
+    "contract_version",
+    "run_id",
+    "run_identity",
+    "status",
+    "provider",
+    "request",
+    "preflight",
+    "context",
+    "tool_calls",
+    "environment",
+    "timing",
+    "usage",
+    "cost",
+    "attempts",
+    "retry",
+    "resume",
+    "checkpoint",
+    "failure",
+    "result",
+    "immutable_bundle",
+    "redaction"
+  ],
+  "properties": {
+    "contract_type": { "const": "run_trace" },
+    "contract_version": { "const": "5.0.0" },
+    "run_id": { "type": "string", "pattern": "^run_[0-9a-f]{32}$" },
+    "run_identity": {
+      "type": "object",
+      "required": [
+        "benchmark_id",
+        "case_id",
+        "variant_id",
+        "requested_model_id",
+        "repeat",
+        "seed",
+        "inference_config_sha256",
+        "harness_contract_sha256",
+        "immutable_bundle_sha256"
+      ],
+      "properties": {
+        "benchmark_id": { "const": "financial-agent-reliability-v3" },
+        "case_id": { "type": "string", "minLength": 1 },
+        "variant_id": { "type": "string", "minLength": 1 },
+        "requested_model_id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$" },
+        "repeat": { "type": "integer", "minimum": 1 },
+        "seed": { "type": "integer" },
+        "inference_config_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "harness_contract_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "immutable_bundle_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      },
+      "additionalProperties": false
+    },
+    "status": { "enum": ["succeeded", "failed", "invalidated"] },
+    "provider": {
+      "type": "object",
+      "required": ["name", "requested_model_id", "response_model_id", "endpoint_id", "inference_config_sha256"],
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{0,31}$" },
+        "requested_model_id": { "type": "string", "minLength": 1 },
+        "response_model_id": { "type": "string", "minLength": 1 },
+        "endpoint_id": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{0,31}_[0-9a-f]{12}$" },
+        "inference_config_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      },
+      "additionalProperties": false
+    },
+    "request": {
+      "type": "object",
+      "required": ["parameters", "seed"],
+      "properties": {
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "temperature": { "type": "string" },
+            "top_p": { "type": "string" },
+            "max_tokens": { "type": "integer" },
+            "stream": { "type": "boolean" }
+          }
+        },
+        "seed": { "type": "integer" }
+      },
+      "additionalProperties": false
+    },
+    "preflight": {
+      "type": "object",
+      "required": ["performed", "identity_match", "fallback_detected", "fallback_attempted", "parameters_honored", "endpoint_verified", "valid", "invalid_reason"],
+      "properties": {
+        "performed": { "const": true },
+        "identity_match": { "type": "boolean" },
+        "fallback_detected": { "type": "boolean" },
+        "fallback_attempted": { "const": false },
+        "parameters_honored": { "type": "boolean" },
+        "endpoint_verified": { "type": "boolean" },
+        "valid": { "type": "boolean" },
+        "invalid_reason": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "context": {
+      "type": "object",
+      "required": ["system_prompt_sha256", "tool_schema_sha256", "frozen_input_sha256", "messages_count"],
+      "properties": {
+        "system_prompt_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "tool_schema_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "frozen_input_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "messages_count": { "type": "integer", "minimum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "tool_calls": { "type": "array" },
+    "environment": {
+      "type": "object",
+      "required": ["dataset_access", "ledger_mode", "network_scope", "touched_paths"],
+      "properties": {
+        "dataset_access": { "const": "frozen_read_only" },
+        "ledger_mode": { "const": "simulated" },
+        "network_scope": { "enum": ["none_offline_fixture", "bailian_inference_only", "configured_provider_inference_only"] },
+        "touched_paths": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "timing": {
+      "type": "object",
+      "required": ["started_at", "finished_at", "duration_ms"],
+      "properties": {
+        "started_at": { "type": "string" },
+        "finished_at": { "type": "string" },
+        "duration_ms": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "usage": {
+      "type": "object",
+      "required": ["input_tokens", "output_tokens", "total_tokens", "model_requests", "turns"],
+      "properties": {
+        "input_tokens": { "type": "integer", "minimum": 0 },
+        "output_tokens": { "type": "integer", "minimum": 0 },
+        "total_tokens": { "type": "integer", "minimum": 0 },
+        "model_requests": { "type": "integer", "minimum": 0 },
+        "turns": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "cost": {
+      "type": "object",
+      "required": ["currency", "input_usd", "output_usd", "tool_usd", "total_usd"],
+      "properties": {
+        "currency": { "const": "USD" },
+        "input_usd": { "type": "string", "pattern": "^-?\\d+(\\.\\d+)?$" },
+        "output_usd": { "type": "string", "pattern": "^-?\\d+(\\.\\d+)?$" },
+        "tool_usd": { "type": "string", "pattern": "^-?\\d+(\\.\\d+)?$" },
+        "total_usd": { "type": "string", "pattern": "^-?\\d+(\\.\\d+)?$" }
+      },
+      "additionalProperties": false
+    },
+    "attempts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["attempt", "started_at", "finished_at", "duration_ms", "outcome", "failure_type", "retryable", "http_status", "backoff_ms"],
+        "properties": {
+          "attempt": { "type": "integer", "minimum": 1 },
+          "started_at": { "type": "string" },
+          "finished_at": { "type": "string" },
+          "duration_ms": { "type": "integer", "minimum": 0 },
+          "outcome": { "enum": ["succeeded", "failed", "invalidated"] },
+          "failure_type": { "type": ["string", "null"] },
+          "retryable": { "type": "boolean" },
+          "http_status": { "type": ["integer", "null"] },
+          "backoff_ms": { "type": "integer", "minimum": 0 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "retry": {
+      "type": "object",
+      "required": ["max_retries", "retries_used"],
+      "properties": {
+        "max_retries": { "type": "integer", "minimum": 0 },
+        "retries_used": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "resume": {
+      "type": "object",
+      "required": ["resumed", "source_run_id", "checkpoint_id", "state_sha256", "event_offset"],
+      "properties": {
+        "resumed": { "type": "boolean" },
+        "source_run_id": { "type": ["string", "null"] },
+        "checkpoint_id": { "type": ["string", "null"] },
+        "state_sha256": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" },
+        "event_offset": { "type": ["integer", "null"], "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "checkpoint": {
+      "type": "object",
+      "required": ["enabled", "checkpoint_id", "sequence", "state_sha256", "prior_event_hash", "created_at"],
+      "properties": {
+        "enabled": { "const": true },
+        "checkpoint_id": { "type": "string" },
+        "sequence": { "type": "integer", "minimum": 1 },
+        "state_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "prior_event_hash": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" },
+        "created_at": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "failure": {
+      "type": "object",
+      "required": ["type", "stage", "retryable", "message_redacted"],
+      "properties": {
+        "type": { "type": ["string", "null"] },
+        "stage": { "enum": [null, "preflight", "provider_request"] },
+        "retryable": { "type": "boolean" },
+        "message_redacted": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "result": {
+      "type": "object",
+      "required": ["response_sha256", "action", "output_stored", "raw_provider_response_stored"],
+      "properties": {
+        "response_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "action": { "enum": ["answer", "abstain", "escalate", "reject_action"] },
+        "output_stored": { "const": false },
+        "raw_provider_response_stored": { "const": false }
+      },
+      "additionalProperties": false
+    },
+    "immutable_bundle": {
+      "type": "object",
+      "required": ["bundle_sha256", "artifacts"],
+      "properties": {
+        "bundle_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["path", "sha256"],
+            "properties": {
+              "path": { "type": "string", "minLength": 1 },
+              "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "redaction": {
+      "type": "object",
+      "required": ["applied", "secret_fields_removed", "raw_sensitive_response_persisted"],
+      "properties": {
+        "applied": { "const": true },
+        "secret_fields_removed": { "type": "array", "items": { "type": "string" } },
+        "raw_sensitive_response_persisted": { "const": false }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "supersedes": {
+    "path": "contracts/run_trace.schema.v3.11.json",
+    "sha256": "fb14da23222b19f82b7157fa551ebacf0b0697e8ffbd4d118b4b6f7e90d02027",
+    "reason": "PER-323 design contract C5 (PER-326, frozen by the delivery lead): the run-trace successor publishes with baseline v3 (PER-328). run_identity hash binding replaces harness_config_sha256/plan_core_sha256 with inference_config_sha256 + harness_contract_sha256 + immutable_bundle_sha256; model/provider identities become configuration-driven strings. The superseded file remains recoverable via the rollback index SHA (contracts/ last content commit 077fcb56)."
+  }
+}

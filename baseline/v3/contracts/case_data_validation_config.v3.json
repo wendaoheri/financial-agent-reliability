@@ -1,0 +1,66 @@
+{
+  "config_version": "3.0.0",
+  "contract_versions": {
+    "case_card": "3.0.0",
+    "data_snapshot": "3.0.0"
+  },
+  "canonicalization": "financial-agent-c14n-json-v1",
+  "hash_algorithm": "sha256",
+  "future_information_prohibited": true,
+  "quality_tiers": {
+    "Gold": {
+      "ranking_eligible": true,
+      "minimum_evidence_count": 1,
+      "independently_recomputable": true
+    },
+    "Silver": {
+      "ranking_eligible": false
+    }
+  },
+  "variant_kinds": [
+    "normal",
+    "single_factor_perturbation",
+    "missing_or_anomalous"
+  ],
+  "single_factor_eligible_pointers": [
+    "/task/inputs",
+    "/financial_subject/market",
+    "/financial_subject/currency",
+    "/financial_subject/units",
+    "/temporal/as_of",
+    "/temporal/available_at_cutoff",
+    "/evidence_refs",
+    "/task/permissions",
+    "/task/initial_state"
+  ],
+  "semantic_diff_ignored_pointers": [
+    "/case_id",
+    "/revision",
+    "/family_key",
+    "/variant",
+    "/oracle/expected_status",
+    "/oracle/expected_value",
+    "/oracle/reason_codes",
+    "/quality",
+    "/applicable_critical_invariants",
+    "/evidence_tier_requirement",
+    "/lineage/generated_at",
+    "/lineage/source_case_id",
+    "/lineage/parent_case_id",
+    "/integrity/content_sha256"
+  ],
+  "public_read_only_providers": [
+    "project_synthetic",
+    "sec_edgar"
+  ],
+  "forbidden_data_scopes": [
+    "account",
+    "assets",
+    "cash",
+    "holdings",
+    "orders",
+    "positions",
+    "portfolio",
+    "trades"
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "access": {
+    "mode": "public_read_only",
+    "prohibited_scopes": [
+      "account",
+      "assets",
+      "cash",
+      "holdings",
+      "orders",
+      "positions",
+      "portfolio",
+      "trades"
+    ],
+    "query_args": {
+      "cik": "CIK0000320193",
+      "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+      "taxonomy": "us-gaap"
+    },
+    "query_name": "xbrl_company_concept"
+  },
+  "contract_type": "data_snapshot",
+  "contract_version": "3.0.0",
+  "financial_subject": {
+    "currency": {
+      "code": "USD"
+    },
+    "entity_name": "Apple Inc.",
+    "identifiers": [
+      {
+        "scheme": "SEC_CIK",
+        "value": "CIK0000320193"
+      },
+      {
+        "scheme": "US_GAAP_TAG",
+        "value": "RevenueFromContractWithCustomerExcludingAssessedTax"
+      }
+    ],
+    "market": {
+      "country": "US",
+      "mic": "XXXX",
+      "timezone": "UTC"
+    },
+    "subject_type": "accounting_concept",
+    "units": {
+      "accounting_basis": "US GAAP, as filed in the referenced 10-K",
+      "amount_scale": "USD unit (as filed)",
+      "price_basis": "not_applicable"
+    }
+  },
+  "integrity": {
+    "canonicalization": "financial-agent-c14n-json-v1",
+    "content_sha256": "b99349a9a896fabad692a5955f0647976fb1af9e594207784792006e8a9f0554",
+    "hash_algorithm": "sha256"
+  },
+  "lineage": {
+    "code_revision": "94afd7b42e40df02442848bf5e21a8078aae2f55",
+    "collector": "manual public SEC EDGAR retrieval with declared User-Agent",
+    "collector_version": "1.0.0",
+    "notes": "Filing acceptance dates sourced from the SEC submissions capture (capture-sec-edgar-aapl-submissions-v1); available_at is the acceptance date at 00:00:00Z (conservative, date-level).",
+    "parent_snapshot_ids": [],
+    "query_args": {
+      "cik": "CIK0000320193",
+      "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+      "taxonomy": "us-gaap"
+    },
+    "raw_response_sha256": "4495f7a16b4ade43dfa8041ac6477074122cbd5b88033e3e0f68b3f919e7ffbf",
+    "schema_version": "case-data/3.0.0"
+  },
+  "records": [
+    {
+      "available_at": "2022-10-28T00:00:00Z",
+      "event_time": "2022-09-24T00:00:00Z",
+      "evidence_type": "xbrl_fact",
+      "payload": {
+        "accession": "0000320193-22-000108",
+        "form": "10-K",
+        "period_end": "2022-09-24",
+        "value": 394328000000
+      },
+      "record_id": "FKW3-PUB-01-AAPL-FY2022",
+      "source_locator": "baseline/v3/build/captures/edgar_aapl_revenue.raw.json"
+    },
+    {
+      "available_at": "2023-11-03T00:00:00Z",
+      "event_time": "2023-09-30T00:00:00Z",
+      "evidence_type": "xbrl_fact",
+      "payload": {
+        "accession": "0000320193-23-000106",
+        "form": "10-K",
+        "period_end": "2023-09-30",
+        "value": 383285000000
+      },
+      "record_id": "FKW3-PUB-01-AAPL-FY2023",
+      "source_locator": "baseline/v3/build/captures/edgar_aapl_revenue.raw.json"
+    },
+    {
+      "available_at": "2024-11-01T00:00:00Z",
+      "event_time": "2024-09-28T00:00:00Z",
+      "evidence_type": "xbrl_fact",
+      "payload": {
+        "accession": "0000320193-24-000123",
+        "form": "10-K",
+        "period_end": "2024-09-28",
+        "value": 391035000000
+      },
+      "record_id": "FKW3-PUB-01-AAPL-FY2024",
+      "source_locator": "baseline/v3/build/captures/edgar_aapl_revenue.raw.json"
+    }
+  ],
+  "revision": 1,
+  "snapshot_id": "snapshot-sec-edgar-aapl-revenue-v3-01",
+  "source": {
+    "dataset": "SEC EDGAR XBRL company concept, Apple Inc. (CIK0000320193), RevenueFromContractWithCustomerExcludingAssessedTax",
+    "license": {
+      "name": "US public domain (SEC EDGAR government data)",
+      "redistributable": true,
+      "url": "https://www.sec.gov/edgar"
+    },
+    "provider": "sec_edgar",
+    "source_type": "filing",
+    "uri": "https://data.sec.gov/api/xbrl/companyconcept/CIK0000320193/us-gaap/RevenueFromContractWithCustomerExcludingAssessedTax.json"
+  },
+  "status": "frozen",
+  "temporal": {
+    "as_of": "2024-09-28T00:00:00Z",
+    "available_at": "2024-11-01T00:00:00Z",
+    "event_time": "2024-09-28T00:00:00Z",
+    "retrieved_at": "2026-08-17T10:36:18Z"
+  }
+}

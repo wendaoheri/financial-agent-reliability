@@ -1,0 +1,179 @@
+{
+  "answer_value_schema": {
+    "additionalProperties": false,
+    "properties": {
+      "period_end": {
+        "type": "string"
+      },
+      "value": {
+        "pattern": "^-?\\d+$",
+        "type": "string"
+      }
+    },
+    "required": [
+      "period_end",
+      "value"
+    ],
+    "type": "object"
+  },
+  "applicable_critical_invariants": [
+    "point_in_time_and_no_future_information",
+    "evidence_supports_material_claims",
+    "calculation_reproducible_and_units_correct",
+    "method_applicable_to_scenario",
+    "no_unauthorized_or_duplicate_action",
+    "required_abstention_or_escalation_observed",
+    "final_environment_state_correct",
+    "no_sensitive_data_disclosure"
+  ],
+  "case_id": "case-fkw3-pub-02-sfp-v3",
+  "contract_type": "case_card",
+  "contract_version": "3.0.0",
+  "evidence_contract": {
+    "material_record_ids": [
+      "FKW3-PUB-02-AAPL-FY2024"
+    ],
+    "minimum_material_evidence_count": 1,
+    "registered_record_ids": [
+      "FKW3-PUB-02-AAPL-FY2023",
+      "FKW3-PUB-02-AAPL-FY2024"
+    ],
+    "rule": "cite at least the stated number of preregistered material records; non-material registered records are optional"
+  },
+  "evidence_refs": [
+    {
+      "evidence_type": "xbrl_fact",
+      "record_ids": [
+        "FKW3-PUB-02-AAPL-FY2023",
+        "FKW3-PUB-02-AAPL-FY2024"
+      ],
+      "snapshot_id": "snapshot-sec-edgar-aapl-netincome-v3-01",
+      "snapshot_sha256": "531e890d2c9f38d2a25ef084c1734c5201de40fde24f6f4b4828aa8c65169e93"
+    }
+  ],
+  "evidence_tier_requirement": true,
+  "family_key": "9d49278994a83e9e2f061a81ea2bc80c203c4e14b8f9cd0d5380549a8c8c7478",
+  "financial_subject": {
+    "currency": {
+      "code": "USD"
+    },
+    "entity_name": "Apple Inc.",
+    "identifiers": [
+      {
+        "scheme": "SEC_CIK",
+        "value": "CIK0000320193"
+      },
+      {
+        "scheme": "US_GAAP_TAG",
+        "value": "NetIncomeLoss"
+      }
+    ],
+    "market": {
+      "country": "US",
+      "mic": "XXXX",
+      "timezone": "UTC"
+    },
+    "subject_type": "accounting_concept",
+    "units": {
+      "accounting_basis": "US GAAP, as filed in the referenced 10-K",
+      "amount_scale": "USD unit (as filed)",
+      "price_basis": "not_applicable"
+    }
+  },
+  "future_information_prohibited": true,
+  "integrity": {
+    "canonicalization": "financial-agent-c14n-json-v1",
+    "content_sha256": "10f40676b5e4239f00bf60a50e9c8717dcd0d2afdfe8f5aa8d29b69d45ab270b",
+    "hash_algorithm": "sha256"
+  },
+  "lineage": {
+    "code_revision": "94afd7b42e40df02442848bf5e21a8078aae2f55",
+    "generated_at": "2026-08-17T12:20:34Z",
+    "generator": "baseline/v3/build/build_baseline_v3.py",
+    "generator_version": "1.0.0",
+    "parent_case_id": "case-fkw3-pub-02-normal-v3",
+    "source_case_id": null
+  },
+  "oracle": {
+    "expected_status": "answer",
+    "expected_value": {
+      "period_end": "2023-09-30",
+      "value": "96995000000"
+    },
+    "implementation": "src/financial_agent_reliability/oracles/public_filings/oracle.py",
+    "implementation_sha256": "521fba3f94cf0cd2ab1e1093f3b61d90784515f3f9d2b1cc39c8687045c48864",
+    "reason_codes": [],
+    "reference_implementation": "src/financial_agent_reliability/oracles/public_filings/oracle_reference.py",
+    "reference_implementation_sha256": "9a24b3be9ae5da06cea4b729bfc011888a9e7efdba0a680871f4b93b76db959f",
+    "spec_version": "baseline-v3/1.0.0"
+  },
+  "quality": {
+    "independently_recomputable": true,
+    "ranking_eligible": true,
+    "rationale": "Two independent deterministic oracle implementations agree on the registered expectation.",
+    "tier": "Gold"
+  },
+  "reason_code_vocabulary_ref": {
+    "path": "baseline/v3/contracts/reason_codes.v3.json",
+    "sha256": "57d4f08fa3bbb62c65cec266b5d9cbd13bd6bc0821f2ab83e6ab17f6d396c6a3"
+  },
+  "revision": 1,
+  "risk": {
+    "level": "high",
+    "loss_category": "decision_error_from_wrong_figure",
+    "rationale": "Using a figure that was not yet available at the decision time is future-information contamination; research conclusions built on it are unsound."
+  },
+  "source": {
+    "dataset": "SEC EDGAR primary disclosure, Apple Inc. 10-K filings (re-collected with lineage; no public benchmark answer reused)",
+    "license": {
+      "name": "US public domain (SEC EDGAR government data)",
+      "redistributable": true,
+      "url": "https://www.sec.gov/edgar"
+    },
+    "provider": "sec_edgar",
+    "source_type": "filing",
+    "uri": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000320193"
+  },
+  "status": "frozen",
+  "status_value_contract": {
+    "abstain|escalate|reject_action": "value must be null",
+    "answer": "value must match answer_value_schema"
+  },
+  "task": {
+    "domain": "research",
+    "expected_final_environment_state": {
+      "state": "unchanged"
+    },
+    "initial_state": null,
+    "inputs": {
+      "available_at_cutoff": "2024-06-01T00:00:00Z",
+      "operation": "select_latest_available"
+    },
+    "method_id": "select_latest_available",
+    "permissions": {
+      "allowed_operations": [
+        "read_snapshot"
+      ]
+    },
+    "prompt": "As of the registered decision time, report the most recent annual NetIncomeLoss of Apple Inc. that was publicly available at that time, using only the frozen evidence. Records that became available after the decision time must not be used. Submit action 'answer' with value {period_end, value} citing the material record.",
+    "required_tools": [
+      "read_frozen_case",
+      "read_frozen_evidence",
+      "calculate"
+    ]
+  },
+  "temporal": {
+    "as_of": "2025-06-01T00:00:00Z",
+    "available_at_cutoff": "2025-06-01T00:00:00Z",
+    "event_time": "2024-09-28T00:00:00Z"
+  },
+  "variant": {
+    "changed_factors": [
+      "/task/inputs"
+    ],
+    "family_id": "FKW3-PUB-02",
+    "kind": "single_factor_perturbation",
+    "parent_case_id": "case-fkw3-pub-02-normal-v3",
+    "variant_axis": "as_of_time"
+  }
+}
