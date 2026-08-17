@@ -1,0 +1,1442 @@
+{
+  "batches": [
+    {
+      "batch_id": "acceptance-v3",
+      "batch_type": "protocol_gate",
+      "checks": [
+        {
+          "details": [
+            "protocol-gate artifacts on disk: preflight-diagnostic.v1.json, preflight.v3.json"
+          ],
+          "metrics": {
+            "files": 2
+          },
+          "name": "A_protocol_gate_scope",
+          "status": "pass"
+        }
+      ],
+      "contract_version": "3.0.0",
+      "directory": "runs/stage3/acceptance-20260811-v3",
+      "labels": [
+        "H1",
+        "L1",
+        "L2",
+        "L6"
+      ],
+      "run_statistics": {},
+      "scope_note": "协议门批次(差距项 H1):按设计无验收运行,本批结论限于协议/身份门;缺失的轨迹/评分节点不可从现有产物推导(运行从未发生)",
+      "verdict": "traceable",
+      "verdict_basis": "适用判定项全部通过"
+    },
+    {
+      "batch_id": "acceptance-v3.1",
+      "batch_type": "protocol_gate",
+      "checks": [
+        {
+          "details": [
+            "protocol-gate artifacts on disk: preflight.v3.1.json"
+          ],
+          "metrics": {
+            "files": 1
+          },
+          "name": "A_protocol_gate_scope",
+          "status": "pass"
+        }
+      ],
+      "contract_version": "3.1.0",
+      "directory": "runs/stage3/acceptance-20260811-v3.1",
+      "labels": [
+        "H1",
+        "L1",
+        "L2",
+        "L6"
+      ],
+      "run_statistics": {},
+      "scope_note": "协议门批次(差距项 H1):按设计无验收运行,本批结论限于协议/身份门;缺失的轨迹/评分节点不可从现有产物推导(运行从未发生)",
+      "verdict": "traceable",
+      "verdict_basis": "适用判定项全部通过"
+    },
+    {
+      "batch_id": "acceptance-v3.2",
+      "batch_type": "protocol_gate",
+      "checks": [
+        {
+          "details": [
+            "protocol-gate artifacts on disk: preflight.v3.2.json"
+          ],
+          "metrics": {
+            "files": 1
+          },
+          "name": "A_protocol_gate_scope",
+          "status": "pass"
+        }
+      ],
+      "contract_version": "3.2.0",
+      "directory": "runs/stage3/acceptance-20260811-v3.2",
+      "labels": [
+        "H1",
+        "L1",
+        "L2",
+        "L6"
+      ],
+      "run_statistics": {},
+      "scope_note": "协议门批次(差距项 H1):按设计无验收运行,本批结论限于协议/身份门;缺失的轨迹/评分节点不可从现有产物推导(运行从未发生)",
+      "verdict": "traceable",
+      "verdict_basis": "适用判定项全部通过"
+    },
+    {
+      "batch_id": "acceptance-v3.3",
+      "batch_type": "protocol_gate",
+      "checks": [
+        {
+          "details": [
+            "protocol-gate artifacts on disk: preflight.auto_strict.v3.3.json, preflight.forced_strict.v3.3.json, preflight.sequence.v3.3.json"
+          ],
+          "metrics": {
+            "files": 3
+          },
+          "name": "A_protocol_gate_scope",
+          "status": "pass"
+        }
+      ],
+      "contract_version": "3.3.0",
+      "directory": "runs/stage3/acceptance-20260811-v3.3",
+      "labels": [
+        "H1",
+        "L1",
+        "L2",
+        "L6"
+      ],
+      "run_statistics": {},
+      "scope_note": "协议门批次(差距项 H1):按设计无验收运行,本批结论限于协议/身份门;缺失的轨迹/评分节点不可从现有产物推导(运行从未发生)",
+      "verdict": "traceable",
+      "verdict_basis": "适用判定项全部通过"
+    },
+    {
+      "batch_id": "acceptance-v3.4",
+      "batch_type": "protocol_gate",
+      "checks": [
+        {
+          "details": [
+            "protocol-gate artifacts on disk: preflight.auto_split.v3.4.json",
+            "contract preflight_execution.acceptance_runs_authorized=False"
+          ],
+          "metrics": {
+            "files": 1
+          },
+          "name": "A_protocol_gate_scope",
+          "status": "pass"
+        }
+      ],
+      "contract_version": "3.4.0",
+      "directory": "runs/stage3/acceptance-20260812-v3.4",
+      "labels": [
+        "H1",
+        "L1",
+        "L2",
+        "L6"
+      ],
+      "run_statistics": {},
+      "scope_note": "协议门批次(差距项 H1):按设计无验收运行,本批结论限于协议/身份门;缺失的轨迹/评分节点不可从现有产物推导(运行从未发生)",
+      "verdict": "traceable",
+      "verdict_basis": "适用判定项全部通过"
+    },
+    {
+      "batch_id": "frozen-preflight-evidence-v1",
+      "batch_type": "frozen_preflight_evidence",
+      "checks": [
+        {
+          "details": [
+            "all pinned artifacts verify"
+          ],
+          "metrics": {
+            "artifacts": 6,
+            "bundle_sha256_convention": "sorted_pair_aggregate",
+            "contract_type": "immutable_run_bundle",
+            "contract_version": "1.0.0",
+            "drifted": 0,
+            "manifest_status": null,
+            "missing": 0,
+            "unregistered": 0
+          },
+          "name": "A1_manifest_integrity",
+          "status": "pass"
+        },
+        {
+          "details": [
+            "execution_decision.json present"
+          ],
+          "metrics": {},
+          "name": "A_execution_decision",
+          "status": "pass"
+        }
+      ],
+      "contract_version": null,
+      "directory": "runs/stage3/frozen-preflight-evidence-20260811",
+      "labels": [
+        "L1",
+        "L6"
+      ],
+      "run_statistics": {},
+      "scope_note": "预检证据 bundle:结论限于模型身份预检判定,非验收评分证据",
+      "verdict": "traceable",
+      "verdict_basis": "适用判定项全部通过"
+    },
+    {
+      "batch_id": "frozen-preflight-evidence-v2",
+      "batch_type": "frozen_preflight_evidence",
+      "checks": [
+        {
+          "details": [
+            "all pinned artifacts verify"
+          ],
+          "metrics": {
+            "artifacts": 7,
+            "bundle_sha256_convention": "sorted_pair_aggregate",
+            "contract_type": "immutable_run_bundle",
+            "contract_version": "1.0.0",
+            "drifted": 0,
+            "manifest_status": null,
+            "missing": 0,
+            "unregistered": 0
+          },
+          "name": "A1_manifest_integrity",
+          "status": "pass"
+        },
+        {
+          "details": [
+            "execution_decision.json present"
+          ],
+          "metrics": {},
+          "name": "A_execution_decision",
+          "status": "pass"
+        }
+      ],
+      "contract_version": null,
+      "directory": "runs/stage3/frozen-preflight-evidence-20260811-v2",
+      "labels": [
+        "L1",
+        "L6"
+      ],
+      "run_statistics": {},
+      "scope_note": "预检证据 bundle:结论限于模型身份预检判定,非验收评分证据",
+      "verdict": "traceable",
+      "verdict_basis": "适用判定项全部通过"
+    },
+    {
+      "batch_id": "frozen-preflight-evidence-v3",
+      "batch_type": "frozen_preflight_evidence",
+      "checks": [
+        {
+          "details": [
+            "all pinned artifacts verify"
+          ],
+          "metrics": {
+            "artifacts": 8,
+            "bundle_sha256_convention": "sorted_pair_aggregate",
+            "contract_type": "immutable_run_bundle",
+            "contract_version": "1.0.0",
+            "drifted": 0,
+            "manifest_status": null,
+            "missing": 0,
+            "unregistered": 0
+          },
+          "name": "A1_manifest_integrity",
+          "status": "pass"
+        },
+        {
+          "details": [
+            "execution_decision.json present"
+          ],
+          "metrics": {},
+          "name": "A_execution_decision",
+          "status": "pass"
+        }
+      ],
+      "contract_version": null,
+      "directory": "runs/stage3/frozen-preflight-evidence-20260811-v3",
+      "labels": [
+        "L1",
+        "L6"
+      ],
+      "run_statistics": {},
+      "scope_note": "预检证据 bundle:结论限于模型身份预检判定,非验收评分证据",
+      "verdict": "traceable",
+      "verdict_basis": "适用判定项全部通过"
+    },
+    {
+      "batch_id": "frozen-preflight-evidence-v4",
+      "batch_type": "frozen_preflight_evidence",
+      "checks": [
+        {
+          "details": [
+            "all pinned artifacts verify"
+          ],
+          "metrics": {
+            "artifacts": 5,
+            "bundle_sha256_convention": "sorted_pair_aggregate",
+            "contract_type": "immutable_run_bundle",
+            "contract_version": "1.0.0",
+            "drifted": 0,
+            "manifest_status": null,
+            "missing": 0,
+            "unregistered": 0
+          },
+          "name": "A1_manifest_integrity",
+          "status": "pass"
+        },
+        {
+          "details": [
+            "execution_decision.json present"
+          ],
+          "metrics": {},
+          "name": "A_execution_decision",
+          "status": "pass"
+        }
+      ],
+      "contract_version": null,
+      "directory": "runs/stage3/frozen-preflight-evidence-20260811-v4",
+      "labels": [
+        "L1",
+        "L6"
+      ],
+      "run_statistics": {},
+      "scope_note": "预检证据 bundle:结论限于模型身份预检判定,非验收评分证据",
+      "verdict": "traceable",
+      "verdict_basis": "适用判定项全部通过"
+    },
+    {
+      "batch_id": "smoke-v1",
+      "batch_type": "smoke",
+      "checks": [
+        {
+          "details": [
+            "bundle.manifest.json absent (protocol-gate/diagnostic batch)"
+          ],
+          "metrics": {},
+          "name": "A1_manifest_integrity",
+          "status": "not_applicable"
+        },
+        {
+          "details": [
+            "run artifacts correspond 1:1"
+          ],
+          "metrics": {
+            "checkpoints": 3,
+            "graders": 3,
+            "traces": 3
+          },
+          "name": "A3_run_inventory",
+          "status": "pass"
+        }
+      ],
+      "contract_version": "2.0.0",
+      "directory": "runs/stage3/smoke-20260811-v1",
+      "labels": [
+        "L1",
+        "L6"
+      ],
+      "run_statistics": {},
+      "scope_note": "冒烟线批次:结论限于冒烟通过/硬停判定,非验收评分证据",
+      "verdict": "traceable",
+      "verdict_basis": "适用判定项全部通过"
+    },
+    {
+      "batch_id": "smoke-v2",
+      "batch_type": "smoke",
+      "checks": [
+        {
+          "details": [
+            "bundle.manifest.json absent (protocol-gate/diagnostic batch)"
+          ],
+          "metrics": {},
+          "name": "A1_manifest_integrity",
+          "status": "not_applicable"
+        },
+        {
+          "details": [
+            "run artifacts correspond 1:1"
+          ],
+          "metrics": {
+            "checkpoints": 36,
+            "graders": 36,
+            "traces": 36
+          },
+          "name": "A3_run_inventory",
+          "status": "pass"
+        }
+      ],
+      "contract_version": "2.0.0",
+      "directory": "runs/stage3/smoke-20260811-v2",
+      "labels": [
+        "L1",
+        "L6"
+      ],
+      "run_statistics": {},
+      "scope_note": "冒烟线批次:结论限于冒烟通过/硬停判定,非验收评分证据",
+      "verdict": "traceable",
+      "verdict_basis": "适用判定项全部通过"
+    },
+    {
+      "batch_id": "frozen-smoke-evidence-v1",
+      "batch_type": "frozen_smoke_evidence",
+      "checks": [
+        {
+          "details": [
+            "all pinned artifacts verify"
+          ],
+          "metrics": {
+            "artifacts": 16,
+            "bundle_sha256_convention": "sorted_pair_aggregate",
+            "contract_type": "immutable_run_bundle",
+            "contract_version": "1.0.0",
+            "drifted": 0,
+            "manifest_status": null,
+            "missing": 0,
+            "unregistered": 0
+          },
+          "name": "A1_manifest_integrity",
+          "status": "pass"
+        },
+        {
+          "details": [
+            "no run artifact directories (protocol-gate/diagnostic batch)"
+          ],
+          "metrics": {},
+          "name": "A3_run_inventory",
+          "status": "not_applicable"
+        }
+      ],
+      "contract_version": null,
+      "directory": "runs/stage3/frozen-smoke-evidence-20260811-v1",
+      "labels": [
+        "L1",
+        "L6"
+      ],
+      "run_statistics": {},
+      "scope_note": "冒烟线批次:结论限于冒烟通过/硬停判定,非验收评分证据",
+      "verdict": "traceable",
+      "verdict_basis": "适用判定项全部通过"
+    },
+    {
+      "batch_id": "frozen-smoke-evidence-v2",
+      "batch_type": "frozen_smoke_evidence",
+      "checks": [
+        {
+          "details": [
+            "all pinned artifacts verify"
+          ],
+          "metrics": {
+            "artifacts": 121,
+            "bundle_sha256_convention": "sorted_pair_aggregate",
+            "contract_type": "immutable_run_bundle",
+            "contract_version": "1.0.0",
+            "drifted": 0,
+            "manifest_status": null,
+            "missing": 0,
+            "unregistered": 0
+          },
+          "name": "A1_manifest_integrity",
+          "status": "pass"
+        },
+        {
+          "details": [
+            "no run artifact directories (protocol-gate/diagnostic batch)"
+          ],
+          "metrics": {},
+          "name": "A3_run_inventory",
+          "status": "not_applicable"
+        }
+      ],
+      "contract_version": null,
+      "directory": "runs/stage3/frozen-smoke-evidence-20260811-v2",
+      "labels": [
+        "L1",
+        "L6"
+      ],
+      "run_statistics": {},
+      "scope_note": "冒烟线批次:结论限于冒烟通过/硬停判定,非验收评分证据",
+      "verdict": "traceable",
+      "verdict_basis": "适用判定项全部通过"
+    },
+    {
+      "batch_id": "session-20260811",
+      "batch_type": "diagnostic_session",
+      "checks": [
+        {
+          "details": [
+            "diagnostic session files: config_validation_after_env_update.v1.json, model_catalog.v1.json, preflight.json, preflight.v2.json, preflight.v3.json, preflight.v4.json"
+          ],
+          "metrics": {
+            "files": 6
+          },
+          "name": "A_session_inventory",
+          "status": "pass"
+        }
+      ],
+      "contract_version": null,
+      "directory": "runs/stage3/session-20260811",
+      "labels": [
+        "L1",
+        "L6"
+      ],
+      "run_statistics": {},
+      "scope_note": "诊断会话留存:仅过程排障证据,不构成任何评分结论",
+      "verdict": "traceable",
+      "verdict_basis": "适用判定项全部通过"
+    },
+    {
+      "batch_id": "acceptance-v3.5",
+      "batch_type": "acceptance",
+      "checks": [
+        {
+          "details": [
+            "all pinned artifacts verify"
+          ],
+          "metrics": {
+            "artifacts": 112,
+            "bundle_sha256_convention": "sorted_pair_aggregate",
+            "contract_type": "stage3_financial_acceptance_evidence_bundle",
+            "contract_version": "3.5.0",
+            "drifted": 0,
+            "manifest_status": "frozen",
+            "missing": 0,
+            "unregistered": 0
+          },
+          "name": "A1_manifest_integrity",
+          "status": "pass"
+        },
+        {
+          "details": [
+            "L7:6 张案例卡 evidence_refs 为空(卡级快照指针缺失;运行内投影哈希链完整)"
+          ],
+          "metrics": {
+            "case_cards_checked": 12,
+            "downgrade_affects_conclusion": false,
+            "empty_evidence_refs_cards": 6,
+            "plan_self_hash_ok": true,
+            "snapshots_cached": 12,
+            "tasks": 12,
+            "validator_errors": 0
+          },
+          "name": "A2_scenario_inputs",
+          "status": "degraded"
+        },
+        {
+          "details": [
+            "traces validate; grader recompute bit-equal; anchors hold"
+          ],
+          "metrics": {
+            "anchor_problems": 0,
+            "checkpoint_events": 162,
+            "regrade_engine": "acceptance_v3.grade_candidate(v3.5 semantics)",
+            "run_errors": 0,
+            "runs": 36
+          },
+          "name": "A3_trace_and_B1_regrade",
+          "status": "pass"
+        },
+        {
+          "details": [
+            "M1:v3.5 授权记录缺失(authorization.run/preflight 均无)"
+          ],
+          "metrics": {
+            "authorization_errors": 0,
+            "downgrade_affects_conclusion": true,
+            "frozen_input_errors": 0,
+            "frozen_pins_relocated": 0,
+            "invalidation_notes": 0,
+            "preflight_errors": 0
+          },
+          "name": "A5_governance_freeze",
+          "status": "degraded"
+        },
+        {
+          "details": [
+            "batch statistics recomputed bit-equal"
+          ],
+          "metrics": {
+            "mismatched_fields": 0,
+            "persisted_counts": {
+              "all_critical_invariants": 15,
+              "checkpoint_events": 162,
+              "checkpoints": 36,
+              "exact_semantic_match": 15,
+              "failed": 6,
+              "fallback": 0,
+              "graders": 36,
+              "identity_valid": 36,
+              "invalidated": 0,
+              "planned": 36,
+              "secret_leakage": 0,
+              "structured_results": 30,
+              "traces": 36,
+              "unsafe_or_real_side_effect": 0
+            },
+            "records": 36
+          },
+          "name": "B2_summary_recompute",
+          "status": "pass"
+        }
+      ],
+      "contract_version": "3.5.0",
+      "directory": "evidence/stage3/acceptance-20260812-v3.5",
+      "labels": [
+        "M1",
+        "L1",
+        "L3",
+        "L6",
+        "L7",
+        "L10"
+      ],
+      "run_statistics": {
+        "checkpoint_events": 162,
+        "regrade_engine": "acceptance_v3.grade_candidate(v3.5 semantics)",
+        "runs": 36
+      },
+      "scope_note": "验收评分批次:结论链 N0–N5 全量复盘",
+      "verdict": "partially_traceable",
+      "verdict_basis": "完整性通过但存在影响结论的降级/缺失节点:A5_governance_freeze"
+    },
+    {
+      "batch_id": "acceptance-v3.8",
+      "batch_type": "acceptance",
+      "checks": [
+        {
+          "details": [
+            "all pinned artifacts verify"
+          ],
+          "metrics": {
+            "artifacts": 152,
+            "bundle_sha256_convention": "content_sha256",
+            "contract_type": "stage3_financial_acceptance_evidence_bundle",
+            "contract_version": "3.8.0",
+            "drifted": 0,
+            "manifest_status": "frozen",
+            "missing": 0,
+            "unregistered": 0
+          },
+          "name": "A1_manifest_integrity",
+          "status": "pass"
+        },
+        {
+          "details": [
+            "L7:6 张案例卡 evidence_refs 为空(卡级快照指针缺失;运行内投影哈希链完整)"
+          ],
+          "metrics": {
+            "case_cards_checked": 12,
+            "downgrade_affects_conclusion": false,
+            "empty_evidence_refs_cards": 6,
+            "plan_self_hash_ok": true,
+            "snapshots_cached": 12,
+            "tasks": 12,
+            "validator_errors": 0
+          },
+          "name": "A2_scenario_inputs",
+          "status": "degraded"
+        },
+        {
+          "details": [
+            "traces validate; grader recompute bit-equal; anchors hold"
+          ],
+          "metrics": {
+            "anchor_problems": 0,
+            "checkpoint_events": 182,
+            "frozen_pins_relocated": 4,
+            "invalidated": 0,
+            "planned_scope": 36,
+            "regrade_engine": "frozen reconcile: audit/reconcile_stage3_v3_8_execution.py",
+            "run_errors": 0,
+            "runs": 36
+          },
+          "name": "A3_trace_and_B1_regrade",
+          "status": "pass"
+        },
+        {
+          "details": [
+            "PER-85-D6 relocation 放行留痕(旧路径钉住按迁移映射解析):harness/acceptance_v3_8.py:relocation=refactor-change; harness/live_acceptance_v3_8.mjs:relocation=refactor-change; tests/test_financial_acceptance_v3_8.py:relocation=refactor-change; tests/integration/financial_acceptance_v3_8.test.mjs:relocation=refactor-change"
+          ],
+          "metrics": {
+            "authorization_errors": 0,
+            "downgrade_affects_conclusion": false,
+            "frozen_input_errors": 0,
+            "frozen_pins_relocated": 4,
+            "invalidation_notes": 0,
+            "preflight_errors": 0
+          },
+          "name": "A5_governance_freeze",
+          "status": "pass"
+        },
+        {
+          "details": [
+            "batch statistics recomputed bit-equal"
+          ],
+          "metrics": {
+            "mismatched_fields": 0,
+            "persisted_counts": {
+              "all_applicable_checks_passed": 31,
+              "candidate_failed": 1,
+              "checkpoint_events": 182,
+              "checkpoints": 36,
+              "fallback": 0,
+              "graders": 36,
+              "identity_valid": 36,
+              "invalid_provider_or_runtime": 0,
+              "planned": 36,
+              "provider_attempts": 113,
+              "provider_failures": 0,
+              "secret_leakage": 0,
+              "structured_results": 35,
+              "succeeded": 35,
+              "total_duration_ms": 1133918,
+              "total_tokens": 366155,
+              "traces": 36,
+              "unsafe_or_real_side_effect": 0,
+              "value_semantic_correct": 32
+            },
+            "record_mismatch": 0,
+            "records": 36
+          },
+          "name": "B2_summary_recompute",
+          "status": "pass"
+        }
+      ],
+      "contract_version": "3.8.0",
+      "directory": "evidence/stage3/acceptance-20260812-v3.8",
+      "labels": [
+        "L1",
+        "L3",
+        "L6",
+        "L7",
+        "L10",
+        "L11"
+      ],
+      "run_statistics": {
+        "checkpoint_events": 182,
+        "frozen_pins_relocated": 4,
+        "invalidated": 0,
+        "planned_scope": 36,
+        "regrade_engine": "frozen reconcile: audit/reconcile_stage3_v3_8_execution.py",
+        "runs": 36
+      },
+      "scope_note": "验收评分批次:结论链 N0–N5 全量复盘",
+      "verdict": "traceable",
+      "verdict_basis": "适用判定项全部通过;降级标注不留结论影响:A2_scenario_inputs"
+    },
+    {
+      "batch_id": "acceptance-v3.9",
+      "batch_type": "acceptance",
+      "checks": [
+        {
+          "details": [
+            "all pinned artifacts verify"
+          ],
+          "metrics": {
+            "artifacts": 152,
+            "bundle_sha256_convention": "content_sha256",
+            "contract_type": "stage3_financial_acceptance_evidence_bundle",
+            "contract_version": "3.9.0",
+            "drifted": 0,
+            "manifest_status": "frozen",
+            "missing": 0,
+            "unregistered": 0
+          },
+          "name": "A1_manifest_integrity",
+          "status": "pass"
+        },
+        {
+          "details": [
+            "L7:6 张案例卡 evidence_refs 为空(卡级快照指针缺失;运行内投影哈希链完整)"
+          ],
+          "metrics": {
+            "case_cards_checked": 12,
+            "downgrade_affects_conclusion": false,
+            "empty_evidence_refs_cards": 6,
+            "plan_self_hash_ok": true,
+            "snapshots_cached": 12,
+            "tasks": 12,
+            "validator_errors": 0
+          },
+          "name": "A2_scenario_inputs",
+          "status": "degraded"
+        },
+        {
+          "details": [
+            "traces validate; grader recompute bit-equal; anchors hold"
+          ],
+          "metrics": {
+            "anchor_problems": 0,
+            "checkpoint_events": 186,
+            "frozen_pins_relocated": 4,
+            "invalidated": 0,
+            "planned_scope": 36,
+            "regrade_engine": "frozen reconcile: audit/reconcile_stage3_v3_9_execution.py",
+            "run_errors": 0,
+            "runs": 36
+          },
+          "name": "A3_trace_and_B1_regrade",
+          "status": "pass"
+        },
+        {
+          "details": [
+            "PER-85-D6 relocation 放行留痕(旧路径钉住按迁移映射解析):harness/acceptance_v3_9.py:relocation=refactor-change; harness/live_acceptance_v3_9.mjs:relocation=refactor-change; tests/test_financial_acceptance_v3_9.py:relocation=refactor-change; tests/integration/financial_acceptance_v3_9.test.mjs:relocation=refactor-change"
+          ],
+          "metrics": {
+            "authorization_errors": 0,
+            "downgrade_affects_conclusion": false,
+            "frozen_input_errors": 0,
+            "frozen_pins_relocated": 4,
+            "invalidation_notes": 0,
+            "preflight_errors": 0
+          },
+          "name": "A5_governance_freeze",
+          "status": "pass"
+        },
+        {
+          "details": [
+            "batch statistics recomputed bit-equal"
+          ],
+          "metrics": {
+            "mismatched_fields": 0,
+            "persisted_counts": {
+              "all_applicable_checks_passed": 30,
+              "candidate_failed": 0,
+              "checkpoint_events": 186,
+              "checkpoints": 36,
+              "fallback": 0,
+              "graders": 36,
+              "identity_valid": 36,
+              "invalid_provider_or_runtime": 0,
+              "planned": 36,
+              "provider_attempts": 115,
+              "provider_failures": 0,
+              "secret_leakage": 0,
+              "structured_results": 36,
+              "succeeded": 36,
+              "total_duration_ms": 992222,
+              "total_tokens": 359132,
+              "traces": 36,
+              "unsafe_or_real_side_effect": 0,
+              "value_semantic_correct": 34
+            },
+            "record_mismatch": 0,
+            "records": 36
+          },
+          "name": "B2_summary_recompute",
+          "status": "pass"
+        }
+      ],
+      "contract_version": "3.9.0",
+      "directory": "runs/stage3/acceptance-20260813-v3.9",
+      "labels": [
+        "L1",
+        "L3",
+        "L4",
+        "L6",
+        "L7",
+        "L11",
+        "L14"
+      ],
+      "run_statistics": {
+        "checkpoint_events": 186,
+        "frozen_pins_relocated": 4,
+        "invalidated": 0,
+        "planned_scope": 36,
+        "regrade_engine": "frozen reconcile: audit/reconcile_stage3_v3_9_execution.py",
+        "runs": 36
+      },
+      "scope_note": "验收评分批次:结论链 N0–N5 全量复盘",
+      "verdict": "traceable",
+      "verdict_basis": "适用判定项全部通过;降级标注不留结论影响:A2_scenario_inputs"
+    },
+    {
+      "batch_id": "acceptance-v3.10",
+      "batch_type": "acceptance",
+      "checks": [
+        {
+          "details": [
+            "all pinned artifacts verify"
+          ],
+          "metrics": {
+            "artifacts": 1070,
+            "bundle_sha256_convention": "content_sha256",
+            "contract_type": "stage3_financial_acceptance_evidence_bundle",
+            "contract_version": "3.10.0",
+            "drifted": 0,
+            "manifest_status": "frozen",
+            "missing": 0,
+            "unregistered": 0
+          },
+          "name": "A1_manifest_integrity",
+          "status": "pass"
+        },
+        {
+          "details": [
+            "L7:30 张案例卡 evidence_refs 为空(卡级快照指针缺失;运行内投影哈希链完整)"
+          ],
+          "metrics": {
+            "case_cards_checked": 90,
+            "downgrade_affects_conclusion": false,
+            "empty_evidence_refs_cards": 30,
+            "plan_self_hash_ok": true,
+            "snapshots_cached": 30,
+            "tasks": 90,
+            "validator_errors": 0
+          },
+          "name": "A2_scenario_inputs",
+          "status": "degraded"
+        },
+        {
+          "details": [
+            "traces validate; grader recompute bit-equal; anchors hold"
+          ],
+          "metrics": {
+            "anchor_problems": 0,
+            "checkpoint_events": 1407,
+            "frozen_pins_relocated": 4,
+            "invalidated": 10,
+            "planned_scope": 270,
+            "regrade_engine": "frozen reconcile: audit/reconcile_stage3_v3_10_execution.py",
+            "run_errors": 0,
+            "runs": 260
+          },
+          "name": "A3_trace_and_B1_regrade",
+          "status": "pass"
+        },
+        {
+          "details": [
+            "PER-85-D6 relocation 放行留痕(旧路径钉住按迁移映射解析):harness/acceptance_v3_10.py:relocation=refactor-change; harness/live_acceptance_v3_10.mjs:relocation=refactor-change; tests/test_financial_acceptance_v3_10.py:relocation=refactor-change; tests/integration/financial_acceptance_v3_10.test.mjs:relocation=refactor-change"
+          ],
+          "metrics": {
+            "authorization_errors": 0,
+            "downgrade_affects_conclusion": false,
+            "frozen_input_errors": 0,
+            "frozen_pins_relocated": 4,
+            "invalidation_notes": 0,
+            "preflight_errors": 0
+          },
+          "name": "A5_governance_freeze",
+          "status": "pass"
+        },
+        {
+          "details": [
+            "batch statistics recomputed bit-equal"
+          ],
+          "metrics": {
+            "mismatched_fields": 0,
+            "persisted_counts": {
+              "all_applicable_checks_passed": 215,
+              "candidate_failed": 9,
+              "checkpoint_events": 1407,
+              "checkpoints": 260,
+              "fallback": 0,
+              "frozen": 260,
+              "graders": 260,
+              "identity_valid": 260,
+              "invalid_provider_or_runtime": 0,
+              "invalidated": 10,
+              "planned": 270,
+              "provider_attempts": 917,
+              "provider_failures": 0,
+              "retries_used": 0,
+              "secret_leakage": 0,
+              "structured_results": 251,
+              "succeeded": 251,
+              "total_duration_ms": 10219478,
+              "total_tokens": 3231053,
+              "traces": 260,
+              "unsafe_or_real_side_effect": 0,
+              "value_semantic_correct": 244
+            },
+            "record_mismatch": 0,
+            "records": 260
+          },
+          "name": "B2_summary_recompute",
+          "status": "pass"
+        }
+      ],
+      "contract_version": "3.10.0",
+      "directory": "runs/stage3/acceptance-20260813-v3.10",
+      "labels": [
+        "M3",
+        "L1",
+        "L3",
+        "L5",
+        "L6",
+        "L7",
+        "L11",
+        "L14"
+      ],
+      "run_statistics": {
+        "checkpoint_events": 1407,
+        "frozen_pins_relocated": 4,
+        "invalidated": 10,
+        "planned_scope": 270,
+        "regrade_engine": "frozen reconcile: audit/reconcile_stage3_v3_10_execution.py",
+        "runs": 260
+      },
+      "scope_note": "验收评分批次:结论链 N0–N5 全量复盘",
+      "verdict": "traceable",
+      "verdict_basis": "适用判定项全部通过;降级标注不留结论影响:A2_scenario_inputs"
+    },
+    {
+      "batch_id": "acceptance-v3.11",
+      "batch_type": "acceptance",
+      "checks": [
+        {
+          "details": [
+            "all pinned artifacts verify"
+          ],
+          "metrics": {
+            "artifacts": 2208,
+            "bundle_sha256_convention": "content_sha256",
+            "contract_type": "stage3_financial_acceptance_evidence_bundle",
+            "contract_version": "3.11.0",
+            "drifted": 0,
+            "manifest_status": "frozen",
+            "missing": 0,
+            "unregistered": 0
+          },
+          "name": "A1_manifest_integrity",
+          "status": "pass"
+        },
+        {
+          "details": [
+            "L7:30 张案例卡 evidence_refs 为空(卡级快照指针缺失;运行内投影哈希链完整)"
+          ],
+          "metrics": {
+            "case_cards_checked": 90,
+            "downgrade_affects_conclusion": false,
+            "empty_evidence_refs_cards": 30,
+            "plan_self_hash_ok": true,
+            "snapshots_cached": 30,
+            "tasks": 90,
+            "validator_errors": 0
+          },
+          "name": "A2_scenario_inputs",
+          "status": "degraded"
+        },
+        {
+          "details": [
+            "traces validate; grader recompute bit-equal; anchors hold"
+          ],
+          "metrics": {
+            "anchor_problems": 0,
+            "checkpoint_events": 2972,
+            "frozen_pins_relocated": 4,
+            "invalidated": 1,
+            "planned_scope": 550,
+            "regrade_engine": "frozen reconcile: audit/reconcile_stage3_v3_11_execution.py",
+            "run_errors": 0,
+            "runs": 549
+          },
+          "name": "A3_trace_and_B1_regrade",
+          "status": "pass"
+        },
+        {
+          "details": [
+            "PER-85-D6 relocation 放行留痕(旧路径钉住按迁移映射解析):harness/acceptance_v3_11.py:relocation=refactor-change; harness/live_acceptance_v3_11.mjs:relocation=refactor-change; tests/test_financial_acceptance_v3_11.py:relocation=refactor-change; tests/integration/financial_acceptance_v3_11.test.mjs:relocation=refactor-change"
+          ],
+          "metrics": {
+            "authorization_errors": 0,
+            "downgrade_affects_conclusion": false,
+            "frozen_input_errors": 0,
+            "frozen_pins_relocated": 4,
+            "invalidation_notes": 0,
+            "preflight_errors": 0
+          },
+          "name": "A5_governance_freeze",
+          "status": "pass"
+        },
+        {
+          "details": [
+            "batch statistics recomputed bit-equal"
+          ],
+          "metrics": {
+            "mismatched_fields": 0,
+            "persisted_counts": {
+              "all_applicable_checks_passed": 417,
+              "candidate_failed": 43,
+              "checkpoint_events": 2972,
+              "checkpoints": 549,
+              "fallback": 0,
+              "frozen": 549,
+              "graders": 549,
+              "identity_valid": 549,
+              "invalid_provider_or_runtime": 0,
+              "invalidated": 1,
+              "planned": 550,
+              "provider_attempts": 2114,
+              "provider_failures": 0,
+              "retries_used": 0,
+              "secret_leakage": 0,
+              "structured_results": 506,
+              "succeeded": 506,
+              "total_duration_ms": 26939376,
+              "total_tokens": 7228091,
+              "traces": 549,
+              "unsafe_or_real_side_effect": 0,
+              "value_semantic_correct": 488
+            },
+            "record_mismatch": 0,
+            "records": 549
+          },
+          "name": "B2_summary_recompute",
+          "status": "pass"
+        }
+      ],
+      "contract_version": "3.11.0",
+      "directory": "runs/stage3/acceptance-20260813-v3.11",
+      "labels": [
+        "L1",
+        "L3",
+        "L6",
+        "L7",
+        "L8",
+        "L11",
+        "L12",
+        "L14"
+      ],
+      "run_statistics": {
+        "checkpoint_events": 2972,
+        "frozen_pins_relocated": 4,
+        "invalidated": 1,
+        "planned_scope": 550,
+        "regrade_engine": "frozen reconcile: audit/reconcile_stage3_v3_11_execution.py",
+        "runs": 549
+      },
+      "scope_note": "验收评分批次:结论链 N0–N5 全量复盘",
+      "verdict": "traceable",
+      "verdict_basis": "适用判定项全部通过;降级标注不留结论影响:A2_scenario_inputs"
+    },
+    {
+      "batch_id": "coverage-v3.11.1",
+      "batch_type": "coverage",
+      "checks": [
+        {
+          "details": [
+            "all pinned artifacts verify"
+          ],
+          "metrics": {
+            "artifacts": 14,
+            "bundle_sha256_convention": "content_sha256",
+            "contract_type": "stage3_financial_acceptance_evidence_bundle",
+            "contract_version": "3.11.0",
+            "drifted": 0,
+            "manifest_status": "frozen",
+            "missing": 0,
+            "unregistered": 0
+          },
+          "name": "A1_manifest_integrity",
+          "status": "pass"
+        },
+        {
+          "details": [
+            "scenario inputs rebuild verified"
+          ],
+          "metrics": {
+            "case_cards_checked": 1,
+            "downgrade_affects_conclusion": false,
+            "empty_evidence_refs_cards": 0,
+            "plan_self_hash_ok": true,
+            "snapshots_cached": 1,
+            "tasks": 1,
+            "validator_errors": 0
+          },
+          "name": "A2_scenario_inputs",
+          "status": "pass"
+        },
+        {
+          "details": [
+            "traces validate; grader recompute bit-equal; anchors hold"
+          ],
+          "metrics": {
+            "anchor_problems": 0,
+            "checkpoint_events": 5,
+            "frozen_pins_relocated": 4,
+            "invalidated": 0,
+            "planned_scope": 1,
+            "regrade_engine": "frozen reconcile: audit/reconcile_stage3_v3_11_1_coverage.py",
+            "run_errors": 0,
+            "runs": 1
+          },
+          "name": "A3_trace_and_B1_regrade",
+          "status": "pass"
+        },
+        {
+          "details": [
+            "PER-85-D6 relocation 放行留痕(旧路径钉住按迁移映射解析):harness/acceptance_v3_11.py:relocation=refactor-change; harness/live_acceptance_v3_11.mjs:relocation=refactor-change; tests/test_financial_acceptance_v3_11.py:relocation=refactor-change; tests/integration/financial_acceptance_v3_11.test.mjs:relocation=refactor-change"
+          ],
+          "metrics": {
+            "authorization_errors": 0,
+            "downgrade_affects_conclusion": false,
+            "frozen_input_errors": 0,
+            "frozen_pins_relocated": 4,
+            "invalidation_notes": 0,
+            "preflight_errors": 0
+          },
+          "name": "A5_governance_freeze",
+          "status": "pass"
+        },
+        {
+          "details": [
+            "batch statistics recomputed bit-equal"
+          ],
+          "metrics": {
+            "mismatched_fields": 0,
+            "persisted_counts": {
+              "all_applicable_checks_passed": 1,
+              "candidate_failed": 0,
+              "checkpoint_events": 5,
+              "checkpoints": 1,
+              "fallback": 0,
+              "frozen": 1,
+              "graders": 1,
+              "identity_valid": 1,
+              "invalid_provider_or_runtime": 0,
+              "invalidated": 0,
+              "planned": 1,
+              "provider_attempts": 3,
+              "provider_failures": 0,
+              "retries_used": 0,
+              "secret_leakage": 0,
+              "structured_results": 1,
+              "succeeded": 1,
+              "total_duration_ms": 13716,
+              "total_tokens": 10710,
+              "traces": 1,
+              "unsafe_or_real_side_effect": 0,
+              "value_semantic_correct": 1
+            },
+            "record_mismatch": 0,
+            "records": 1
+          },
+          "name": "B2_summary_recompute",
+          "status": "pass"
+        }
+      ],
+      "contract_version": "3.11.1",
+      "directory": "runs/stage3/coverage-20260814-v3.11.1",
+      "labels": [
+        "L1",
+        "L3",
+        "L6",
+        "L7",
+        "L11",
+        "L12",
+        "L14"
+      ],
+      "run_statistics": {
+        "checkpoint_events": 5,
+        "frozen_pins_relocated": 4,
+        "invalidated": 0,
+        "planned_scope": 1,
+        "regrade_engine": "frozen reconcile: audit/reconcile_stage3_v3_11_1_coverage.py",
+        "runs": 1
+      },
+      "scope_note": "验收评分批次:结论链 N0–N5 全量复盘",
+      "verdict": "traceable",
+      "verdict_basis": "适用判定项全部通过"
+    }
+  ],
+  "contract_type": "stage3_historical_run_retrospective_index",
+  "criteria_document": "docs/contracts/scenario-conclusion-reproducibility-criteria.v1.md",
+  "criteria_version": "1.0.0",
+  "gap_report": "docs/stage1-historical-trace-inventory-gap-report.v1.md",
+  "git_commit": "2eee889994b607514257674b4cf512b188e5f543",
+  "index_version": "1.0.0",
+  "labels_registry": [
+    {
+      "affected_batches": [
+        "acceptance-v3",
+        "acceptance-v3.1",
+        "acceptance-v3.2",
+        "acceptance-v3.3",
+        "acceptance-v3.4"
+      ],
+      "code": "H1",
+      "consequence": "这些批次只构成'模型身份与协议门'证据,不是'场景答题→评分'证据;任何验收评分结论不得引用这些批次。",
+      "remediation": "如需验收评分证据,必须立新运行(新血缘),不回写旧批次。",
+      "severity": "high",
+      "summary": "v3–v3.4 无任何验收运行轨迹/grader/评分;按设计即无运行(v3.4 契约 acceptance_runs_authorized=false),属定性问题而非数据丢失。"
+    },
+    {
+      "affected_batches": [
+        "acceptance-v3.5"
+      ],
+      "code": "M1",
+      "consequence": "v3.5 评分链本身完整(36/36 grader↔trace 对账一致),但治理层授权节点缺失:该批次结论按'部分可追溯'标注,授权缺失不影响评分重算本身,影响的是执行合规性声明。",
+      "remediation": "只能降级标注(v3.8 起授权机制已建立);不回补历史授权文书。",
+      "severity": "medium",
+      "summary": "v3.5 付费调用授权记录缺失(authorization.run/preflight 均无);v3.8 的 authorization_basis 未追认 v3.5。"
+    },
+    {
+      "affected_batches": [
+        "acceptance-v3.10"
+      ],
+      "code": "M3",
+      "consequence": "孤立事件(1/270);作废记录本身即证据,该 run 不入结论。复盘按'孤立取证不可复现事件'显式标注,不影响其余 260 run。",
+      "remediation": "显式标注 + 保留 checkpoint 取证链;无需修复。",
+      "severity": "medium",
+      "summary": "v3.10 run_bba344e2 被验证器在持久化前拒绝,无 grading-failures 转录;该次拒绝本身不可从取证复现,仅存 checkpoint 与作废记录。"
+    },
+    {
+      "affected_batches": [
+        "*"
+      ],
+      "code": "L1",
+      "consequence": "金额口径不可复盘;以 token/请求次数为替代口径。",
+      "remediation": "未来运行需价目表映射或账单归档(新增记录类,不回补历史)。",
+      "severity": "low",
+      "summary": "cost_usd 全为 null(provider 响应不含成本);token 用量与请求次数完整。"
+    },
+    {
+      "affected_batches": [
+        "acceptance-v3",
+        "acceptance-v3.1",
+        "acceptance-v3.2",
+        "acceptance-v3.3",
+        "acceptance-v3.4"
+      ],
+      "code": "L2",
+      "consequence": "早期 preflight 的用例级消费不可复盘;批次级结论不受影响。",
+      "remediation": "未来运行新增 case_id 明文记录(非敏感字段)。",
+      "severity": "low",
+      "summary": "早期 preflight 不记录消费的 case_id(脱敏代价)。"
+    },
+    {
+      "affected_batches": [
+        "acceptance-v3.5",
+        "acceptance-v3.8",
+        "acceptance-v3.9",
+        "acceptance-v3.10",
+        "acceptance-v3.11",
+        "coverage-v3.11.1"
+      ],
+      "code": "L3",
+      "consequence": "无;可由 by_model/by_repeat 聚合推导导出(本工具 ranking 命令)。",
+      "remediation": "推导即可,不新增记录。",
+      "severity": "low",
+      "summary": "summary 无显式 ranking 字段。"
+    },
+    {
+      "affected_batches": [
+        "acceptance-v3.9"
+      ],
+      "code": "L4",
+      "consequence": "过程复盘以 checkpoints 哈希链 + trace usage/attempts 承载,无缺口。",
+      "remediation": "推导即可。",
+      "severity": "low",
+      "summary": "v3.9 无 driver-console/driver-progress 日志(机制 v3.10 才引入)。"
+    },
+    {
+      "affected_batches": [
+        "acceptance-v3.10"
+      ],
+      "code": "L5",
+      "consequence": "去重后与 invalidated-runs.json 完全吻合(本工具 invalidation 命令复核)。",
+      "remediation": "推导即可。",
+      "severity": "low",
+      "summary": "v3.10 driver-progress.jsonl 中 run_invalidated 事件存在断点续跑重复落盘;复盘须按 run_id 去重。"
+    },
+    {
+      "affected_batches": [
+        "*"
+      ],
+      "code": "L6",
+      "consequence": "无;复盘工具内建口径区分(hashing.detect_bundle_aggregate 等)。",
+      "remediation": "推导即可。",
+      "severity": "low",
+      "summary": "双哈希口径:规范化 c14n 哈希与整文件 sha256 并存;裸文件哈希复核会误判失配。"
+    },
+    {
+      "affected_batches": [
+        "acceptance-v3.5",
+        "acceptance-v3.8",
+        "acceptance-v3.9",
+        "acceptance-v3.10",
+        "acceptance-v3.11",
+        "coverage-v3.11.1"
+      ],
+      "code": "L7",
+      "consequence": "运行内链条完整(复盘按运行时锚点校验);卡级指针缺失按缺口记录,不影响本口径下的可追溯判定。",
+      "remediation": "未来运行补齐卡级 evidence_refs 或书面确认运行时锚点口径(新增记录类)。",
+      "severity": "low",
+      "summary": "FTW 合成案例卡 evidence_refs=[]:卡级快照指针缺失,快照绑定仅在运行时投影哈希(trace/checkpoint/grader commitments)。"
+    },
+    {
+      "affected_batches": [
+        "acceptance-v3.11"
+      ],
+      "code": "L8",
+      "consequence": "链条闭合,不构成缺口;复盘按 carry-over 记录核对。",
+      "remediation": "推导即可。",
+      "severity": "low",
+      "summary": "v3.11 无独立 authorization.preflight.json(carry-over 取代:源哈希 + 9 项等价校验 + PER-62/63 独立审计)。"
+    },
+    {
+      "affected_batches": [
+        "stage5-report"
+      ],
+      "code": "L9",
+      "consequence": "外部可复核性弱于 runs bundle;REPRODUCE.md + build_stage5.py 重推路径存在。",
+      "remediation": "推导即可(report-level 复盘复验该路径)。",
+      "severity": "low",
+      "summary": "reports/stage5 无独立 artifact manifest,provenance 内嵌于report bundle/machine_readable_results。"
+    },
+    {
+      "affected_batches": [
+        "acceptance-v3.5",
+        "acceptance-v3.8"
+      ],
+      "code": "L10",
+      "consequence": "无;复盘工具 symlink 感知,以 evidence/stage3 为正本。",
+      "remediation": "归档打包时解引用 symlink(新增规范类)。",
+      "severity": "low",
+      "summary": "runs/stage3 的 v3.5/v3.8 目录是 symlink → evidence/stage3(无 drift 风险但无冗余)。"
+    },
+    {
+      "affected_batches": [
+        "acceptance-v3.8",
+        "acceptance-v3.9",
+        "acceptance-v3.10",
+        "acceptance-v3.11",
+        "coverage-v3.11.1"
+      ],
+      "code": "L11",
+      "consequence": "无;已验全部可联结(本工具经 plan.runs 联结并复核)。",
+      "remediation": "推导即可。",
+      "severity": "low",
+      "summary": "v3.8+ graders 不含 model_id(v3.5 含),模型归属须经 run_id 联结。"
+    },
+    {
+      "affected_batches": [
+        "acceptance-v3.11",
+        "coverage-v3.11.1"
+      ],
+      "code": "L12",
+      "consequence": "提示性;不影响本次复盘(同机同用户)。",
+      "remediation": "归档打包规范说明(新增规范类)。",
+      "severity": "low",
+      "summary": "批内部分文件权限 600(owner-only),他人复盘需注意读权限。"
+    },
+    {
+      "affected_batches": [
+        "acceptance-v3.9",
+        "acceptance-v3.10",
+        "acceptance-v3.11",
+        "coverage-v3.11.1"
+      ],
+      "code": "L14",
+      "consequence": "表面不一致、语义正确;复盘按语义分层判读。",
+      "remediation": "文档注明(Stage 4 规范固化承接)。",
+      "severity": "low",
+      "summary": "契约文件 paid_calls_authorized=false 与 authorization 文书的 true 并存(语义分层:契约不授权,授权来自 authorization_basis)。"
+    }
+  ],
+  "offline": true,
+  "verdict_counts": {
+    "partially_traceable": 1,
+    "traceable": 19
+  }
+}

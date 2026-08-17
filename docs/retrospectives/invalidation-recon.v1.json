@@ -1,0 +1,55 @@
+[
+  {
+    "applicable": false,
+    "batch_id": "acceptance-v3.5",
+    "note": "no invalidated-runs.json(批次无作废 run 或早期契约无此文书)"
+  },
+  {
+    "applicable": false,
+    "batch_id": "acceptance-v3.8",
+    "note": "no invalidated-runs.json(批次无作废 run 或早期契约无此文书)"
+  },
+  {
+    "applicable": false,
+    "batch_id": "acceptance-v3.9",
+    "note": "no invalidated-runs.json(批次无作废 run 或早期契约无此文书)"
+  },
+  {
+    "applicable": true,
+    "batch_id": "acceptance-v3.10",
+    "entry_count": 10,
+    "invalidated_run_ids_in_report": [
+      "run_026ce7b195076f7aa0d84502403d61c3",
+      "run_0a93a3127f34e0cd080080353bdb149e",
+      "run_42e247098cf15f5ad7d6568610466879",
+      "run_5cb172c4d3621b3cc692598a10460802",
+      "run_68352ead71639135bb3e5e5e37974dab",
+      "run_a69bf0a682dc5be57f3976aa064a9da3",
+      "run_bba344e218f6643126192d6f818f37e2",
+      "run_c5c0ae24d74c577df57b9007b4b7fe74",
+      "run_e41b53663632b0e724f3dcc95d54df94",
+      "run_e50d4565effc44efa37772bd8c92a2e2"
+    ],
+    "ok": true,
+    "problems": [],
+    "progress_events_deduped": 10,
+    "progress_events_total": 55
+  },
+  {
+    "applicable": true,
+    "batch_id": "acceptance-v3.11",
+    "entry_count": 1,
+    "invalidated_run_ids_in_report": [
+      "run_c0f58d3c0d9227585058c4e4872a468b"
+    ],
+    "ok": true,
+    "problems": [],
+    "progress_events_deduped": 1,
+    "progress_events_total": 1
+  },
+  {
+    "applicable": false,
+    "batch_id": "coverage-v3.11.1",
+    "note": "no invalidated-runs.json(批次无作废 run 或早期契约无此文书)"
+  }
+]

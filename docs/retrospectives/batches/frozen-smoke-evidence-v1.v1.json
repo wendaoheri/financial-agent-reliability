@@ -1,0 +1,41 @@
+{
+  "batch_id": "frozen-smoke-evidence-v1",
+  "batch_type": "frozen_smoke_evidence",
+  "checks": [
+    {
+      "details": [
+        "all pinned artifacts verify"
+      ],
+      "metrics": {
+        "artifacts": 16,
+        "bundle_sha256_convention": "sorted_pair_aggregate",
+        "contract_type": "immutable_run_bundle",
+        "contract_version": "1.0.0",
+        "drifted": 0,
+        "manifest_status": null,
+        "missing": 0,
+        "unregistered": 0
+      },
+      "name": "A1_manifest_integrity",
+      "status": "pass"
+    },
+    {
+      "details": [
+        "no run artifact directories (protocol-gate/diagnostic batch)"
+      ],
+      "metrics": {},
+      "name": "A3_run_inventory",
+      "status": "not_applicable"
+    }
+  ],
+  "contract_version": null,
+  "directory": "runs/stage3/frozen-smoke-evidence-20260811-v1",
+  "labels": [
+    "L1",
+    "L6"
+  ],
+  "run_statistics": {},
+  "scope_note": "冒烟线批次:结论限于冒烟通过/硬停判定,非验收评分证据",
+  "verdict": "traceable",
+  "verdict_basis": "适用判定项全部通过"
+}

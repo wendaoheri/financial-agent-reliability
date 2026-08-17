@@ -1,0 +1,125 @@
+{
+  "batch_id": "acceptance-v3.8",
+  "batch_type": "acceptance",
+  "checks": [
+    {
+      "details": [
+        "all pinned artifacts verify"
+      ],
+      "metrics": {
+        "artifacts": 152,
+        "bundle_sha256_convention": "content_sha256",
+        "contract_type": "stage3_financial_acceptance_evidence_bundle",
+        "contract_version": "3.8.0",
+        "drifted": 0,
+        "manifest_status": "frozen",
+        "missing": 0,
+        "unregistered": 0
+      },
+      "name": "A1_manifest_integrity",
+      "status": "pass"
+    },
+    {
+      "details": [
+        "L7:6 张案例卡 evidence_refs 为空(卡级快照指针缺失;运行内投影哈希链完整)"
+      ],
+      "metrics": {
+        "case_cards_checked": 12,
+        "downgrade_affects_conclusion": false,
+        "empty_evidence_refs_cards": 6,
+        "plan_self_hash_ok": true,
+        "snapshots_cached": 12,
+        "tasks": 12,
+        "validator_errors": 0
+      },
+      "name": "A2_scenario_inputs",
+      "status": "degraded"
+    },
+    {
+      "details": [
+        "traces validate; grader recompute bit-equal; anchors hold"
+      ],
+      "metrics": {
+        "anchor_problems": 0,
+        "checkpoint_events": 182,
+        "frozen_pins_relocated": 4,
+        "invalidated": 0,
+        "planned_scope": 36,
+        "regrade_engine": "frozen reconcile: audit/reconcile_stage3_v3_8_execution.py",
+        "run_errors": 0,
+        "runs": 36
+      },
+      "name": "A3_trace_and_B1_regrade",
+      "status": "pass"
+    },
+    {
+      "details": [
+        "PER-85-D6 relocation 放行留痕(旧路径钉住按迁移映射解析):harness/acceptance_v3_8.py:relocation=refactor-change; harness/live_acceptance_v3_8.mjs:relocation=refactor-change; tests/test_financial_acceptance_v3_8.py:relocation=refactor-change; tests/integration/financial_acceptance_v3_8.test.mjs:relocation=refactor-change"
+      ],
+      "metrics": {
+        "authorization_errors": 0,
+        "downgrade_affects_conclusion": false,
+        "frozen_input_errors": 0,
+        "frozen_pins_relocated": 4,
+        "invalidation_notes": 0,
+        "preflight_errors": 0
+      },
+      "name": "A5_governance_freeze",
+      "status": "pass"
+    },
+    {
+      "details": [
+        "batch statistics recomputed bit-equal"
+      ],
+      "metrics": {
+        "mismatched_fields": 0,
+        "persisted_counts": {
+          "all_applicable_checks_passed": 31,
+          "candidate_failed": 1,
+          "checkpoint_events": 182,
+          "checkpoints": 36,
+          "fallback": 0,
+          "graders": 36,
+          "identity_valid": 36,
+          "invalid_provider_or_runtime": 0,
+          "planned": 36,
+          "provider_attempts": 113,
+          "provider_failures": 0,
+          "secret_leakage": 0,
+          "structured_results": 35,
+          "succeeded": 35,
+          "total_duration_ms": 1133918,
+          "total_tokens": 366155,
+          "traces": 36,
+          "unsafe_or_real_side_effect": 0,
+          "value_semantic_correct": 32
+        },
+        "record_mismatch": 0,
+        "records": 36
+      },
+      "name": "B2_summary_recompute",
+      "status": "pass"
+    }
+  ],
+  "contract_version": "3.8.0",
+  "directory": "evidence/stage3/acceptance-20260812-v3.8",
+  "labels": [
+    "L1",
+    "L3",
+    "L6",
+    "L7",
+    "L10",
+    "L11"
+  ],
+  "run_statistics": {
+    "checkpoint_events": 182,
+    "frozen_pins_relocated": 4,
+    "invalidated": 0,
+    "planned_scope": 36,
+    "regrade_engine": "frozen reconcile: audit/reconcile_stage3_v3_8_execution.py",
+    "runs": 36
+  },
+  "scope_note": "验收评分批次:结论链 N0–N5 全量复盘",
+  "verdict": "traceable",
+  "verdict_basis": "适用判定项全部通过;降级标注不留结论影响:A2_scenario_inputs"
+}

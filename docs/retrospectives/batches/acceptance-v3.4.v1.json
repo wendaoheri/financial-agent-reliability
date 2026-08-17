@@ -1,0 +1,29 @@
+{
+  "batch_id": "acceptance-v3.4",
+  "batch_type": "protocol_gate",
+  "checks": [
+    {
+      "details": [
+        "protocol-gate artifacts on disk: preflight.auto_split.v3.4.json",
+        "contract preflight_execution.acceptance_runs_authorized=False"
+      ],
+      "metrics": {
+        "files": 1
+      },
+      "name": "A_protocol_gate_scope",
+      "status": "pass"
+    }
+  ],
+  "contract_version": "3.4.0",
+  "directory": "runs/stage3/acceptance-20260812-v3.4",
+  "labels": [
+    "H1",
+    "L1",
+    "L2",
+    "L6"
+  ],
+  "run_statistics": {},
+  "scope_note": "协议门批次(差距项 H1):按设计无验收运行,本批结论限于协议/身份门;缺失的轨迹/评分节点不可从现有产物推导(运行从未发生)",
+  "verdict": "traceable",
+  "verdict_basis": "适用判定项全部通过"
+}
