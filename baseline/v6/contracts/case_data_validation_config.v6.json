@@ -1,0 +1,73 @@
+{
+  "config_version": "6.0.0",
+  "contract_versions": {
+    "case_card": "6.0.0",
+    "data_snapshot": "6.0.0",
+    "frozen_input_registry": "6.0.0",
+    "run_trace": "7.0.0"
+  },
+  "canonicalization": "financial-agent-c14n-json-v1",
+  "hash_algorithm": "sha256",
+  "supersedes": {
+    "path": "baseline/v5/contracts/case_data_validation_config.v5.json",
+    "sha256": "eb1b4cfa0225fe5f6303fb488e5c162d80be590a974f961d439aca14bfb8b2bd",
+    "reason": "V6 adds trace v8 external registry path/SHA commitment validation without rewriting v5."
+  },
+  "future_information_prohibited": true,
+  "quality_tiers": {
+    "Gold": {
+      "ranking_eligible": true,
+      "minimum_evidence_count": 1,
+      "independently_recomputable": true
+    },
+    "Silver": {
+      "ranking_eligible": false
+    }
+  },
+  "variant_kinds": [
+    "normal",
+    "single_factor_perturbation",
+    "missing_or_anomalous"
+  ],
+  "single_factor_eligible_pointers": [
+    "/task/inputs",
+    "/financial_subject/market",
+    "/financial_subject/currency",
+    "/financial_subject/units",
+    "/temporal/as_of",
+    "/temporal/available_at_cutoff",
+    "/evidence_refs",
+    "/task/permissions",
+    "/task/initial_state"
+  ],
+  "semantic_diff_ignored_pointers": [
+    "/case_id",
+    "/revision",
+    "/family_key",
+    "/variant",
+    "/oracle/expected_status",
+    "/oracle/expected_value",
+    "/oracle/reason_codes",
+    "/quality",
+    "/applicable_critical_invariants",
+    "/evidence_tier_requirement",
+    "/lineage/generated_at",
+    "/lineage/source_case_id",
+    "/lineage/parent_case_id",
+    "/integrity/content_sha256"
+  ],
+  "public_read_only_providers": [
+    "project_synthetic",
+    "sec_edgar"
+  ],
+  "forbidden_data_scopes": [
+    "account",
+    "assets",
+    "cash",
+    "holdings",
+    "orders",
+    "positions",
+    "portfolio",
+    "trades"
+  ]
+}
