@@ -23,7 +23,9 @@
     {"name": "cleanroom_preflight_without_credential", "exit_code": 1, "expected_exit_code": 1, "result": "structured config_error before network; no output file", "log": "cleanroom-preflight-no-credential.log"},
     {"name": "cleanroom_fareli_retro_list", "exit_code": 2, "expected_exit_code": 2, "result": "baseline_gap", "log": "cleanroom-fareli-retro-list.log"},
     {"name": "cleanroom_git_status", "exit_code": 0, "result": "clean", "log": "cleanroom-environment.log"},
-    {"name": "audit_evidence", "exit_code": 0, "result": "all structured audit assertions pass", "log": "audit_evidence.py"}
+    {"name": "audit_evidence", "exit_code": 0, "result": "all structured audit assertions pass", "log": "audit_evidence.py"},
+    {"name": "main_fast_forward_and_push", "exit_code": 0, "result": "main and origin/main at ddf5c57; PER-327, v5 freeze, guide, and Stage 4-v5 evidence are ancestors", "log": "main-ancestry.log"},
+    {"name": "merged_branch_cleanup", "exit_code": 0, "result": "local main only; remote origin/main only aside from origin/HEAD symbolic ref", "log": "branch-cleanup.log"}
   ],
   "prohibited_actions": {
     "paid_model_calls": false,

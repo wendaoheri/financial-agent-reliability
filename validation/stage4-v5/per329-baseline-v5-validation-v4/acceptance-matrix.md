@@ -63,3 +63,13 @@ v5 自检将既有 `validation/stage4/` 整棵树作为历史证据钉住，向�
 
 原始命令输出与结构化结果均在本目录。`SHA256SUMS` 对除自身外的证据文件逐件登记；
 清单自身 hash 在 PER-329 完成评论中登记。主线祖先证明与分支清理结果在收敛后追加。
+
+## main 收敛
+
+`main` 已 fast-forward 并推送至 `ddf5c573abd8b8773a15cc0c0ff7b8cc48fb8321`；
+`main-ancestry.log` 证明上一轮 main、PER-327 第三轮 frozen-input 修复、baseline v5
+冻结、手动指南及本轮首批证据均为其祖先。确认祖先关系后，已删除本地
+`per327-third-audit-input-binding`、`per328-baseline-v5`、
+`per329-baseline-v5-validation` 及远端前两条分支。当前本地仅 `main`，远端仅
+`origin/main`（另有 `origin/HEAD` 符号引用）。最终清单和清理证据追加提交后再
+fast-forward 到同一主线。

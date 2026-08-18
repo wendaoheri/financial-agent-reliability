@@ -1,0 +1,10 @@
+main=ddf5c573abd8b8773a15cc0c0ff7b8cc48fb8321
+origin_main=ddf5c573abd8b8773a15cc0c0ff7b8cc48fb8321
+baseline_v5_ancestor=0
+stage4_v5_evidence_ancestor=0
+local_branches:
+(HEAD detached at ddf5c57)
+main
+remote_branches:
+origin
+origin/main
