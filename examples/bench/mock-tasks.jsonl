@@ -1,0 +1,2 @@
+{"task_id":"echo-disclosure","input":{"question":"Summarize the synthetic filing."},"expected_output":{"answer":"Synthetic filing summary."}}
+{"task_id":"echo-risk","input":{"question":"Name the principal synthetic risk."},"expected_output":{"answer":"Synthetic concentration risk."}}

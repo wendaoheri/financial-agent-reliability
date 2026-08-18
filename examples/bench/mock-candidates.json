@@ -1,0 +1,18 @@
+{
+  "candidates": [
+    {
+      "id": "mock-base__plain-agent",
+      "model": "mock-base",
+      "agent": "plain-agent",
+      "adapter": "mock",
+      "config": {"temperature": 0}
+    },
+    {
+      "id": "mock-base__tool-agent",
+      "model": "mock-base",
+      "agent": "tool-agent",
+      "adapter": "mock",
+      "config": {"temperature": 0, "tools": []}
+    }
+  ]
+}
