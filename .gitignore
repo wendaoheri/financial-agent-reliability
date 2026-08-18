@@ -24,6 +24,10 @@ baseline/v4/build/**/*.py[cod]
 !baseline/v5/build/**
 baseline/v5/build/**/__pycache__/
 baseline/v5/build/**/*.py[cod]
+!baseline/v6/build/
+!baseline/v6/build/**
+baseline/v6/build/**/__pycache__/
+baseline/v6/build/**/*.py[cod]
 *.egg-info/
 node_modules/
 runs/
