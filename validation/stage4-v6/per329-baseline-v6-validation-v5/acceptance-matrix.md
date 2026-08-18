@@ -64,3 +64,14 @@ v6 自检钉住既有 `validation/stage4/` 与 `validation/stage4-v5/` 历史证
 
 原始命令输出与结构化结果均在本目录。`SHA256SUMS` 将对除自身外的证据文件逐件登记；
 清单自身 hash 在 PER-329 完成评论中登记。主线祖先证明与分支清理结果在收敛后追加。
+
+## main 收敛
+
+`main` 已 fast-forward 并推送至 `243bb54dd4c341ff0d12fbaa386107fc928e237e`；
+`main-ancestry.log` 证明上一轮 main、trace v8 修复、baseline v6 冻结、手动指南及本轮
+首批证据均为其祖先。确认祖先关系后，已删除本轮范围内本地
+`per328-baseline-v6`、`per329-baseline-v6-validation` 与远端
+`agent/harness/per-327-trace-v8`、`per328-baseline-v6`。
+
+PER-361/PER-366 是本 issue 之后的独立工作，未并入本次收敛，故其本地/远端分支明确
+保留。最终清单和清理证据追加提交后再 fast-forward 到同一主线。

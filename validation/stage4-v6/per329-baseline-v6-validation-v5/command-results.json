@@ -23,7 +23,9 @@
     {"name": "cleanroom_preflight_without_credential", "exit_code": 1, "expected_exit_code": 1, "result": "structured config_error before network; no output file", "log": "cleanroom-preflight-no-credential.log"},
     {"name": "cleanroom_fareli_retro_list", "exit_code": 2, "expected_exit_code": 2, "result": "baseline_gap", "log": "cleanroom-fareli-retro-list.log"},
     {"name": "cleanroom_git_status", "exit_code": 0, "result": "clean", "log": "cleanroom-environment.log"},
-    {"name": "audit_evidence", "exit_code": 0, "result": "all structured audit assertions pass", "log": "audit_evidence.py"}
+    {"name": "audit_evidence", "exit_code": 0, "result": "all structured audit assertions pass", "log": "audit_evidence.py"},
+    {"name": "main_fast_forward_and_push", "exit_code": 0, "result": "main and origin/main at 243bb54; prior main, trace v8 fix, v6 freeze, guide, and first evidence commit are ancestors", "log": "main-ancestry.log"},
+    {"name": "merged_branch_cleanup", "exit_code": 0, "result": "in-scope v6 local/remote topics removed; unrelated PER-361/PER-366 branches preserved", "log": "branch-cleanup.log"}
   ],
   "prohibited_actions": {
     "paid_model_calls": false,
