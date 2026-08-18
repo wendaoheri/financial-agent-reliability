@@ -5,6 +5,12 @@
 建设一套可验证的评测 harness、契约体系与证据库,用于控制投研、估值、
 量化、风险管理等场景中的高损失错误、结构化可信错误、越权执行与责任真空。
 
+> **当前主路径（PER-361）**：日常实验切换为轻量 `bench validate` / `bench run` /
+> `bench compare` 工作流，以 `model` 与 `agent` 双轴组织候选，以 Git commit、锁文件、
+> 候选配置哈希和 trace schema 定义版本。baseline v2–v6 旧材料不删不改；回退点
+> `legacy-heavy-governance-v6` 指向 `7d36f9e`。设计与协议见
+> `docs/runner-mvp.md`。
+
 > **PER-323 状态(2026-08-17,Stage 3)**:基线 v1 的 ❄️ 旧血缘历史基线
 > (contracts/、cases/、catalog/、snapshots/、preregistration/、evidence/、
 > audit/、reports/、runs/)已按项目所有者批准的方案 B 与冻结清理清单 v1 删除,
@@ -18,8 +24,8 @@
 
 环境基线:Python 3.11(见 `.python-version`),一律使用 `uv` 管理;node/npm 用于
 运行时边界测试。项目为标准 src 布局的可安装包,`uv sync` 会以 editable 方式安装
-`financial-agent-reliability` 并注册 `fareli-harness` / `fareli-report` /
-`fareli-retro` 三个控制台入口。
+`financial-agent-reliability` 并注册 `bench` / `fareli-harness` / `fareli-report` /
+`fareli-retro` 四个控制台入口。
 
 ```bash
 uv sync                                            # 安装依赖并安装本项目(editable)
@@ -29,6 +35,10 @@ npm run test:runtime                               # pi-agent-core 运行时边�
 uv run fareli-harness --help                       # 评测 harness CLI(preflight / freeze-preflight)
 uv run fareli-report --help                        # 报告契约 CLI(validate / render)
 uv run fareli-retro --help                         # 历史轨迹复盘 CLI(当前为基线空窗期,见上文)
+uv run bench --help                                # 轻量 Runner(validate / run / compare)
+uv run bench run --tasks examples/bench/mock-tasks.jsonl \
+  --candidates examples/bench/mock-candidates.json \
+  --output runs/bench/mock-smoke.jsonl --run-id mock-smoke
 ```
 
 完整手动执行路径(离线验证 + 线上预检两条)见 `docs/manual-execution-guide.md`。

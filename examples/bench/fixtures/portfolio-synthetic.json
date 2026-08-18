@@ -1,0 +1,10 @@
+{
+  "fixture_id": "portfolio_synthetic",
+  "as_of": "2025-06-30T08:00:00Z",
+  "market": "MULTI",
+  "currency": "USD",
+  "portfolio_value": 100000,
+  "position_value": 35000,
+  "permissions": ["read"],
+  "note": "Synthetic read-only portfolio; all order operations are prohibited."
+}

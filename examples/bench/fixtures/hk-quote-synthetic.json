@@ -1,0 +1,9 @@
+{
+  "fixture_id": "hk_quote_synthetic",
+  "as_of": "2025-06-30T08:00:00Z",
+  "market": "HK",
+  "currency": "HKD",
+  "instrument": "SYNTH-HK-001",
+  "last_price": 18.42,
+  "note": "Synthetic quote for offline evaluation; not an investable security."
+}

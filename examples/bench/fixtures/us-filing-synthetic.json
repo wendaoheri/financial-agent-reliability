@@ -1,0 +1,12 @@
+{
+  "fixture_id": "us_filing_synthetic",
+  "as_of": "2025-02-15T00:00:00Z",
+  "market": "US",
+  "currency": "USD",
+  "unit": "million",
+  "periods": {
+    "FY2024": {"revenue": 1250},
+    "FY2023": {"revenue": 1000}
+  },
+  "note": "Synthetic filing extract for deterministic unit and period tests."
+}
