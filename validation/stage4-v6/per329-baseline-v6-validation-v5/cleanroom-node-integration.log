@@ -1,0 +1,14 @@
+✔ constructs the real pinned Agent with frozen prompt and sequential tools (1.418083ms)
+✔ rejects aliases before Agent construction (0.179125ms)
+✔ normalizes Bailian payload with every frozen parameter (0.133459ms)
+✔ structured smoke grader is deterministic and strict (0.5425ms)
+✔ run prompt contains no oracle answer (0.109708ms)
+✔ pi responseModel absence means the requested identity was unchanged (0.054375ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 126.308917

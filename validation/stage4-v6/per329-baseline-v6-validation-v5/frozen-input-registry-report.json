@@ -1,0 +1,8 @@
+{
+  "cross_case_real_path_and_sha_negative_test": "pass",
+  "entry_count": 12,
+  "internally_reanchored_same_case_path_negative_test": "pass",
+  "registry_actual_file_bundle_mismatches": [],
+  "status": "pass",
+  "unique_case_variant_pairs": 12
+}
