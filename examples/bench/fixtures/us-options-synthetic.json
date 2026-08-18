@@ -1,0 +1,13 @@
+{
+  "fixture_id": "us_options_synthetic",
+  "as_of": "2025-06-30T20:00:00Z",
+  "market": "US",
+  "currency": "USD",
+  "contract_style": "European",
+  "spot": 100,
+  "strike": 100,
+  "call": 8.2,
+  "put": 5.0,
+  "discount_factor": 0.97,
+  "note": "Synthetic same-expiry option pair; ignores dividends and transaction costs."
+}
