@@ -1,0 +1,194 @@
+{
+  "acceptance_criteria": {
+    "path": "docs/contracts/acceptance-criteria-v6.md",
+    "sha256": "78ef6fd31fa809a4886ded36c831a948bd09072bf95d50185677e30c94a682a3"
+  },
+  "artifacts": [
+    {
+      "path": "baseline/v6/README.md",
+      "sha256": "864ea923b99f9b8feabaf701e1a0470d7e6f129b42c87a0ab35ec91697746dca"
+    },
+    {
+      "path": "baseline/v6/build/build_baseline_v6.py",
+      "sha256": "c3f141558cf2905af4a8e9c0461e1d2d63b1dc0e8e6d24a420745f8b9a3c0d1d"
+    },
+    {
+      "path": "baseline/v6/build/capture_manifest.v6.json",
+      "sha256": "f1d875c26a1bfb33f2ee20da61ee3bf3fd7a18e5fb2365f32081b05510b00433"
+    },
+    {
+      "path": "baseline/v6/build/captures/edgar_aapl_netincome.raw.json",
+      "sha256": "9b6ac23b024662c95dc7b4088a448bf60a31ff672e2f328161c5ceda6a8b9915"
+    },
+    {
+      "path": "baseline/v6/build/captures/edgar_aapl_revenue.raw.json",
+      "sha256": "4495f7a16b4ade43dfa8041ac6477074122cbd5b88033e3e0f68b3f919e7ffbf"
+    },
+    {
+      "path": "baseline/v6/build/captures/edgar_aapl_submissions.raw.json",
+      "sha256": "9ce67c0a62345214dd42434cbacfa70dad226e679c6ce752281578b1cfd2fac4"
+    },
+    {
+      "path": "baseline/v6/build/captures/synthetic_quote_alpha.fixture.json",
+      "sha256": "175e617f5a59559aa20e5f02d24729357d88755267383ec5f11d7c92e2539c26"
+    },
+    {
+      "path": "baseline/v6/build/captures/synthetic_quote_beta.fixture.json",
+      "sha256": "464c44f8d20094b66f8aa543e7ab83b96e7246ddb45e24b041eaa51b985cda83"
+    },
+    {
+      "path": "baseline/v6/cases/case-fkw5-pub-01-moa-v6.json",
+      "sha256": "dd491c670653069fdd2996a9cc9b95548110e05c0c834d2ad5c1503458102225"
+    },
+    {
+      "path": "baseline/v6/cases/case-fkw5-pub-01-normal-v6.json",
+      "sha256": "2ac0a4dda4477aa32ff23bf10a2570af16155c05b3d3c85a1140e83e035af282"
+    },
+    {
+      "path": "baseline/v6/cases/case-fkw5-pub-01-sfp-v6.json",
+      "sha256": "acfa98b0056e22e38943d7409d188e631744d952492136aaf50698bdd5aac611"
+    },
+    {
+      "path": "baseline/v6/cases/case-fkw5-pub-02-moa-v6.json",
+      "sha256": "28546e3997c8e275efbbc0299639a8cade32024fbb8c055873d46490436f30f0"
+    },
+    {
+      "path": "baseline/v6/cases/case-fkw5-pub-02-normal-v6.json",
+      "sha256": "c0e319003b50dd752486539241679aa7be9f4e85dca6d917b8ad612d939ff9e7"
+    },
+    {
+      "path": "baseline/v6/cases/case-fkw5-pub-02-sfp-v6.json",
+      "sha256": "fd97617579f4b8289ecfa86cd11f6b73357e847af028afb067d16e3bde01c8d8"
+    },
+    {
+      "path": "baseline/v6/cases/case-ftw5-syn-01-moa-v6.json",
+      "sha256": "f3ce8f77988e88de05b2e2e05d7f6b6db5d5b69e3d75a75fc867b99328c27e75"
+    },
+    {
+      "path": "baseline/v6/cases/case-ftw5-syn-01-normal-v6.json",
+      "sha256": "e946b6b1b67d2253a9840362cd3326e8c947b76f8032d27739971f29f23d9d6a"
+    },
+    {
+      "path": "baseline/v6/cases/case-ftw5-syn-01-sfp-v6.json",
+      "sha256": "b569aea64a9bf6f74ba7d8cee297096e7ad9651cbfcc91e8ed0c68aa4c540846"
+    },
+    {
+      "path": "baseline/v6/cases/case-ftw5-syn-02-moa-v6.json",
+      "sha256": "2ed542008d952af70dce4baa4bb2d949ee3561a3f3e3677aeb6d9313f7e12f92"
+    },
+    {
+      "path": "baseline/v6/cases/case-ftw5-syn-02-normal-v6.json",
+      "sha256": "843f257af05cab8d5a07ed13b1f37f95d7df666052bdfbab3dcb4043707ee830"
+    },
+    {
+      "path": "baseline/v6/cases/case-ftw5-syn-02-sfp-v6.json",
+      "sha256": "f8083dc146074c312f64c9924bc53604de161c080a2fe08660b6e073dfea2809"
+    },
+    {
+      "path": "baseline/v6/contracts/case_card.schema.v6.json",
+      "sha256": "9a4c9716b89069520e6ac9b8b42784c03d99291841e78e3d5b8d83c04533d8a6"
+    },
+    {
+      "path": "baseline/v6/contracts/case_data_validation_config.v6.json",
+      "sha256": "58e5b54716845ae3b55f29b20d68ed8609c0bb913555eb34210cc6c084070328"
+    },
+    {
+      "path": "baseline/v6/contracts/data_snapshot.schema.v6.json",
+      "sha256": "515a729fccf92043014b88f0b7fdc2f6f7ae2a18867bc8a35ea3a37554a71f5e"
+    },
+    {
+      "path": "baseline/v6/contracts/frozen_input_registry.frozen.v6.json",
+      "sha256": "c7c70a26c7e59c65b4966db9d5c414c2861d19402dc7f6bb40541c331404c9b7"
+    },
+    {
+      "path": "baseline/v6/contracts/frozen_input_registry.schema.v6.json",
+      "sha256": "e775f6309cd3436d27d30c80223f48efc4b7ec386193d6b0524ac98f17a03178"
+    },
+    {
+      "path": "baseline/v6/contracts/grader_contract.frozen.v6.json",
+      "sha256": "3bb25271bf44a125412ef449d49889575ae5ccfb1bdd25ce6b78c8b44b019f9f"
+    },
+    {
+      "path": "baseline/v6/contracts/reason_codes.v6.json",
+      "sha256": "116a55768562f6d841ed4664ea12826cebf65834ba855fba59b63311842d40b9"
+    },
+    {
+      "path": "baseline/v6/contracts/run_trace.schema.v8.json",
+      "sha256": "189618c59e0614220bb0aef32f03392b612f7635d9508df8ea2f145161bf01e2"
+    },
+    {
+      "path": "baseline/v6/grader/grader_policy.v6.json",
+      "sha256": "ffe0c8d8fcd3928b11acb327c398322e0d7dd144f2f3e382aa1977e4d237e631"
+    },
+    {
+      "path": "baseline/v6/snapshots/data_snapshot.snapshot-sec-edgar-aapl-netincome-v6-01-missing.missing.json",
+      "sha256": "6f3b8e655a756aee0f46b272acd0e9ce21f486c49bd4b16dad48468a22bdb641"
+    },
+    {
+      "path": "baseline/v6/snapshots/data_snapshot.snapshot-sec-edgar-aapl-netincome-v6-01.primary.json",
+      "sha256": "2327c14c5505771700406b5734f24263453fe26531da7e692459f255175de5fb"
+    },
+    {
+      "path": "baseline/v6/snapshots/data_snapshot.snapshot-sec-edgar-aapl-revenue-v6-01-missing.missing.json",
+      "sha256": "e1c04b1f373e4030b586e6c88625742258a61ea192f762938dac6e9bd545589a"
+    },
+    {
+      "path": "baseline/v6/snapshots/data_snapshot.snapshot-sec-edgar-aapl-revenue-v6-01.primary.json",
+      "sha256": "e54c9410ff7bb7435b56c7498f27b8522c19c9b1e58ad416bc750e14c9baa805"
+    },
+    {
+      "path": "baseline/v6/snapshots/data_snapshot.snapshot-synthetic-quote-alpha-v6-01-missing.missing.json",
+      "sha256": "681ee59286da90152a891262ec0fe2ab79f3130c2f1339ec064a9f88c355e85c"
+    },
+    {
+      "path": "baseline/v6/snapshots/data_snapshot.snapshot-synthetic-quote-alpha-v6-01.primary.json",
+      "sha256": "e9074fda5581e8221e0788f83b2d0a5f63b769de9c5af588c1d45e9e9fff961f"
+    },
+    {
+      "path": "baseline/v6/snapshots/data_snapshot.snapshot-synthetic-quote-beta-v6-01-missing.missing.json",
+      "sha256": "6e6e79e2e3ad4c9040dc5f2acb78d630145feb28f68ee3d7087eca808a8b6734"
+    },
+    {
+      "path": "baseline/v6/snapshots/data_snapshot.snapshot-synthetic-quote-beta-v6-01.primary.json",
+      "sha256": "588b7d5b5921140dd538fd99f6a075fd7bb915bd1a24bea43689af3e17767d2a"
+    },
+    {
+      "path": "baseline/v6/validate_baseline_v6.py",
+      "sha256": "27659130375501bd010375b6f5dbcfe7514c0846ec49c38d086d821aab0f67ad"
+    }
+  ],
+  "baseline_generation": "v6-fourth-audit-external-registry-commitment",
+  "build_source_commit": "cbdfb99e43618d5866ce158a7a9843e4893f810c",
+  "bundle_sha256": "25ea0bd32df5071de72096f55b5fa22af2eb78b114c8a966c0b9670596bab63a",
+  "contract_type": "baseline_manifest",
+  "contract_version": "6.0.0",
+  "frozen_at": "2026-08-18T02:01:08Z",
+  "frozen_by_issue": "PER-328",
+  "historical_failed_generations": [
+    {
+      "failure_reason": "first audit: permissive object matching, persisted-object secret scan gap, incomplete invariant execution, and non-redistributable inputs",
+      "generation": "v2",
+      "manifest_path": "baseline/v2/baseline_manifest.frozen.v2.json",
+      "manifest_sha256": "02b91c8bd80d1c3b80ed1dd924c45c3a454bcb4780a8edad9b7cbf15a6d6e428"
+    },
+    {
+      "failure_reason": "second audit: provider/alias, full-schema/cross-anchor, preflight-freeze, and exact claim-label gates",
+      "generation": "v3",
+      "manifest_path": "baseline/v3/baseline_manifest.frozen.v3.json",
+      "manifest_sha256": "9d3dfc758525b404d300903e6c11f975ef95b3a547ea2e2a8a676d7852a1d2fa"
+    },
+    {
+      "failure_reason": "third audit: frozen input digest was not bound to the registered case/variant artifact path",
+      "generation": "v4",
+      "manifest_path": "baseline/v4/baseline_manifest.frozen.v4.json",
+      "manifest_sha256": "84bf582bcf14291e885274e6df2dd6a86f871ddb4d8c9e065db215e4080b2b4a"
+    },
+    {
+      "failure_reason": "fourth audit: registry SHA was discarded before trace verification, allowing internally re-anchored artifact and context digests to bypass the external frozen commitment",
+      "generation": "v5",
+      "manifest_path": "baseline/v5/baseline_manifest.frozen.v5.json",
+      "manifest_sha256": "55732203104fbb5a887bc58dc649fff96f99f2ea8c27448e3760b63c4a097086"
+    }
+  ],
+  "status": "frozen"
+}

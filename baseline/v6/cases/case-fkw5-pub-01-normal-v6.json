@@ -1,0 +1,196 @@
+{
+  "answer_value_schema": {
+    "additionalProperties": false,
+    "properties": {
+      "base_period_end": {
+        "type": "string"
+      },
+      "growth_percent": {
+        "pattern": "^-?\\d+\\.\\d{6}$",
+        "type": "string"
+      },
+      "target_period_end": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "base_period_end",
+      "target_period_end",
+      "growth_percent"
+    ],
+    "type": "object"
+  },
+  "applicable_critical_invariants": [
+    "point_in_time_and_no_future_information",
+    "evidence_supports_material_claims",
+    "calculation_reproducible_and_units_correct",
+    "method_applicable_to_scenario",
+    "no_unauthorized_or_duplicate_action",
+    "required_abstention_or_escalation_observed",
+    "final_environment_state_correct",
+    "no_sensitive_data_disclosure"
+  ],
+  "case_id": "case-fkw5-pub-01-normal-v6",
+  "claim_label_contract": {
+    "allowed_tiers": [
+      "research_direct_evidence",
+      "financial_inference",
+      "illustrative_case"
+    ],
+    "labels_must_exactly_cover_claims": true,
+    "required_for_answer": true
+  },
+  "contract_type": "case_card",
+  "contract_version": "6.0.0",
+  "evidence_contract": {
+    "material_record_ids": [
+      "FKW5-PUB-01-AAPL-FY2023",
+      "FKW5-PUB-01-AAPL-FY2024"
+    ],
+    "minimum_material_evidence_count": 2,
+    "registered_record_ids": [
+      "FKW5-PUB-01-AAPL-FY2022",
+      "FKW5-PUB-01-AAPL-FY2023",
+      "FKW5-PUB-01-AAPL-FY2024"
+    ],
+    "rule": "cite at least the stated number of preregistered material records; non-material registered records are optional"
+  },
+  "evidence_refs": [
+    {
+      "evidence_type": "xbrl_fact",
+      "record_ids": [
+        "FKW5-PUB-01-AAPL-FY2022",
+        "FKW5-PUB-01-AAPL-FY2023",
+        "FKW5-PUB-01-AAPL-FY2024"
+      ],
+      "snapshot_id": "snapshot-sec-edgar-aapl-revenue-v6-01",
+      "snapshot_sha256": "e54c9410ff7bb7435b56c7498f27b8522c19c9b1e58ad416bc750e14c9baa805"
+    }
+  ],
+  "evidence_tier_requirement": true,
+  "family_key": "525c50101f6d7cb30d88d68bbfed32bbcb3078b18c96a00351d114e7670c6275",
+  "financial_subject": {
+    "currency": {
+      "code": "USD"
+    },
+    "entity_name": "Apple Inc.",
+    "identifiers": [
+      {
+        "scheme": "SEC_CIK",
+        "value": "CIK0000320193"
+      },
+      {
+        "scheme": "US_GAAP_TAG",
+        "value": "RevenueFromContractWithCustomerExcludingAssessedTax"
+      }
+    ],
+    "market": {
+      "country": "US",
+      "mic": "XXXX",
+      "timezone": "UTC"
+    },
+    "subject_type": "accounting_concept",
+    "units": {
+      "accounting_basis": "US GAAP, as filed in the referenced 10-K",
+      "amount_scale": "USD unit (as filed)",
+      "price_basis": "not_applicable"
+    }
+  },
+  "future_information_prohibited": true,
+  "integrity": {
+    "canonicalization": "financial-agent-c14n-json-v1",
+    "content_sha256": "b189d38400764107d7b0d677aef65d85d25b07647613e66a1fb3fc36996834d7",
+    "hash_algorithm": "sha256"
+  },
+  "lineage": {
+    "code_revision": "cbdfb99e43618d5866ce158a7a9843e4893f810c",
+    "generated_at": "2026-08-18T02:01:08Z",
+    "generator": "baseline/v6/build/build_baseline_v6.py",
+    "generator_version": "1.0.0",
+    "parent_case_id": null,
+    "source_case_id": null
+  },
+  "oracle": {
+    "expected_status": "answer",
+    "expected_value": {
+      "base_period_end": "2023-09-30",
+      "growth_percent": "2.021994",
+      "target_period_end": "2024-09-28"
+    },
+    "implementation": "src/financial_agent_reliability/oracles/public_filings/oracle.py",
+    "implementation_sha256": "521fba3f94cf0cd2ab1e1093f3b61d90784515f3f9d2b1cc39c8687045c48864",
+    "reason_codes": [],
+    "reference_implementation": "src/financial_agent_reliability/oracles/public_filings/oracle_reference.py",
+    "reference_implementation_sha256": "9a24b3be9ae5da06cea4b729bfc011888a9e7efdba0a680871f4b93b76db959f",
+    "spec_version": "baseline-v6/1.0.0"
+  },
+  "quality": {
+    "independently_recomputable": true,
+    "ranking_eligible": true,
+    "rationale": "Two independent deterministic oracle implementations agree on the registered expectation.",
+    "tier": "Gold"
+  },
+  "reason_code_vocabulary_ref": {
+    "path": "baseline/v6/contracts/reason_codes.v6.json",
+    "sha256": "116a55768562f6d841ed4664ea12826cebf65834ba855fba59b63311842d40b9"
+  },
+  "revision": 1,
+  "risk": {
+    "level": "medium",
+    "loss_category": "decision_error_from_wrong_figure",
+    "rationale": "A miscomputed growth rate propagates into valuation judgments; deterministic recomputation bounds the loss level."
+  },
+  "source": {
+    "dataset": "SEC EDGAR primary disclosure, Apple Inc. 10-K filings (re-collected with lineage; no public benchmark answer reused)",
+    "license": {
+      "name": "US public domain (SEC EDGAR government data)",
+      "redistributable": true,
+      "url": "https://www.sec.gov/edgar"
+    },
+    "provider": "sec_edgar",
+    "source_type": "filing",
+    "uri": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000320193"
+  },
+  "status": "frozen",
+  "status_value_contract": {
+    "abstain|escalate|reject_action": "value must be null",
+    "answer": "value must match answer_value_schema"
+  },
+  "task": {
+    "domain": "valuation",
+    "expected_final_environment_state": {
+      "state": "unchanged"
+    },
+    "initial_state": null,
+    "inputs": {
+      "base_period_end": "2023-09-30",
+      "operation": "yoy_growth_rate",
+      "precision": 6,
+      "target_period_end": "2024-09-28"
+    },
+    "method_id": "yoy_growth_rate",
+    "permissions": {
+      "allowed_operations": [
+        "read_snapshot"
+      ]
+    },
+    "prompt": "Using only the frozen evidence available by the cutoff, compute the year-over-year growth rate of Apple Inc. revenue from contract with customers (us-gaap RevenueFromContractWithCustomerExcludingAssessedTax) for the registered target fiscal period end against the registered base fiscal period end. Express the result as a percentage quantized to 6 decimal places with ROUND_HALF_EVEN. Submit action 'answer' with value {base_period_end, target_period_end, growth_percent} citing the material records.",
+    "required_tools": [
+      "read_frozen_case",
+      "read_frozen_evidence",
+      "calculate"
+    ]
+  },
+  "temporal": {
+    "as_of": "2026-08-17T00:00:00Z",
+    "available_at_cutoff": "2026-08-17T00:00:00Z",
+    "event_time": "2024-09-28T00:00:00Z"
+  },
+  "variant": {
+    "changed_factors": [],
+    "family_id": "FKW5-PUB-01",
+    "kind": "normal",
+    "parent_case_id": null,
+    "variant_axis": "fiscal_period"
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "access": {
+    "mode": "public_read_only",
+    "prohibited_scopes": [
+      "account",
+      "assets",
+      "cash",
+      "holdings",
+      "orders",
+      "positions",
+      "portfolio",
+      "trades"
+    ],
+    "query_args": {
+      "cik": "CIK0000320193",
+      "tag": "NetIncomeLoss",
+      "taxonomy": "us-gaap"
+    },
+    "query_name": "xbrl_company_concept"
+  },
+  "contract_type": "data_snapshot",
+  "contract_version": "6.0.0",
+  "financial_subject": {
+    "currency": {
+      "code": "USD"
+    },
+    "entity_name": "Apple Inc.",
+    "identifiers": [
+      {
+        "scheme": "SEC_CIK",
+        "value": "CIK0000320193"
+      },
+      {
+        "scheme": "US_GAAP_TAG",
+        "value": "NetIncomeLoss"
+      }
+    ],
+    "market": {
+      "country": "US",
+      "mic": "XXXX",
+      "timezone": "UTC"
+    },
+    "subject_type": "accounting_concept",
+    "units": {
+      "accounting_basis": "US GAAP, as filed in the referenced 10-K",
+      "amount_scale": "USD unit (as filed)",
+      "price_basis": "not_applicable"
+    }
+  },
+  "integrity": {
+    "canonicalization": "financial-agent-c14n-json-v1",
+    "content_sha256": "ffb4e24d4fd98957e6ea785592c7f208075ecca45f6f35777f7d6501f712d2a0",
+    "hash_algorithm": "sha256"
+  },
+  "lineage": {
+    "code_revision": "cbdfb99e43618d5866ce158a7a9843e4893f810c",
+    "collector": "manual public SEC EDGAR retrieval with declared User-Agent",
+    "collector_version": "1.0.0",
+    "notes": "Filing acceptance dates sourced from the SEC submissions capture (capture-sec-edgar-aapl-submissions-v1); available_at is the acceptance date at 00:00:00Z (conservative, date-level).",
+    "parent_snapshot_ids": [],
+    "query_args": {
+      "cik": "CIK0000320193",
+      "tag": "NetIncomeLoss",
+      "taxonomy": "us-gaap"
+    },
+    "raw_response_sha256": "9b6ac23b024662c95dc7b4088a448bf60a31ff672e2f328161c5ceda6a8b9915",
+    "schema_version": "case-data/4.0.0"
+  },
+  "records": [
+    {
+      "available_at": "2023-11-03T00:00:00Z",
+      "event_time": "2023-09-30T00:00:00Z",
+      "evidence_type": "xbrl_fact",
+      "payload": {
+        "accession": "0000320193-23-000106",
+        "form": "10-K",
+        "period_end": "2023-09-30",
+        "value": 96995000000
+      },
+      "record_id": "FKW5-PUB-02-AAPL-FY2023",
+      "source_locator": "baseline/v6/build/captures/edgar_aapl_netincome.raw.json"
+    },
+    {
+      "available_at": "2024-11-01T00:00:00Z",
+      "event_time": "2024-09-28T00:00:00Z",
+      "evidence_type": "xbrl_fact",
+      "payload": {
+        "accession": "0000320193-24-000123",
+        "form": "10-K",
+        "period_end": "2024-09-28",
+        "value": 93736000000
+      },
+      "record_id": "FKW5-PUB-02-AAPL-FY2024",
+      "source_locator": "baseline/v6/build/captures/edgar_aapl_netincome.raw.json"
+    }
+  ],
+  "revision": 1,
+  "snapshot_id": "snapshot-sec-edgar-aapl-netincome-v6-01",
+  "source": {
+    "dataset": "SEC EDGAR XBRL company concept, Apple Inc. (CIK0000320193), NetIncomeLoss",
+    "license": {
+      "name": "US public domain (SEC EDGAR government data)",
+      "redistributable": true,
+      "url": "https://www.sec.gov/edgar"
+    },
+    "provider": "sec_edgar",
+    "source_type": "filing",
+    "uri": "https://data.sec.gov/api/xbrl/companyconcept/CIK0000320193/us-gaap/NetIncomeLoss.json"
+  },
+  "status": "frozen",
+  "temporal": {
+    "as_of": "2024-09-28T00:00:00Z",
+    "available_at": "2024-11-01T00:00:00Z",
+    "event_time": "2024-09-28T00:00:00Z",
+    "retrieved_at": "2026-08-17T10:36:19Z"
+  }
+}

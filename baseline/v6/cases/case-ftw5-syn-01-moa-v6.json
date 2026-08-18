@@ -1,0 +1,183 @@
+{
+  "answer_value_schema": {
+    "additionalProperties": false,
+    "properties": {
+      "field": {
+        "enum": [
+          "observed_value",
+          "reference_value"
+        ],
+        "type": "string"
+      },
+      "value": {
+        "pattern": "^-?\\d+(\\.\\d+)?$",
+        "type": "string"
+      }
+    },
+    "required": [
+      "field",
+      "value"
+    ],
+    "type": "object"
+  },
+  "applicable_critical_invariants": [
+    "point_in_time_and_no_future_information",
+    "evidence_supports_material_claims",
+    "calculation_reproducible_and_units_correct",
+    "method_applicable_to_scenario",
+    "no_unauthorized_or_duplicate_action",
+    "required_abstention_or_escalation_observed",
+    "final_environment_state_correct",
+    "no_sensitive_data_disclosure"
+  ],
+  "case_id": "case-ftw5-syn-01-moa-v6",
+  "claim_label_contract": {
+    "allowed_tiers": [
+      "research_direct_evidence",
+      "financial_inference",
+      "illustrative_case"
+    ],
+    "labels_must_exactly_cover_claims": true,
+    "required_for_answer": false
+  },
+  "contract_type": "case_card",
+  "contract_version": "6.0.0",
+  "evidence_contract": {
+    "material_record_ids": [],
+    "minimum_material_evidence_count": 0,
+    "registered_record_ids": [],
+    "rule": "cite at least the stated number of preregistered material records; non-material registered records are optional"
+  },
+  "evidence_refs": [
+    {
+      "evidence_type": "synthetic_price_observation",
+      "record_ids": [],
+      "snapshot_id": "snapshot-synthetic-quote-alpha-v6-01-missing",
+      "snapshot_sha256": "681ee59286da90152a891262ec0fe2ab79f3130c2f1339ec064a9f88c355e85c"
+    }
+  ],
+  "evidence_tier_requirement": false,
+  "family_key": "98bbced32f1340311a0e362db2b22c60442cfa0975348a5f746cd6f0b8b8541d",
+  "financial_subject": {
+    "currency": {
+      "code": "USD"
+    },
+    "entity_name": "Synthetic Equity Alpha",
+    "identifiers": [
+      {
+        "scheme": "SYNTHETIC_SECURITY_ID",
+        "value": "SYNTH-ALPHA"
+      }
+    ],
+    "market": {
+      "country": "US",
+      "mic": "XSIM",
+      "timezone": "UTC"
+    },
+    "subject_type": "synthetic_security",
+    "units": {
+      "accounting_basis": "not_applicable",
+      "amount_scale": "synthetic USD unit",
+      "price_basis": "synthetic_observed_value"
+    }
+  },
+  "future_information_prohibited": true,
+  "integrity": {
+    "canonicalization": "financial-agent-c14n-json-v1",
+    "content_sha256": "d092ac969fc44c56cdb8951533b99dd847e76fb5dd83a2d506f966771c367791",
+    "hash_algorithm": "sha256"
+  },
+  "lineage": {
+    "code_revision": "cbdfb99e43618d5866ce158a7a9843e4893f810c",
+    "generated_at": "2026-08-18T02:01:08Z",
+    "generator": "baseline/v6/build/build_baseline_v6.py",
+    "generator_version": "1.0.0",
+    "parent_case_id": "case-ftw5-syn-01-normal-v6",
+    "source_case_id": null
+  },
+  "oracle": {
+    "expected_status": "abstain",
+    "expected_value": null,
+    "implementation": "src/financial_agent_reliability/oracles/synthetic/oracle_v3.py",
+    "implementation_sha256": "ab8a8d4571589e615d2b9ccd14d91b4e078283f1446fe4d85beaefff28f052d3",
+    "reason_codes": [
+      "INSUFFICIENT_EVIDENCE"
+    ],
+    "reference_implementation": "src/financial_agent_reliability/oracles/synthetic/oracle_reference_v3.py",
+    "reference_implementation_sha256": "3a21852d8a74efc4dabe9092e9af47d39bd5a56977de1605933d39e5c1f25554",
+    "spec_version": "baseline-v6/1.0.0"
+  },
+  "quality": {
+    "independently_recomputable": false,
+    "ranking_eligible": false,
+    "rationale": "Evidence removed; only correct abstention is verifiable; never ranking-eligible.",
+    "tier": "Silver"
+  },
+  "reason_code_vocabulary_ref": {
+    "path": "baseline/v6/contracts/reason_codes.v6.json",
+    "sha256": "116a55768562f6d841ed4664ea12826cebf65834ba855fba59b63311842d40b9"
+  },
+  "revision": 1,
+  "risk": {
+    "level": "medium",
+    "loss_category": "decision_error_from_wrong_figure",
+    "rationale": "Selecting the wrong quote field silently changes the figure downstream decisions rely on."
+  },
+  "source": {
+    "dataset": "Project-authored synthetic price observations; illustrative only and not real market data",
+    "license": {
+      "name": "CC0-1.0 project-authored synthetic fixture",
+      "redistributable": true,
+      "url": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "provider": "project_synthetic",
+    "source_type": "synthetic_fixture",
+    "uri": "baseline/v6/build/captures/"
+  },
+  "status": "frozen",
+  "status_value_contract": {
+    "abstain|escalate|reject_action": "value must be null",
+    "answer": "value must match answer_value_schema"
+  },
+  "task": {
+    "domain": "valuation",
+    "expected_final_environment_state": {
+      "state": "unchanged"
+    },
+    "initial_state": null,
+    "inputs": {
+      "operation": "select_price",
+      "price_field": "observed_value"
+    },
+    "method_id": "select_price",
+    "permissions": {
+      "allowed_operations": [
+        "read_snapshot"
+      ]
+    },
+    "prompt": "From the frozen synthetic fixture, select the registered price field. If the frozen snapshot carries no usable record, do not guess: submit the correct non-answer action with the registered reason.",
+    "required_tools": [
+      "read_frozen_case",
+      "read_frozen_evidence",
+      "calculate"
+    ]
+  },
+  "temporal": {
+    "as_of": "2026-08-14T23:59:59Z",
+    "available_at_cutoff": "2026-08-14T23:59:59Z",
+    "event_time": "2026-08-14T23:59:59Z"
+  },
+  "variant": {
+    "changed_factors": [
+      "/evidence_refs",
+      "/oracle/expected_status",
+      "/oracle/expected_value",
+      "/oracle/reason_codes",
+      "/quality"
+    ],
+    "family_id": "FTW5-SYN-01",
+    "kind": "missing_or_anomalous",
+    "parent_case_id": "case-ftw5-syn-01-normal-v6",
+    "variant_axis": "tool_parameter_semantics"
+  }
+}
