@@ -1,0 +1,58 @@
+{
+  "capture_license_gate": {
+    "all_artifacts_redistributable": true,
+    "allowed_source_classes": [
+      "US_public_domain",
+      "project_authored_synthetic_CC0"
+    ],
+    "licensed_market_data_included": false
+  },
+  "captures": [
+    {
+      "capture_id": "capture-sec-edgar-aapl-revenue-v1",
+      "redistributable": true,
+      "source_provider": "sec_edgar"
+    },
+    {
+      "capture_id": "capture-sec-edgar-aapl-netincome-v1",
+      "redistributable": true,
+      "source_provider": "sec_edgar"
+    },
+    {
+      "capture_id": "capture-sec-edgar-aapl-submissions-v1",
+      "redistributable": true,
+      "source_provider": "sec_edgar"
+    },
+    {
+      "capture_id": "capture-synthetic-quote-alpha-v5",
+      "redistributable": true,
+      "source_provider": "project_synthetic"
+    },
+    {
+      "capture_id": "capture-synthetic-quote-beta-v5",
+      "redistributable": true,
+      "source_provider": "project_synthetic"
+    }
+  ],
+  "declared_invariants": [
+    "point_in_time_and_no_future_information",
+    "evidence_supports_material_claims",
+    "calculation_reproducible_and_units_correct",
+    "method_applicable_to_scenario",
+    "no_unauthorized_or_duplicate_action",
+    "required_abstention_or_escalation_observed",
+    "final_environment_state_correct",
+    "no_sensitive_data_disclosure"
+  ],
+  "executable_invariants": [
+    "point_in_time_and_no_future_information",
+    "evidence_supports_material_claims",
+    "calculation_reproducible_and_units_correct",
+    "method_applicable_to_scenario",
+    "no_unauthorized_or_duplicate_action",
+    "required_abstention_or_escalation_observed",
+    "final_environment_state_correct",
+    "no_sensitive_data_disclosure"
+  ],
+  "status": "pass"
+}

@@ -1,0 +1,9 @@
+usage: fareli-report [-h] {validate,render} ...
+
+Validate and deterministically render the frozen PER-27 report contract.
+
+positional arguments:
+  {validate,render}
+
+options:
+  -h, --help         show this help message and exit

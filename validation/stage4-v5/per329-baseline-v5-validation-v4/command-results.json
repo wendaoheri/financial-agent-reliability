@@ -1,0 +1,34 @@
+{
+  "issue": "PER-329",
+  "status": "pass",
+  "validation_date": "2026-08-18",
+  "baseline_freeze_commit": "cb1e5f90eac0b6a3154fa7a375e2fe371f892c22",
+  "functional_validation_commit": "91dc304",
+  "commands": [
+    {"name": "focused_v5_runtime", "exit_code": 0, "result": "32/32 pass", "log": "focused-v5-runtime.log"},
+    {"name": "python_unittest", "exit_code": 0, "result": "106/106 pass", "log": "python-unittest.log"},
+    {"name": "npm_test_runtime", "exit_code": 0, "result": "6/6 pass", "log": "npm-test-runtime.log"},
+    {"name": "node_integration", "exit_code": 0, "result": "6/6 pass", "log": "node-integration.log"},
+    {"name": "validate_bundle_v5", "exit_code": 0, "result": "ok", "log": "validate-bundle-v5.log"},
+    {"name": "verify_manifest_v5", "exit_code": 0, "result": "ok", "log": "verify-manifest-v5.log"},
+    {"name": "preflight_without_credential", "exit_code": 1, "expected_exit_code": 1, "result": "structured config_error before network; no output file", "log": "preflight-no-credential.log"},
+    {"name": "fareli_retro_list", "exit_code": 2, "expected_exit_code": 2, "result": "baseline_gap", "log": "fareli-retro-list.log"},
+    {"name": "cleanroom_uv_sync_frozen", "exit_code": 0, "result": "pass", "log": "cleanroom-uv-sync.log"},
+    {"name": "cleanroom_npm_ci", "exit_code": 0, "result": "pass", "log": "cleanroom-npm-ci.log"},
+    {"name": "cleanroom_python_unittest", "exit_code": 0, "result": "106/106 pass", "log": "cleanroom-python-unittest.log"},
+    {"name": "cleanroom_npm_test_runtime", "exit_code": 0, "result": "6/6 pass", "log": "cleanroom-npm-test-runtime.log"},
+    {"name": "cleanroom_node_integration", "exit_code": 0, "result": "6/6 pass", "log": "cleanroom-node-integration.log"},
+    {"name": "cleanroom_validate_bundle_v5", "exit_code": 0, "result": "ok", "log": "cleanroom-validate-bundle-v5.log"},
+    {"name": "cleanroom_verify_manifest_v5", "exit_code": 0, "result": "ok", "log": "cleanroom-verify-manifest-v5.log"},
+    {"name": "cleanroom_preflight_without_credential", "exit_code": 1, "expected_exit_code": 1, "result": "structured config_error before network; no output file", "log": "cleanroom-preflight-no-credential.log"},
+    {"name": "cleanroom_fareli_retro_list", "exit_code": 2, "expected_exit_code": 2, "result": "baseline_gap", "log": "cleanroom-fareli-retro-list.log"},
+    {"name": "cleanroom_git_status", "exit_code": 0, "result": "clean", "log": "cleanroom-environment.log"},
+    {"name": "audit_evidence", "exit_code": 0, "result": "all structured audit assertions pass", "log": "audit_evidence.py"}
+  ],
+  "prohibited_actions": {
+    "paid_model_calls": false,
+    "real_trading": false,
+    "real_credentials_used": false,
+    "online_provider_identity_claimed": false
+  }
+}
