@@ -112,9 +112,15 @@ def run_matrix(
     traces: list[dict[str, Any]] = []
     provider_attempts = 0
     provider_errors = 0
-    for candidate in candidates:
-        adapter = get_adapter(candidate.adapter, repository_root=repository_root)
-        for task in tasks:
+    adapters = {
+        candidate.id: get_adapter(candidate.adapter, repository_root=repository_root)
+        for candidate in candidates
+    }
+    # Task-major round-robin prevents a slow first model from starving every
+    # other model before a provider stop condition has enough evidence.
+    for task in tasks:
+        for candidate in candidates:
+            adapter = adapters[candidate.id]
             started_at = _timestamp()
             request = CandidateRequest.from_payload(task["candidate_payload"])
             tools = OfflineMockTools(request)
@@ -149,6 +155,7 @@ def run_matrix(
                     "input": task["input"],
                     "tool_calls": tool_calls,
                     "provider_identity": result.provider_identity,
+                    "provider_observability": result.provider_observability,
                     "output": result.output,
                     "error": result.error,
                     "evidence_refs": evidence_refs,
@@ -176,7 +183,10 @@ def run_matrix(
             if candidate.adapter == "bailian-live" and (
                 not score["hard_gate_passed"]
                 or error_code == "IDENTITY_MISMATCH"
-                or provider_errors / provider_attempts > 0.10
+                or (
+                    provider_attempts >= 10
+                    and provider_errors / provider_attempts > 0.10
+                )
             ):
                 return traces
     return traces

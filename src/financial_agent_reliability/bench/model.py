@@ -294,7 +294,7 @@ def load_candidates(path: pathlib.Path) -> list[Candidate]:
         else:
             if values["agent"] != "plain-agent":
                 raise BenchInputError("bailian-live v0.1 only permits plain-agent")
-            if set(config) - {"inference_config", "seed"}:
+            if set(config) - {"inference_config", "seed", "profile", "generation"}:
                 raise BenchInputError(
                     f"candidate {values['id']} has unsupported bailian-live config keys"
                 )
@@ -304,6 +304,10 @@ def load_candidates(path: pathlib.Path) -> list[Candidate]:
                 )
             if "seed" in config and not isinstance(config["seed"], int):
                 raise BenchInputError(f"candidate {values['id']} seed must be an integer")
+            if "profile" in config and not isinstance(config["profile"], str):
+                raise BenchInputError(f"candidate {values['id']} profile must be a string")
+            if "generation" in config and not isinstance(config["generation"], dict):
+                raise BenchInputError(f"candidate {values['id']} generation must be an object")
         candidates.append(Candidate(config=config, **values))
         seen.add(values["id"])
     coordinates = {(candidate.model, candidate.agent) for candidate in candidates}

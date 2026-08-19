@@ -7,8 +7,10 @@ headers, credentials, and error text are never included in exceptions or traces.
 from __future__ import annotations
 
 import json
+import hashlib
 import re
 import socket
+import time
 from dataclasses import dataclass
 from typing import Any, Mapping
 from urllib.error import HTTPError, URLError
@@ -24,6 +26,8 @@ class BailianHTTPError(RuntimeError):
     retryable: bool
     http_status: int | None = None
     provider_code: str | None = None
+    request_id: str | None = None
+    error_origin: str = "provider_payload"
 
     def __str__(self) -> str:
         status = f" http_status={self.http_status}" if self.http_status is not None else ""
@@ -78,12 +82,23 @@ def _join_url(base_url: str) -> str:
     return normalized + "/chat/completions"
 
 
-def _parse_sse(raw: bytes) -> dict[str, Any]:
+def _parse_sse_lines(
+    lines: Any, *, started: float, clock: Any = time.perf_counter
+) -> dict[str, Any]:
     model: str | None = None
     content: list[str] = []
+    reasoning_digest = hashlib.sha256()
+    reasoning_chars = 0
     tool_call_seen = False
     usage: dict[str, Any] = {}
-    for line in raw.decode("utf-8", errors="replace").splitlines():
+    ttft_reasoning_ms: int | None = None
+    ttft_content_ms: int | None = None
+    for raw_line in lines:
+        line = (
+            raw_line.decode("utf-8", errors="replace")
+            if isinstance(raw_line, bytes)
+            else str(raw_line)
+        ).strip()
         if not line.startswith("data:"):
             continue
         data = line[5:].strip()
@@ -102,7 +117,17 @@ def _parse_sse(raw: bytes) -> dict[str, Any]:
             delta = choices[0].get("delta") or {}
             if isinstance(delta, Mapping):
                 if isinstance(delta.get("content"), str):
-                    content.append(delta["content"])
+                    value = delta["content"]
+                    if value and ttft_content_ms is None:
+                        ttft_content_ms = max(0, round((clock() - started) * 1000))
+                    content.append(value)
+                if isinstance(delta.get("reasoning_content"), str):
+                    value = delta["reasoning_content"]
+                    if value and ttft_reasoning_ms is None:
+                        ttft_reasoning_ms = max(0, round((clock() - started) * 1000))
+                    encoded = value.encode("utf-8")
+                    reasoning_digest.update(encoded)
+                    reasoning_chars += len(value)
                 if delta.get("tool_calls"):
                     tool_call_seen = True
     return {
@@ -110,7 +135,22 @@ def _parse_sse(raw: bytes) -> dict[str, Any]:
         "output": "".join(content),
         "tool_call_supported": tool_call_seen,
         "usage": usage,
+        "reasoning_summary": {
+            "characters": reasoning_chars,
+            "sha256": reasoning_digest.hexdigest() if reasoning_chars else None,
+        },
+        "stream_metrics": {
+            "mode": "streaming",
+            "ttft_reasoning_ms": ttft_reasoning_ms,
+            "ttft_content_ms": ttft_content_ms,
+            "e2e_ms": max(0, round((clock() - started) * 1000)),
+        },
     }
+
+
+def _parse_sse(raw: bytes) -> dict[str, Any]:
+    started = time.perf_counter()
+    return _parse_sse_lines(raw.splitlines(), started=started)
 
 
 def _parse_json(raw: bytes) -> dict[str, Any]:
@@ -131,6 +171,7 @@ def _parse_json(raw: bytes) -> dict[str, Any]:
         "output": message.get("content") or "",
         "tool_call_supported": bool(message.get("tool_calls")),
         "usage": dict(body.get("usage") or {}),
+        "reasoning_summary": {"characters": 0, "sha256": None},
     }
 
 
@@ -164,6 +205,16 @@ def _safe_provider_code(raw: bytes) -> str | None:
     return candidate
 
 
+def _safe_request_id(headers: Any) -> str | None:
+    if headers is None:
+        return None
+    for name in ("x-request-id", "request-id", "x-dashscope-request-id"):
+        candidate = headers.get(name)
+        if isinstance(candidate, str) and re.fullmatch(r"[A-Za-z0-9_.:-]{1,128}", candidate):
+            return candidate
+    return None
+
+
 class BailianHTTPTransport:
     def __init__(self, settings: BailianSettings, *, timeout_seconds: float = 120):
         self.settings = settings
@@ -187,26 +238,61 @@ class BailianHTTPTransport:
             method="POST",
         )
         try:
+            started = time.perf_counter()
             with urlopen(http_request, timeout=self.timeout_seconds) as response:
-                raw = response.read()
+                headers = getattr(response, "headers", None)
+                request_id = _safe_request_id(headers)
+                getcode = getattr(response, "getcode", None)
+                status = int(getcode() if callable(getcode) else response.status)
+                if payload.get("stream") and hasattr(response, "__iter__"):
+                    normalized = _parse_sse_lines(response, started=started)
+                else:
+                    raw = response.read()
+                    normalized = (
+                        _parse_json(raw) if raw.lstrip().startswith(b"{") else _parse_sse(raw)
+                    )
+                    elapsed = max(0, round((time.perf_counter() - started) * 1000))
+                    normalized["stream_metrics"] = {
+                        "mode": "non_streaming",
+                        "ttft_reasoning_ms": None,
+                        "ttft_content_ms": elapsed,
+                        "e2e_ms": elapsed,
+                    }
+                normalized["http_observation"] = {
+                    "status": status,
+                    "provider_code": None,
+                    "request_id": request_id,
+                    "error_origin": None,
+                }
         except HTTPError as exc:
             failure_type, retryable = _classify_http(exc.code)
             provider_code = _safe_provider_code(exc.read()) if exc.fp is not None else None
-            raise BailianHTTPError(failure_type, retryable, exc.code, provider_code) from None
+            raise BailianHTTPError(
+                failure_type,
+                retryable,
+                exc.code,
+                provider_code,
+                _safe_request_id(exc.headers),
+                "provider_http",
+            ) from None
         except (TimeoutError, socket.timeout) as exc:
-            raise BailianHTTPError("timeout", True) from exc
+            raise BailianHTTPError("timeout", True, error_origin="client_socket") from exc
         except URLError as exc:
             reason = exc.reason
             failure_type = "timeout" if isinstance(reason, (TimeoutError, socket.timeout)) else "provider_unavailable"
-            raise BailianHTTPError(failure_type, True) from None
+            origin = "client_socket" if failure_type == "timeout" else "network"
+            raise BailianHTTPError(failure_type, True, error_origin=origin) from None
 
-        stripped = raw.lstrip()
-        normalized = _parse_json(raw) if stripped.startswith(b"{") else _parse_sse(raw)
         raw_usage = normalized.get("usage") or {}
+        completion_details = raw_usage.get("completion_tokens_details") or {}
         normalized["usage"] = {
             "input_tokens": int(raw_usage.get("prompt_tokens", 0)),
             "output_tokens": int(raw_usage.get("completion_tokens", 0)),
         }
+        if "reasoning_tokens" in completion_details:
+            normalized["usage"]["reasoning_tokens"] = int(
+                completion_details.get("reasoning_tokens", 0)
+            )
         normalized["accepted_parameters"] = list(request["parameters"])
         normalized["fallback_detected"] = False
         return normalized

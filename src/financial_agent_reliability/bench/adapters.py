@@ -12,12 +12,14 @@ import time
 from typing import Any, Callable, Mapping, Protocol
 
 from financial_agent_reliability.bench.model import Candidate
-from financial_agent_reliability.inference_config import load_inference_config, merged_parameters
+from financial_agent_reliability.inference_config import merged_parameters
+from financial_agent_reliability.inference_config_v2 import load_inference_config_any
 from financial_agent_reliability.providers.bailian import BailianSettings
 from financial_agent_reliability.providers.bailian_http import (
     BailianHTTPError,
     BailianHTTPTransport,
 )
+from financial_agent_reliability.providers.generation import resolve_generation
 
 
 @dataclass(frozen=True)
@@ -29,6 +31,7 @@ class AdapterResult:
     output_tokens: int = 0
     provider_identity: dict[str, Any] | None = None
     cost_basis: str = "mock_zero"
+    provider_observability: dict[str, Any] | None = None
 
 
 @dataclass(frozen=True)
@@ -226,7 +229,7 @@ class BailianLiveAdapter:
     """Minimal plain-agent adapter for an approved Bailian token-plan pilot."""
 
     name = "bailian-live"
-    version = "0.1.0"
+    version = "0.2.0"
 
     def __init__(
         self,
@@ -248,7 +251,7 @@ class BailianLiveAdapter:
             path.relative_to(self._root.resolve())
         except ValueError as exc:
             raise ValueError("bailian-live inference_config escapes repository root") from exc
-        config = load_inference_config(path, env=self._env)
+        config = load_inference_config_any(path, env=self._env)
         try:
             model = next(item for item in config.models if item.model_id == candidate.model)
         except StopIteration as exc:
@@ -260,10 +263,34 @@ class BailianLiveAdapter:
         transport = self._transport_factory(
             settings, timeout_seconds=provider.timeout_seconds
         )
-        parameters = merged_parameters(config, model)
-        parameters["stream"] = False
-        parameters["seed"] = int(candidate.config.get("seed", 20260819))
-        return config, model, settings, {"transport": transport, "parameters": parameters}
+        if config.schema_version.startswith("1."):
+            parameters = merged_parameters(config, model)
+            parameters["seed"] = int(candidate.config.get("seed", 20260819))
+            generation_profile = {
+                "requested": dict(parameters),
+                "resolved": dict(parameters),
+                "effective_parameters": dict(parameters),
+                "sources": {key: "legacy_v1" for key in parameters},
+                "provider_adapter": "bailian",
+                "protocol": "openai_chat_completions",
+                "capabilities": {},
+            }
+        else:
+            candidate_generation = dict(candidate.config.get("generation") or {})
+            candidate_generation["seed"] = int(candidate.config.get("seed", 20260819))
+            resolved = resolve_generation(
+                provider,
+                model,
+                profile=config.profile(candidate.config.get("profile")),
+                candidate=candidate_generation,
+            )
+            parameters = dict(resolved.effective_parameters)
+            generation_profile = resolved.trace_record()
+        return config, model, settings, {
+            "transport": transport,
+            "parameters": parameters,
+            "generation_profile": generation_profile,
+        }
 
     @staticmethod
     def _identity(candidate: Candidate, response: Mapping[str, Any], endpoint_id: str) -> dict[str, Any]:
@@ -353,6 +380,7 @@ class BailianLiveAdapter:
                 "latency_ms": max(0, round((time.perf_counter() - started) * 1000)),
                 "usage": dict(response.get("usage") or {}),
                 "inference_config_sha256": config.source_sha256,
+                "generation_profile": runtime["generation_profile"],
             }
         except BailianHTTPError as exc:
             return {
@@ -363,13 +391,23 @@ class BailianLiveAdapter:
                 "latency_ms": max(0, round((time.perf_counter() - started) * 1000)),
                 "usage": {"input_tokens": 0, "output_tokens": 0},
                 "inference_config_sha256": config.source_sha256,
+                "generation_profile": runtime["generation_profile"],
             }
+
+    @staticmethod
+    def _observability(runtime: Mapping[str, Any], response: Mapping[str, Any]) -> dict[str, Any]:
+        return {
+            "generation_profile": runtime["generation_profile"],
+            "stream_metrics": dict(response.get("stream_metrics") or {}),
+            "reasoning_summary": dict(response.get("reasoning_summary") or {}),
+            "http": dict(response.get("http_observation") or {}),
+        }
 
     def execute(
         self, request: CandidateRequest, candidate: Candidate, tools: OfflineMockTools
     ) -> AdapterResult:
         if candidate.agent != "plain-agent":
-            raise ValueError("bailian-live v0.1 only permits plain-agent")
+            raise ValueError("bailian-live only permits plain-agent")
         _config, _model, settings, runtime = self._runtime(candidate)
         started = time.perf_counter()
         try:
@@ -387,6 +425,7 @@ class BailianLiveAdapter:
                     output_tokens=int(usage.get("output_tokens", 0)),
                     provider_identity=identity,
                     cost_basis="token_plan_unpriced",
+                    provider_observability=self._observability(runtime, response),
                 )
             try:
                 output = self._decode_output(response.get("output"))
@@ -406,6 +445,7 @@ class BailianLiveAdapter:
                 output_tokens=int(usage.get("output_tokens", 0)),
                 provider_identity=identity,
                 cost_basis="token_plan_unpriced",
+                provider_observability=self._observability(runtime, response),
             )
         except BailianHTTPError as exc:
             return AdapterResult(
@@ -414,9 +454,24 @@ class BailianLiveAdapter:
                     "code": exc.failure_type.upper(),
                     "message": "provider request failed",
                     "retryable": exc.retryable,
+                    "http_status": exc.http_status,
+                    "provider_code": exc.provider_code,
+                    "request_id": exc.request_id,
+                    "error_origin": exc.error_origin,
                 },
                 latency_ms=max(0, round((time.perf_counter() - started) * 1000)),
                 cost_basis="token_plan_unpriced",
+                provider_observability={
+                    "generation_profile": runtime["generation_profile"],
+                    "stream_metrics": {},
+                    "reasoning_summary": {},
+                    "http": {
+                        "status": exc.http_status,
+                        "provider_code": exc.provider_code,
+                        "request_id": exc.request_id,
+                        "error_origin": exc.error_origin,
+                    },
+                },
             )
 
 
