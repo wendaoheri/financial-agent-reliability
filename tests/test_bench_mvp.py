@@ -5,10 +5,17 @@ import json
 import pathlib
 import tempfile
 import unittest
-from contextlib import redirect_stdout
+from contextlib import redirect_stderr, redirect_stdout
 from io import StringIO
+from unittest.mock import patch
 
-from financial_agent_reliability.bench.adapters import CandidateRequest, MockAdapter, OfflineMockTools
+from financial_agent_reliability.bench.adapters import (
+    AdapterResult,
+    BailianLiveAdapter,
+    CandidateRequest,
+    MockAdapter,
+    OfflineMockTools,
+)
 from financial_agent_reliability.bench.cli import main
 from financial_agent_reliability.bench.model import (
     BenchInputError,
@@ -18,6 +25,8 @@ from financial_agent_reliability.bench.model import (
     task_validator,
 )
 from financial_agent_reliability.bench.trace import append_traces, read_traces, trace_validator
+from financial_agent_reliability.bench.runner import run_matrix
+from financial_agent_reliability.providers.bailian_http import BailianHTTPError
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -25,6 +34,8 @@ TASKS = ROOT / "examples" / "bench" / "mock-tasks.jsonl"
 CANDIDATES = ROOT / "examples" / "bench" / "mock-candidates.json"
 NEGATIVE_CONTROLS = ROOT / "examples" / "bench" / "negative-control-candidates.json"
 AUDIT = ROOT / "examples" / "bench" / "taskset-audit.v0.2.json"
+LIVE_CANDIDATES = ROOT / "examples" / "bench" / "bailian-token-plan-candidates.v0.1.json"
+V2_LIVE_CANDIDATES = ROOT / "examples" / "bench" / "bailian-token-plan-candidates.v0.2.json"
 
 
 class BenchMVPTests(unittest.TestCase):
@@ -33,6 +44,175 @@ class BenchMVPTests(unittest.TestCase):
         validator.check_schema(validator.schema)
         legacy_validator = trace_validator("0.1.0")
         legacy_validator.check_schema(legacy_validator.schema)
+        prior_validator = trace_validator("0.2.0")
+        prior_validator.check_schema(prior_validator.schema)
+        v03_validator = trace_validator("0.3.0")
+        v03_validator.check_schema(v03_validator.schema)
+
+    def test_bailian_live_candidate_boundary_and_exact_identity(self):
+        candidates = load_candidates(LIVE_CANDIDATES)
+        self.assertEqual(len(candidates), 4)
+        self.assertEqual({candidate.agent for candidate in candidates}, {"plain-agent"})
+        candidate = candidates[0]
+        captured = []
+
+        def transport_factory(_settings, *, timeout_seconds):
+            self.assertEqual(timeout_seconds, 120)
+
+            def transport(request):
+                captured.append(request)
+                return {
+                    "model": candidate.model,
+                    "output": json.dumps(
+                        {"status": "answer", "value": 1.5, "reason_codes": []}
+                    ),
+                    "usage": {"input_tokens": 11, "output_tokens": 7},
+                }
+
+            return transport
+
+        adapter = BailianLiveAdapter(
+            ROOT,
+            env={"BENCH_BAILIAN_API_KEY": "memory-only-test-value"},
+            transport_factory=transport_factory,
+        )
+        preflight = adapter.preflight(candidate)
+        self.assertEqual(preflight["status"], "passed")
+        self.assertTrue(preflight["identity"]["exact_match"])
+        task = load_tasks(TASKS)[0]
+        request = CandidateRequest.from_payload(task["candidate_payload"])
+        result = adapter.execute(request, candidate, OfflineMockTools(request))
+        self.assertIsNone(result.error)
+        self.assertEqual(result.output, {"status": "answer", "value": 1.5, "reason_codes": []})
+        self.assertEqual(result.input_tokens, 11)
+        self.assertEqual(result.output_tokens, 7)
+        self.assertTrue(result.provider_identity["exact_match"])
+        rendered_request = json.dumps(captured[1], sort_keys=True)
+        self.assertNotIn("expected_output", rendered_request)
+        self.assertNotIn("oracle", rendered_request)
+        self.assertNotIn("memory-only-test-value", rendered_request)
+
+    def test_v2_live_profile_controls_stream_and_reasoning_without_network(self):
+        candidate = load_candidates(V2_LIVE_CANDIDATES)[0]
+        captured = []
+
+        def transport_factory(_settings, *, timeout_seconds):
+            self.assertEqual(timeout_seconds, 120)
+
+            def transport(request):
+                captured.append(request)
+                return {
+                    "model": candidate.model,
+                    "output": json.dumps(
+                        {"status": "answer", "value": 1.5, "reason_codes": []}
+                    ),
+                    "usage": {"input_tokens": 11, "output_tokens": 7},
+                    "stream_metrics": {
+                        "mode": "streaming",
+                        "ttft_reasoning_ms": 2,
+                        "ttft_content_ms": 4,
+                        "e2e_ms": 7,
+                    },
+                    "reasoning_summary": {"characters": 3, "sha256": "a" * 64},
+                    "http_observation": {
+                        "status": 200,
+                        "provider_code": None,
+                        "request_id": "fixture-request",
+                        "error_origin": None,
+                    },
+                }
+
+            return transport
+
+        adapter = BailianLiveAdapter(
+            ROOT,
+            env={"BENCH_BAILIAN_API_KEY": "memory-only-test-value"},
+            transport_factory=transport_factory,
+        )
+        task = load_tasks(TASKS)[0]
+        request = CandidateRequest.from_payload(task["candidate_payload"])
+        result = adapter.execute(request, candidate, OfflineMockTools(request))
+        self.assertIsNone(result.error)
+        self.assertTrue(captured[0]["parameters"]["stream"])
+        self.assertEqual(captured[0]["parameters"]["reasoning_effort"], "low")
+        profile = result.provider_observability["generation_profile"]
+        self.assertEqual(profile["requested"]["stream"], "on")
+        self.assertEqual(profile["resolved"]["reasoning"]["mode"], "on")
+        self.assertEqual(result.provider_observability["http"]["request_id"], "fixture-request")
+
+    def test_v2_live_error_retains_sanitized_429_evidence(self):
+        candidate = load_candidates(V2_LIVE_CANDIDATES)[1]
+
+        def transport_factory(_settings, *, timeout_seconds):
+            def transport(_request):
+                raise BailianHTTPError(
+                    "rate_limited", True, 429, "QuotaExceeded", "request-123", "provider_http"
+                )
+
+            return transport
+
+        adapter = BailianLiveAdapter(
+            ROOT,
+            env={"BENCH_BAILIAN_API_KEY": "memory-only-test-value"},
+            transport_factory=transport_factory,
+        )
+        task = load_tasks(TASKS)[0]
+        request = CandidateRequest.from_payload(task["candidate_payload"])
+        result = adapter.execute(request, candidate, OfflineMockTools(request))
+        self.assertEqual(result.error["code"], "RATE_LIMITED")
+        self.assertEqual(result.error["http_status"], 429)
+        self.assertEqual(result.error["provider_code"], "QuotaExceeded")
+        self.assertEqual(result.error["error_origin"], "provider_http")
+        self.assertEqual(result.provider_observability["http"]["request_id"], "request-123")
+
+    def test_live_matrix_rotates_models_and_waits_for_minimum_error_sample(self):
+        candidates = load_candidates(V2_LIVE_CANDIDATES)
+        tasks = load_tasks(TASKS)[:3]
+        first_task = tasks[0]["task_id"]
+        failing = {candidates[0].id, candidates[1].id}
+
+        class FixtureAdapter:
+            version = "fixture"
+
+            def execute(self, request, candidate, tools):
+                if request.task_id == first_task and candidate.id in failing:
+                    return AdapterResult(
+                        output=None,
+                        error={"code": "TIMEOUT", "message": "fixture", "retryable": True},
+                        latency_ms=1,
+                        cost_basis="token_plan_unpriced",
+                    )
+                return MockAdapter().execute(request, candidate, tools)
+
+        with patch(
+            "financial_agent_reliability.bench.runner.get_adapter",
+            return_value=FixtureAdapter(),
+        ):
+            traces = run_matrix(
+                tasks,
+                candidates,
+                repository_root=ROOT,
+                run_id="round-robin-fixture",
+                versions={"trace_schema_version": "0.4.0"},
+            )
+        self.assertEqual(len(traces), 10)
+        self.assertEqual(
+            {trace["candidate"]["model"] for trace in traces[:4]},
+            {candidate.model for candidate in candidates},
+        )
+
+    def test_bailian_live_run_requires_bound_preflight_before_network(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            output = pathlib.Path(temporary) / "trace.jsonl"
+            stderr = StringIO()
+            with redirect_stdout(StringIO()), redirect_stderr(stderr):
+                status = main([
+                    "run", "--tasks", str(TASKS), "--candidates", str(LIVE_CANDIDATES),
+                    "--output", str(output), "--run-id", "missing-preflight",
+                ])
+            self.assertEqual(status, 2)
+            self.assertIn("requires --preflight", stderr.getvalue())
+            self.assertFalse(output.exists())
 
     def test_validate_accepts_model_agent_axes(self):
         stdout = StringIO()
@@ -338,7 +518,7 @@ class BenchMVPTests(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
-            with self.assertRaisesRegex(BenchInputError, "only permits the offline mock"):
+            with self.assertRaisesRegex(BenchInputError, "unsupported candidate adapter"):
                 load_candidates(path)
 
     def test_duplicate_task_ids_are_rejected(self):

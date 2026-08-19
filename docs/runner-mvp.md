@@ -19,6 +19,10 @@
 合成 smoke 见 `docs/task-contract-v0.1.md`。v0.1 未引入真实金融数据、外部账户或
 网络调用。
 
+PER-390 在 v0.1 离线基线上追加了受控的 `bailian-live` plain-agent 路径和 trace
+v0.3；旧 trace v0.1/v0.2 继续可读。它只用于项目所有者已授权的四模型 token-plan
+MVP，不把 dev 任务提升为 pilot/eval，也不开放真实工具或交易能力。
+
 ## 单命令工作流
 
 ```bash
@@ -69,9 +73,50 @@ mock adapter 支持 `wrong_answer`、`failure`、`timeout`、`tool_error`、
 确定性 Gold/Oracle 重算校验。为方便从 Runner MVP 迁移，加载器暂时仍接受旧的
 `task_id` / `input` 简版行；新任务不得再使用该兼容格式。
 
+## 百炼 Token Plan 四模型 MVP（PER-390）
+
+密钥只通过环境变量注入，不得写入候选文件、命令参数、trace 或评论：
+
+```bash
+export BENCH_BAILIAN_API_KEY='<安全注入，勿落盘>'
+uv run bench validate \
+  --tasks examples/bench/mock-tasks.jsonl \
+  --candidates examples/bench/bailian-token-plan-candidates.v0.1.json
+uv run bench preflight \
+  --candidates examples/bench/bailian-token-plan-candidates.v0.1.json \
+  --output runs/bench/per390-preflight.json
+uv run bench run \
+  --tasks examples/bench/mock-tasks.jsonl \
+  --candidates examples/bench/bailian-token-plan-candidates.v0.1.json \
+  --preflight runs/bench/per390-preflight.json \
+  --output runs/bench/per390-traces.jsonl \
+  --run-id per390-bailian-token-plan
+uv run bench compare runs/bench/per390-traces.jsonl \
+  --output runs/bench/per390-aggregate.json
+```
+
+本配置使用 Token Plan 华北 2（北京）OpenAI 兼容端点
+`https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`。来源：阿里云百炼
+《Token Plan 快速开始》（发布日期 2026，访问日期 2026-08-19，适用范围为 Token Plan
+个人版/团队版的中国区 OpenAI 兼容接入）：
+`https://help.aliyun.com/zh/model-studio/token-plan-quickstart`。Token Plan、Coding Plan 与
+按量付费的 Key/端点彼此隔离，不可混用。
+
+预检最多 4 次请求，并要求响应模型 ID 与请求 ID 逐字一致；矩阵最多 64 次请求，按
+4 models × 16 variants × 1 plain-agent × 1 repeat 顺序执行。没有金额上限，但不重试，
+provider 错误率超过 10% 即停止。trace 将 token-plan 的金额估算记为 `0.000000`，同时
+用 `cost_basis=token_plan_unpriced` 明确表示这不是“已核验为零成本”的价格结论。
+预检报告必须与候选清单哈希绑定，否则矩阵在网络请求前拒绝。
+
+live 模型只看到任务指令、合成 variant 输入和严格 JSON 输出契约；看不到 Gold、Oracle、
+评分策略或期望 reason code。当前不注册工具，故 evidence quality 按 plain-agent 基线为
+0；本次只能识别 model 轴，不可用于 Agent 工程差异结论。任务仍为 dev，结果是一次
+内部 MVP 诊断，不是正式排名。
+
 ## 安全门
 
-v0.1 只接受 `adapter: "mock"`，不读取 API key，不产生付费请求，仅执行项目内存中的
-合成只读 mock 工具，不执行交易或生产写入。
-任何 live adapter、付费模型调用、预算、外部账号和对外发布都需要项目所有者另行
-明确确认，并应在新版本中实现显式预检门。
+默认路径仍只接受 `adapter: "mock"`，不读取 API key，不产生付费请求，仅执行项目
+内存中的合成只读 mock 工具，不执行交易或生产写入。`bailian-live` 只允许
+`plain-agent`，必须有哈希绑定且全部通过的 exact-identity preflight；密钥缺失、身份不符、
+配置漂移或请求预算超限均在矩阵前拒绝。PER-390 的授权不覆盖其他 live adapter、工具
+Agent、真实数据/账号、生产写入、真实交易或对外发布。

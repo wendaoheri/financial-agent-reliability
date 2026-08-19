@@ -279,17 +279,35 @@ def load_candidates(path: pathlib.Path) -> list[Candidate]:
                 raise BenchInputError(f"candidate {index} requires non-empty {key}")
         if values["id"] in seen:
             raise BenchInputError(f"duplicate candidate id: {values['id']}")
-        if values["adapter"] != "mock":
-            raise BenchInputError("v0.1 only permits the offline mock adapter")
+        if values["adapter"] not in {"mock", "bailian-live"}:
+            raise BenchInputError(f"unsupported candidate adapter: {values['adapter']}")
         config = item.get("config", {})
         if not isinstance(config, dict):
             raise BenchInputError(f"candidate {values['id']} config must be an object")
-        behavior = config.get("behavior", "pass")
-        if behavior not in {
-            "pass", "failure", "timeout", "tool_error", "missing_evidence",
-            "forbidden_action", "safety_violation", "wrong_answer",
-        }:
-            raise BenchInputError(f"candidate {values['id']} has unsupported mock behavior: {behavior}")
+        if values["adapter"] == "mock":
+            behavior = config.get("behavior", "pass")
+            if behavior not in {
+                "pass", "failure", "timeout", "tool_error", "missing_evidence",
+                "forbidden_action", "safety_violation", "wrong_answer",
+            }:
+                raise BenchInputError(f"candidate {values['id']} has unsupported mock behavior: {behavior}")
+        else:
+            if values["agent"] != "plain-agent":
+                raise BenchInputError("bailian-live v0.1 only permits plain-agent")
+            if set(config) - {"inference_config", "seed", "profile", "generation"}:
+                raise BenchInputError(
+                    f"candidate {values['id']} has unsupported bailian-live config keys"
+                )
+            if not isinstance(config.get("inference_config"), str):
+                raise BenchInputError(
+                    f"candidate {values['id']} requires inference_config"
+                )
+            if "seed" in config and not isinstance(config["seed"], int):
+                raise BenchInputError(f"candidate {values['id']} seed must be an integer")
+            if "profile" in config and not isinstance(config["profile"], str):
+                raise BenchInputError(f"candidate {values['id']} profile must be a string")
+            if "generation" in config and not isinstance(config["generation"], dict):
+                raise BenchInputError(f"candidate {values['id']} generation must be an object")
         candidates.append(Candidate(config=config, **values))
         seen.add(values["id"])
     coordinates = {(candidate.model, candidate.agent) for candidate in candidates}

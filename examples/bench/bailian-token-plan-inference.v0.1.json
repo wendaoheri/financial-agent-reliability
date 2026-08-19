@@ -1,0 +1,56 @@
+{
+  "contract_type": "inference_config",
+  "schema_version": "1.0.0",
+  "providers": [
+    {
+      "name": "bailian",
+      "description": "PER-390 approved Bailian token-plan endpoint for a bounded four-model MVP",
+      "api": "openai_chat_completions_compatible",
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "credential_env": "BENCH_BAILIAN_API_KEY",
+      "default_parameters": {
+        "temperature": "0.000000",
+        "top_p": "1.000000",
+        "max_tokens": 512,
+        "stream": false
+      },
+      "tool_choice": "auto",
+      "timeout_seconds": 120,
+      "preflight_tool_instruction": "Return the requested strict JSON object."
+    }
+  ],
+  "models": [
+    {
+      "model_id": "qwen3.8-max",
+      "provider": "bailian",
+      "roles": ["candidate"],
+      "identity_rule": "exact_response_match",
+      "allowed_response_model_ids": ["qwen3.8-max"],
+      "live_preflight_required": true
+    },
+    {
+      "model_id": "glm-5.2",
+      "provider": "bailian",
+      "roles": ["candidate"],
+      "identity_rule": "exact_response_match",
+      "allowed_response_model_ids": ["glm-5.2"],
+      "live_preflight_required": true
+    },
+    {
+      "model_id": "deepseek-v4-flash-0731",
+      "provider": "bailian",
+      "roles": ["candidate"],
+      "identity_rule": "exact_response_match",
+      "allowed_response_model_ids": ["deepseek-v4-flash-0731"],
+      "live_preflight_required": true
+    },
+    {
+      "model_id": "deepseek-v4-pro-0813",
+      "provider": "bailian",
+      "roles": ["candidate"],
+      "identity_rule": "exact_response_match",
+      "allowed_response_model_ids": ["deepseek-v4-pro-0813"],
+      "live_preflight_required": true
+    }
+  ]
+}

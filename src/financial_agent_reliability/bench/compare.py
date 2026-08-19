@@ -124,6 +124,9 @@ def _summary(rows: list[dict[str, Any]], *, include_contrasts: bool = False) -> 
             "input_tokens_estimate": sum(row["metrics"]["input_tokens_estimate"] for row in rows),
             "output_tokens_estimate": sum(row["metrics"]["output_tokens_estimate"] for row in rows),
             "cost_usd_estimate": f"{sum(Decimal(row['metrics']['cost_usd_estimate']) for row in rows):.6f}",
+            "cost_bases": sorted(
+                {row["metrics"].get("cost_basis", "legacy_unspecified") for row in rows}
+            ),
         },
         "failure_signatures": [
             {"code": code, "count": signatures[code]} for code in sorted(signatures)
@@ -159,7 +162,7 @@ def compare_traces(traces: Iterable[dict[str, Any]]) -> dict[str, Any]:
     candidates = _grouped(rows, lambda row: row["candidate"]["id"], "candidate_id")
     legacy_candidates = [{**candidate, "traces": candidate["runs"]} for candidate in candidates]
     return {
-        "schema_version": "0.2.0",
+        "schema_version": "0.3.0",
         "matrix": {
             "models": sorted({row["candidate"]["model"] for row in rows}),
             "agents": sorted({row["candidate"]["agent"] for row in rows}),
