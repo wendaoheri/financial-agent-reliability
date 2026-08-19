@@ -1,0 +1,9 @@
+{
+  "fixture_id": "hk_settlement_rule_synthetic",
+  "as_of": "2025-06-30T08:00:00Z",
+  "market": "HK",
+  "rule": "Synthetic T+2 example",
+  "trade_at": "2025-06-30T08:00:00Z",
+  "available_at": "2025-07-02T08:00:00Z",
+  "note": "Illustrative settlement rule fixture; weekends, holidays, broker terms, and real eligibility are out of scope."
+}

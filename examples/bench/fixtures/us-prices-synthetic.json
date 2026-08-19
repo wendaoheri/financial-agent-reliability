@@ -1,0 +1,9 @@
+{
+  "fixture_id": "us_prices_synthetic",
+  "as_of": "2025-06-30T20:00:00Z",
+  "market": "US",
+  "currency": "USD",
+  "bullish_case": {"fast_values": [102, 104, 106], "slow_values": [98, 99, 100, 101, 102]},
+  "bearish_case": {"fast_values": [98, 96, 94], "slow_values": [102, 101, 100, 99, 98]},
+  "note": "Synthetic adjusted closes for deterministic moving-average direction tests only."
+}

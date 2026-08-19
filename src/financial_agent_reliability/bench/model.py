@@ -5,7 +5,9 @@ from __future__ import annotations
 import hashlib
 import json
 import pathlib
+import re
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Any
 
 from jsonschema import Draft202012Validator, FormatChecker
@@ -119,6 +121,84 @@ def _expand_card(card: dict[str, Any]) -> list[dict[str, Any]]:
             }
         )
     return tasks
+
+
+def audit_taskset(path: pathlib.Path) -> dict[str, Any]:
+    """Run deterministic curation checks over a task-card JSONL file."""
+
+    items = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    cards = [item for item in items if "id" in item]
+    findings: dict[str, list[str]] = {
+        "duplicates": [],
+        "leakage": [],
+        "future_information": [],
+        "low_information": [],
+        "eval_without_pilot": [],
+    }
+    seen_prompts: dict[str, str] = {}
+    seen_variants: dict[str, str] = {}
+    for card in cards:
+        card_id = str(card.get("id", "<missing>"))
+        prompt = str(card.get("prompt", ""))
+        normalized_prompt = re.sub(r"\s+", " ", prompt.strip().lower())
+        if normalized_prompt in seen_prompts:
+            findings["duplicates"].append(f"{card_id}: prompt duplicates {seen_prompts[normalized_prompt]}")
+        seen_prompts[normalized_prompt] = card_id
+        variants = card.get("variants", [])
+        designs = {variant.get("design") for variant in variants}
+        inputs = {json.dumps(variant.get("input"), sort_keys=True) for variant in variants}
+        if len(designs) != len(variants) or len(inputs) != len(variants):
+            findings["low_information"].append(f"{card_id}: variants are not distinct")
+        if len({signal for variant in variants for signal in variant.get("expected_signals", [])}) < 2:
+            findings["low_information"].append(f"{card_id}: fewer than two diagnostic signals")
+        for variant in variants:
+            variant_key = json.dumps(
+                {"prompt": normalized_prompt, "input": variant.get("input")}, sort_keys=True
+            )
+            variant_id = f"{card_id}::{variant.get('id')}"
+            if variant_key in seen_variants:
+                findings["duplicates"].append(f"{variant_id}: duplicates {seen_variants[variant_key]}")
+            seen_variants[variant_key] = variant_id
+            expected = variant.get("expected", {})
+            for reason_code in expected.get("reason_codes", []):
+                if reason_code.lower() in normalized_prompt:
+                    findings["leakage"].append(f"{variant_id}: reason code appears in prompt")
+            expected_value = expected.get("value")
+            if isinstance(expected_value, (str, int, float)) and not isinstance(expected_value, bool):
+                rendered = str(expected_value).lower()
+                if len(rendered) >= 3 and rendered in normalized_prompt:
+                    findings["leakage"].append(f"{variant_id}: Gold value appears in prompt")
+            payload = variant.get("input", {})
+            if "published_at" in payload and "cutoff_at" in payload:
+                is_future = _audit_timestamp(payload["published_at"]) > _audit_timestamp(payload["cutoff_at"])
+                safely_blocked = expected.get("status") == "abstain" and "FUTURE_INFORMATION" in expected.get("reason_codes", [])
+                if is_future != safely_blocked:
+                    findings["future_information"].append(f"{variant_id}: cutoff expectation is inconsistent")
+        lifecycle = card.get("tags", {}).get("lifecycle")
+        changes = " ".join(card.get("notes", {}).get("change_log", [])).lower()
+        if lifecycle == "eval" and "pilot" not in changes:
+            findings["eval_without_pilot"].append(f"{card_id}: eval lacks pilot evidence")
+    return {
+        "cards": len(cards),
+        "variants": sum(len(card.get("variants", [])) for card in cards),
+        "slices": sorted({card.get("slice") for card in cards}),
+        "lifecycles": {
+            lifecycle: sum(card.get("tags", {}).get("lifecycle") == lifecycle for card in cards)
+            for lifecycle in ("dev", "pilot", "eval")
+        },
+        "checks": {
+            name: {"passed": not items, "findings": items} for name, items in findings.items()
+        },
+    }
+
+
+def _audit_timestamp(value: Any) -> datetime:
+    if not isinstance(value, str):
+        raise BenchInputError("audit timestamp must be a string")
+    try:
+        return datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise BenchInputError("audit timestamp must be ISO-8601") from exc
 
 
 def load_tasks(path: pathlib.Path) -> list[dict[str, Any]]:

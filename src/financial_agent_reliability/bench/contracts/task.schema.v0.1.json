@@ -7,7 +7,7 @@
   "required": ["id", "slice", "prompt", "fixtures", "tools", "budget", "checks", "tags", "variants", "notes"],
   "properties": {
     "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{2,63}$"},
-    "slice": {"enum": ["market_data", "fundamentals", "portfolio", "derivatives"]},
+    "slice": {"enum": ["market_data", "fundamentals", "earnings", "news_filings", "portfolio", "derivatives", "technical_analysis", "rules_safety"]},
     "prompt": {"type": "string", "minLength": 20},
     "fixtures": {
       "type": "array",
@@ -31,7 +31,7 @@
     "tools": {
       "type": "array",
       "uniqueItems": true,
-      "items": {"enum": ["mock_market_read", "mock_filing_read", "mock_portfolio_read", "mock_options_read"]}
+      "items": {"enum": ["mock_market_read", "mock_filing_read", "mock_news_read", "mock_portfolio_read", "mock_options_read", "mock_prices_read", "mock_rules_read"]}
     },
     "budget": {
       "type": "object",
@@ -55,7 +55,7 @@
           "additionalProperties": false,
           "required": ["operation"],
           "properties": {
-            "operation": {"enum": ["lookup", "percent_change", "portfolio_weight", "put_call_parity", "policy_decision"]}
+            "operation": {"enum": ["lookup", "orderbook_spread", "percent_change", "valuation_multiple", "cutoff_evidence", "portfolio_weight", "put_call_parity", "moving_average_signal", "settlement_eligibility", "policy_decision"]}
           }
         },
         "evidence": {
