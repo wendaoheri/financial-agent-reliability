@@ -2,13 +2,12 @@
 
 PER-323 Stage 2 moved contract pins from the removed frozen directory to
 ``configs/harness_contract.v1.json`` and ``configs/inference.json``.
-PER-328 first froze ``baseline/v2/contracts/run_trace.schema.v4.json`` and later
-published the append-only v3 successor ``baseline/v3/contracts/run_trace.schema.v5.json``.
-Both generations carry the same identity hash fields:
+PER-328 (Stage 3) froze the formal run-trace successor contract
+``baseline/v2/contracts/run_trace.schema.v4.json`` (design contract C5):
 ``run_identity`` carries ``inference_config_sha256`` +
 ``harness_contract_sha256`` + ``immutable_bundle_sha256``, and this module
-Callers select the frozen generation explicitly with ``baseline_generation``;
-the v2 default is retained only for compatibility with historical tests.
+emits ``contract_version`` 4.0.0 with benchmark_id
+``financial-agent-reliability-v2``.
 """
 
 from __future__ import annotations
@@ -34,7 +33,6 @@ from financial_agent_reliability.providers.bailian import BailianAdapter, Transp
 
 ROOT = pathlib.Path(__file__).resolve().parents[3]
 HARNESS_CONTRACT_PATH = ROOT / "configs" / "harness_contract.v1.json"
-INFERENCE_CONFIG_PATH = ROOT / "configs" / "inference.json"
 
 
 def _timestamp() -> str:
@@ -58,8 +56,6 @@ class OfflineHarness:
         sleeper: Callable[[float], None] | None = None,
         harness_contract_path: pathlib.Path = HARNESS_CONTRACT_PATH,
         inference_config_path: pathlib.Path | None = None,
-        baseline_generation: str = "v2",
-        trace_contract_version: str | None = None,
     ):
         self.adapter = adapter
         self.bundle = bundle
@@ -70,14 +66,6 @@ class OfflineHarness:
         self.inference_config_path = pathlib.Path(configured_path).resolve()
         if file_sha256(self.inference_config_path) != adapter.inference_config.source_sha256:
             raise ValueError("inference_config_path does not match the adapter's injected config")
-        if baseline_generation not in {"v2", "v3"}:
-            raise ValueError("baseline_generation must be 'v2' or 'v3'")
-        self.baseline_generation = baseline_generation
-        historical_version = "4.0.0" if baseline_generation == "v2" else "5.0.0"
-        self.trace_contract_version = trace_contract_version or historical_version
-        if self.trace_contract_version not in {"4.0.0", "5.0.0", "6.0.0"}:
-            raise ValueError("trace_contract_version must be 4.0.0, 5.0.0, or 6.0.0")
-        self.benchmark_id = f"financial-agent-reliability-{baseline_generation}"
         self.config = json.loads(self.harness_contract_path.read_text(encoding="utf-8"))
 
     def run(
@@ -99,7 +87,7 @@ class OfflineHarness:
         if frozen_input_path not in {item["path"] for item in relative_artifacts}:
             raise ValueError("frozen input is not committed in the immutable bundle")
         identity = {
-            "benchmark_id": self.benchmark_id,
+            "benchmark_id": "financial-agent-reliability-v2",
             "case_id": case_id,
             "variant_id": variant_id,
             "requested_model_id": self.adapter.model_id,
@@ -109,8 +97,6 @@ class OfflineHarness:
             "harness_contract_sha256": file_sha256(self.harness_contract_path),
             "immutable_bundle_sha256": self.bundle.bundle_sha256,
         }
-        if self.trace_contract_version == "6.0.0":
-            identity["inference_config_path"] = self.inference_config_path.as_posix()
         run_id = build_run_id(identity)
         checkpoint_path = self.checkpoint_directory / f"{run_id}.jsonl"
         resumed = checkpoint_path.is_file()
@@ -221,22 +207,19 @@ class OfflineHarness:
             if response.get("model") is not None
             else (preflight.response_model_id or "unverified")
         )
-        provider = {
-            "name": self.adapter.settings.provider_name,
-            "requested_model_id": self.adapter.model_id,
-            "response_model_id": response_model,
-            "endpoint_id": self.adapter.settings.endpoint_id,
-            "inference_config_sha256": file_sha256(self.inference_config_path),
-        }
-        if self.trace_contract_version == "6.0.0":
-            provider["inference_config_path"] = self.inference_config_path.as_posix()
         trace = {
             "contract_type": "run_trace",
-            "contract_version": self.trace_contract_version,
+            "contract_version": "4.0.0",
             "run_id": run_id,
             "run_identity": identity,
             "status": status,
-            "provider": provider,
+            "provider": {
+                "name": self.adapter.settings.provider_name,
+                "requested_model_id": self.adapter.model_id,
+                "response_model_id": response_model,
+                "endpoint_id": self.adapter.settings.endpoint_id,
+                "inference_config_sha256": file_sha256(self.inference_config_path),
+            },
             "request": {
                 "parameters": dict(self.adapter.parameters),
                 "seed": seed,

@@ -101,8 +101,9 @@ PER-388 记录结果为 focused Python 17/17、全量 Python 134/134、Node runt
 - mock 工具只证明合成只读路径、审计和 evidence 归因，不等同于生产数据工具。
 - 区间按 cell 描述；确定性 mock cell 不是来自真实总体的独立随机样本。
 - model 轴当前为 `non_identifiable`；只有真实候选 pilot 才可能检验模型差异。
-- 旧 harness、baseline 与 validation 材料继续保留作历史证据和兼容路径，不扩建新重型
-  冻结世代；回退依赖 Git tag，而不是改写当前轻量主路径。
+- 现行 `baseline/v2` 与其冻结验证继续保留作历史证据和兼容路径；失败的 v3–v6 世代
+  已在 PER-396 从工作树清理，完整重型历史通过 Git tag
+  `legacy-heavy-governance-v6` 回溯，不再占用当前轻量主路径。
 
 ## 6. 14 天团队观察指标
 

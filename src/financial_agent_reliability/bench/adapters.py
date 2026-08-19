@@ -13,7 +13,7 @@ from typing import Any, Callable, Mapping, Protocol
 
 from financial_agent_reliability.bench.model import Candidate
 from financial_agent_reliability.inference_config import merged_parameters
-from financial_agent_reliability.inference_config_v2 import load_inference_config_any
+from financial_agent_reliability.bench.inference_config import load_inference_config_any
 from financial_agent_reliability.providers.bailian import BailianSettings
 from financial_agent_reliability.providers.bailian_http import (
     BailianHTTPError,

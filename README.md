@@ -35,15 +35,16 @@ Gold/Oracle 和评分契约位于 `docs/` 的 v0.1 任务契约说明中。
 | 路径 | 用途 |
 | --- | --- |
 | `src/financial_agent_reliability/bench/` | `validate`、`run`、`compare`、adapter、独立 grader 与 trace 协议 |
+| `src/financial_agent_reliability/bench/contracts/` | 轻量 trace、任务、评分和推理配置 schema |
 | `examples/bench/` | 8 个金融 slice、16 个成对变体、合成 fixture、mock 与负控候选 |
 | `tests/test_bench_mvp.py` | Gold 隔离、工具轴、评分、配对差异、负控和 trace 回归测试 |
 | `docs/runner-mvp.md` | v0.1 Runner 使用与解释边界 |
 | `docs/` 的 v0.1 任务契约说明 | 十字段以内任务卡与 `dev → pilot → eval` 生命周期 |
 | `runs/` | 本地运行产物；不作为 Git 跟踪内容 |
 
-其他 `harness`、`baseline/v2`–`v6`、`validation` 和历史复盘材料是 legacy
-证据或兼容路径，不是日常轻量实验入口。它们继续保留且可定位；重型治理线的 Git
-回退点为 `legacy-heavy-governance-v6`（`7d36f9e`）。
+其他 `harness`、`baseline/v2`、v2 冻结验证和历史复盘材料是 legacy 证据或兼容路径，
+不是日常轻量实验入口。失败的 baseline v3–v6 及其配套代码已从工作树清理；完整重型
+治理线仍可从 Git tag `legacy-heavy-governance-v6`（`7d36f9e`）回溯。
 
 ## 当前能力与边界
 
@@ -76,5 +77,5 @@ uv run bench validate \
 ```
 
 凭据只能通过环境或平台密钥能力注入，严禁进入源码、fixture、task card、trace、日志
-或报告。Provider 配置与历史兼容命令仍保留在 `configs/`、`docs/manual-execution-guide.md`
-及对应源码中，但不属于上述离线主路径。
+或报告。`configs/` 只保留被 baseline v2 钉住的历史兼容配置；轻量路径的推理配置实例
+放在 `examples/bench/`，其 schema 与加载器分别位于 `bench/contracts/` 和 `bench/`。
