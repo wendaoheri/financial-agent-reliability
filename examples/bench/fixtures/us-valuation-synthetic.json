@@ -1,0 +1,10 @@
+{
+  "fixture_id": "us_valuation_synthetic",
+  "as_of": "2025-03-31T20:00:00Z",
+  "market": "US",
+  "currency": "USD",
+  "market_cap_usd_million": 2400,
+  "net_income_positive_usd_million": 120,
+  "net_income_loss_usd_million": -40,
+  "note": "Synthetic point-in-time valuation inputs; no real issuer or investable price is represented."
+}

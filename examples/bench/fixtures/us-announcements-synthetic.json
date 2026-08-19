@@ -1,0 +1,18 @@
+{
+  "fixture_id": "us_announcements_synthetic",
+  "as_of": "2025-04-15T20:00:00Z",
+  "market": "US",
+  "items": [
+    {
+      "announcement_id": "SYNTH-8K-001",
+      "published_at": "2025-04-15T12:00:00Z",
+      "event": "guidance_withdrawn"
+    },
+    {
+      "announcement_id": "SYNTH-8K-002",
+      "published_at": "2025-04-16T12:00:00Z",
+      "event": "guidance_restored"
+    }
+  ],
+  "note": "Synthetic announcement timeline for point-in-time evidence tests; it is not a real filing."
+}

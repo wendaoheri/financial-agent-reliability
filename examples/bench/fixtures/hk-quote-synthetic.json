@@ -5,5 +5,9 @@
   "currency": "HKD",
   "instrument": "SYNTH-HK-001",
   "last_price": 18.42,
-  "note": "Synthetic quote for offline evaluation; not an investable security."
+  "bid": 18.40,
+  "ask": 18.44,
+  "bid_size": 1200,
+  "ask_size": 900,
+  "note": "Synthetic one-level order book for offline evaluation; not an investable security."
 }

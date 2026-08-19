@@ -8,7 +8,12 @@ import pathlib
 import sys
 
 from financial_agent_reliability.bench.compare import compare_traces
-from financial_agent_reliability.bench.model import BenchInputError, load_candidates, load_tasks
+from financial_agent_reliability.bench.model import (
+    BenchInputError,
+    audit_taskset,
+    load_candidates,
+    load_tasks,
+)
 from financial_agent_reliability.bench.runner import run_mock_matrix
 from financial_agent_reliability.bench.trace import append_traces, read_traces
 
@@ -50,7 +55,21 @@ def main(argv: list[str] | None = None) -> int:
             tasks = load_tasks(args.tasks)
             candidates = load_candidates(args.candidates)
         if args.command == "validate":
-            print(_render({"status": "valid", "tasks": len(tasks), "candidates": len(candidates)}), end="")
+            audit = audit_taskset(args.tasks)
+            failed = [name for name, result in audit["checks"].items() if not result["passed"]]
+            if failed:
+                raise BenchInputError(f"task-set audit failed: {', '.join(failed)}")
+            print(
+                _render(
+                    {
+                        "status": "valid",
+                        "tasks": len(tasks),
+                        "candidates": len(candidates),
+                        "audit": audit,
+                    }
+                ),
+                end="",
+            )
             return 0
         if args.command == "run":
             traces = run_mock_matrix(
