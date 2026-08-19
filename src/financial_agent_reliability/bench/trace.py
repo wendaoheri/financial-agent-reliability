@@ -15,28 +15,36 @@ from financial_agent_reliability.harness.secret_scan import (
 )
 
 
-SCHEMA_PATH = pathlib.Path(__file__).parent / "contracts" / "trace.schema.v0.1.json"
+SCHEMA_DIR = pathlib.Path(__file__).parent / "contracts"
+CURRENT_TRACE_VERSION = "0.2.0"
+SCHEMA_PATHS = {
+    "0.1.0": SCHEMA_DIR / "trace.schema.v0.1.json",
+    CURRENT_TRACE_VERSION: SCHEMA_DIR / "trace.schema.v0.2.json",
+}
 
 
-def trace_validator() -> Draft202012Validator:
-    schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+def trace_validator(version: str = CURRENT_TRACE_VERSION) -> Draft202012Validator:
+    try:
+        path = SCHEMA_PATHS[version]
+    except KeyError as exc:
+        raise ValueError(f"unsupported trace schema_version: {version}") from exc
+    schema = json.loads(path.read_text(encoding="utf-8"))
     return Draft202012Validator(schema, format_checker=FormatChecker())
 
 
 def validate_trace(trace: dict[str, Any]) -> None:
-    trace_validator().validate(trace)
+    trace_validator(str(trace.get("schema_version"))).validate(trace)
 
 
 def read_traces(paths: Iterable[pathlib.Path]) -> Iterator[dict[str, Any]]:
-    validator = trace_validator()
     for path in paths:
         for line_number, raw in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
             if not raw.strip():
                 continue
             try:
                 trace = json.loads(raw)
-                validator.validate(trace)
-            except (json.JSONDecodeError, ValidationError) as exc:
+                validate_trace(trace)
+            except (json.JSONDecodeError, ValidationError, ValueError) as exc:
                 if isinstance(exc, json.JSONDecodeError):
                     detail = exc.msg
                 else:
@@ -46,10 +54,9 @@ def read_traces(paths: Iterable[pathlib.Path]) -> Iterator[dict[str, Any]]:
 
 
 def append_traces(path: pathlib.Path, traces: Iterable[dict[str, Any]]) -> int:
-    validator = trace_validator()
     rendered: list[str] = []
     for trace in traces:
-        validator.validate(trace)
+        validate_trace(trace)
         findings = scan_persisted_value_for_secrets(trace)
         if findings:
             raise ValueError(
