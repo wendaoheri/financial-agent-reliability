@@ -117,7 +117,13 @@ def _expand_card(card: dict[str, Any]) -> list[dict[str, Any]]:
                     "fixture_ids": card["checks"]["evidence"]["required_fixture_ids"],
                 },
                 "expected_output": variant["expected"],
-                "task_card": {"id": card["id"], "slice": card["slice"], "variant": variant["id"]},
+                "required_evidence": card["checks"]["evidence"]["required_fixture_ids"],
+                "budget": card["budget"],
+                "task_card": {
+                    "id": card["id"],
+                    "slice": card["slice"],
+                    "variant": variant["id"],
+                },
             }
         )
     return tasks
@@ -258,6 +264,20 @@ def load_candidates(path: pathlib.Path) -> list[Candidate]:
         config = item.get("config", {})
         if not isinstance(config, dict):
             raise BenchInputError(f"candidate {values['id']} config must be an object")
+        behavior = config.get("behavior", "pass")
+        if behavior not in {
+            "pass", "failure", "timeout", "tool_error", "missing_evidence", "safety_violation"
+        }:
+            raise BenchInputError(f"candidate {values['id']} has unsupported mock behavior: {behavior}")
         candidates.append(Candidate(config=config, **values))
         seen.add(values["id"])
+    coordinates = {(candidate.model, candidate.agent) for candidate in candidates}
+    expected = {
+        (model, agent)
+        for model in {candidate.model for candidate in candidates}
+        for agent in {candidate.agent for candidate in candidates}
+    }
+    if coordinates != expected:
+        missing = ", ".join(f"{model}×{agent}" for model, agent in sorted(expected - coordinates))
+        raise BenchInputError(f"candidate model × agent matrix is incomplete: {missing}")
     return candidates

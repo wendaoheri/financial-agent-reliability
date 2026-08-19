@@ -1,15 +1,29 @@
 {
   "candidates": [
     {
-      "id": "mock-base__plain-agent",
-      "model": "mock-base",
+      "id": "mock-small__plain-agent",
+      "model": "mock-small",
       "agent": "plain-agent",
       "adapter": "mock",
       "config": {"temperature": 0}
     },
     {
-      "id": "mock-base__tool-agent",
-      "model": "mock-base",
+      "id": "mock-small__tool-agent",
+      "model": "mock-small",
+      "agent": "tool-agent",
+      "adapter": "mock",
+      "config": {"temperature": 0, "tools": []}
+    },
+    {
+      "id": "mock-large__plain-agent",
+      "model": "mock-large",
+      "agent": "plain-agent",
+      "adapter": "mock",
+      "config": {"temperature": 0}
+    },
+    {
+      "id": "mock-large__tool-agent",
+      "model": "mock-large",
       "agent": "tool-agent",
       "adapter": "mock",
       "config": {"temperature": 0, "tools": []}

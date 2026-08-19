@@ -39,6 +39,8 @@ uv run bench --help                                # 轻量 Runner(validate / ru
 uv run bench run --tasks examples/bench/mock-tasks.jsonl \
   --candidates examples/bench/mock-candidates.json \
   --output runs/bench/mock-smoke.jsonl --run-id mock-smoke
+uv run bench compare runs/bench/mock-smoke.jsonl \
+  --output runs/bench/mock-smoke-report.json
 ```
 
 完整手动执行路径(离线验证 + 线上预检两条)见 `docs/manual-execution-guide.md`。
