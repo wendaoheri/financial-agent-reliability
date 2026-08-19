@@ -55,6 +55,12 @@ Gold/Oracle 和评分契约位于 `docs/` 的 v0.1 任务契约说明中。
 - 工具：当前仅验证 Runner-owned 合成只读工具；禁止真实交易和生产写入。
 - 权限：付费模型、外部账号、额外预算和对外发布都需项目所有者另行明确批准。
 
+PER-390 已批准一次百炼 token-plan 四模型内部 MVP。受控入口为
+`examples/bench/bailian-token-plan-candidates.v0.1.json`；它只支持 plain-agent，要求
+先运行 `bench preflight` 并把通过报告传给 `bench run --preflight`，总请求数最多
+4 次预检 + 64 个矩阵单元。完整命令与边界见 `docs/runner-mvp.md`。该授权不扩展到
+真实工具、交易、生产写入或对外发布。
+
 ## 验证
 
 ```bash

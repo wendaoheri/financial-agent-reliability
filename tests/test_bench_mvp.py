@@ -5,10 +5,15 @@ import json
 import pathlib
 import tempfile
 import unittest
-from contextlib import redirect_stdout
+from contextlib import redirect_stderr, redirect_stdout
 from io import StringIO
 
-from financial_agent_reliability.bench.adapters import CandidateRequest, MockAdapter, OfflineMockTools
+from financial_agent_reliability.bench.adapters import (
+    BailianLiveAdapter,
+    CandidateRequest,
+    MockAdapter,
+    OfflineMockTools,
+)
 from financial_agent_reliability.bench.cli import main
 from financial_agent_reliability.bench.model import (
     BenchInputError,
@@ -25,6 +30,7 @@ TASKS = ROOT / "examples" / "bench" / "mock-tasks.jsonl"
 CANDIDATES = ROOT / "examples" / "bench" / "mock-candidates.json"
 NEGATIVE_CONTROLS = ROOT / "examples" / "bench" / "negative-control-candidates.json"
 AUDIT = ROOT / "examples" / "bench" / "taskset-audit.v0.2.json"
+LIVE_CANDIDATES = ROOT / "examples" / "bench" / "bailian-token-plan-candidates.v0.1.json"
 
 
 class BenchMVPTests(unittest.TestCase):
@@ -33,6 +39,64 @@ class BenchMVPTests(unittest.TestCase):
         validator.check_schema(validator.schema)
         legacy_validator = trace_validator("0.1.0")
         legacy_validator.check_schema(legacy_validator.schema)
+        prior_validator = trace_validator("0.2.0")
+        prior_validator.check_schema(prior_validator.schema)
+
+    def test_bailian_live_candidate_boundary_and_exact_identity(self):
+        candidates = load_candidates(LIVE_CANDIDATES)
+        self.assertEqual(len(candidates), 4)
+        self.assertEqual({candidate.agent for candidate in candidates}, {"plain-agent"})
+        candidate = candidates[0]
+        captured = []
+
+        def transport_factory(_settings, *, timeout_seconds):
+            self.assertEqual(timeout_seconds, 120)
+
+            def transport(request):
+                captured.append(request)
+                return {
+                    "model": candidate.model,
+                    "output": json.dumps(
+                        {"status": "answer", "value": 1.5, "reason_codes": []}
+                    ),
+                    "usage": {"input_tokens": 11, "output_tokens": 7},
+                }
+
+            return transport
+
+        adapter = BailianLiveAdapter(
+            ROOT,
+            env={"BENCH_BAILIAN_API_KEY": "memory-only-test-value"},
+            transport_factory=transport_factory,
+        )
+        preflight = adapter.preflight(candidate)
+        self.assertEqual(preflight["status"], "passed")
+        self.assertTrue(preflight["identity"]["exact_match"])
+        task = load_tasks(TASKS)[0]
+        request = CandidateRequest.from_payload(task["candidate_payload"])
+        result = adapter.execute(request, candidate, OfflineMockTools(request))
+        self.assertIsNone(result.error)
+        self.assertEqual(result.output, {"status": "answer", "value": 1.5, "reason_codes": []})
+        self.assertEqual(result.input_tokens, 11)
+        self.assertEqual(result.output_tokens, 7)
+        self.assertTrue(result.provider_identity["exact_match"])
+        rendered_request = json.dumps(captured[1], sort_keys=True)
+        self.assertNotIn("expected_output", rendered_request)
+        self.assertNotIn("oracle", rendered_request)
+        self.assertNotIn("memory-only-test-value", rendered_request)
+
+    def test_bailian_live_run_requires_bound_preflight_before_network(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            output = pathlib.Path(temporary) / "trace.jsonl"
+            stderr = StringIO()
+            with redirect_stdout(StringIO()), redirect_stderr(stderr):
+                status = main([
+                    "run", "--tasks", str(TASKS), "--candidates", str(LIVE_CANDIDATES),
+                    "--output", str(output), "--run-id", "missing-preflight",
+                ])
+            self.assertEqual(status, 2)
+            self.assertIn("requires --preflight", stderr.getvalue())
+            self.assertFalse(output.exists())
 
     def test_validate_accepts_model_agent_axes(self):
         stdout = StringIO()
@@ -338,7 +402,7 @@ class BenchMVPTests(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
-            with self.assertRaisesRegex(BenchInputError, "only permits the offline mock"):
+            with self.assertRaisesRegex(BenchInputError, "unsupported candidate adapter"):
                 load_candidates(path)
 
     def test_duplicate_task_ids_are_rejected(self):

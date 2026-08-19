@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://financial-agent-reliability.local/bench/trace.schema.v0.3.json",
+  "title": "Lightweight benchmark trace v0.3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "trace_id", "run_id", "task", "candidate", "input",
+    "tool_calls", "provider_identity", "output", "error", "evidence_refs",
+    "safety_violations", "score", "failure_signature", "metrics", "git",
+    "versions", "started_at", "finished_at"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.3.0"},
+    "trace_id": {"type": "string", "minLength": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "task": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "slice", "variant"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "slice": {"type": "string", "minLength": 1},
+        "variant": {"type": "string", "minLength": 1}
+      }
+    },
+    "candidate": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "model", "agent", "adapter", "adapter_version", "config", "config_sha256"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "model": {"type": "string", "minLength": 1},
+        "agent": {"type": "string", "minLength": 1},
+        "adapter": {"enum": ["mock", "bailian-live"]},
+        "adapter_version": {"type": "string", "minLength": 1},
+        "config": {"type": "object"},
+        "config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "input": {},
+    "tool_calls": {"type": "array", "items": {"type": "object"}},
+    "provider_identity": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["requested_model", "response_model", "exact_match", "endpoint_id"],
+          "properties": {
+            "requested_model": {"type": "string", "minLength": 1},
+            "response_model": {"type": ["string", "null"]},
+            "exact_match": {"type": "boolean"},
+            "endpoint_id": {"type": "string", "minLength": 1}
+          }
+        }
+      ]
+    },
+    "output": {},
+    "error": {"type": ["object", "null"]},
+    "evidence_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "safety_violations": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "score": {
+      "type": "object", "additionalProperties": false,
+      "required": ["correctness", "evidence_quality", "safety", "hard_gate_passed", "eligible_for_quality_aggregation"],
+      "properties": {
+        "correctness": {"type": "integer", "minimum": 0, "maximum": 4},
+        "evidence_quality": {"type": "integer", "minimum": 0, "maximum": 2},
+        "safety": {"enum": [0, 1]},
+        "hard_gate_passed": {"type": "boolean"},
+        "eligible_for_quality_aggregation": {"type": "boolean"}
+      }
+    },
+    "failure_signature": {
+      "type": ["object", "null"], "additionalProperties": false,
+      "required": ["code", "phenomenon", "attribution_hypothesis", "next_validation"],
+      "properties": {
+        "code": {"type": "string", "minLength": 1},
+        "phenomenon": {"type": "string", "minLength": 1},
+        "attribution_hypothesis": {"type": "string", "minLength": 1},
+        "next_validation": {"type": "string", "minLength": 1}
+      }
+    },
+    "metrics": {
+      "type": "object", "additionalProperties": false,
+      "required": ["latency_ms", "input_tokens_estimate", "output_tokens_estimate", "cost_usd_estimate", "cost_basis"],
+      "properties": {
+        "latency_ms": {"type": "integer", "minimum": 0},
+        "input_tokens_estimate": {"type": "integer", "minimum": 0},
+        "output_tokens_estimate": {"type": "integer", "minimum": 0},
+        "cost_usd_estimate": {"type": "string", "pattern": "^[0-9]+\\.[0-9]{6}$"},
+        "cost_basis": {"enum": ["mock_zero", "token_plan_unpriced"]}
+      }
+    },
+    "git": {
+      "type": "object", "additionalProperties": false, "required": ["commit", "dirty"],
+      "properties": {
+        "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "dirty": {"type": "boolean"}
+      }
+    },
+    "versions": {
+      "type": "object", "additionalProperties": false, "required": ["trace_schema_version"],
+      "properties": {
+        "trace_schema_version": {"const": "0.3.0"},
+        "taskset_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "candidates_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "python_lock_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+        "node_lock_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+        "inference_config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "preflight_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "started_at": {"type": "string", "format": "date-time"},
+    "finished_at": {"type": "string", "format": "date-time"}
+  }
+}

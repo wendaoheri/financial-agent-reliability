@@ -16,10 +16,11 @@ from financial_agent_reliability.harness.secret_scan import (
 
 
 SCHEMA_DIR = pathlib.Path(__file__).parent / "contracts"
-CURRENT_TRACE_VERSION = "0.2.0"
+CURRENT_TRACE_VERSION = "0.3.0"
 SCHEMA_PATHS = {
     "0.1.0": SCHEMA_DIR / "trace.schema.v0.1.json",
-    CURRENT_TRACE_VERSION: SCHEMA_DIR / "trace.schema.v0.2.json",
+    "0.2.0": SCHEMA_DIR / "trace.schema.v0.2.json",
+    CURRENT_TRACE_VERSION: SCHEMA_DIR / "trace.schema.v0.3.json",
 }
 
 

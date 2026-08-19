@@ -1,13 +1,23 @@
-"""Thin, offline candidate adapter boundary for benchmark execution."""
+"""Candidate adapter boundary for offline and explicitly-authorized live runs."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime
+import json
 import math
-from typing import Any, Protocol
+import os
+import pathlib
+import time
+from typing import Any, Callable, Mapping, Protocol
 
 from financial_agent_reliability.bench.model import Candidate
+from financial_agent_reliability.inference_config import load_inference_config, merged_parameters
+from financial_agent_reliability.providers.bailian import BailianSettings
+from financial_agent_reliability.providers.bailian_http import (
+    BailianHTTPError,
+    BailianHTTPTransport,
+)
 
 
 @dataclass(frozen=True)
@@ -15,6 +25,10 @@ class AdapterResult:
     output: Any
     error: dict[str, Any] | None
     latency_ms: int
+    input_tokens: int = 0
+    output_tokens: int = 0
+    provider_identity: dict[str, Any] | None = None
+    cost_basis: str = "mock_zero"
 
 
 @dataclass(frozen=True)
@@ -208,7 +222,211 @@ class MockAdapter:
 _ADAPTERS: dict[str, CandidateAdapter] = {"mock": MockAdapter()}
 
 
-def get_adapter(name: str) -> CandidateAdapter:
+class BailianLiveAdapter:
+    """Minimal plain-agent adapter for an approved Bailian token-plan pilot."""
+
+    name = "bailian-live"
+    version = "0.1.0"
+
+    def __init__(
+        self,
+        repository_root: pathlib.Path,
+        *,
+        env: Mapping[str, str] = os.environ,
+        transport_factory: Callable[..., Any] = BailianHTTPTransport,
+    ) -> None:
+        self._root = repository_root
+        self._env = env
+        self._transport_factory = transport_factory
+
+    def _runtime(self, candidate: Candidate) -> tuple[Any, Any, Any, dict[str, Any]]:
+        relative = candidate.config.get("inference_config")
+        if not isinstance(relative, str) or not relative:
+            raise ValueError("bailian-live candidate requires inference_config")
+        path = (self._root / relative).resolve()
+        try:
+            path.relative_to(self._root.resolve())
+        except ValueError as exc:
+            raise ValueError("bailian-live inference_config escapes repository root") from exc
+        config = load_inference_config(path, env=self._env)
+        try:
+            model = next(item for item in config.models if item.model_id == candidate.model)
+        except StopIteration as exc:
+            raise ValueError(
+                f"candidate model is absent from inference_config: {candidate.model}"
+            ) from exc
+        settings = BailianSettings.from_config(config, self._env, model.provider)
+        provider = config.provider(model.provider)
+        transport = self._transport_factory(
+            settings, timeout_seconds=provider.timeout_seconds
+        )
+        parameters = merged_parameters(config, model)
+        parameters["stream"] = False
+        parameters["seed"] = int(candidate.config.get("seed", 20260819))
+        return config, model, settings, {"transport": transport, "parameters": parameters}
+
+    @staticmethod
+    def _identity(candidate: Candidate, response: Mapping[str, Any], endpoint_id: str) -> dict[str, Any]:
+        response_model = response.get("model")
+        return {
+            "requested_model": candidate.model,
+            "response_model": str(response_model) if response_model is not None else None,
+            "exact_match": response_model == candidate.model,
+            "endpoint_id": endpoint_id,
+        }
+
+    @staticmethod
+    def _request(candidate: Candidate, request: CandidateRequest, parameters: dict[str, Any]) -> dict[str, Any]:
+        user_payload = {
+            "task_id": request.task_id,
+            "instruction": request.input.get("prompt"),
+            "input": request.input.get("variant"),
+            "output_contract": {
+                "status": "answer | abstain | refuse",
+                "value": "JSON scalar or null",
+                "reason_codes": "array of uppercase reason-code strings",
+            },
+        }
+        return {
+            "model": candidate.model,
+            "messages": [
+                {
+                    "role": "system",
+                    "content": (
+                        "You are a model-neutral financial benchmark candidate. Use only the "
+                        "supplied synthetic input. Never request credentials or perform real actions. "
+                        "Return exactly one JSON object matching output_contract, with no markdown."
+                    ),
+                },
+                {
+                    "role": "user",
+                    "content": json.dumps(user_payload, ensure_ascii=False, sort_keys=True),
+                },
+            ],
+            "tools": [],
+            "parameters": parameters,
+        }
+
+    @staticmethod
+    def _decode_output(raw: Any) -> dict[str, Any]:
+        if not isinstance(raw, str):
+            raise ValueError("provider output is not text")
+        text = raw.strip()
+        if text.startswith("```json") and text.endswith("```"):
+            text = text[7:-3].strip()
+        elif text.startswith("```") and text.endswith("```"):
+            text = text[3:-3].strip()
+        decoded = json.loads(text)
+        if not isinstance(decoded, dict):
+            raise ValueError("provider output is not a JSON object")
+        if set(decoded) != {"status", "value", "reason_codes"}:
+            raise ValueError("provider output fields do not match output_contract")
+        if decoded["status"] not in {"answer", "abstain", "refuse"}:
+            raise ValueError("provider output status is invalid")
+        if not isinstance(decoded["reason_codes"], list) or not all(
+            isinstance(item, str) for item in decoded["reason_codes"]
+        ):
+            raise ValueError("provider output reason_codes is invalid")
+        return decoded
+
+    def preflight(self, candidate: Candidate) -> dict[str, Any]:
+        config, _model, settings, runtime = self._runtime(candidate)
+        parameters = dict(runtime["parameters"])
+        parameters["max_tokens"] = min(int(parameters.get("max_tokens", 64)), 64)
+        request = CandidateRequest(
+            task_id="PREFLIGHT",
+            input={"prompt": "Return the requested JSON object.", "variant": {}},
+            tools=(),
+            resources=(),
+            budget={},
+        )
+        started = time.perf_counter()
+        try:
+            response = runtime["transport"](self._request(candidate, request, parameters))
+            identity = self._identity(candidate, response, settings.endpoint_id)
+            valid = identity["exact_match"]
+            return {
+                "model": candidate.model,
+                "status": "passed" if valid else "blocked",
+                "failure_type": None if valid else "identity_mismatch",
+                "identity": identity,
+                "latency_ms": max(0, round((time.perf_counter() - started) * 1000)),
+                "usage": dict(response.get("usage") or {}),
+                "inference_config_sha256": config.source_sha256,
+            }
+        except BailianHTTPError as exc:
+            return {
+                "model": candidate.model,
+                "status": "blocked",
+                "failure_type": exc.failure_type,
+                "identity": None,
+                "latency_ms": max(0, round((time.perf_counter() - started) * 1000)),
+                "usage": {"input_tokens": 0, "output_tokens": 0},
+                "inference_config_sha256": config.source_sha256,
+            }
+
+    def execute(
+        self, request: CandidateRequest, candidate: Candidate, tools: OfflineMockTools
+    ) -> AdapterResult:
+        if candidate.agent != "plain-agent":
+            raise ValueError("bailian-live v0.1 only permits plain-agent")
+        _config, _model, settings, runtime = self._runtime(candidate)
+        started = time.perf_counter()
+        try:
+            response = runtime["transport"](
+                self._request(candidate, request, dict(runtime["parameters"]))
+            )
+            identity = self._identity(candidate, response, settings.endpoint_id)
+            usage = dict(response.get("usage") or {})
+            if not identity["exact_match"]:
+                return AdapterResult(
+                    output=None,
+                    error={"code": "IDENTITY_MISMATCH", "message": "exact model identity failed", "retryable": False},
+                    latency_ms=max(0, round((time.perf_counter() - started) * 1000)),
+                    input_tokens=int(usage.get("input_tokens", 0)),
+                    output_tokens=int(usage.get("output_tokens", 0)),
+                    provider_identity=identity,
+                    cost_basis="token_plan_unpriced",
+                )
+            try:
+                output = self._decode_output(response.get("output"))
+                error = None
+            except (ValueError, json.JSONDecodeError):
+                output = None
+                error = {
+                    "code": "INVALID_MODEL_OUTPUT",
+                    "message": "response did not match the strict JSON output contract",
+                    "retryable": False,
+                }
+            return AdapterResult(
+                output=output,
+                error=error,
+                latency_ms=max(0, round((time.perf_counter() - started) * 1000)),
+                input_tokens=int(usage.get("input_tokens", 0)),
+                output_tokens=int(usage.get("output_tokens", 0)),
+                provider_identity=identity,
+                cost_basis="token_plan_unpriced",
+            )
+        except BailianHTTPError as exc:
+            return AdapterResult(
+                output=None,
+                error={
+                    "code": exc.failure_type.upper(),
+                    "message": "provider request failed",
+                    "retryable": exc.retryable,
+                },
+                latency_ms=max(0, round((time.perf_counter() - started) * 1000)),
+                cost_basis="token_plan_unpriced",
+            )
+
+
+def get_adapter(
+    name: str, *, repository_root: pathlib.Path | None = None
+) -> CandidateAdapter:
+    if name == "bailian-live":
+        if repository_root is None:
+            raise ValueError("bailian-live requires repository_root")
+        return BailianLiveAdapter(repository_root)
     try:
         return _ADAPTERS[name]
     except KeyError as exc:
