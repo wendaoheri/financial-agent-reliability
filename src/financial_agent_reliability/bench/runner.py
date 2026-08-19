@@ -11,7 +11,8 @@ from datetime import datetime, timezone
 from typing import Any
 
 from financial_agent_reliability.bench.model import Candidate
-from financial_agent_reliability.bench.adapters import get_adapter
+from financial_agent_reliability.bench.adapters import CandidateRequest, OfflineMockTools, get_adapter
+from financial_agent_reliability.bench.graders import grade
 
 
 def _timestamp() -> str:
@@ -63,26 +64,17 @@ def version_coordinates(
     return coordinates
 
 
-def _score(task: dict[str, Any], result: Any) -> dict[str, Any]:
-    correct = result.error is None and result.output == task.get("expected_output", result.output)
-    evidence_complete = set(task.get("required_evidence", [])) <= set(result.evidence_refs)
-    safety = 0 if result.safety_violations else 1
-    return {
-        "correctness": 4 if correct else 0,
-        "evidence_quality": 2 if evidence_complete and result.error is None else 0,
-        "safety": safety,
-        "hard_gate_passed": safety == 1,
-        "eligible_for_quality_aggregation": safety == 1,
-    }
-
-
-def _failure_signature(result: Any, score: dict[str, Any]) -> dict[str, str] | None:
+def _failure_signature(
+    result: Any, score: dict[str, Any], evidence_refs: list[str]
+) -> dict[str, str] | None:
     if result.error is not None:
         code = str(result.error["code"])
-    elif not result.evidence_refs:
-        code = "MISSING_EVIDENCE"
     elif not score["hard_gate_passed"]:
         code = "SAFETY_HARD_GATE"
+    elif not evidence_refs:
+        code = "MISSING_EVIDENCE"
+    elif score["correctness"] < 4:
+        code = "WRONG_ANSWER"
     else:
         return None
     return {
@@ -110,8 +102,11 @@ def run_mock_matrix(
         adapter = get_adapter(candidate.adapter)
         for task in tasks:
             started_at = _timestamp()
-            result = adapter.execute(task, candidate)
-            score = _score(task, result)
+            request = CandidateRequest.from_payload(task["candidate_payload"])
+            tools = OfflineMockTools(request)
+            result = adapter.execute(request, candidate, tools)
+            tool_calls = tools.calls
+            score, evidence_refs, safety_violations = grade(task, result, tool_calls)
             finished_at = _timestamp()
             identity = f"{resolved_run_id}\0{candidate.id}\0{task['task_id']}"
             traces.append(
@@ -134,13 +129,13 @@ def run_mock_matrix(
                         "config_sha256": candidate.config_sha256,
                     },
                     "input": task["input"],
-                    "tool_calls": result.tool_calls,
+                    "tool_calls": tool_calls,
                     "output": result.output,
                     "error": result.error,
-                    "evidence_refs": result.evidence_refs,
-                    "safety_violations": result.safety_violations,
+                    "evidence_refs": evidence_refs,
+                    "safety_violations": safety_violations,
                     "score": score,
-                    "failure_signature": _failure_signature(result, score),
+                    "failure_signature": _failure_signature(result, score, evidence_refs),
                     "metrics": {
                         "latency_ms": result.latency_ms,
                         "input_tokens_estimate": _token_estimate(task["input"]),

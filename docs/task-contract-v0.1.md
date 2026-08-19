@@ -17,7 +17,8 @@
   留痕。
 - 每张卡至少有两个 `variants`。每个变体都登记设计意图、预期信号、边界条件和
   已知限制；变体 ID 展开为 Runner task ID `<card-id>::<variant-id>`。
-- `checks` 引用统一评分契约，并登记确定性 Oracle、证据要求和安全不变量。
+- `checks` 引用统一评分契约，并登记确定性 Oracle、证据要求和安全不变量。这些 evaluator
+  字段不进入候选请求；candidate payload 只含任务输入、允许工具、合成资源元数据和预算。
 
 `bench validate` 会执行 JSON Schema 校验、路径限制、fixture 存在性与元数据一致性、
 引用闭包、ID 唯一性，以及 Gold 的确定性重算。Gold 与容差仅供 Runner/Grader，
@@ -74,5 +75,6 @@ uv run bench run \
   --run-id per366-smoke
 ```
 
-第二条命令只运行本地 mock adapter，产生 16 个变体 × 2 个 model/agent 候选的 32 条
-trace；不访问网络、不读取密钥、不执行交易。
+第二条命令只运行本地 mock adapter，产生 16 个变体 × 4 个 model/agent 候选的 64 条
+trace；tool-agent 只调用内存中的合成只读工具，plain-agent 保持零工具对照；不访问
+网络、不读取密钥、不执行交易。

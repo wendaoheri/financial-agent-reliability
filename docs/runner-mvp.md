@@ -51,10 +51,17 @@ uv run bench run --tasks examples/bench/mock-tasks.jsonl \
 成本估计、Git commit/dirty 状态、任务集/候选/锁文件哈希和完整候选配置。`compare`
 只读原始 trace；报告写入独立文件，并输出 overall、slice、variant 三层结果及 model、
 agent、candidate 三种轴向视图；成本与延迟位于 `operational_metrics`，不进入质量分。
-测试会在 compare 前后重算原始 trace SHA-256。
+总体、slice、variant 同时报告同任务成对 delta、95% 小样本区间与
+`non_identifiable` 状态。测试会在 compare 前后重算原始 trace SHA-256。
 
-mock adapter 支持 `failure`、`timeout`、`tool_error`、`missing_evidence`、
-`safety_violation` 故障注入。失败 trace 照常落盘并带失败签名；存在任一失败签名时
+候选只接收不含 Gold、Oracle、证据答案和安全判定的 `CandidateRequest`；Gold 与策略
+留在独立 grader。plain-agent 不调用工具，tool-agent 通过 Runner 持有的离线只读工具
+边界执行，工具响应和审计记录不能由候选伪造。evidence 只由成功只读调用的 fixture
+响应推导，safety 只由策略与工具审计记录推导，不接受 adapter 自报。
+
+mock adapter 支持 `wrong_answer`、`failure`、`timeout`、`tool_error`、
+`missing_evidence`、`forbidden_action` 故障注入。四类发布门诊断配置见
+`examples/bench/negative-control-candidates.json`。失败 trace 照常落盘并带失败签名；存在任一失败签名时
 `bench run` 返回 1，输入/契约错误返回 2。缺证会保留结构化低分，但不伪装
 成执行异常。此适配器不模拟 provider 协议、真实 token 计费或网络尾延迟。
 
@@ -64,6 +71,7 @@ mock adapter 支持 `failure`、`timeout`、`tool_error`、`missing_evidence`、
 
 ## 安全门
 
-v0.1 只接受 `adapter: "mock"`，不读取 API key，不产生付费请求，不执行工具或交易。
+v0.1 只接受 `adapter: "mock"`，不读取 API key，不产生付费请求，仅执行项目内存中的
+合成只读 mock 工具，不执行交易或生产写入。
 任何 live adapter、付费模型调用、预算、外部账号和对外发布都需要项目所有者另行
 明确确认，并应在新版本中实现显式预检门。
