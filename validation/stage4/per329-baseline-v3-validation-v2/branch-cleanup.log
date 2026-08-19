@@ -1,9 +1,0 @@
-main=65685e2cbca19a4611325258604327781fe8f02b
-origin_main=65685e2cbca19a4611325258604327781fe8f02b
-baseline_v3_ancestor=PASS
-stage4_evidence_ancestor=PASS
-local_branches:
-main
-remote_branches:
-origin
-origin/main

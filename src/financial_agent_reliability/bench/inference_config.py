@@ -29,8 +29,7 @@ from financial_agent_reliability.inference_config import (
 )
 
 
-ROOT = pathlib.Path(__file__).resolve().parents[2]
-SCHEMA_PATH = ROOT / "configs" / "inference.schema.v2.json"
+SCHEMA_PATH = pathlib.Path(__file__).resolve().parent / "contracts" / "inference.schema.v2.json"
 
 
 @dataclass(frozen=True)

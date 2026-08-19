@@ -7,7 +7,7 @@ import pathlib
 import unittest
 from types import SimpleNamespace
 
-from financial_agent_reliability.inference_config_v2 import load_inference_config_v2
+from financial_agent_reliability.bench.inference_config import load_inference_config_v2
 from financial_agent_reliability.providers.bailian_http import _parse_sse
 from financial_agent_reliability.providers.generation import (
     GenerationConfigError,

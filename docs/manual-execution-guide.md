@@ -1,11 +1,9 @@
-# 手动执行指南（PER-323 Stage 4，baseline v6 对齐版）
+# 手动执行指南（baseline v2 + 轻量 bench）
 
-- 状态:**baseline v6 对齐版**。第四轮审计作废 v5 新结论后，trace v8 增加外部
-  registry SHA commitment，PER-328 以追加世代冻结 baseline v6；旧 v2-v5 命令仅作历史记录。
-- 议题:PER-329(PER-323 Stage 4);结论血缘:C-323-27（v5 验收作废）及
-  PER-328 v6 门禁冻结。
-- 实测基线:2026-08-18，冻结提交 `7d36f9e0f3b08195141ead3316f6f1ba5aa83288`；
-  全新检出使用 uv 0.11.21、Node v26.3.0、npm 11.16.0、Python 3.11.14。
+- 状态:**现行版**。工作树保留冻结 baseline v2 和轻量 `bench` 主路径；失败的
+  baseline v3–v6 已由 PER-396 清理，完整历史可从 tag
+  `legacy-heavy-governance-v6` 回溯。
+- 实测环境:2026-08-20；Python 3.11，命令统一通过 `uv run` 执行。
 - 纪律边界:密钥一律只经环境变量注入,不落盘、不入文档;不执行付费模型矩阵与真实交易。
 
 ## 0. 工作环境:裸检出即可跑全(PER-323 清理后)
@@ -17,13 +15,13 @@ Stage 1b 草案曾区分「裸检出 / 完整工作区」两档,差异全部来�
 
 | 能力 | 命令 |
 | --- | --- |
-| Python 全量测试(117 用例) | `uv run python -m unittest discover -s tests -v` |
+| Python 全量测试(95 用例) | `uv run python -m unittest discover -s tests -v` |
 | node 运行时边界(6 用例) | `npm run test:runtime` |
 | 集成 `.test.mjs` 全集 | `node --test tests/integration/*.test.mjs`(集合与上一行相同,F5/F8 已收口) |
-| baseline v6 校验 | `uv run python baseline/v6/validate_baseline_v6.py validate-bundle baseline/v6` 与 `verify-manifest baseline/v6` |
+| baseline v2 校验 | `uv run python baseline/v2/validate_baseline_v2.py validate-bundle baseline/v2` 与 `verify-manifest baseline/v2` |
 | 预检(离线可演练错误路径) | `uv run fareli-harness preflight --output <path>` |
 
-复盘工具链(`fareli-retro`)与基线 v1 的历史运行绑定;基线 v1 已删除且 baseline v6
+复盘工具链(`fareli-retro`)与基线 v1 的历史运行绑定;基线 v1 已删除且 baseline v2
 不恢复历史运行证据,因此所有子命令显式返回
 `{"status": "baseline_gap", ...}` 并以退出码 2 结束。这是预期行为,不是检出损坏。
 
@@ -54,11 +52,11 @@ npm ci      # 按 package-lock.json 精确安装 @mariozechner/pi-agent-core@0.7
 ## 3. 路径 A:离线验证(无需任何凭据)
 
 ```bash
-uv run python -m unittest discover -s tests -v   # 实测:117 用例全部通过
+uv run python -m unittest discover -s tests -v   # 实测:95 用例全部通过
 npm run test:runtime                             # 实测:6/6 通过
 node --test tests/integration/*.test.mjs         # 实测:6/6 通过(与 npm 脚本同集合)
-uv run python baseline/v6/validate_baseline_v6.py validate-bundle baseline/v6   # 实测:ok
-uv run python baseline/v6/validate_baseline_v6.py verify-manifest baseline/v6   # 实测:ok
+uv run python baseline/v2/validate_baseline_v2.py validate-bundle baseline/v2   # 实测:ok
+uv run python baseline/v2/validate_baseline_v2.py verify-manifest baseline/v2   # 实测:ok
 ```
 
 三个控制台入口的离线行为:
@@ -74,7 +72,7 @@ uv run fareli-retro list              # 基线空窗期:exit 2,{"status": "basel
 
 说明:基线 v1 的 `build-manifest` / `build-smoke-plan` / `smoke` 子命令已随 v3.x
 验收链退役(清理清单 M2);`fareli-report verify-freeze` 随基线 v1 报告契约退役。
-baseline v6 不恢复这些已退役入口。
+baseline v2 不恢复这些已退役入口。
 
 ## 4. 路径 B:线上预检(需环境变量;本文不执行真实请求)
 
@@ -150,11 +148,11 @@ uv run fareli-harness preflight --output runs/preflight.<日期>.json
 | --- | --- |
 | `uv sync` | 成功,三入口注册 |
 | `npm ci` | pi-agent-core 0.73.1;allow-scripts 信息级警告 |
-| `uv run python -m unittest discover -s tests -v` | baseline v6 Stage 4 全新检出 **117 用例全部通过(OK)** |
+| `uv run python -m unittest discover -s tests -v` | **95 用例全部通过(OK)** |
 | `npm run test:runtime` | **6/6 通过** |
 | `node --test tests/integration/*.test.mjs` | **6/6 通过** |
-| `uv run python baseline/v6/validate_baseline_v6.py validate-bundle baseline/v6` | **ok** |
-| `uv run python baseline/v6/validate_baseline_v6.py verify-manifest baseline/v6` | **ok** |
+| `uv run python baseline/v2/validate_baseline_v2.py validate-bundle baseline/v2` | **ok** |
+| `uv run python baseline/v2/validate_baseline_v2.py verify-manifest baseline/v2` | **ok** |
 | `uv run fareli-harness preflight --output ...`(无凭据) | exit 1,结构化 `config_error`(F7 修复验证) |
 | `uv run fareli-retro list` | exit 2,`baseline_gap` 显式提示 |
 | `uv run fareli-report --help` | exit 0(validate/render 两子命令) |

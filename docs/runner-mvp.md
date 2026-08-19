@@ -1,8 +1,9 @@
 # 轻量 Runner MVP（v0.1）
 
-本路径用于区分基础模型差异和 Agent 工程差异，不延续 baseline v2–v6 的逐文件
-冻结治理作为日常主执行路径。旧材料完整保留；legacy 回退点为 Git tag
-`legacy-heavy-governance-v6`，指向提交 `7d36f9e`。
+本路径用于区分基础模型差异和 Agent 工程差异，不延续重型基线的逐文件冻结治理作为
+日常主执行路径。仓库只保留现行冻结的 `baseline/v2`；失败的 v3–v6 世代及其验证、
+测试和迁移代码已从工作树清理，仍可通过 Git tag `legacy-heavy-governance-v6`
+（提交 `7d36f9e`）回溯。
 
 ## 版本和双轴
 

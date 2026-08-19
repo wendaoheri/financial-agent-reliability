@@ -21,12 +21,12 @@ from typing import Any, Sequence
 # PER-323 Stage 2:复盘模块的批次表与哈希口径仍绑定基线 v1(含已删除的
 # ``contracts`` 校验器导入)。基线空窗期内不在模块顶层导入它们,保证
 # ``fareli-retro`` 任何子命令都能先走到显式的 baseline_gap 门,而不是在
-# import 期崩溃。baseline v3 只重建最小评测基线、未重建历史运行血缘，故该门继续生效。
+# import 期崩溃。baseline v2 只重建最小评测基线、未重建历史运行血缘，故该门继续生效。
 
 
 #: Compatibility name retained from Stage 2. It can become False only after a
 #: future version actually rebuilds the historical batch registry and lineage
-#: roots; baseline v3 intentionally does not do so.
+#: roots; baseline v2 intentionally does not do so.
 BASELINE_V2_PENDING = True
 
 
@@ -59,7 +59,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     if BASELINE_V2_PENDING:
         # PER-323 Stage 2(cleanup list M2):baseline v1 的血缘根目录
         # (runs/ evidence/ reports/ audit/)已按冻结清单删除,复盘工具链的批次表
-        # 与根路径绑定该基线；baseline v3 未重建历史运行证据，故仍处于空窗期。
+        # 与根路径绑定该基线；baseline v2 未重建历史运行证据，故仍处于空窗期。
         # 显式报「基线空窗」而不是静默失败或误报 untraceable。
         _emit(
             {
@@ -67,7 +67,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "command": args.command,
                 "reason": (
                     "baseline v1 lineage roots (runs/, evidence/, reports/, audit/) were "
-                    "removed by the PER-323 frozen cleanup list; baseline v3 rebuilds "
+                    "removed by the PER-323 frozen cleanup list; baseline v2 rebuilds "
                     "evaluation inputs and contracts only and does not "
                     "rebuild historical run evidence"
                 ),
