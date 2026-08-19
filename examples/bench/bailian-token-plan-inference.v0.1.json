@@ -6,7 +6,7 @@
       "name": "bailian",
       "description": "PER-390 approved Bailian token-plan endpoint for a bounded four-model MVP",
       "api": "openai_chat_completions_compatible",
-      "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
       "credential_env": "BENCH_BAILIAN_API_KEY",
       "default_parameters": {
         "temperature": "0.000000",

@@ -95,6 +95,13 @@ uv run bench compare runs/bench/per390-traces.jsonl \
   --output runs/bench/per390-aggregate.json
 ```
 
+本配置使用 Token Plan 华北 2（北京）OpenAI 兼容端点
+`https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`。来源：阿里云百炼
+《Token Plan 快速开始》（发布日期 2026，访问日期 2026-08-19，适用范围为 Token Plan
+个人版/团队版的中国区 OpenAI 兼容接入）：
+`https://help.aliyun.com/zh/model-studio/token-plan-quickstart`。Token Plan、Coding Plan 与
+按量付费的 Key/端点彼此隔离，不可混用。
+
 预检最多 4 次请求，并要求响应模型 ID 与请求 ID 逐字一致；矩阵最多 64 次请求，按
 4 models × 16 variants × 1 plain-agent × 1 repeat 顺序执行。没有金额上限，但不重试，
 provider 错误率超过 10% 即停止。trace 将 token-plan 的金额估算记为 `0.000000`，同时
