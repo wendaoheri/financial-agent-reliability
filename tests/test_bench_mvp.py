@@ -8,6 +8,7 @@ import unittest
 from contextlib import redirect_stdout
 from io import StringIO
 
+from financial_agent_reliability.bench.adapters import CandidateRequest, MockAdapter, OfflineMockTools
 from financial_agent_reliability.bench.cli import main
 from financial_agent_reliability.bench.model import (
     BenchInputError,
@@ -22,6 +23,7 @@ from financial_agent_reliability.bench.trace import append_traces, read_traces, 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 TASKS = ROOT / "examples" / "bench" / "mock-tasks.jsonl"
 CANDIDATES = ROOT / "examples" / "bench" / "mock-candidates.json"
+NEGATIVE_CONTROLS = ROOT / "examples" / "bench" / "negative-control-candidates.json"
 AUDIT = ROOT / "examples" / "bench" / "taskset-audit.v0.2.json"
 
 
@@ -63,7 +65,7 @@ class BenchMVPTests(unittest.TestCase):
                         "test-run",
                     ]
                 )
-            self.assertEqual(status, 0)
+            self.assertEqual(status, 1)
             traces = list(read_traces([trace_path]))
             self.assertEqual(len(traces), 64)
             self.assertEqual(
@@ -94,15 +96,21 @@ class BenchMVPTests(unittest.TestCase):
                     "rules-settlement-cutoff::at_availability",
                 },
             )
-            self.assertTrue(all(row["tool_calls"] == [] for row in traces))
+            plain = [row for row in traces if row["candidate"]["agent"] == "plain-agent"]
+            tool = [row for row in traces if row["candidate"]["agent"] == "tool-agent"]
+            self.assertTrue(all(row["tool_calls"] == [] for row in plain))
+            self.assertTrue(all(len(row["tool_calls"]) == 1 for row in tool))
+            self.assertTrue(all(row["tool_calls"][0]["action"] == "read" for row in tool))
+            self.assertTrue(all(row["tool_calls"][0]["status"] == "ok" for row in tool))
             self.assertTrue(all(row["metrics"]["cost_usd_estimate"] == "0.000000" for row in traces))
             self.assertTrue(all(row["score"] == {
                 "correctness": 4,
-                "evidence_quality": 2,
+                "evidence_quality": 0,
                 "safety": 1,
                 "hard_gate_passed": True,
                 "eligible_for_quality_aggregation": True,
-            } for row in traces))
+            } for row in plain))
+            self.assertTrue(all(row["score"]["evidence_quality"] == 2 for row in tool))
             self.assertTrue(all(len(row["versions"]["taskset_sha256"]) == 64 for row in traces))
 
     def test_compare_does_not_modify_raw_trace(self):
@@ -123,7 +131,7 @@ class BenchMVPTests(unittest.TestCase):
                         "immutable-source-test",
                     ]
                 ),
-                0,
+                1,
             )
             before = hashlib.sha256(trace_path.read_bytes()).hexdigest()
             stdout = StringIO()
@@ -140,6 +148,23 @@ class BenchMVPTests(unittest.TestCase):
             self.assertEqual(len(report["by_model"]), 2)
             self.assertEqual(len(report["by_agent"]), 2)
             self.assertEqual(report["overall"]["operational_metrics"]["cost_usd_estimate"], "0.000000")
+            agent_contrast = next(
+                item for item in report["overall"]["paired_contrasts"]
+                if item["axis"] == "agent"
+            )
+            model_contrast = next(
+                item for item in report["overall"]["paired_contrasts"]
+                if item["axis"] == "model"
+            )
+            self.assertEqual(agent_contrast["status"], "identifiable")
+            self.assertEqual(agent_contrast["delta_intervals_95"]["evidence_quality"]["mean"], 2.0)
+            self.assertEqual(model_contrast["status"], "non_identifiable")
+            self.assertLess(report["overall"]["uncertainty_95"]["safety_pass_rate"]["lower"], 1.0)
+            self.assertEqual(
+                report["overall"]["uncertainty_95"]["safety_pass_rate"]["method"], "wilson"
+            )
+            self.assertTrue(all("paired_contrasts" in row for row in report["by_slice"]))
+            self.assertTrue(all("paired_contrasts" in row for row in report["by_variant"]))
 
     def test_run_filters_slice_variant_and_candidate(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -152,7 +177,7 @@ class BenchMVPTests(unittest.TestCase):
                     "--candidate", "mock-small__plain-agent",
                 ]
             )
-            self.assertEqual(status, 0)
+            self.assertEqual(status, 1)
             traces = list(read_traces([trace_path]))
             self.assertEqual(len(traces), 1)
             self.assertEqual(traces[0]["task"]["slice"], "portfolio")
@@ -169,7 +194,7 @@ class BenchMVPTests(unittest.TestCase):
                     self.assertEqual(main([
                         "run", "--tasks", str(TASKS), "--candidates", str(CANDIDATES),
                         "--output", str(trace_path), "--run-id", f"repeat-{index}",
-                    ]), 0)
+                    ]), 1)
                     self.assertEqual(
                         main(["compare", str(trace_path), "--output", str(report_path)]), 0
                     )
@@ -187,37 +212,43 @@ class BenchMVPTests(unittest.TestCase):
             with self.assertRaisesRegex(BenchInputError, "matrix is incomplete: m2×a2"):
                 load_candidates(path)
 
-    def test_mock_failure_modes_leave_evidence_and_return_nonzero(self):
-        behaviors = ["failure", "timeout", "tool_error", "missing_evidence", "safety_violation"]
+    def test_candidate_boundary_excludes_gold_and_oracle_fields(self):
+        task = load_tasks(TASKS)[0]
+        request = CandidateRequest.from_payload(task["candidate_payload"])
+        visible = request.__dict__
+        self.assertNotIn("expected_output", visible)
+        self.assertNotIn("required_evidence", visible)
+        self.assertNotIn("safety_policy", visible)
+        self.assertNotIn("oracle", json.dumps(visible, sort_keys=True))
+        candidate = load_candidates(CANDIDATES)[0]
+        poisoned = dict(task)
+        poisoned["expected_output"] = {"status": "answer", "value": "POISON", "reason_codes": []}
+        self.assertNotEqual(
+            MockAdapter().execute(request, candidate, OfflineMockTools(request)).output,
+            poisoned["expected_output"],
+        )
+
+    def test_four_negative_controls_are_independently_graded(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = pathlib.Path(temporary)
-            candidates_path = root / "candidates.json"
-            candidates_path.write_text(
-                json.dumps({"candidates": [
-                    {"id": behavior, "model": "mock", "agent": behavior, "adapter": "mock", "config": {"behavior": behavior}}
-                    for behavior in behaviors
-                ]}),
-                encoding="utf-8",
-            )
             trace_path = root / "trace.jsonl"
             stdout = StringIO()
             with redirect_stdout(stdout):
                 status = main([
-                    "run", "--tasks", str(TASKS), "--candidates", str(candidates_path),
+                    "run", "--tasks", str(TASKS), "--candidates", str(NEGATIVE_CONTROLS),
                     "--output", str(trace_path), "--run-id", "failures",
                     "--slice", "market_data", "--variant", "valid_book",
                 ])
             self.assertEqual(status, 1)
-            self.assertEqual(json.loads(stdout.getvalue())["failed_cells"], 5)
-            traces = {row["candidate"]["id"]: row for row in read_traces([trace_path])}
-            self.assertEqual(traces["failure"]["error"]["code"], "ADAPTER_FAILURE")
-            self.assertEqual(traces["timeout"]["error"]["code"], "TIMEOUT")
-            self.assertEqual(traces["tool_error"]["tool_calls"][0]["status"], "error")
-            self.assertEqual(traces["missing_evidence"]["score"]["evidence_quality"], 0)
-            self.assertFalse(traces["safety_violation"]["score"]["hard_gate_passed"])
+            self.assertEqual(json.loads(stdout.getvalue())["failed_cells"], 4)
+            traces = {row["candidate"]["agent"]: row for row in read_traces([trace_path])}
+            self.assertEqual(traces["wrong-answer"]["score"]["correctness"], 0)
+            self.assertEqual(traces["missing-evidence"]["score"]["evidence_quality"], 0)
+            self.assertFalse(traces["forbidden-action"]["score"]["hard_gate_passed"])
+            self.assertEqual(traces["tool-error"]["error"]["code"], "TOOL_ERROR")
             self.assertEqual(
                 {row["failure_signature"]["code"] for row in traces.values()},
-                {"ADAPTER_FAILURE", "TIMEOUT", "TOOL_ERROR", "MISSING_EVIDENCE", "SAFETY_HARD_GATE"},
+                {"WRONG_ANSWER", "MISSING_EVIDENCE", "SAFETY_HARD_GATE", "TOOL_ERROR"},
             )
 
     def test_task_schema_has_ten_core_fields_and_p2_pairs_cover_eight_slices(self):

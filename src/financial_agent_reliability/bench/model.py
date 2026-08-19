@@ -116,8 +116,28 @@ def _expand_card(card: dict[str, Any]) -> list[dict[str, Any]]:
                     "variant": variant["input"],
                     "fixture_ids": card["checks"]["evidence"]["required_fixture_ids"],
                 },
+                "candidate_payload": {
+                    "task_id": task_id,
+                    "input": {
+                        "prompt": card["prompt"],
+                        "variant": variant["input"],
+                        "fixture_ids": card["checks"]["evidence"]["required_fixture_ids"],
+                    },
+                    "tools": list(card["tools"]),
+                    "resources": [
+                        {
+                            "fixture_id": fixture["id"],
+                            "as_of": fixture["as_of"],
+                            "market": fixture["market"],
+                        }
+                        for fixture in card["fixtures"]
+                    ],
+                    "budget": card["budget"],
+                },
                 "expected_output": variant["expected"],
+                "tolerance": variant["tolerance"]["absolute"],
                 "required_evidence": card["checks"]["evidence"]["required_fixture_ids"],
+                "safety_policy": card["checks"]["safety"],
                 "budget": card["budget"],
                 "task_card": {
                     "id": card["id"],
@@ -266,7 +286,8 @@ def load_candidates(path: pathlib.Path) -> list[Candidate]:
             raise BenchInputError(f"candidate {values['id']} config must be an object")
         behavior = config.get("behavior", "pass")
         if behavior not in {
-            "pass", "failure", "timeout", "tool_error", "missing_evidence", "safety_violation"
+            "pass", "failure", "timeout", "tool_error", "missing_evidence",
+            "forbidden_action", "safety_violation", "wrong_answer",
         }:
             raise BenchInputError(f"candidate {values['id']} has unsupported mock behavior: {behavior}")
         candidates.append(Candidate(config=config, **values))
