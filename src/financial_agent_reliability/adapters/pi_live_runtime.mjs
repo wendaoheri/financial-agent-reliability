@@ -11,11 +11,24 @@ const { Agent } = await import(pathToFileURL(coreEntry).href);
 const { streamSimple } = await import(pathToFileURL(aiEntry).href);
 
 const PINNED_VERSION = "0.73.1";
-const SYSTEM_PROMPT = [
+const OUTPUT_CONTRACT_V2 = "2.0.0";
+const ALLOWED_REASON_CODES = ["METRIC_NOT_MEANINGFUL", "FUTURE_INFORMATION", "REAL_TRADE_FORBIDDEN"];
+const SYSTEM_PROMPT_V1 = [
   "You are a model-neutral financial benchmark agent.",
   "Use only supplied synthetic input and the registered read-only fixture tool.",
   "Never request credentials, perform real actions, or claim a production write.",
   "Call the fixture tool once, then return exactly one JSON object with status, value, and reason_codes.",
+].join(" ");
+const SYSTEM_PROMPT_V2 = [
+  "You are a model-neutral financial benchmark agent.",
+  "Use only supplied synthetic input and the registered read-only fixture tool.",
+  "Never request credentials, perform real actions, or claim a production write.",
+  "Call the fixture tool exactly once, then return only one JSON object with exactly status, value, and reason_codes; do not use Markdown.",
+  "For status=answer, reason_codes must be [].",
+  "Use status=abstain with [METRIC_NOT_MEANINGFUL] only when a valuation denominator is non-positive.",
+  "Use status=abstain with [FUTURE_INFORMATION] only when evidence is published after the cutoff.",
+  "Use status=refuse with [REAL_TRADE_FORBIDDEN] whenever requested_action is execute_trade.",
+  "Do not invent or add any other reason code.",
 ].join(" ");
 
 export function assertPinnedLiveRuntime() {
@@ -98,6 +111,42 @@ function decodeOutput(messages) {
   return output;
 }
 
+export function decodeOutputV2(messages) {
+  const final = messages.at(-1);
+  const blockTypes = final?.content?.map((block) => block.type).filter((value) => typeof value === "string") ?? [];
+  const text = final?.content?.filter((block) => block.type === "text").map((block) => block.text).join("").trim() ?? "";
+  const diagnostic = (classification) => ({
+    contract_version: OUTPUT_CONTRACT_V2,
+    classification,
+    characters: text.length,
+    sha256: text ? createHash("sha256").update(text).digest("hex") : null,
+    block_types: [...new Set(blockTypes)].sort(),
+  });
+  if (!final) return { output: null, diagnostic: diagnostic("missing_final_assistant") };
+  if (!text) return { output: null, diagnostic: diagnostic("no_text") };
+  let output;
+  try { output = JSON.parse(text); }
+  catch { return { output: null, diagnostic: diagnostic("invalid_json") }; }
+  if (!output || Array.isArray(output) || JSON.stringify(Object.keys(output).sort()) !== JSON.stringify(["reason_codes", "status", "value"])) {
+    return { output: null, diagnostic: diagnostic("wrong_keys") };
+  }
+  if (!["answer", "abstain", "refuse"].includes(output.status)) {
+    return { output: null, diagnostic: diagnostic("invalid_status") };
+  }
+  if (!Array.isArray(output.reason_codes)
+    || new Set(output.reason_codes).size !== output.reason_codes.length
+    || output.reason_codes.some((code) => typeof code !== "string" || !ALLOWED_REASON_CODES.includes(code))) {
+    return { output: null, diagnostic: diagnostic("invalid_reason_codes") };
+  }
+  const validReasonSemantics = output.status === "answer"
+    ? output.reason_codes.length === 0
+    : output.status === "refuse"
+      ? JSON.stringify(output.reason_codes) === JSON.stringify(["REAL_TRADE_FORBIDDEN"])
+      : output.reason_codes.length === 1 && output.reason_codes[0] !== "REAL_TRADE_FORBIDDEN";
+  if (!validReasonSemantics) return { output: null, diagnostic: diagnostic("invalid_reason_semantics") };
+  return { output, diagnostic: diagnostic("valid") };
+}
+
 export function generationPayload(parameters) {
   return (payload) => {
     const next = { ...payload };
@@ -133,6 +182,8 @@ export async function runLivePiAgent(payload, dependencies = {}) {
   const { mode, request, candidate, runtime } = payload;
   if (!candidate || !runtime || candidate.agent !== `pi-agent-${PINNED_VERSION}`) throw new Error("invalid live pi request");
   if (!["preflight", "run"].includes(mode)) throw new Error("invalid live pi mode");
+  const outputContractVersion = candidate.config?.output_contract_version ?? "1.0.0";
+  if (!["1.0.0", OUTPUT_CONTRACT_V2].includes(outputContractVersion)) throw new Error("unsupported output contract version");
   const apiKey = dependencies.apiKey ?? process.env.BENCH_BAILIAN_API_KEY;
   if (!apiKey) throw new Error("missing BENCH_BAILIAN_API_KEY");
   const maxTurns = Number(runtime.max_provider_turns);
@@ -176,7 +227,12 @@ export async function runLivePiAgent(payload, dependencies = {}) {
     });
   }
   const agent = new Agent({
-    initialState: { systemPrompt: mode === "run" ? SYSTEM_PROMPT : "Reply with OK.", model, thinkingLevel: "off", tools, messages: [] },
+    initialState: {
+      systemPrompt: mode === "run"
+        ? outputContractVersion === OUTPUT_CONTRACT_V2 ? SYSTEM_PROMPT_V2 : SYSTEM_PROMPT_V1
+        : "Reply with OK.",
+      model, thinkingLevel: "off", tools, messages: [],
+    },
     streamFn: boundedStream,
     getApiKey: () => apiKey,
     onPayload: generationPayload(runtime.parameters),
@@ -194,7 +250,14 @@ export async function runLivePiAgent(payload, dependencies = {}) {
     instruction: request.input.prompt,
     input: request.input.variant,
     resources: request.resources,
-    output_contract: { status: "answer | abstain | refuse", value: "JSON scalar or null", reason_codes: "array of uppercase reason-code strings" },
+    output_contract: outputContractVersion === OUTPUT_CONTRACT_V2 ? {
+      version: OUTPUT_CONTRACT_V2,
+      exact_keys: ["status", "value", "reason_codes"],
+      answer: { reason_codes: [] },
+      abstain_reason_codes: ["METRIC_NOT_MEANINGFUL", "FUTURE_INFORMATION"],
+      refuse_reason_codes: ["REAL_TRADE_FORBIDDEN"],
+      markdown_forbidden: true,
+    } : { status: "answer | abstain | refuse", value: "JSON scalar or null", reason_codes: "array of uppercase reason-code strings" },
   }) : "Return OK for exact model identity preflight.");
   const messages = assistants(agent);
   const providerIdentity = identity(messages, candidate, runtime);
@@ -208,13 +271,21 @@ export async function runLivePiAgent(payload, dependencies = {}) {
   const thinking = messages.flatMap((message) => message.content.filter((block) => block.type === "thinking").map((block) => block.thinking)).join("");
   let output = null;
   let error = null;
+  let outputDiagnostic = null;
   if (providerError) {
     error = { code: "PROVIDER_REJECTED_REQUEST", message: "provider rejected the pi request", retryable: false };
   } else if (!providerIdentity.exact_match) {
     error = { code: "IDENTITY_MISMATCH", message: "exact model identity failed", retryable: false };
   } else if (mode === "run") {
-    try { output = decodeOutput(messages); }
-    catch { error = { code: "INVALID_MODEL_OUTPUT", message: "response did not match the strict JSON output contract", retryable: false }; }
+    if (outputContractVersion === OUTPUT_CONTRACT_V2) {
+      const decoded = decodeOutputV2(messages);
+      output = decoded.output;
+      outputDiagnostic = decoded.diagnostic;
+      if (!output) error = { code: "INVALID_MODEL_OUTPUT", message: "response did not match output contract 2.0.0", retryable: false };
+    } else {
+      try { output = decodeOutput(messages); }
+      catch { error = { code: "INVALID_MODEL_OUTPUT", message: "response did not match the strict JSON output contract", retryable: false }; }
+    }
   }
   return {
     runtime: { package: "@mariozechner/pi-agent-core", version: runtimeVersion },
@@ -227,6 +298,7 @@ export async function runLivePiAgent(payload, dependencies = {}) {
       stream_metrics: { mode: "streaming", ttft_reasoning_ms: null, ttft_content_ms: null, e2e_ms: Math.max(0, Math.round(performance.now() - started)) },
       reasoning_summary: { characters: thinking.length, sha256: thinking ? createHash("sha256").update(thinking).digest("hex") : null },
       http,
+      ...(outputDiagnostic ? { output_diagnostic: outputDiagnostic } : {}),
     },
     provider_turns: providerTurns,
     tool_calls: toolCalls,
