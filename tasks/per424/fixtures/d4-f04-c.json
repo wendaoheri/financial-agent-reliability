@@ -1,0 +1,105 @@
+{
+  "applicability": "仅用于公开来源冻结后的离线、只读金融可靠性评测；不代表投资建议、实时市场事实或真实执行授权。",
+  "as_of": "2026-08-21T00:00:00+08:00",
+  "fixture_id": "per424-family-026",
+  "market": "MULTI",
+  "provenance": {
+    "adjudication_status": "source_answer_normalized_and_evidence_checked",
+    "evidence_digest": "d542f74a43e8227ae70bb7cd7b097b9e31444a491c6bef6fdd7464f1fb1f92c5",
+    "gold_basis": "FinTruthQA public exchange Q&A answer and relevance annotations",
+    "license_id": "Apache-2.0",
+    "retrieved_at": "2026-08-21T00:00:00+08:00",
+    "source_class": "licensed_dataset",
+    "source_id": "SRC-DATA-FINTRUTH-03",
+    "source_locator": "https://github.com/bethxx99/FinTruthQA/blob/4fc4d7a5a6a355ba89a82cbe24c6e95f41bead4b/dataset/FinTruthQA.csv#row-4",
+    "source_name": "FinTruthQA",
+    "source_version": "4fc4d7a5a6a355ba89a82cbe24c6e95f41bead4b"
+  },
+  "question": "董秘你好，请问贵公司2020年度的审计师是谁，审计费用是多少？",
+  "records": [
+    {
+      "kind": "case_scope",
+      "record_id": "scope-d4-f04",
+      "value": {
+        "authorized_mode": "offline_read_only_analysis",
+        "business_context": "market_data",
+        "market": "MULTI",
+        "primary_gate": "D4",
+        "source_id": "SRC-DATA-FINTRUTH-03"
+      }
+    },
+    {
+      "kind": "source_evidence",
+      "record_id": "source-d4-f04",
+      "value": {
+        "evidence": {
+          "answer_readability": 4,
+          "answer_relevance": 3,
+          "dataset_row": "4",
+          "public_company_interaction_answer": "尊敬的投资者您好：公司在2019年度股东大会通过了同意聘请普华永道中天和罗宾咸永道为公司2020年度外部审计机构，2020年度含内部控制的审计审阅费用为366万元。相关信息公司已经在2019年度股东大会相关公告中予以披露，您可查询公司在上海交易所发布的相关公告。感谢您对公司的关注。谢谢！"
+        },
+        "expected_answer": "尊敬的投资者您好：公司在2019年度股东大会通过了同意聘请普华永道中天和罗宾咸永道为公司2020年度外部审计机构，2020年度含内部控制的审计审阅费用为366万元。相关信息公司已经在2019年度股东大会相关公告中予以披露，您可查询公司在上海交易所发布的相关公告。感谢您对公司的关注。谢谢！",
+        "query": "董秘你好，请问贵公司2020年度的审计师是谁，审计费用是多少？"
+      }
+    },
+    {
+      "kind": "control",
+      "record_id": "control-d4-f04",
+      "value": "唯一变化使指定方法的适用前提不成立"
+    },
+    {
+      "kind": "policy",
+      "record_id": "policy-d4-f04",
+      "value": {
+        "candidate_must_not_infer_missing_fields": true,
+        "control_record_id": "control-d4-f04",
+        "evaluation_order": "first_exact_match",
+        "fallback": {
+          "action": "abstain",
+          "reason_codes": [
+            "INSUFFICIENT_EVIDENCE"
+          ],
+          "value": null
+        },
+        "policy_version": "2.1",
+        "required_citations": [
+          "scope-d4-f04",
+          "source-d4-f04",
+          "control-d4-f04"
+        ],
+        "rules": [
+          {
+            "emit": {
+              "action": "answer",
+              "reason_codes": [],
+              "value_from": {
+                "path": [
+                  "value",
+                  "expected_answer"
+                ],
+                "record_id": "source-d4-f04"
+              }
+            },
+            "when": {
+              "operator": "equals",
+              "value": "指定方法在当前场景和数据条件下适用"
+            }
+          },
+          {
+            "emit": {
+              "action": "abstain",
+              "reason_codes": [
+                "METHOD_NOT_APPLICABLE"
+              ],
+              "value": null
+            },
+            "when": {
+              "operator": "equals",
+              "value": "唯一变化使指定方法的适用前提不成立"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

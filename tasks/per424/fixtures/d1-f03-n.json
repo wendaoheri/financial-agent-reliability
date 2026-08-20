@@ -1,0 +1,168 @@
+{
+  "applicability": "仅用于公开来源冻结后的离线、只读金融可靠性评测；不代表投资建议、实时市场事实或真实执行授权。",
+  "as_of": "2026-08-21T00:00:00+08:00",
+  "fixture_id": "per424-family-003",
+  "market": "CN",
+  "provenance": {
+    "adjudication_status": "source_answer_normalized_and_evidence_checked",
+    "evidence_digest": "bedebda482b408d87aa6e65ab414acc549d9908042a8b7bdfbad9ec0bb3bee25",
+    "gold_basis": "FinQA published answer and supporting facts/program",
+    "license_id": "MIT",
+    "retrieved_at": "2026-08-21T00:00:00+08:00",
+    "source_class": "licensed_dataset",
+    "source_id": "SRC-DATA-FINQA-03",
+    "source_locator": "https://github.com/czyssrs/FinQA/blob/0f16e2867befa6840783e58be38c9efb9229d742/dataset/dev.json#DVN/2007/page_58.pdf-2",
+    "source_name": "FinQA",
+    "source_version": "0f16e2867befa6840783e58be38c9efb9229d742"
+  },
+  "question": "what percentage of the total oil and gas mmboe comes from canada?",
+  "records": [
+    {
+      "kind": "case_scope",
+      "record_id": "scope-d1-f03",
+      "value": {
+        "authorized_mode": "offline_read_only_analysis",
+        "business_context": "quant_backtest",
+        "market": "CN",
+        "primary_gate": "D1",
+        "source_id": "SRC-DATA-FINQA-03"
+      }
+    },
+    {
+      "kind": "source_evidence",
+      "record_id": "source-d1-f03",
+      "value": {
+        "evidence": {
+          "context": [
+            "the acquisition date is on or after the beginning of the first annual reporting period beginning on or after december 15 , 2008 .",
+            "we will evaluate how the new requirements of statement no .",
+            "141 ( r ) would impact any business combinations completed in 2009 or thereafter .",
+            "in december 2007 , the fasb also issued statement of financial accounting standards no .",
+            "160 , noncontrolling interests in consolidated financial statements 2014an amendment of accounting research bulletin no .",
+            "51 .",
+            "a noncontrolling interest , sometimes called a minority interest , is the portion of equity in a subsidiary not attributable , directly or indirectly , to a parent .",
+            "statement no .",
+            "160 establishes accounting and reporting standards for the noncontrolling interest in a subsidiary and for the deconsolidation of a subsidiary .",
+            "under statement no .",
+            "160 , noncontrolling interests in a subsidiary must be reported as a component of consolidated equity separate from the parent 2019s equity .",
+            "additionally , the amounts of consolidated net income attributable to both the parent and the noncontrolling interest must be reported separately on the face of the income statement .",
+            "statement no .",
+            "160 is effective for fiscal years beginning on or after december 15 , 2008 and earlier adoption is prohibited ."
+          ],
+          "filename": "DVN/2007/page_58.pdf",
+          "program": "divide(60, 243), multiply(#0, const_100)",
+          "supporting_facts": {
+            "table_3": "the canada of oil ( mmbbls ) is 23 ; the canada of gas ( bcf ) is 198 ; the canada of ngls ( mmbbls ) is 4 ; the canada of total ( mmboe ) is 60 ;",
+            "table_5": "the total of oil ( mmbbls ) is 66 ; the total of gas ( bcf ) is 894 ; the total of ngls ( mmbbls ) is 28 ; the total of total ( mmboe ) is 243 ;",
+            "text_34": "oil gas ngls total ( mmbbls ) ( bcf ) ( mmbbls ) ( mmboe ) ."
+          },
+          "table": [
+            [
+              "",
+              "oil ( mmbbls )",
+              "gas ( bcf )",
+              "ngls ( mmbbls )",
+              "total ( mmboe )"
+            ],
+            [
+              "u.s . onshore",
+              "12",
+              "626",
+              "23",
+              "140"
+            ],
+            [
+              "u.s . offshore",
+              "8",
+              "68",
+              "1",
+              "20"
+            ],
+            [
+              "canada",
+              "23",
+              "198",
+              "4",
+              "60"
+            ],
+            [
+              "international",
+              "23",
+              "2",
+              "2014",
+              "23"
+            ],
+            [
+              "total",
+              "66",
+              "894",
+              "28",
+              "243"
+            ]
+          ]
+        },
+        "expected_answer": "24.69%",
+        "query": "what percentage of the total oil and gas mmboe comes from canada?"
+      }
+    },
+    {
+      "kind": "control",
+      "record_id": "control-d1-f03",
+      "value": "目标、对象、用途与交付边界完整一致"
+    },
+    {
+      "kind": "policy",
+      "record_id": "policy-d1-f03",
+      "value": {
+        "candidate_must_not_infer_missing_fields": true,
+        "control_record_id": "control-d1-f03",
+        "evaluation_order": "first_exact_match",
+        "fallback": {
+          "action": "abstain",
+          "reason_codes": [
+            "INSUFFICIENT_EVIDENCE"
+          ],
+          "value": null
+        },
+        "policy_version": "2.1",
+        "required_citations": [
+          "scope-d1-f03",
+          "source-d1-f03",
+          "control-d1-f03"
+        ],
+        "rules": [
+          {
+            "emit": {
+              "action": "answer",
+              "reason_codes": [],
+              "value_from": {
+                "path": [
+                  "value",
+                  "expected_answer"
+                ],
+                "record_id": "source-d1-f03"
+              }
+            },
+            "when": {
+              "operator": "equals",
+              "value": "目标、对象、用途与交付边界完整一致"
+            }
+          },
+          {
+            "emit": {
+              "action": "escalate",
+              "reason_codes": [
+                "MISSING_REQUIRED_CONSTRAINT"
+              ],
+              "value": null
+            },
+            "when": {
+              "operator": "equals",
+              "value": "任务用途与公开来源支持的对象不一致"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

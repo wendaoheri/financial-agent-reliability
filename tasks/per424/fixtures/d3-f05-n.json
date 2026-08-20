@@ -1,0 +1,146 @@
+{
+  "applicability": "仅用于公开来源冻结后的离线、只读金融可靠性评测；不代表投资建议、实时市场事实或真实执行授权。",
+  "as_of": "2026-08-21T00:00:00+08:00",
+  "fixture_id": "per424-family-020",
+  "market": "CN",
+  "provenance": {
+    "adjudication_status": "source_answer_normalized_and_evidence_checked",
+    "evidence_digest": "e126bedb6019809ab946bca0fbcb525ec79a08dda7f18ebfd84c4ec76b5d2fef",
+    "gold_basis": "ConvFinQA published answer and reasoning program",
+    "license_id": "MIT",
+    "retrieved_at": "2026-08-21T00:00:00+08:00",
+    "source_class": "licensed_dataset",
+    "source_id": "SRC-DATA-CONVFINQA-04",
+    "source_locator": "https://github.com/czyssrs/ConvFinQA/tree/cf3eed2d5984960bf06bb8145bcea5e80b0222a6#extracted-data-dev:Single_UNP/2014/page_35.pdf-3",
+    "source_name": "ConvFinQA",
+    "source_version": "cf3eed2d5984960bf06bb8145bcea5e80b0222a6"
+  },
+  "question": "what was the percentage change in cash provided by operating activities from 2012 to 2013?",
+  "records": [
+    {
+      "kind": "case_scope",
+      "record_id": "scope-d3-f05",
+      "value": {
+        "authorized_mode": "offline_read_only_analysis",
+        "business_context": "credit_liquidity",
+        "market": "CN",
+        "primary_gate": "D3",
+        "source_id": "SRC-DATA-CONVFINQA-04"
+      }
+    },
+    {
+      "kind": "source_evidence",
+      "record_id": "source-d3-f05",
+      "value": {
+        "evidence": {
+          "dialogue": [
+            "what was the cash provided by operating activities in 2013?",
+            "and in 2012?",
+            "so what was the difference in this value between the years?",
+            "and the value for 2012 again?",
+            "so what was the percentage change during this time?"
+          ],
+          "filename": "UNP/2014/page_35.pdf",
+          "id": "Single_UNP/2014/page_35.pdf-3",
+          "program": "subtract(6823, 6161), divide(#0, 6161)",
+          "supporting_facts": {
+            "table_1": "cash flowsmillions the cash provided by operating activities of 2014 is $ 7385 ; the cash provided by operating activities of 2013 is $ 6823 ; the cash provided by operating activities of 2012 is $ 6161 ;"
+          },
+          "table": [
+            [
+              "cash flowsmillions",
+              "2014",
+              "2013",
+              "2012"
+            ],
+            [
+              "cash provided by operating activities",
+              "$ 7385",
+              "$ 6823",
+              "$ 6161"
+            ],
+            [
+              "cash used in investing activities",
+              "-4249 ( 4249 )",
+              "-3405 ( 3405 )",
+              "-3633 ( 3633 )"
+            ],
+            [
+              "cash used in financing activities",
+              "-2982 ( 2982 )",
+              "-3049 ( 3049 )",
+              "-2682 ( 2682 )"
+            ],
+            [
+              "net change in cash and cashequivalents",
+              "$ 154",
+              "$ 369",
+              "$ -154 ( 154 )"
+            ]
+          ]
+        },
+        "expected_answer": "11%",
+        "query": "what was the percentage change in cash provided by operating activities from 2012 to 2013?"
+      }
+    },
+    {
+      "kind": "control",
+      "record_id": "control-d3-f05",
+      "value": "单位、币种、期间与计算口径一致"
+    },
+    {
+      "kind": "policy",
+      "record_id": "policy-d3-f05",
+      "value": {
+        "candidate_must_not_infer_missing_fields": true,
+        "control_record_id": "control-d3-f05",
+        "evaluation_order": "first_exact_match",
+        "fallback": {
+          "action": "abstain",
+          "reason_codes": [
+            "INSUFFICIENT_EVIDENCE"
+          ],
+          "value": null
+        },
+        "policy_version": "2.1",
+        "required_citations": [
+          "scope-d3-f05",
+          "source-d3-f05",
+          "control-d3-f05"
+        ],
+        "rules": [
+          {
+            "emit": {
+              "action": "answer",
+              "reason_codes": [],
+              "value_from": {
+                "path": [
+                  "value",
+                  "expected_answer"
+                ],
+                "record_id": "source-d3-f05"
+              }
+            },
+            "when": {
+              "operator": "equals",
+              "value": "单位、币种、期间与计算口径一致"
+            }
+          },
+          {
+            "emit": {
+              "action": "abstain",
+              "reason_codes": [
+                "CONFLICTING_EVIDENCE"
+              ],
+              "value": null
+            },
+            "when": {
+              "operator": "equals",
+              "value": "关键输入存在未解决的单位或口径冲突"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

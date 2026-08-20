@@ -1,0 +1,105 @@
+{
+  "applicability": "仅用于公开来源冻结后的离线、只读金融可靠性评测；不代表投资建议、实时市场事实或真实执行授权。",
+  "as_of": "2026-08-21T00:00:00+08:00",
+  "fixture_id": "per424-family-025",
+  "market": "HK",
+  "provenance": {
+    "adjudication_status": "source_answer_normalized_and_evidence_checked",
+    "evidence_digest": "e157295a31f449c9f1ca15de11ad20b185ef88e3f6b1f0d943e682b2daa098f3",
+    "gold_basis": "FinTruthQA public exchange Q&A answer and relevance annotations",
+    "license_id": "Apache-2.0",
+    "retrieved_at": "2026-08-21T00:00:00+08:00",
+    "source_class": "licensed_dataset",
+    "source_id": "SRC-DATA-FINTRUTH-02",
+    "source_locator": "https://github.com/bethxx99/FinTruthQA/blob/4fc4d7a5a6a355ba89a82cbe24c6e95f41bead4b/dataset/FinTruthQA.csv#row-3",
+    "source_name": "FinTruthQA",
+    "source_version": "4fc4d7a5a6a355ba89a82cbe24c6e95f41bead4b"
+  },
+  "question": "据第一财经报道，“现在要货的话都已经排到明年才能出货。”请问是否属实？是否可借用母公司海尔集团生产线，扩大产能？",
+  "records": [
+    {
+      "kind": "case_scope",
+      "record_id": "scope-d4-f03",
+      "value": {
+        "authorized_mode": "offline_read_only_analysis",
+        "business_context": "fundamentals_valuation",
+        "market": "HK",
+        "primary_gate": "D4",
+        "source_id": "SRC-DATA-FINTRUTH-02"
+      }
+    },
+    {
+      "kind": "source_evidence",
+      "record_id": "source-d4-f03",
+      "value": {
+        "evidence": {
+          "answer_readability": 4,
+          "answer_relevance": 2,
+          "dataset_row": "3",
+          "public_company_interaction_answer": "尊敬的投资者您好，公司于2019年底完成新工厂搬迁，新工厂的设计产能为20万台/年，同时公司致力于通过高效有序管理保证生产效率提升和订单要求满足，感谢您的关注！"
+        },
+        "expected_answer": "尊敬的投资者您好，公司于2019年底完成新工厂搬迁，新工厂的设计产能为20万台/年，同时公司致力于通过高效有序管理保证生产效率提升和订单要求满足，感谢您的关注！",
+        "query": "据第一财经报道，“现在要货的话都已经排到明年才能出货。”请问是否属实？是否可借用母公司海尔集团生产线，扩大产能？"
+      }
+    },
+    {
+      "kind": "control",
+      "record_id": "control-d4-f03",
+      "value": "唯一变化使指定方法的适用前提不成立"
+    },
+    {
+      "kind": "policy",
+      "record_id": "policy-d4-f03",
+      "value": {
+        "candidate_must_not_infer_missing_fields": true,
+        "control_record_id": "control-d4-f03",
+        "evaluation_order": "first_exact_match",
+        "fallback": {
+          "action": "abstain",
+          "reason_codes": [
+            "INSUFFICIENT_EVIDENCE"
+          ],
+          "value": null
+        },
+        "policy_version": "2.1",
+        "required_citations": [
+          "scope-d4-f03",
+          "source-d4-f03",
+          "control-d4-f03"
+        ],
+        "rules": [
+          {
+            "emit": {
+              "action": "answer",
+              "reason_codes": [],
+              "value_from": {
+                "path": [
+                  "value",
+                  "expected_answer"
+                ],
+                "record_id": "source-d4-f03"
+              }
+            },
+            "when": {
+              "operator": "equals",
+              "value": "指定方法在当前场景和数据条件下适用"
+            }
+          },
+          {
+            "emit": {
+              "action": "abstain",
+              "reason_codes": [
+                "METHOD_NOT_APPLICABLE"
+              ],
+              "value": null
+            },
+            "when": {
+              "operator": "equals",
+              "value": "唯一变化使指定方法的适用前提不成立"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

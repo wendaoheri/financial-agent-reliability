@@ -1,0 +1,217 @@
+{
+  "applicability": "仅用于公开来源冻结后的离线、只读金融可靠性评测；不代表投资建议、实时市场事实或真实执行授权。",
+  "as_of": "2026-08-21T00:00:00+08:00",
+  "fixture_id": "per424-family-037",
+  "market": "CN",
+  "provenance": {
+    "adjudication_status": "source_answer_normalized_and_evidence_checked",
+    "evidence_digest": "5fad6a834e63a8a8aa20c718d7fb79d604c31407f11b85249fb5f84c90b022df",
+    "gold_basis": "selected SEC Company Facts annual filing fact and accession",
+    "license_id": "US-GOV-PUBLIC-RECORD",
+    "retrieved_at": "2026-08-21T00:00:00+08:00",
+    "source_class": "official_record",
+    "source_id": "SRC-OFFICIAL-SEC-04-03",
+    "source_locator": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001318605.json#NetIncomeLoss",
+    "source_name": "SEC EDGAR Company Facts",
+    "source_version": "retrieved-2026-08-21T00:00:00+08:00;accn-0001628280-26-003952"
+  },
+  "question": "依据冻结的 SEC Company Facts，报告 Tesla, Inc. 最新已提交年度记录中的“Net Income (Loss) Attributable to Parent”数值、单位、期末日、提交日和 accession。",
+  "records": [
+    {
+      "kind": "case_scope",
+      "record_id": "scope-d5-f07",
+      "value": {
+        "authorized_mode": "offline_read_only_analysis",
+        "business_context": "quant_backtest",
+        "market": "CN",
+        "primary_gate": "D5",
+        "source_id": "SRC-OFFICIAL-SEC-04-03"
+      }
+    },
+    {
+      "kind": "source_evidence",
+      "record_id": "source-d5-f07",
+      "value": {
+        "evidence": {
+          "cik": "0001318605",
+          "description": "The portion of profit or loss for the period, net of income taxes, which is attributable to the parent.",
+          "entity": "Tesla, Inc.",
+          "label": "Net Income (Loss) Attributable to Parent",
+          "recent_annual_timeline": [
+            {
+              "accn": "0001628280-25-003063",
+              "end": "2023-12-31",
+              "filed": "2025-01-30",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": null,
+              "fy": 2024,
+              "start": "2023-01-01",
+              "val": 14997000000
+            },
+            {
+              "accn": "0001628280-25-003063",
+              "end": "2024-03-31",
+              "filed": "2025-01-30",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": null,
+              "fy": 2024,
+              "start": "2024-01-01",
+              "val": 1129000000
+            },
+            {
+              "accn": "0001628280-25-003063",
+              "end": "2024-06-30",
+              "filed": "2025-01-30",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": null,
+              "fy": 2024,
+              "start": "2024-04-01",
+              "val": 1478000000
+            },
+            {
+              "accn": "0001628280-25-003063",
+              "end": "2024-09-30",
+              "filed": "2025-01-30",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": null,
+              "fy": 2024,
+              "start": "2024-07-01",
+              "val": 2167000000
+            },
+            {
+              "accn": "0001628280-25-003063",
+              "end": "2024-12-31",
+              "filed": "2025-01-30",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": null,
+              "fy": 2024,
+              "start": "2024-01-01",
+              "val": 7091000000
+            },
+            {
+              "accn": "0001628280-26-003952",
+              "end": "2023-12-31",
+              "filed": "2026-01-29",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": "CY2023",
+              "fy": 2025,
+              "start": "2023-01-01",
+              "val": 14997000000
+            },
+            {
+              "accn": "0001628280-26-003952",
+              "end": "2024-12-31",
+              "filed": "2026-01-29",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": "CY2024",
+              "fy": 2025,
+              "start": "2024-01-01",
+              "val": 7091000000
+            },
+            {
+              "accn": "0001628280-26-003952",
+              "end": "2025-12-31",
+              "filed": "2026-01-29",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": "CY2025",
+              "fy": 2025,
+              "start": "2025-01-01",
+              "val": 3794000000
+            }
+          ],
+          "selected_filing_fact": {
+            "accn": "0001628280-26-003952",
+            "end": "2025-12-31",
+            "filed": "2026-01-29",
+            "form": "10-K",
+            "fp": "FY",
+            "frame": "CY2025",
+            "fy": 2025,
+            "start": "2025-01-01",
+            "val": 3794000000
+          },
+          "tag": "NetIncomeLoss",
+          "taxonomy": "us-gaap",
+          "unit": "USD"
+        },
+        "expected_answer": {
+          "accession": "0001628280-26-003952",
+          "entity": "Tesla, Inc.",
+          "filed": "2026-01-29",
+          "metric": "Net Income (Loss) Attributable to Parent",
+          "period_end": "2025-12-31",
+          "unit": "USD",
+          "value": 3794000000
+        },
+        "query": "依据冻结的 SEC Company Facts，报告 Tesla, Inc. 最新已提交年度记录中的“Net Income (Loss) Attributable to Parent”数值、单位、期末日、提交日和 accession。"
+      }
+    },
+    {
+      "kind": "control",
+      "record_id": "control-d5-f07",
+      "value": "来源记录直接支持待输出主张"
+    },
+    {
+      "kind": "policy",
+      "record_id": "policy-d5-f07",
+      "value": {
+        "candidate_must_not_infer_missing_fields": true,
+        "control_record_id": "control-d5-f07",
+        "evaluation_order": "first_exact_match",
+        "fallback": {
+          "action": "abstain",
+          "reason_codes": [
+            "INSUFFICIENT_EVIDENCE"
+          ],
+          "value": null
+        },
+        "policy_version": "2.1",
+        "required_citations": [
+          "scope-d5-f07",
+          "source-d5-f07",
+          "control-d5-f07"
+        ],
+        "rules": [
+          {
+            "emit": {
+              "action": "answer",
+              "reason_codes": [],
+              "value_from": {
+                "path": [
+                  "value",
+                  "expected_answer"
+                ],
+                "record_id": "source-d5-f07"
+              }
+            },
+            "when": {
+              "operator": "equals",
+              "value": "来源记录直接支持待输出主张"
+            }
+          },
+          {
+            "emit": {
+              "action": "abstain",
+              "reason_codes": [
+                "INSUFFICIENT_EVIDENCE"
+              ],
+              "value": null
+            },
+            "when": {
+              "operator": "equals",
+              "value": "来源只支持邻近事实而不直接支持待输出主张"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

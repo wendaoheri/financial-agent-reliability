@@ -5,6 +5,7 @@ import pathlib
 import tempfile
 import unittest
 from contextlib import redirect_stdout
+from datetime import UTC, datetime, timedelta
 from io import StringIO
 from unittest.mock import patch
 
@@ -208,14 +209,22 @@ class PiAgentOfflineTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             path = pathlib.Path(temporary) / "preflight.json"
             versions = {"config_sha256": "a" * 64}
+            now = datetime.now(UTC)
             path.write_text(
                 json.dumps(
                     {
                         "status": "passed",
+                        "created_at": now.isoformat().replace("+00:00", "Z"),
+                        "expires_at": (now + timedelta(hours=24))
+                        .isoformat()
+                        .replace("+00:00", "Z"),
                         "config_sha256": "a" * 64,
                         "models": [
                             {
+                                "candidate_id": candidate.id,
                                 "model": candidate.model,
+                                "agent": candidate.agent,
+                                "adapter": candidate.adapter,
                                 "status": "passed",
                                 "identity": {"exact_match": True},
                             }
@@ -227,6 +236,38 @@ class PiAgentOfflineTests(unittest.TestCase):
             )
             _bind_live_preflight(path, [candidates[0]], versions)
         self.assertEqual(len(versions["preflight_sha256"]), 64)
+
+    def test_bound_preflight_rejects_expired_or_candidate_mismatched_evidence(self):
+        candidate = load_candidates(PI_CALIBRATION_CONFIG)[0]
+        now = datetime.now(UTC)
+        report = {
+            "status": "passed",
+            "created_at": (now - timedelta(hours=25)).isoformat().replace("+00:00", "Z"),
+            "expires_at": (now - timedelta(hours=1)).isoformat().replace("+00:00", "Z"),
+            "config_sha256": "a" * 64,
+            "models": [
+                {
+                    "candidate_id": candidate.id,
+                    "model": candidate.model,
+                    "agent": candidate.agent,
+                    "adapter": candidate.adapter,
+                    "status": "passed",
+                    "identity": {"exact_match": True},
+                }
+            ],
+        }
+        with tempfile.TemporaryDirectory() as temporary:
+            path = pathlib.Path(temporary) / "preflight.json"
+            path.write_text(json.dumps(report), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "expired"):
+                _bind_live_preflight(path, [candidate], {"config_sha256": "a" * 64})
+
+            report["created_at"] = now.isoformat().replace("+00:00", "Z")
+            report["expires_at"] = (now + timedelta(hours=24)).isoformat().replace("+00:00", "Z")
+            report["models"][0]["candidate_id"] = "different-candidate"
+            path.write_text(json.dumps(report), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "candidate identities"):
+                _bind_live_preflight(path, [candidate], {"config_sha256": "a" * 64})
 
 
 if __name__ == "__main__":

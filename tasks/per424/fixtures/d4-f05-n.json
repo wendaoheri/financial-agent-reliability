@@ -1,0 +1,215 @@
+{
+  "applicability": "仅用于公开来源冻结后的离线、只读金融可靠性评测；不代表投资建议、实时市场事实或真实执行授权。",
+  "as_of": "2026-08-21T00:00:00+08:00",
+  "fixture_id": "per424-family-027",
+  "market": "MULTI",
+  "provenance": {
+    "adjudication_status": "source_answer_normalized_and_evidence_checked",
+    "evidence_digest": "8aabe144d05342d8ca68b5e0aad3342fa6aee56403b0faf6b7045cc93b652ce6",
+    "gold_basis": "selected SEC Company Facts annual filing fact and accession",
+    "license_id": "US-GOV-PUBLIC-RECORD",
+    "retrieved_at": "2026-08-21T00:00:00+08:00",
+    "source_class": "official_record",
+    "source_id": "SRC-OFFICIAL-SEC-03-01",
+    "source_locator": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001045810.json#Assets",
+    "source_name": "SEC EDGAR Company Facts",
+    "source_version": "retrieved-2026-08-21T00:00:00+08:00;accn-0001045810-26-000021"
+  },
+  "question": "依据冻结的 SEC Company Facts，报告 NVIDIA CORP 最新已提交年度记录中的“Assets”数值、单位、期末日、提交日和 accession。",
+  "records": [
+    {
+      "kind": "case_scope",
+      "record_id": "scope-d4-f05",
+      "value": {
+        "authorized_mode": "offline_read_only_analysis",
+        "business_context": "cross_market",
+        "market": "MULTI",
+        "primary_gate": "D4",
+        "source_id": "SRC-OFFICIAL-SEC-03-01"
+      }
+    },
+    {
+      "kind": "source_evidence",
+      "record_id": "source-d4-f05",
+      "value": {
+        "evidence": {
+          "cik": "0001045810",
+          "description": "Sum of the carrying amounts as of the balance sheet date of all assets that are recognized. Assets are probable future economic benefits obtained or controlled by an entity as a result of past transactions or events.",
+          "entity": "NVIDIA CORP",
+          "label": "Assets",
+          "recent_annual_timeline": [
+            {
+              "accn": "0001045810-23-000017",
+              "end": "2022-01-30",
+              "filed": "2023-02-24",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": "CY2021Q4I",
+              "fy": 2023,
+              "start": null,
+              "val": 44187000000
+            },
+            {
+              "accn": "0001045810-23-000017",
+              "end": "2023-01-29",
+              "filed": "2023-02-24",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": null,
+              "fy": 2023,
+              "start": null,
+              "val": 41182000000
+            },
+            {
+              "accn": "0001045810-24-000029",
+              "end": "2023-01-29",
+              "filed": "2024-02-21",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": "CY2022Q4I",
+              "fy": 2024,
+              "start": null,
+              "val": 41182000000
+            },
+            {
+              "accn": "0001045810-24-000029",
+              "end": "2024-01-28",
+              "filed": "2024-02-21",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": null,
+              "fy": 2024,
+              "start": null,
+              "val": 65728000000
+            },
+            {
+              "accn": "0001045810-25-000023",
+              "end": "2024-01-28",
+              "filed": "2025-02-26",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": "CY2023Q4I",
+              "fy": 2025,
+              "start": null,
+              "val": 65728000000
+            },
+            {
+              "accn": "0001045810-25-000023",
+              "end": "2025-01-26",
+              "filed": "2025-02-26",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": null,
+              "fy": 2025,
+              "start": null,
+              "val": 111601000000
+            },
+            {
+              "accn": "0001045810-26-000021",
+              "end": "2025-01-26",
+              "filed": "2026-02-25",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": "CY2024Q4I",
+              "fy": 2026,
+              "start": null,
+              "val": 111601000000
+            },
+            {
+              "accn": "0001045810-26-000021",
+              "end": "2026-01-25",
+              "filed": "2026-02-25",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": null,
+              "fy": 2026,
+              "start": null,
+              "val": 206803000000
+            }
+          ],
+          "selected_filing_fact": {
+            "accn": "0001045810-26-000021",
+            "end": "2026-01-25",
+            "filed": "2026-02-25",
+            "form": "10-K",
+            "fp": "FY",
+            "fy": 2026,
+            "val": 206803000000
+          },
+          "tag": "Assets",
+          "taxonomy": "us-gaap",
+          "unit": "USD"
+        },
+        "expected_answer": {
+          "accession": "0001045810-26-000021",
+          "entity": "NVIDIA CORP",
+          "filed": "2026-02-25",
+          "metric": "Assets",
+          "period_end": "2026-01-25",
+          "unit": "USD",
+          "value": 206803000000
+        },
+        "query": "依据冻结的 SEC Company Facts，报告 NVIDIA CORP 最新已提交年度记录中的“Assets”数值、单位、期末日、提交日和 accession。"
+      }
+    },
+    {
+      "kind": "control",
+      "record_id": "control-d4-f05",
+      "value": "指定方法在当前场景和数据条件下适用"
+    },
+    {
+      "kind": "policy",
+      "record_id": "policy-d4-f05",
+      "value": {
+        "candidate_must_not_infer_missing_fields": true,
+        "control_record_id": "control-d4-f05",
+        "evaluation_order": "first_exact_match",
+        "fallback": {
+          "action": "abstain",
+          "reason_codes": [
+            "INSUFFICIENT_EVIDENCE"
+          ],
+          "value": null
+        },
+        "policy_version": "2.1",
+        "required_citations": [
+          "scope-d4-f05",
+          "source-d4-f05",
+          "control-d4-f05"
+        ],
+        "rules": [
+          {
+            "emit": {
+              "action": "answer",
+              "reason_codes": [],
+              "value_from": {
+                "path": [
+                  "value",
+                  "expected_answer"
+                ],
+                "record_id": "source-d4-f05"
+              }
+            },
+            "when": {
+              "operator": "equals",
+              "value": "指定方法在当前场景和数据条件下适用"
+            }
+          },
+          {
+            "emit": {
+              "action": "abstain",
+              "reason_codes": [
+                "METHOD_NOT_APPLICABLE"
+              ],
+              "value": null
+            },
+            "when": {
+              "operator": "equals",
+              "value": "唯一变化使指定方法的适用前提不成立"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

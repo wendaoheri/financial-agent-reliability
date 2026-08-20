@@ -1,0 +1,112 @@
+{
+  "applicability": "仅用于公开来源冻结后的离线、只读金融可靠性评测；不代表投资建议、实时市场事实或真实执行授权。",
+  "as_of": "2026-08-21T00:00:00+08:00",
+  "fixture_id": "per424-family-038",
+  "market": "US",
+  "provenance": {
+    "adjudication_status": "source_answer_normalized_and_evidence_checked",
+    "evidence_digest": "ef945d5d033c1103cbcd2bc198deaa03457d3f70083ed19484693bca1769f248",
+    "gold_basis": "CFQA published answer and annual-report page locator",
+    "license_id": "MIT",
+    "retrieved_at": "2026-08-21T00:00:00+08:00",
+    "source_class": "licensed_dataset",
+    "source_id": "SRC-DATA-CFQA-03",
+    "source_locator": "https://github.com/ygan/CFQA/blob/61c9ec3c4335d0411a1735cd228af8b3ead114fc/dataset/split_by_company/split_by_company_dev.json#id-136",
+    "source_name": "CFQA",
+    "source_version": "61c9ec3c4335d0411a1735cd228af8b3ead114fc"
+  },
+  "question": "请问2021年的项目建设有什么?",
+  "records": [
+    {
+      "kind": "case_scope",
+      "record_id": "scope-d6-f01",
+      "value": {
+        "authorized_mode": "offline_read_only_analysis",
+        "business_context": "filings",
+        "market": "US",
+        "primary_gate": "D6",
+        "source_id": "SRC-DATA-CFQA-03"
+      }
+    },
+    {
+      "kind": "source_evidence",
+      "record_id": "source-d6-f01",
+      "value": {
+        "evidence": {
+          "answer_pages": [
+            [
+              28,
+              29,
+              30,
+              31
+            ]
+          ],
+          "company": "南玻A",
+          "published_answer": "南玻公司2021年的项目建设有：肇庆南玻高档节能玻璃生产线项目；肇庆南玻高档汽车玻璃生产线项目；安徽凤阳石英砂项目；安徽凤阳太阳能装备用轻质高透面板制造基地项目；天津节能镀膜生产线购置及升级改造项目；吴江工程新建工程玻璃智能制造工厂建设项目；东莞太阳能轻质高效双玻加工生产线建设项目；吴江浮法轻质高效双玻加工生产线建设项目；西安南玻节能玻璃生产线项目；河北视窗超薄电子玻璃二线建设项目；咸宁南玻1200T/D 光伏封装材料生产线项目；东莞南玻太阳能双玻压延线技术改造升级项目；南玻华东总部大厦；南玻集团广西北海光伏绿色能源产业园（一期）项目；合肥南玻节能玻璃智能制造产业基地项目；咸宁南玻节能玻璃有限公司生产线改扩建建设项目；清远南玻节能新材料有限公司一期升级技改项目。",
+          "stock_code": "000012"
+        },
+        "expected_answer": "南玻公司2021年的项目建设有：肇庆南玻高档节能玻璃生产线项目；肇庆南玻高档汽车玻璃生产线项目；安徽凤阳石英砂项目；安徽凤阳太阳能装备用轻质高透面板制造基地项目；天津节能镀膜生产线购置及升级改造项目；吴江工程新建工程玻璃智能制造工厂建设项目；东莞太阳能轻质高效双玻加工生产线建设项目；吴江浮法轻质高效双玻加工生产线建设项目；西安南玻节能玻璃生产线项目；河北视窗超薄电子玻璃二线建设项目；咸宁南玻1200T/D 光伏封装材料生产线项目；东莞南玻太阳能双玻压延线技术改造升级项目；南玻华东总部大厦；南玻集团广西北海光伏绿色能源产业园（一期）项目；合肥南玻节能玻璃智能制造产业基地项目；咸宁南玻节能玻璃有限公司生产线改扩建建设项目；清远南玻节能新材料有限公司一期升级技改项目。",
+        "query": "请问2021年的项目建设有什么?"
+      }
+    },
+    {
+      "kind": "control",
+      "record_id": "control-d6-f01",
+      "value": "合理不确定区间未跨越行动阈值"
+    },
+    {
+      "kind": "policy",
+      "record_id": "policy-d6-f01",
+      "value": {
+        "candidate_must_not_infer_missing_fields": true,
+        "control_record_id": "control-d6-f01",
+        "evaluation_order": "first_exact_match",
+        "fallback": {
+          "action": "abstain",
+          "reason_codes": [
+            "INSUFFICIENT_EVIDENCE"
+          ],
+          "value": null
+        },
+        "policy_version": "2.1",
+        "required_citations": [
+          "scope-d6-f01",
+          "source-d6-f01",
+          "control-d6-f01"
+        ],
+        "rules": [
+          {
+            "emit": {
+              "action": "answer",
+              "reason_codes": [],
+              "value_from": {
+                "path": [
+                  "value",
+                  "expected_answer"
+                ],
+                "record_id": "source-d6-f01"
+              }
+            },
+            "when": {
+              "operator": "equals",
+              "value": "合理不确定区间未跨越行动阈值"
+            }
+          },
+          {
+            "emit": {
+              "action": "escalate",
+              "reason_codes": [
+                "UNCERTAINTY_TOO_HIGH"
+              ],
+              "value": null
+            },
+            "when": {
+              "operator": "equals",
+              "value": "合理不确定区间跨越行动阈值"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

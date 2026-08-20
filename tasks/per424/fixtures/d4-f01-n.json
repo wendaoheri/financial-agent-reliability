@@ -1,0 +1,157 @@
+{
+  "applicability": "仅用于公开来源冻结后的离线、只读金融可靠性评测；不代表投资建议、实时市场事实或真实执行授权。",
+  "as_of": "2026-08-21T00:00:00+08:00",
+  "fixture_id": "per424-family-023",
+  "market": "US",
+  "provenance": {
+    "adjudication_status": "source_answer_normalized_and_evidence_checked",
+    "evidence_digest": "192bc32ec64f62c3feaceb8a3e2cef5006a3cd47046953546c45e0e41a1d5282",
+    "gold_basis": "ConvFinQA published answer and reasoning program",
+    "license_id": "MIT",
+    "retrieved_at": "2026-08-21T00:00:00+08:00",
+    "source_class": "licensed_dataset",
+    "source_id": "SRC-DATA-CONVFINQA-05",
+    "source_locator": "https://github.com/czyssrs/ConvFinQA/tree/cf3eed2d5984960bf06bb8145bcea5e80b0222a6#extracted-data-dev:Single_DVN/2007/page_58.pdf-3",
+    "source_name": "ConvFinQA",
+    "source_version": "cf3eed2d5984960bf06bb8145bcea5e80b0222a6"
+  },
+  "question": "what percentage of the total oil and gas mmboe comes from canada?",
+  "records": [
+    {
+      "kind": "case_scope",
+      "record_id": "scope-d4-f01",
+      "value": {
+        "authorized_mode": "offline_read_only_analysis",
+        "business_context": "event_risk",
+        "market": "US",
+        "primary_gate": "D4",
+        "source_id": "SRC-DATA-CONVFINQA-05"
+      }
+    },
+    {
+      "kind": "source_evidence",
+      "record_id": "source-d4-f01",
+      "value": {
+        "evidence": {
+          "dialogue": [
+            "what is the amount of oil and gas mmboe from canada divided by the total?",
+            "what is that times 100?"
+          ],
+          "filename": "DVN/2007/page_58.pdf",
+          "id": "Single_DVN/2007/page_58.pdf-3",
+          "program": "divide(60, 243), multiply(#0, const_100)",
+          "supporting_facts": {
+            "table_3": "the canada of oil ( mmbbls ) is 23 ; the canada of gas ( bcf ) is 198 ; the canada of ngls ( mmbbls ) is 4 ; the canada of total ( mmboe ) is 60 ;",
+            "table_5": "the total of oil ( mmbbls ) is 66 ; the total of gas ( bcf ) is 894 ; the total of ngls ( mmbbls ) is 28 ; the total of total ( mmboe ) is 243 ;",
+            "text_34": "oil gas ngls total ( mmbbls ) ( bcf ) ( mmbbls ) ( mmboe ) ."
+          },
+          "table": [
+            [
+              "",
+              "oil ( mmbbls )",
+              "gas ( bcf )",
+              "ngls ( mmbbls )",
+              "total ( mmboe )"
+            ],
+            [
+              "u.s . onshore",
+              "12",
+              "626",
+              "23",
+              "140"
+            ],
+            [
+              "u.s . offshore",
+              "8",
+              "68",
+              "1",
+              "20"
+            ],
+            [
+              "canada",
+              "23",
+              "198",
+              "4",
+              "60"
+            ],
+            [
+              "international",
+              "23",
+              "2",
+              "2014",
+              "23"
+            ],
+            [
+              "total",
+              "66",
+              "894",
+              "28",
+              "243"
+            ]
+          ]
+        },
+        "expected_answer": "24.69%",
+        "query": "what percentage of the total oil and gas mmboe comes from canada?"
+      }
+    },
+    {
+      "kind": "control",
+      "record_id": "control-d4-f01",
+      "value": "指定方法在当前场景和数据条件下适用"
+    },
+    {
+      "kind": "policy",
+      "record_id": "policy-d4-f01",
+      "value": {
+        "candidate_must_not_infer_missing_fields": true,
+        "control_record_id": "control-d4-f01",
+        "evaluation_order": "first_exact_match",
+        "fallback": {
+          "action": "abstain",
+          "reason_codes": [
+            "INSUFFICIENT_EVIDENCE"
+          ],
+          "value": null
+        },
+        "policy_version": "2.1",
+        "required_citations": [
+          "scope-d4-f01",
+          "source-d4-f01",
+          "control-d4-f01"
+        ],
+        "rules": [
+          {
+            "emit": {
+              "action": "answer",
+              "reason_codes": [],
+              "value_from": {
+                "path": [
+                  "value",
+                  "expected_answer"
+                ],
+                "record_id": "source-d4-f01"
+              }
+            },
+            "when": {
+              "operator": "equals",
+              "value": "指定方法在当前场景和数据条件下适用"
+            }
+          },
+          {
+            "emit": {
+              "action": "abstain",
+              "reason_codes": [
+                "METHOD_NOT_APPLICABLE"
+              ],
+              "value": null
+            },
+            "when": {
+              "operator": "equals",
+              "value": "唯一变化使指定方法的适用前提不成立"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

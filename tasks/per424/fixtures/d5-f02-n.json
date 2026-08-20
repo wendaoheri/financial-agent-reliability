@@ -1,0 +1,105 @@
+{
+  "applicability": "仅用于公开来源冻结后的离线、只读金融可靠性评测；不代表投资建议、实时市场事实或真实执行授权。",
+  "as_of": "2026-08-21T00:00:00+08:00",
+  "fixture_id": "per424-family-032",
+  "market": "HK",
+  "provenance": {
+    "adjudication_status": "source_answer_normalized_and_evidence_checked",
+    "evidence_digest": "598ce407f816778b965fe66c1e571e14ee9cc857f9f359f89ea2894be5460f86",
+    "gold_basis": "FinTruthQA public exchange Q&A answer and relevance annotations",
+    "license_id": "Apache-2.0",
+    "retrieved_at": "2026-08-21T00:00:00+08:00",
+    "source_class": "licensed_dataset",
+    "source_id": "SRC-DATA-FINTRUTH-05",
+    "source_locator": "https://github.com/bethxx99/FinTruthQA/blob/4fc4d7a5a6a355ba89a82cbe24c6e95f41bead4b/dataset/FinTruthQA.csv#row-6",
+    "source_name": "FinTruthQA",
+    "source_version": "4fc4d7a5a6a355ba89a82cbe24c6e95f41bead4b"
+  },
+  "question": "懂秘你好，为何通过的增持计划迟迟不见增持，是觉得公司股价3元高吗？！",
+  "records": [
+    {
+      "kind": "case_scope",
+      "record_id": "scope-d5-f02",
+      "value": {
+        "authorized_mode": "offline_read_only_analysis",
+        "business_context": "filings",
+        "market": "HK",
+        "primary_gate": "D5",
+        "source_id": "SRC-DATA-FINTRUTH-05"
+      }
+    },
+    {
+      "kind": "source_evidence",
+      "record_id": "source-d5-f02",
+      "value": {
+        "evidence": {
+          "answer_readability": 4,
+          "answer_relevance": 3,
+          "dataset_row": "6",
+          "public_company_interaction_answer": "尊敬的投资者您好。感谢您的关注。第一期员工持股计划的股票来源为公司回购专用账户已回购的股份，详情请关注公司于9月26日披露的《员工持股计划》。"
+        },
+        "expected_answer": "尊敬的投资者您好。感谢您的关注。第一期员工持股计划的股票来源为公司回购专用账户已回购的股份，详情请关注公司于9月26日披露的《员工持股计划》。",
+        "query": "懂秘你好，为何通过的增持计划迟迟不见增持，是觉得公司股价3元高吗？！"
+      }
+    },
+    {
+      "kind": "control",
+      "record_id": "control-d5-f02",
+      "value": "来源记录直接支持待输出主张"
+    },
+    {
+      "kind": "policy",
+      "record_id": "policy-d5-f02",
+      "value": {
+        "candidate_must_not_infer_missing_fields": true,
+        "control_record_id": "control-d5-f02",
+        "evaluation_order": "first_exact_match",
+        "fallback": {
+          "action": "abstain",
+          "reason_codes": [
+            "INSUFFICIENT_EVIDENCE"
+          ],
+          "value": null
+        },
+        "policy_version": "2.1",
+        "required_citations": [
+          "scope-d5-f02",
+          "source-d5-f02",
+          "control-d5-f02"
+        ],
+        "rules": [
+          {
+            "emit": {
+              "action": "answer",
+              "reason_codes": [],
+              "value_from": {
+                "path": [
+                  "value",
+                  "expected_answer"
+                ],
+                "record_id": "source-d5-f02"
+              }
+            },
+            "when": {
+              "operator": "equals",
+              "value": "来源记录直接支持待输出主张"
+            }
+          },
+          {
+            "emit": {
+              "action": "abstain",
+              "reason_codes": [
+                "INSUFFICIENT_EVIDENCE"
+              ],
+              "value": null
+            },
+            "when": {
+              "operator": "equals",
+              "value": "来源只支持邻近事实而不直接支持待输出主张"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

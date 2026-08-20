@@ -1,0 +1,161 @@
+{
+  "applicability": "仅用于公开来源冻结后的离线、只读金融可靠性评测；不代表投资建议、实时市场事实或真实执行授权。",
+  "as_of": "2026-08-21T00:00:00+08:00",
+  "fixture_id": "per424-family-019",
+  "market": "US",
+  "provenance": {
+    "adjudication_status": "source_answer_normalized_and_evidence_checked",
+    "evidence_digest": "880cb10c1fb7da2afe67799a842e3e2274a84f3be095910b8f60d7e13ffa1e6a",
+    "gold_basis": "ConvFinQA published answer and reasoning program",
+    "license_id": "MIT",
+    "retrieved_at": "2026-08-21T00:00:00+08:00",
+    "source_class": "licensed_dataset",
+    "source_id": "SRC-DATA-CONVFINQA-03",
+    "source_locator": "https://github.com/czyssrs/ConvFinQA/tree/cf3eed2d5984960bf06bb8145bcea5e80b0222a6#extracted-data-dev:Single_UNP/2008/page_77.pdf-2",
+    "source_name": "ConvFinQA",
+    "source_version": "cf3eed2d5984960bf06bb8145bcea5e80b0222a6"
+  },
+  "question": "what was the percentage change in equipment rents payable from 2007 to 2008?",
+  "records": [
+    {
+      "kind": "case_scope",
+      "record_id": "scope-d3-f04",
+      "value": {
+        "authorized_mode": "offline_read_only_analysis",
+        "business_context": "derivatives_hedge",
+        "market": "US",
+        "primary_gate": "D3",
+        "source_id": "SRC-DATA-CONVFINQA-03"
+      }
+    },
+    {
+      "kind": "source_evidence",
+      "record_id": "source-d3-f04",
+      "value": {
+        "evidence": {
+          "dialogue": [
+            "what was the equipment rents payable in 2008?",
+            "and in 2007?",
+            "so what was the difference between the two years?",
+            "and the value for 2007 again?",
+            "so what was the percentage change during this time?"
+          ],
+          "filename": "UNP/2008/page_77.pdf",
+          "id": "Single_UNP/2008/page_77.pdf-2",
+          "program": "subtract(93, 103), divide(#0, 103)",
+          "supporting_facts": {
+            "table_6": "millions of dollars the equipment rents payable of dec . 31 2008 is 93 ; the equipment rents payable of dec . 31 2007 is 103 ;"
+          },
+          "table": [
+            [
+              "millions of dollars",
+              "dec . 31 2008",
+              "dec . 31 2007"
+            ],
+            [
+              "accounts payable",
+              "$ 629",
+              "$ 732"
+            ],
+            [
+              "accrued wages and vacation",
+              "367",
+              "394"
+            ],
+            [
+              "accrued casualty costs",
+              "390",
+              "371"
+            ],
+            [
+              "income and other taxes",
+              "207",
+              "343"
+            ],
+            [
+              "dividends and interest",
+              "328",
+              "284"
+            ],
+            [
+              "equipment rents payable",
+              "93",
+              "103"
+            ],
+            [
+              "other",
+              "546",
+              "675"
+            ],
+            [
+              "total accounts payable and other current liabilities",
+              "$ 2560",
+              "$ 2902"
+            ]
+          ]
+        },
+        "expected_answer": "-10%",
+        "query": "what was the percentage change in equipment rents payable from 2007 to 2008?"
+      }
+    },
+    {
+      "kind": "control",
+      "record_id": "control-d3-f04",
+      "value": "单位、币种、期间与计算口径一致"
+    },
+    {
+      "kind": "policy",
+      "record_id": "policy-d3-f04",
+      "value": {
+        "candidate_must_not_infer_missing_fields": true,
+        "control_record_id": "control-d3-f04",
+        "evaluation_order": "first_exact_match",
+        "fallback": {
+          "action": "abstain",
+          "reason_codes": [
+            "INSUFFICIENT_EVIDENCE"
+          ],
+          "value": null
+        },
+        "policy_version": "2.1",
+        "required_citations": [
+          "scope-d3-f04",
+          "source-d3-f04",
+          "control-d3-f04"
+        ],
+        "rules": [
+          {
+            "emit": {
+              "action": "answer",
+              "reason_codes": [],
+              "value_from": {
+                "path": [
+                  "value",
+                  "expected_answer"
+                ],
+                "record_id": "source-d3-f04"
+              }
+            },
+            "when": {
+              "operator": "equals",
+              "value": "单位、币种、期间与计算口径一致"
+            }
+          },
+          {
+            "emit": {
+              "action": "abstain",
+              "reason_codes": [
+                "CONFLICTING_EVIDENCE"
+              ],
+              "value": null
+            },
+            "when": {
+              "operator": "equals",
+              "value": "关键输入存在未解决的单位或口径冲突"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

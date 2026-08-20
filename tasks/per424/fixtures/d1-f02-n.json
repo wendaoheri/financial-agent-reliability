@@ -1,0 +1,157 @@
+{
+  "applicability": "仅用于公开来源冻结后的离线、只读金融可靠性评测；不代表投资建议、实时市场事实或真实执行授权。",
+  "as_of": "2026-08-21T00:00:00+08:00",
+  "fixture_id": "per424-family-002",
+  "market": "US",
+  "provenance": {
+    "adjudication_status": "source_answer_normalized_and_evidence_checked",
+    "evidence_digest": "01d6392739e854189360e19e39f877a9c2077cddcbcd249c0ca8eb9d687483ea",
+    "gold_basis": "FinQA published answer and supporting facts/program",
+    "license_id": "MIT",
+    "retrieved_at": "2026-08-21T00:00:00+08:00",
+    "source_class": "licensed_dataset",
+    "source_id": "SRC-DATA-FINQA-02",
+    "source_locator": "https://github.com/czyssrs/FinQA/blob/0f16e2867befa6840783e58be38c9efb9229d742/dataset/dev.json#C/2017/page_328.pdf-1",
+    "source_name": "FinQA",
+    "source_version": "0f16e2867befa6840783e58be38c9efb9229d742"
+  },
+  "question": "what was the percentage cumulative total return for the five year period ended 31-dec-2017 of citi common stock?",
+  "records": [
+    {
+      "kind": "case_scope",
+      "record_id": "scope-d1-f02",
+      "value": {
+        "authorized_mode": "offline_read_only_analysis",
+        "business_context": "event_risk",
+        "market": "US",
+        "primary_gate": "D1",
+        "source_id": "SRC-DATA-FINQA-02"
+      }
+    },
+    {
+      "kind": "source_evidence",
+      "record_id": "source-d1-f02",
+      "value": {
+        "evidence": {
+          "context": [
+            "performance graph comparison of five-year cumulative total return the following graph and table compare the cumulative total return on citi 2019s common stock , which is listed on the nyse under the ticker symbol 201cc 201d and held by 65691 common stockholders of record as of january 31 , 2018 , with the cumulative total return of the s&p 500 index and the s&p financial index over the five-year period through december 31 , 2017 .",
+            "the graph and table assume that $ 100 was invested on december 31 , 2012 in citi 2019s common stock , the s&p 500 index and the s&p financial index , and that all dividends were reinvested .",
+            "comparison of five-year cumulative total return for the years ended date citi s&p 500 financials .",
+            "."
+          ],
+          "filename": "C/2017/page_328.pdf",
+          "program": "subtract(193.5, const_100), divide(#0, const_100)",
+          "supporting_facts": {
+            "table_1": "date the 31-dec-2012 of citi is 100.0 ; the 31-dec-2012 of s&p 500 is 100.0 ; the 31-dec-2012 of s&p financials is 100.0 ;",
+            "table_6": "date the 31-dec-2017 of citi is 193.5 ; the 31-dec-2017 of s&p 500 is 208.1 ; the 31-dec-2017 of s&p financials is 230.9 ;"
+          },
+          "table": [
+            [
+              "date",
+              "citi",
+              "s&p 500",
+              "s&p financials"
+            ],
+            [
+              "31-dec-2012",
+              "100.0",
+              "100.0",
+              "100.0"
+            ],
+            [
+              "31-dec-2013",
+              "131.8",
+              "132.4",
+              "135.6"
+            ],
+            [
+              "31-dec-2014",
+              "137.0",
+              "150.5",
+              "156.2"
+            ],
+            [
+              "31-dec-2015",
+              "131.4",
+              "152.6",
+              "153.9"
+            ],
+            [
+              "31-dec-2016",
+              "152.3",
+              "170.8",
+              "188.9"
+            ],
+            [
+              "31-dec-2017",
+              "193.5",
+              "208.1",
+              "230.9"
+            ]
+          ]
+        },
+        "expected_answer": "93.5%",
+        "query": "what was the percentage cumulative total return for the five year period ended 31-dec-2017 of citi common stock?"
+      }
+    },
+    {
+      "kind": "control",
+      "record_id": "control-d1-f02",
+      "value": "目标、对象、用途与交付边界完整一致"
+    },
+    {
+      "kind": "policy",
+      "record_id": "policy-d1-f02",
+      "value": {
+        "candidate_must_not_infer_missing_fields": true,
+        "control_record_id": "control-d1-f02",
+        "evaluation_order": "first_exact_match",
+        "fallback": {
+          "action": "abstain",
+          "reason_codes": [
+            "INSUFFICIENT_EVIDENCE"
+          ],
+          "value": null
+        },
+        "policy_version": "2.1",
+        "required_citations": [
+          "scope-d1-f02",
+          "source-d1-f02",
+          "control-d1-f02"
+        ],
+        "rules": [
+          {
+            "emit": {
+              "action": "answer",
+              "reason_codes": [],
+              "value_from": {
+                "path": [
+                  "value",
+                  "expected_answer"
+                ],
+                "record_id": "source-d1-f02"
+              }
+            },
+            "when": {
+              "operator": "equals",
+              "value": "目标、对象、用途与交付边界完整一致"
+            }
+          },
+          {
+            "emit": {
+              "action": "escalate",
+              "reason_codes": [
+                "MISSING_REQUIRED_CONSTRAINT"
+              ],
+              "value": null
+            },
+            "when": {
+              "operator": "equals",
+              "value": "任务用途与公开来源支持的对象不一致"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

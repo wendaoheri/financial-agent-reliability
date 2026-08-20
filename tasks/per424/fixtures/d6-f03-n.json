@@ -1,0 +1,217 @@
+{
+  "applicability": "仅用于公开来源冻结后的离线、只读金融可靠性评测；不代表投资建议、实时市场事实或真实执行授权。",
+  "as_of": "2026-08-21T00:00:00+08:00",
+  "fixture_id": "per424-family-040",
+  "market": "MULTI",
+  "provenance": {
+    "adjudication_status": "source_answer_normalized_and_evidence_checked",
+    "evidence_digest": "b2ce513a77f2260e1779e5106337e053054fd5f835d3b1d3217d876bc685fe98",
+    "gold_basis": "selected SEC Company Facts annual filing fact and accession",
+    "license_id": "US-GOV-PUBLIC-RECORD",
+    "retrieved_at": "2026-08-21T00:00:00+08:00",
+    "source_class": "official_record",
+    "source_id": "SRC-OFFICIAL-SEC-04-04",
+    "source_locator": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001318605.json#RevenueFromContractWithCustomerExcludingAssessedTax",
+    "source_name": "SEC EDGAR Company Facts",
+    "source_version": "retrieved-2026-08-21T00:00:00+08:00;accn-0001628280-26-003952"
+  },
+  "question": "依据冻结的 SEC Company Facts，报告 Tesla, Inc. 最新已提交年度记录中的“Revenue from Contract with Customer, Excluding Assessed Tax”数值、单位、期末日、提交日和 accession。",
+  "records": [
+    {
+      "kind": "case_scope",
+      "record_id": "scope-d6-f03",
+      "value": {
+        "authorized_mode": "offline_read_only_analysis",
+        "business_context": "portfolio_suitability",
+        "market": "MULTI",
+        "primary_gate": "D6",
+        "source_id": "SRC-OFFICIAL-SEC-04-04"
+      }
+    },
+    {
+      "kind": "source_evidence",
+      "record_id": "source-d6-f03",
+      "value": {
+        "evidence": {
+          "cik": "0001318605",
+          "description": "Amount, excluding tax collected from customer, of revenue from satisfaction of performance obligation by transferring promised good or service to customer. Tax collected from customer is tax assessed by governmental authority that is both imposed on and concurrent with specific revenue-producing transaction, including, but not limited to, sales, use, value added and excise.",
+          "entity": "Tesla, Inc.",
+          "label": "Revenue from Contract with Customer, Excluding Assessed Tax",
+          "recent_annual_timeline": [
+            {
+              "accn": "0001628280-24-002390",
+              "end": "2022-12-31",
+              "filed": "2024-01-29",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": null,
+              "fy": 2023,
+              "start": "2022-01-01",
+              "val": 81462000000
+            },
+            {
+              "accn": "0001628280-24-002390",
+              "end": "2023-12-31",
+              "filed": "2024-01-29",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": null,
+              "fy": 2023,
+              "start": "2023-01-01",
+              "val": 96773000000
+            },
+            {
+              "accn": "0001628280-25-003063",
+              "end": "2022-12-31",
+              "filed": "2025-01-30",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": "CY2022",
+              "fy": 2024,
+              "start": "2022-01-01",
+              "val": 81462000000
+            },
+            {
+              "accn": "0001628280-25-003063",
+              "end": "2023-12-31",
+              "filed": "2025-01-30",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": null,
+              "fy": 2024,
+              "start": "2023-01-01",
+              "val": 96773000000
+            },
+            {
+              "accn": "0001628280-25-003063",
+              "end": "2024-12-31",
+              "filed": "2025-01-30",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": null,
+              "fy": 2024,
+              "start": "2024-01-01",
+              "val": 97690000000
+            },
+            {
+              "accn": "0001628280-26-003952",
+              "end": "2023-12-31",
+              "filed": "2026-01-29",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": "CY2023",
+              "fy": 2025,
+              "start": "2023-01-01",
+              "val": 96773000000
+            },
+            {
+              "accn": "0001628280-26-003952",
+              "end": "2024-12-31",
+              "filed": "2026-01-29",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": "CY2024",
+              "fy": 2025,
+              "start": "2024-01-01",
+              "val": 97690000000
+            },
+            {
+              "accn": "0001628280-26-003952",
+              "end": "2025-12-31",
+              "filed": "2026-01-29",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": "CY2025",
+              "fy": 2025,
+              "start": "2025-01-01",
+              "val": 94827000000
+            }
+          ],
+          "selected_filing_fact": {
+            "accn": "0001628280-26-003952",
+            "end": "2025-12-31",
+            "filed": "2026-01-29",
+            "form": "10-K",
+            "fp": "FY",
+            "frame": "CY2025",
+            "fy": 2025,
+            "start": "2025-01-01",
+            "val": 94827000000
+          },
+          "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+          "taxonomy": "us-gaap",
+          "unit": "USD"
+        },
+        "expected_answer": {
+          "accession": "0001628280-26-003952",
+          "entity": "Tesla, Inc.",
+          "filed": "2026-01-29",
+          "metric": "Revenue from Contract with Customer, Excluding Assessed Tax",
+          "period_end": "2025-12-31",
+          "unit": "USD",
+          "value": 94827000000
+        },
+        "query": "依据冻结的 SEC Company Facts，报告 Tesla, Inc. 最新已提交年度记录中的“Revenue from Contract with Customer, Excluding Assessed Tax”数值、单位、期末日、提交日和 accession。"
+      }
+    },
+    {
+      "kind": "control",
+      "record_id": "control-d6-f03",
+      "value": "合理不确定区间未跨越行动阈值"
+    },
+    {
+      "kind": "policy",
+      "record_id": "policy-d6-f03",
+      "value": {
+        "candidate_must_not_infer_missing_fields": true,
+        "control_record_id": "control-d6-f03",
+        "evaluation_order": "first_exact_match",
+        "fallback": {
+          "action": "abstain",
+          "reason_codes": [
+            "INSUFFICIENT_EVIDENCE"
+          ],
+          "value": null
+        },
+        "policy_version": "2.1",
+        "required_citations": [
+          "scope-d6-f03",
+          "source-d6-f03",
+          "control-d6-f03"
+        ],
+        "rules": [
+          {
+            "emit": {
+              "action": "answer",
+              "reason_codes": [],
+              "value_from": {
+                "path": [
+                  "value",
+                  "expected_answer"
+                ],
+                "record_id": "source-d6-f03"
+              }
+            },
+            "when": {
+              "operator": "equals",
+              "value": "合理不确定区间未跨越行动阈值"
+            }
+          },
+          {
+            "emit": {
+              "action": "escalate",
+              "reason_codes": [
+                "UNCERTAINTY_TOO_HIGH"
+              ],
+              "value": null
+            },
+            "when": {
+              "operator": "equals",
+              "value": "合理不确定区间跨越行动阈值"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,234 @@
+{
+  "applicability": "仅用于公开来源冻结后的离线、只读金融可靠性评测；不代表投资建议、实时市场事实或真实执行授权。",
+  "as_of": "2026-08-21T00:00:00+08:00",
+  "fixture_id": "per424-family-011",
+  "market": "HK",
+  "provenance": {
+    "adjudication_status": "source_answer_normalized_and_evidence_checked",
+    "evidence_digest": "604f29d5fb1759e68d690feab72e74dac17dcf8cc4bd9f5e703d3384ddd5dd9d",
+    "gold_basis": "TAT-QA published answer, scale, and derivation",
+    "license_id": "CC-BY-4.0",
+    "retrieved_at": "2026-08-21T00:00:00+08:00",
+    "source_class": "licensed_dataset",
+    "source_id": "SRC-DATA-TATQA-02",
+    "source_locator": "https://github.com/NExTplusplus/TAT-QA/blob/870accc41953dcde885aabeb963d94aabdc0fbc3/dataset_raw/tatqa_dataset_dev.json#b1018041-1c58-47f2-94db-fa8df0a631cb",
+    "source_name": "TAT-QA",
+    "source_version": "870accc41953dcde885aabeb963d94aabdc0fbc3"
+  },
+  "question": "In which years was for the net sales by segment and industry end market calculated?",
+  "records": [
+    {
+      "kind": "case_scope",
+      "record_id": "scope-d2-f04",
+      "value": {
+        "authorized_mode": "offline_read_only_analysis",
+        "business_context": "market_data",
+        "market": "HK",
+        "primary_gate": "D2",
+        "source_id": "SRC-DATA-TATQA-02"
+      }
+    },
+    {
+      "kind": "source_evidence",
+      "record_id": "source-d2-f04",
+      "value": {
+        "evidence": {
+          "answer_from": "table-text",
+          "derivation": "",
+          "paragraphs": [
+            {
+              "order": 1,
+              "text": "Net sales by segment and industry end market(1) were as follows:",
+              "uid": "f235886a-f95b-4194-939e-87ecdb5899b8"
+            },
+            {
+              "order": 2,
+              "text": "(1) Industry end market information is presented consistently with our internal management reporting and may be revised periodically as management deems necessary.",
+              "uid": "5710b1c7-1e62-4f62-9a1b-b24e696fbc2f"
+            }
+          ],
+          "scale": "",
+          "table": [
+            [
+              "",
+              "",
+              "Fiscal",
+              ""
+            ],
+            [
+              "",
+              "2019",
+              "2018",
+              "2017"
+            ],
+            [
+              "",
+              "",
+              "(in millions)",
+              ""
+            ],
+            [
+              "Transportation Solutions:",
+              "",
+              "",
+              ""
+            ],
+            [
+              "Automotive",
+              "$ 5,686",
+              "$ 6,092",
+              "$  5,228"
+            ],
+            [
+              "Commercial transportation",
+              "1,221",
+              "1,280",
+              "997"
+            ],
+            [
+              "Sensors",
+              "914",
+              "918",
+              "814"
+            ],
+            [
+              "Total Transportation Solutions",
+              "7,821",
+              "8,290",
+              "7,039"
+            ],
+            [
+              "Industrial Solutions:",
+              "",
+              "",
+              ""
+            ],
+            [
+              "Industrial equipment",
+              "1,949",
+              "1,987",
+              "1,747"
+            ],
+            [
+              "Aerospace, defense, oil, and gas",
+              "1,306",
+              "1,157",
+              "1,075"
+            ],
+            [
+              "Energy",
+              "699",
+              "712",
+              "685"
+            ],
+            [
+              "Total Industrial Solutions",
+              "3,954",
+              "3,856",
+              "3,507"
+            ],
+            [
+              "Communications Solutions:",
+              "",
+              "",
+              ""
+            ],
+            [
+              "Data and devices",
+              "993",
+              "1,068",
+              "963"
+            ],
+            [
+              "Appliances",
+              "680",
+              "774",
+              "676"
+            ],
+            [
+              "Total Communications Solutions",
+              "1,673",
+              "1,842",
+              "1,639"
+            ],
+            [
+              "Total",
+              "$ 13,448",
+              "$ 13,988",
+              "$ 12,185"
+            ]
+          ],
+          "table_uid": "53474060-2736-46cb-bd97-1eb42f0ff3c1"
+        },
+        "expected_answer": {
+          "answer": [
+            "2019",
+            "2018",
+            "2017"
+          ],
+          "scale": ""
+        },
+        "query": "In which years was for the net sales by segment and industry end market calculated?"
+      }
+    },
+    {
+      "kind": "control",
+      "record_id": "control-d2-f04",
+      "value": "来源记录在题目截止时点之后才公开"
+    },
+    {
+      "kind": "policy",
+      "record_id": "policy-d2-f04",
+      "value": {
+        "candidate_must_not_infer_missing_fields": true,
+        "control_record_id": "control-d2-f04",
+        "evaluation_order": "first_exact_match",
+        "fallback": {
+          "action": "abstain",
+          "reason_codes": [
+            "INSUFFICIENT_EVIDENCE"
+          ],
+          "value": null
+        },
+        "policy_version": "2.1",
+        "required_citations": [
+          "scope-d2-f04",
+          "source-d2-f04",
+          "control-d2-f04"
+        ],
+        "rules": [
+          {
+            "emit": {
+              "action": "answer",
+              "reason_codes": [],
+              "value_from": {
+                "path": [
+                  "value",
+                  "expected_answer"
+                ],
+                "record_id": "source-d2-f04"
+              }
+            },
+            "when": {
+              "operator": "equals",
+              "value": "来源版本与题目截止时点一致"
+            }
+          },
+          {
+            "emit": {
+              "action": "abstain",
+              "reason_codes": [
+                "FUTURE_INFORMATION"
+              ],
+              "value": null
+            },
+            "when": {
+              "operator": "equals",
+              "value": "来源记录在题目截止时点之后才公开"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -367,7 +367,13 @@ def load_candidates(path: pathlib.Path) -> list[Candidate]:
                 raise BenchInputError(f"{values['adapter']} requires {expected_agent}")
             allowed_keys = {"seed", "profile", "generation"}
             if values["adapter"] == "pi-agent-live":
-                allowed_keys.update({"max_provider_turns", "output_contract_version"})
+                allowed_keys.update(
+                    {
+                        "max_provider_turns",
+                        "output_contract_version",
+                        "calibration_case_ids",
+                    }
+                )
             if set(config) - allowed_keys:
                 raise BenchInputError(
                     f"candidate {values['id']} has unsupported {values['adapter']} config keys"
@@ -385,6 +391,18 @@ def load_candidates(path: pathlib.Path) -> list[Candidate]:
             ) not in {"1.0.0", "2.0.0", "2.1.0"}:
                 raise BenchInputError(
                     "pi-agent-live output contract must be 1.0.0, 2.0.0, or 2.1.0"
+                )
+            calibration_case_ids = config.get("calibration_case_ids")
+            if calibration_case_ids is not None and (
+                not isinstance(calibration_case_ids, list)
+                or len(calibration_case_ids) != 10
+                or len(set(calibration_case_ids)) != 10
+                or any(
+                    not isinstance(case_id, str) or not case_id for case_id in calibration_case_ids
+                )
+            ):
+                raise BenchInputError(
+                    "pi-agent-live calibration_case_ids must contain 10 unique case ids"
                 )
         candidates.append(Candidate(config=config, source_path=path.resolve(), **values))
         seen.add(values["id"])

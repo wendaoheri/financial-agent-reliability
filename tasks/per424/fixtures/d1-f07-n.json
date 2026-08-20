@@ -1,0 +1,217 @@
+{
+  "applicability": "仅用于公开来源冻结后的离线、只读金融可靠性评测；不代表投资建议、实时市场事实或真实执行授权。",
+  "as_of": "2026-08-21T00:00:00+08:00",
+  "fixture_id": "per424-family-007",
+  "market": "HK",
+  "provenance": {
+    "adjudication_status": "source_answer_normalized_and_evidence_checked",
+    "evidence_digest": "3d8ddc6396e29d477df0c26541fad536aa02f46438a901650143758d759c6e7c",
+    "gold_basis": "selected SEC Company Facts annual filing fact and accession",
+    "license_id": "US-GOV-PUBLIC-RECORD",
+    "retrieved_at": "2026-08-21T00:00:00+08:00",
+    "source_class": "official_record",
+    "source_id": "SRC-OFFICIAL-SEC-01-04",
+    "source_locator": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000320193.json#RevenueFromContractWithCustomerExcludingAssessedTax",
+    "source_name": "SEC EDGAR Company Facts",
+    "source_version": "retrieved-2026-08-21T00:00:00+08:00;accn-0000320193-25-000079"
+  },
+  "question": "依据冻结的 SEC Company Facts，报告 Apple Inc. 最新已提交年度记录中的“Revenue from Contract with Customer, Excluding Assessed Tax”数值、单位、期末日、提交日和 accession。",
+  "records": [
+    {
+      "kind": "case_scope",
+      "record_id": "scope-d1-f07",
+      "value": {
+        "authorized_mode": "offline_read_only_analysis",
+        "business_context": "filings",
+        "market": "HK",
+        "primary_gate": "D1",
+        "source_id": "SRC-OFFICIAL-SEC-01-04"
+      }
+    },
+    {
+      "kind": "source_evidence",
+      "record_id": "source-d1-f07",
+      "value": {
+        "evidence": {
+          "cik": "0000320193",
+          "description": "Amount, excluding tax collected from customer, of revenue from satisfaction of performance obligation by transferring promised good or service to customer. Tax collected from customer is tax assessed by governmental authority that is both imposed on and concurrent with specific revenue-producing transaction, including, but not limited to, sales, use, value added and excise.",
+          "entity": "Apple Inc.",
+          "label": "Revenue from Contract with Customer, Excluding Assessed Tax",
+          "recent_annual_timeline": [
+            {
+              "accn": "0000320193-23-000106",
+              "end": "2022-09-24",
+              "filed": "2023-11-03",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": null,
+              "fy": 2023,
+              "start": "2021-09-26",
+              "val": 394328000000
+            },
+            {
+              "accn": "0000320193-23-000106",
+              "end": "2023-09-30",
+              "filed": "2023-11-03",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": null,
+              "fy": 2023,
+              "start": "2022-09-25",
+              "val": 383285000000
+            },
+            {
+              "accn": "0000320193-24-000123",
+              "end": "2022-09-24",
+              "filed": "2024-11-01",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": "CY2022",
+              "fy": 2024,
+              "start": "2021-09-26",
+              "val": 394328000000
+            },
+            {
+              "accn": "0000320193-24-000123",
+              "end": "2023-09-30",
+              "filed": "2024-11-01",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": null,
+              "fy": 2024,
+              "start": "2022-09-25",
+              "val": 383285000000
+            },
+            {
+              "accn": "0000320193-24-000123",
+              "end": "2024-09-28",
+              "filed": "2024-11-01",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": null,
+              "fy": 2024,
+              "start": "2023-10-01",
+              "val": 391035000000
+            },
+            {
+              "accn": "0000320193-25-000079",
+              "end": "2023-09-30",
+              "filed": "2025-10-31",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": "CY2023",
+              "fy": 2025,
+              "start": "2022-09-25",
+              "val": 383285000000
+            },
+            {
+              "accn": "0000320193-25-000079",
+              "end": "2024-09-28",
+              "filed": "2025-10-31",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": "CY2024",
+              "fy": 2025,
+              "start": "2023-10-01",
+              "val": 391035000000
+            },
+            {
+              "accn": "0000320193-25-000079",
+              "end": "2025-09-27",
+              "filed": "2025-10-31",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": "CY2025",
+              "fy": 2025,
+              "start": "2024-09-29",
+              "val": 416161000000
+            }
+          ],
+          "selected_filing_fact": {
+            "accn": "0000320193-25-000079",
+            "end": "2025-09-27",
+            "filed": "2025-10-31",
+            "form": "10-K",
+            "fp": "FY",
+            "frame": "CY2025",
+            "fy": 2025,
+            "start": "2024-09-29",
+            "val": 416161000000
+          },
+          "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+          "taxonomy": "us-gaap",
+          "unit": "USD"
+        },
+        "expected_answer": {
+          "accession": "0000320193-25-000079",
+          "entity": "Apple Inc.",
+          "filed": "2025-10-31",
+          "metric": "Revenue from Contract with Customer, Excluding Assessed Tax",
+          "period_end": "2025-09-27",
+          "unit": "USD",
+          "value": 416161000000
+        },
+        "query": "依据冻结的 SEC Company Facts，报告 Apple Inc. 最新已提交年度记录中的“Revenue from Contract with Customer, Excluding Assessed Tax”数值、单位、期末日、提交日和 accession。"
+      }
+    },
+    {
+      "kind": "control",
+      "record_id": "control-d1-f07",
+      "value": "目标、对象、用途与交付边界完整一致"
+    },
+    {
+      "kind": "policy",
+      "record_id": "policy-d1-f07",
+      "value": {
+        "candidate_must_not_infer_missing_fields": true,
+        "control_record_id": "control-d1-f07",
+        "evaluation_order": "first_exact_match",
+        "fallback": {
+          "action": "abstain",
+          "reason_codes": [
+            "INSUFFICIENT_EVIDENCE"
+          ],
+          "value": null
+        },
+        "policy_version": "2.1",
+        "required_citations": [
+          "scope-d1-f07",
+          "source-d1-f07",
+          "control-d1-f07"
+        ],
+        "rules": [
+          {
+            "emit": {
+              "action": "answer",
+              "reason_codes": [],
+              "value_from": {
+                "path": [
+                  "value",
+                  "expected_answer"
+                ],
+                "record_id": "source-d1-f07"
+              }
+            },
+            "when": {
+              "operator": "equals",
+              "value": "目标、对象、用途与交付边界完整一致"
+            }
+          },
+          {
+            "emit": {
+              "action": "escalate",
+              "reason_codes": [
+                "MISSING_REQUIRED_CONSTRAINT"
+              ],
+              "value": null
+            },
+            "when": {
+              "operator": "equals",
+              "value": "任务用途与公开来源支持的对象不一致"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

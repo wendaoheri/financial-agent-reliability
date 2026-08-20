@@ -1,0 +1,171 @@
+{
+  "applicability": "仅用于公开来源冻结后的离线、只读金融可靠性评测；不代表投资建议、实时市场事实或真实执行授权。",
+  "as_of": "2026-08-21T00:00:00+08:00",
+  "fixture_id": "per424-family-012",
+  "market": "US",
+  "provenance": {
+    "adjudication_status": "source_answer_normalized_and_evidence_checked",
+    "evidence_digest": "1bd723e0942a93681ff3e06e05ea139317f29465e5e59d799f4d85f03deec046",
+    "gold_basis": "TAT-QA published answer, scale, and derivation",
+    "license_id": "CC-BY-4.0",
+    "retrieved_at": "2026-08-21T00:00:00+08:00",
+    "source_class": "licensed_dataset",
+    "source_id": "SRC-DATA-TATQA-03",
+    "source_locator": "https://github.com/NExTplusplus/TAT-QA/blob/870accc41953dcde885aabeb963d94aabdc0fbc3/dataset_raw/tatqa_dataset_dev.json#0f032004-ec01-40a0-831b-aac3f7e1b5c7",
+    "source_name": "TAT-QA",
+    "source_version": "870accc41953dcde885aabeb963d94aabdc0fbc3"
+  },
+  "question": "How often does the company review the actuarial assumptions which the periodic benefit cost and the actuarial present value of projected benefit obligations are based on?",
+  "records": [
+    {
+      "kind": "case_scope",
+      "record_id": "scope-d2-f05",
+      "value": {
+        "authorized_mode": "offline_read_only_analysis",
+        "business_context": "event_risk",
+        "market": "US",
+        "primary_gate": "D2",
+        "source_id": "SRC-DATA-TATQA-03"
+      }
+    },
+    {
+      "kind": "source_evidence",
+      "record_id": "source-d2-f05",
+      "value": {
+        "evidence": {
+          "answer_from": "text",
+          "derivation": "",
+          "paragraphs": [
+            {
+              "order": 1,
+              "text": "The following table provides the weighted average actuarial assumptions used to determine net periodic benefit costfor years ended:",
+              "uid": "4036d8ae-f142-4f91-b94e-8741203de130"
+            },
+            {
+              "order": 2,
+              "text": "For domestic plans, the discount rate was determined by comparison against the FTSE pension liability index for AA rated corporate instruments. The Company monitors other indices to assure that the pension obligations are fairly reported on a consistent basis. The international discount rates were determined by comparison against country specific AA corporate indices, adjusted for duration of the obligation.",
+              "uid": "baae8fd1-0a35-4421-9e49-4938b9eb84ee"
+            },
+            {
+              "order": 3,
+              "text": "The periodic benefit cost and the actuarial present value of projected benefit obligations are based on actuarial assumptions that are reviewed on an annual basis. The Company revises these assumptions based on an annual evaluation of longterm trends, as well as market conditions that may have an impact on the cost of providing retirement benefits.",
+              "uid": "657ff6a5-188c-4569-88be-685875879c9f"
+            }
+          ],
+          "scale": "",
+          "table": [
+            [
+              "",
+              "Domestic",
+              "",
+              "International",
+              ""
+            ],
+            [
+              "",
+              "September 30,",
+              "",
+              "September 30,",
+              ""
+            ],
+            [
+              "",
+              "2019",
+              "2018",
+              "2019",
+              "2018"
+            ],
+            [
+              "Discount rate",
+              "4.00%",
+              "3.75%",
+              "1.90%",
+              "2.80%"
+            ],
+            [
+              "Expected return on plan assets",
+              "",
+              "",
+              "3.40%",
+              "3.70%"
+            ],
+            [
+              "Rate of compensation increase",
+              "",
+              "",
+              "- - %",
+              "- - %"
+            ]
+          ],
+          "table_uid": "52164b70-6973-4844-af6a-76e8f1298d64"
+        },
+        "expected_answer": {
+          "answer": [
+            "Annual basis"
+          ],
+          "scale": ""
+        },
+        "query": "How often does the company review the actuarial assumptions which the periodic benefit cost and the actuarial present value of projected benefit obligations are based on?"
+      }
+    },
+    {
+      "kind": "control",
+      "record_id": "control-d2-f05",
+      "value": "来源记录在题目截止时点之后才公开"
+    },
+    {
+      "kind": "policy",
+      "record_id": "policy-d2-f05",
+      "value": {
+        "candidate_must_not_infer_missing_fields": true,
+        "control_record_id": "control-d2-f05",
+        "evaluation_order": "first_exact_match",
+        "fallback": {
+          "action": "abstain",
+          "reason_codes": [
+            "INSUFFICIENT_EVIDENCE"
+          ],
+          "value": null
+        },
+        "policy_version": "2.1",
+        "required_citations": [
+          "scope-d2-f05",
+          "source-d2-f05",
+          "control-d2-f05"
+        ],
+        "rules": [
+          {
+            "emit": {
+              "action": "answer",
+              "reason_codes": [],
+              "value_from": {
+                "path": [
+                  "value",
+                  "expected_answer"
+                ],
+                "record_id": "source-d2-f05"
+              }
+            },
+            "when": {
+              "operator": "equals",
+              "value": "来源版本与题目截止时点一致"
+            }
+          },
+          {
+            "emit": {
+              "action": "abstain",
+              "reason_codes": [
+                "FUTURE_INFORMATION"
+              ],
+              "value": null
+            },
+            "when": {
+              "operator": "equals",
+              "value": "来源记录在题目截止时点之后才公开"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
