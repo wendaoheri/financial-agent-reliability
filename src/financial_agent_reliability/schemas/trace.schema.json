@@ -103,11 +103,20 @@
               "type": "object", "additionalProperties": false,
               "required": ["contract_version", "classification", "characters", "sha256", "block_types"],
               "properties": {
-                "contract_version": {"const": "2.0.0"},
-                "classification": {"enum": ["valid", "missing_final_assistant", "no_text", "invalid_json", "wrong_keys", "invalid_status", "invalid_reason_codes", "invalid_reason_semantics"]},
+                "contract_version": {"enum": ["2.0.0", "2.1.0"]},
+                "classification": {"enum": ["valid", "missing_final_assistant", "no_text", "invalid_json", "wrong_keys", "invalid_status", "invalid_reason_codes", "invalid_reason_semantics", "invalid_value_semantics"]},
                 "characters": {"type": "integer", "minimum": 0},
                 "sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
                 "block_types": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+              }
+            },
+            "output_transport": {
+              "type": "object", "additionalProperties": false,
+              "required": ["mode", "applied_provider_turn", "final_tool_choice"],
+              "properties": {
+                "mode": {"enum": ["prompt_only", "json_object"]},
+                "applied_provider_turn": {"type": ["integer", "null"], "minimum": 1},
+                "final_tool_choice": {"enum": ["none", null]}
               }
             }
           }

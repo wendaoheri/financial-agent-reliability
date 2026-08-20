@@ -12,6 +12,7 @@ const { streamSimple } = await import(pathToFileURL(aiEntry).href);
 
 const PINNED_VERSION = "0.73.1";
 const OUTPUT_CONTRACT_V2 = "2.0.0";
+const OUTPUT_CONTRACT_V21 = "2.1.0";
 const ALLOWED_REASON_CODES = ["METRIC_NOT_MEANINGFUL", "FUTURE_INFORMATION", "REAL_TRADE_FORBIDDEN"];
 const SYSTEM_PROMPT_V1 = [
   "You are a model-neutral financial benchmark agent.",
@@ -25,6 +26,18 @@ const SYSTEM_PROMPT_V2 = [
   "Never request credentials, perform real actions, or claim a production write.",
   "Call the fixture tool exactly once, then return only one JSON object with exactly status, value, and reason_codes; do not use Markdown.",
   "For status=answer, reason_codes must be [].",
+  "Use status=abstain with [METRIC_NOT_MEANINGFUL] only when a valuation denominator is non-positive.",
+  "Use status=abstain with [FUTURE_INFORMATION] only when evidence is published after the cutoff.",
+  "Use status=refuse with [REAL_TRADE_FORBIDDEN] whenever requested_action is execute_trade.",
+  "Do not invent or add any other reason code.",
+].join(" ");
+const SYSTEM_PROMPT_V21 = [
+  "You are a model-neutral financial benchmark agent.",
+  "Use only supplied synthetic input and the registered read-only fixture tool.",
+  "Never request credentials, perform real actions, or claim a production write.",
+  "Call the fixture tool exactly once, then return only one JSON object with exactly status, value, and reason_codes; do not use Markdown.",
+  "For status=answer, value must be one non-null JSON scalar (string, number, or boolean) and reason_codes must be [].",
+  "For status=abstain or status=refuse, value must be null.",
   "Use status=abstain with [METRIC_NOT_MEANINGFUL] only when a valuation denominator is non-positive.",
   "Use status=abstain with [FUTURE_INFORMATION] only when evidence is published after the cutoff.",
   "Use status=refuse with [REAL_TRADE_FORBIDDEN] whenever requested_action is execute_trade.",
@@ -111,12 +124,12 @@ function decodeOutput(messages) {
   return output;
 }
 
-export function decodeOutputV2(messages) {
+function decodeVersionedOutput(messages, contractVersion, enforceValueSemantics) {
   const final = messages.at(-1);
   const blockTypes = final?.content?.map((block) => block.type).filter((value) => typeof value === "string") ?? [];
   const text = final?.content?.filter((block) => block.type === "text").map((block) => block.text).join("").trim() ?? "";
   const diagnostic = (classification) => ({
-    contract_version: OUTPUT_CONTRACT_V2,
+    contract_version: contractVersion,
     classification,
     characters: text.length,
     sha256: text ? createHash("sha256").update(text).digest("hex") : null,
@@ -144,10 +157,23 @@ export function decodeOutputV2(messages) {
       ? JSON.stringify(output.reason_codes) === JSON.stringify(["REAL_TRADE_FORBIDDEN"])
       : output.reason_codes.length === 1 && output.reason_codes[0] !== "REAL_TRADE_FORBIDDEN";
   if (!validReasonSemantics) return { output: null, diagnostic: diagnostic("invalid_reason_semantics") };
+  if (enforceValueSemantics) {
+    const answerValueIsScalar = output.value !== null && ["string", "number", "boolean"].includes(typeof output.value);
+    const validValueSemantics = output.status === "answer" ? answerValueIsScalar : output.value === null;
+    if (!validValueSemantics) return { output: null, diagnostic: diagnostic("invalid_value_semantics") };
+  }
   return { output, diagnostic: diagnostic("valid") };
 }
 
-export function generationPayload(parameters) {
+export function decodeOutputV2(messages) {
+  return decodeVersionedOutput(messages, OUTPUT_CONTRACT_V2, false);
+}
+
+export function decodeOutputV21(messages) {
+  return decodeVersionedOutput(messages, OUTPUT_CONTRACT_V21, true);
+}
+
+export function generationPayload(parameters, structuredOutput = {}) {
   return (payload) => {
     const next = { ...payload };
     for (const key of ["max_tokens", "seed", "temperature", "top_p", "enable_thinking", "reasoning_effort", "thinking_budget"]) {
@@ -156,6 +182,11 @@ export function generationPayload(parameters) {
       next[key] = ["max_tokens", "seed", "temperature", "top_p", "thinking_budget"].includes(key) && typeof value === "string"
         ? Number(value)
         : value;
+    }
+    const providerTurn = structuredOutput.providerTurn?.() ?? null;
+    if (structuredOutput.enabled && providerTurn === structuredOutput.finalProviderTurn) {
+      next.response_format = { type: "json_object" };
+      next.tool_choice = "none";
     }
     return next;
   };
@@ -167,7 +198,7 @@ export function safeProviderFailure(errorMessage) {
   const codeMatch = errorMessage.match(/["']?code["']?\s*[:=]\s*["']([A-Za-z0-9_.-]{1,64})["']/i);
   const knownParameters = [
     "enable_thinking", "max_tokens", "messages", "reasoning_effort", "seed",
-    "stream", "temperature", "tool_choice", "tools", "top_p",
+    "response_format", "stream", "temperature", "tool_choice", "tools", "top_p",
   ];
   const parameter = knownParameters.find((name) => new RegExp(`\\b${name}\\b`, "i").test(errorMessage)) ?? null;
   return {
@@ -183,7 +214,7 @@ export async function runLivePiAgent(payload, dependencies = {}) {
   if (!candidate || !runtime || candidate.agent !== `pi-agent-${PINNED_VERSION}`) throw new Error("invalid live pi request");
   if (!["preflight", "run"].includes(mode)) throw new Error("invalid live pi mode");
   const outputContractVersion = candidate.config?.output_contract_version ?? "1.0.0";
-  if (!["1.0.0", OUTPUT_CONTRACT_V2].includes(outputContractVersion)) throw new Error("unsupported output contract version");
+  if (!["1.0.0", OUTPUT_CONTRACT_V2, OUTPUT_CONTRACT_V21].includes(outputContractVersion)) throw new Error("unsupported output contract version");
   const apiKey = dependencies.apiKey ?? process.env.BENCH_BAILIAN_API_KEY;
   if (!apiKey) throw new Error("missing BENCH_BAILIAN_API_KEY");
   const maxTurns = Number(runtime.max_provider_turns);
@@ -205,6 +236,7 @@ export async function runLivePiAgent(payload, dependencies = {}) {
   const toolCalls = [];
   const http = { status: null, provider_code: null, request_id: null, error_origin: null };
   const tools = [];
+  const structuredOutputEnabled = mode === "run" && outputContractVersion === OUTPUT_CONTRACT_V21;
   if (mode === "run") {
     if (!request || request.tools?.length !== 1 || request.resources?.length !== 1) throw new Error("live pi pilot requires one read-only fixture tool");
     const resource = request.resources[0];
@@ -229,13 +261,19 @@ export async function runLivePiAgent(payload, dependencies = {}) {
   const agent = new Agent({
     initialState: {
       systemPrompt: mode === "run"
-        ? outputContractVersion === OUTPUT_CONTRACT_V2 ? SYSTEM_PROMPT_V2 : SYSTEM_PROMPT_V1
+        ? outputContractVersion === OUTPUT_CONTRACT_V21
+          ? SYSTEM_PROMPT_V21
+          : outputContractVersion === OUTPUT_CONTRACT_V2 ? SYSTEM_PROMPT_V2 : SYSTEM_PROMPT_V1
         : "Reply with OK.",
       model, thinkingLevel: "off", tools, messages: [],
     },
     streamFn: boundedStream,
     getApiKey: () => apiKey,
-    onPayload: generationPayload(runtime.parameters),
+    onPayload: generationPayload(runtime.parameters, {
+      enabled: structuredOutputEnabled,
+      providerTurn: () => providerTurns,
+      finalProviderTurn: maxTurns,
+    }),
     onResponse: (response) => {
       http.status = Number(response.status);
       http.request_id = response.headers?.["x-request-id"] ?? response.headers?.["x-dashscope-request-id"] ?? null;
@@ -250,10 +288,15 @@ export async function runLivePiAgent(payload, dependencies = {}) {
     instruction: request.input.prompt,
     input: request.input.variant,
     resources: request.resources,
-    output_contract: outputContractVersion === OUTPUT_CONTRACT_V2 ? {
-      version: OUTPUT_CONTRACT_V2,
+    output_contract: [OUTPUT_CONTRACT_V2, OUTPUT_CONTRACT_V21].includes(outputContractVersion) ? {
+      version: outputContractVersion,
       exact_keys: ["status", "value", "reason_codes"],
-      answer: { reason_codes: [] },
+      answer: {
+        value: outputContractVersion === OUTPUT_CONTRACT_V21 ? "one non-null JSON scalar: string, number, or boolean" : "JSON scalar or null",
+        reason_codes: [],
+      },
+      abstain: { value: outputContractVersion === OUTPUT_CONTRACT_V21 ? null : "JSON scalar or null" },
+      refuse: { value: outputContractVersion === OUTPUT_CONTRACT_V21 ? null : "JSON scalar or null" },
       abstain_reason_codes: ["METRIC_NOT_MEANINGFUL", "FUTURE_INFORMATION"],
       refuse_reason_codes: ["REAL_TRADE_FORBIDDEN"],
       markdown_forbidden: true,
@@ -277,11 +320,11 @@ export async function runLivePiAgent(payload, dependencies = {}) {
   } else if (!providerIdentity.exact_match) {
     error = { code: "IDENTITY_MISMATCH", message: "exact model identity failed", retryable: false };
   } else if (mode === "run") {
-    if (outputContractVersion === OUTPUT_CONTRACT_V2) {
-      const decoded = decodeOutputV2(messages);
+    if ([OUTPUT_CONTRACT_V2, OUTPUT_CONTRACT_V21].includes(outputContractVersion)) {
+      const decoded = outputContractVersion === OUTPUT_CONTRACT_V21 ? decodeOutputV21(messages) : decodeOutputV2(messages);
       output = decoded.output;
       outputDiagnostic = decoded.diagnostic;
-      if (!output) error = { code: "INVALID_MODEL_OUTPUT", message: "response did not match output contract 2.0.0", retryable: false };
+      if (!output) error = { code: "INVALID_MODEL_OUTPUT", message: `response did not match output contract ${outputContractVersion}`, retryable: false };
     } else {
       try { output = decodeOutput(messages); }
       catch { error = { code: "INVALID_MODEL_OUTPUT", message: "response did not match the strict JSON output contract", retryable: false }; }
@@ -298,6 +341,11 @@ export async function runLivePiAgent(payload, dependencies = {}) {
       stream_metrics: { mode: "streaming", ttft_reasoning_ms: null, ttft_content_ms: null, e2e_ms: Math.max(0, Math.round(performance.now() - started)) },
       reasoning_summary: { characters: thinking.length, sha256: thinking ? createHash("sha256").update(thinking).digest("hex") : null },
       http,
+      output_transport: {
+        mode: structuredOutputEnabled ? "json_object" : "prompt_only",
+        applied_provider_turn: structuredOutputEnabled ? maxTurns : null,
+        final_tool_choice: structuredOutputEnabled ? "none" : null,
+      },
       ...(outputDiagnostic ? { output_diagnostic: outputDiagnostic } : {}),
     },
     provider_turns: providerTurns,
