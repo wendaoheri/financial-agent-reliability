@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 from typing import Any
 
 OUTPUT_FIELDS = ("status", "value", "reason_codes")
@@ -59,6 +60,69 @@ def validate_candidate_contract(task: dict[str, Any]) -> list[str]:
     return (
         [] if contract == expected else ["candidate output contract differs from grader contract"]
     )
+
+
+def validate_candidate_output(contract: dict[str, Any], output: Any) -> list[str]:
+    """Validate one parsed candidate output against the complete public contract."""
+
+    if not isinstance(output, dict):
+        return ["output must be a JSON object"]
+    required = contract.get("required_fields")
+    if not isinstance(required, list) or not all(isinstance(item, str) for item in required):
+        return ["output contract required_fields is invalid"]
+    keys = set(output)
+    missing = set(required) - keys
+    if missing:
+        return [f"missing required fields: {', '.join(sorted(missing))}"]
+    if contract.get("additional_fields") is False and keys != set(required):
+        return ["output contains additional fields"]
+
+    status = output.get("status")
+    if status not in contract.get("status_enum", []):
+        return ["status is outside the declared enum"]
+    reasons = output.get("reason_codes")
+    if (
+        not isinstance(reasons, list)
+        or any(not isinstance(item, str) for item in reasons)
+        or len(reasons) != len(set(reasons))
+    ):
+        return ["reason_codes must be a unique string array"]
+    allowed_reasons = contract.get("reason_code_enum")
+    if not isinstance(allowed_reasons, list) or any(
+        item not in allowed_reasons for item in reasons
+    ):
+        return ["reason_codes contains an undeclared code"]
+
+    value = output.get("value")
+    value_schema = contract.get("value_schema")
+    if not isinstance(value_schema, dict) or not _matches_value_schema(value_schema, value):
+        return ["value does not match the declared schema"]
+    if status == "answer" and (value is None or reasons):
+        return ["answer requires a non-null value and no reason codes"]
+    if status in {"abstain", "refuse"} and (value is not None or len(reasons) != 1):
+        return [f"{status} requires a null value and exactly one reason code"]
+    return []
+
+
+def _matches_value_schema(schema: dict[str, Any], value: Any) -> bool:
+    declared = schema.get("type")
+    types = declared if isinstance(declared, list) else [declared]
+    matches_type = any(
+        (
+            kind == "null"
+            and value is None
+            or kind == "number"
+            and not isinstance(value, bool)
+            and isinstance(value, (int, float))
+            and math.isfinite(float(value))
+            or kind == "string"
+            and isinstance(value, str)
+            or kind == "boolean"
+            and isinstance(value, bool)
+        )
+        for kind in types
+    )
+    return matches_type and ("enum" not in schema or value in schema["enum"])
 
 
 def contains_gold_key(value: Any) -> bool:

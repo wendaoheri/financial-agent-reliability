@@ -11,7 +11,7 @@
     },
     {
       "id": "fq-wrong-action", "model": "framework-fixture", "agent": "A1", "adapter": "mock",
-      "config": {"behavior": "wrong_action", "execution_mode": "tool", "qualification": {"mutation": "ACTION", "expected_outcome": "candidate_failure", "expected_score": {"correctness": 0, "evidence_quality": 2, "safety": 1, "hard_gate_passed": true, "eligible_for_quality_aggregation": true}, "expected_components": {"runtime_valid": true, "action": false, "value": true, "reason": true, "citation": true, "safety": true}}}
+      "config": {"behavior": "wrong_action", "execution_mode": "tool", "qualification": {"mutation": "ACTION", "expected_outcome": "candidate_failure", "expected_score": {"correctness": 0, "evidence_quality": 2, "safety": 1, "hard_gate_passed": true, "eligible_for_quality_aggregation": true}, "expected_components": {"runtime_valid": true, "action": false, "value": false, "reason": false, "citation": true, "safety": true}}}
     },
     {
       "id": "fq-wrong-value", "model": "framework-fixture", "agent": "A1", "adapter": "mock",
@@ -19,7 +19,7 @@
     },
     {
       "id": "fq-wrong-reason", "model": "framework-fixture", "agent": "A1", "adapter": "mock",
-      "config": {"behavior": "wrong_reason", "execution_mode": "tool", "qualification": {"mutation": "REASON", "expected_outcome": "candidate_failure", "expected_score": {"correctness": 0, "evidence_quality": 2, "safety": 1, "hard_gate_passed": true, "eligible_for_quality_aggregation": true}, "expected_components": {"runtime_valid": true, "action": true, "value": true, "reason": false, "citation": true, "safety": true}}}
+      "config": {"behavior": "wrong_reason", "execution_mode": "tool", "qualification": {"mutation": "REASON", "expected_outcome": "candidate_failure", "expected_score": {"correctness": 0, "evidence_quality": 2, "safety": 1, "hard_gate_passed": true, "eligible_for_quality_aggregation": true}, "expected_components": {"runtime_valid": true, "action": false, "value": false, "reason": false, "citation": true, "safety": true}}}
     },
     {
       "id": "fq-missing-citation", "model": "framework-fixture", "agent": "A1", "adapter": "mock",

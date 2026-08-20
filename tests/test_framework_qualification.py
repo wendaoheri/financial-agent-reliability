@@ -4,15 +4,21 @@ import json
 import pathlib
 import tempfile
 import unittest
+from unittest.mock import patch
 
+from financial_agent_reliability.adapters.core import AdapterResult
 from financial_agent_reliability.compare import compare_traces
+from financial_agent_reliability.contracts import (
+    candidate_output_contract,
+    validate_candidate_output,
+)
 from financial_agent_reliability.models import load_candidates, load_tasks
 from financial_agent_reliability.qualification import (
     QualificationError,
     replay_qualification,
     run_qualification,
 )
-from financial_agent_reliability.runner import version_coordinates
+from financial_agent_reliability.runner import run_matrix, version_coordinates
 from financial_agent_reliability.trace import read_traces
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -60,7 +66,11 @@ class FrameworkQualificationTests(unittest.TestCase):
                 ),
             )
             self.assertEqual(manifest["status"], "passed")
+            self.assertRegex(manifest["eval_pack_id"], r"^[0-9a-f]{64}$")
+            self.assertEqual(manifest["runner_protocol_version"], "1.0.0")
             report = replay_qualification(tasks, candidates, bundle)
+            self.assertEqual(report["eval_pack_id"], manifest["eval_pack_id"])
+            self.assertEqual(report["runner_protocol_version"], "1.0.0")
             self.assertEqual(
                 report["outcome_counts"],
                 {"candidate_success": 1, "candidate_failure": 6, "invalid_run": 3},
@@ -83,17 +93,62 @@ class FrameworkQualificationTests(unittest.TestCase):
             )
             matrix = json.loads((bundle / "calibration_matrix.json").read_text(encoding="utf-8"))
             by_mutation = {row["mutation"]: row for row in matrix}
-            baseline = by_mutation["NONE"]["actual"]["components"]
-            for mutation, component in {
-                "ACTION": "action",
-                "VALUE": "value",
-                "REASON": "reason",
-                "CITATION": "citation",
-                "SAFETY": "safety",
-            }.items():
-                changed = by_mutation[mutation]["actual"]["components"]
-                differences = {key for key in baseline if baseline[key] != changed[key]}
-                self.assertEqual(differences, {component})
+            self.assertTrue(all(row["matched"] for row in matrix))
+            for mutation in ("ACTION", "VALUE", "REASON"):
+                case_id = by_mutation[mutation]["case_id"]
+                trace = next(
+                    row
+                    for row in read_traces([bundle / "traces.jsonl"])
+                    if row["candidate"]["id"] == case_id
+                )
+                contract_errors = validate_candidate_output(
+                    tasks[0]["candidate_payload"]["output_contract"], trace["output"]
+                )
+                self.assertEqual(contract_errors, [], mutation)
+
+    def test_output_contract_vectors(self):
+        contract = candidate_output_contract("orderbook_spread")
+        vectors = [
+            ({"status": "answer", "value": 0.04, "reason_codes": []}, True),
+            ({"status": "abstain", "value": None, "reason_codes": ["MARKET_DATA_ANOMALY"]}, True),
+            ({"status": "refuse", "value": None, "reason_codes": ["REAL_TRADE_FORBIDDEN"]}, True),
+            ({"status": "answer", "value": "WRONG", "reason_codes": []}, False),
+            ({"status": "answer", "value": 0.04, "reason_codes": ["INSUFFICIENT_EVIDENCE"]}, False),
+            ({"status": "abstain", "value": None, "reason_codes": ["UNKNOWN"]}, False),
+        ]
+        for output, valid in vectors:
+            with self.subTest(output=output):
+                self.assertEqual(not validate_candidate_output(contract, output), valid)
+
+    def test_central_gate_excludes_protocol_error_from_model_failures(self):
+        tasks, candidates = self._selection()
+
+        class InvalidOutputAdapter:
+            version = "fixture"
+
+            def execute(self, request, candidate, tools):
+                return AdapterResult(
+                    output={"status": "answer", "value": "WRONG", "reason_codes": []},
+                    error=None,
+                    latency_ms=1,
+                )
+
+        with patch(
+            "financial_agent_reliability.runner.get_adapter",
+            return_value=InvalidOutputAdapter(),
+        ):
+            traces = run_matrix(
+                tasks,
+                candidates[:1],
+                repository_root=ROOT,
+                run_id="central-protocol-gate",
+                versions=version_coordinates(
+                    repository_root=ROOT, tasks_path=TASKS, config_path=CONFIG
+                ),
+            )
+        self.assertEqual(traces[0]["error"]["code"], "INVALID_MODEL_OUTPUT")
+        self.assertFalse(traces[0]["score"]["eligible_for_quality_aggregation"])
+        self.assertIsNone(traces[0]["failure_signature"])
 
     def test_manifest_detects_tampering_before_regrade(self):
         tasks, candidates = self._selection()

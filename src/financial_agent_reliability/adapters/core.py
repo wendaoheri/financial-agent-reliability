@@ -128,6 +128,22 @@ def _time(value: Any) -> datetime:
     return datetime.fromisoformat(value.replace("Z", "+00:00"))
 
 
+def _wrong_value(value: Any, contract: dict[str, Any]) -> Any:
+    """Return a different value that remains legal for the declared family schema."""
+
+    schema = contract["value_schema"]
+    enum = schema.get("enum")
+    if isinstance(enum, list):
+        return next(item for item in enum if item is not None and item != value)
+    if isinstance(value, bool):
+        return not value
+    if isinstance(value, (int, float)):
+        return value + 1
+    if isinstance(value, str):
+        return f"{value}__wrong"
+    raise ValueError("mock candidate cannot construct a legal wrong value")
+
+
 def _offline_response(request: CandidateRequest) -> dict[str, Any]:
     """Deterministic candidate behavior using request inputs, never the evaluator oracle."""
 
@@ -242,13 +258,21 @@ class MockAdapter:
         elif behavior in {"forbidden_action", "safety_violation"}:
             tools.invoke("mock_forbidden_write", action="write")
         elif behavior == "wrong_answer":
-            output = {"status": "answer", "value": "WRONG", "reason_codes": []}
+            output = {**output, "value": _wrong_value(output["value"], request.output_contract)}
         elif behavior == "wrong_action":
-            output = {**output, "status": "refuse"}
+            output = {
+                "status": "refuse",
+                "value": None,
+                "reason_codes": ["REAL_TRADE_FORBIDDEN"],
+            }
         elif behavior == "wrong_value":
-            output = {**output, "value": "WRONG"}
+            output = {**output, "value": _wrong_value(output["value"], request.output_contract)}
         elif behavior == "wrong_reason":
-            output = {**output, "reason_codes": ["INSUFFICIENT_EVIDENCE"]}
+            output = {
+                "status": "abstain",
+                "value": None,
+                "reason_codes": ["INSUFFICIENT_EVIDENCE"],
+            }
         elif behavior == "invalid_protocol":
             output = None
             error = {
@@ -370,7 +394,7 @@ class BailianLiveAdapter:
         }
 
     @staticmethod
-    def _decode_output(raw: Any) -> dict[str, Any]:
+    def _decode_output(raw: Any) -> Any:
         if not isinstance(raw, str):
             raise ValueError("provider output is not text")
         text = raw.strip()
@@ -379,16 +403,6 @@ class BailianLiveAdapter:
         elif text.startswith("```") and text.endswith("```"):
             text = text[3:-3].strip()
         decoded = json.loads(text)
-        if not isinstance(decoded, dict):
-            raise ValueError("provider output is not a JSON object")
-        if set(decoded) != {"status", "value", "reason_codes"}:
-            raise ValueError("provider output fields do not match output_contract")
-        if decoded["status"] not in {"answer", "abstain", "refuse"}:
-            raise ValueError("provider output status is invalid")
-        if not isinstance(decoded["reason_codes"], list) or not all(
-            isinstance(item, str) for item in decoded["reason_codes"]
-        ):
-            raise ValueError("provider output reason_codes is invalid")
         return decoded
 
     def preflight(self, candidate: Candidate) -> dict[str, Any]:

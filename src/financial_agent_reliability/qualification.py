@@ -9,6 +9,7 @@ from collections import Counter
 from types import SimpleNamespace
 from typing import Any
 
+from financial_agent_reliability.contracts import validate_candidate_output
 from financial_agent_reliability.grading import grade_components
 from financial_agent_reliability.models import Candidate
 from financial_agent_reliability.runner import (
@@ -53,7 +54,19 @@ def derive_evidence(
     for trace in traces:
         task = task_by_id[trace["task"]["id"]]
         candidate = candidate_by_id[trace["candidate"]["id"]]
-        result = SimpleNamespace(output=trace["output"], error=trace["error"])
+        protocol_errors = validate_candidate_output(
+            task["candidate_payload"]["output_contract"], trace["output"]
+        )
+        effective_error = trace["error"]
+        if effective_error is None and protocol_errors:
+            effective_error = {
+                "code": "INVALID_MODEL_OUTPUT",
+                "message": protocol_errors[0],
+                "retryable": False,
+            }
+        if effective_error != trace["error"]:
+            raise QualificationError(f"persisted protocol classification drift for {candidate.id}")
+        result = SimpleNamespace(output=trace["output"], error=effective_error)
         score, evidence_refs, violations, components = grade_components(
             task, result, trace["tool_calls"]
         )
@@ -166,6 +179,8 @@ def run_qualification(
         "contract_version": "1.0.0",
         "status": "passed" if passed else "failed",
         "run_id": run_id,
+        "eval_pack_id": versions["eval_pack_id"],
+        "runner_protocol_version": versions["runner_protocol_version"],
         "artifacts": artifacts,
     }
     _write_json(output_directory / "manifest.json", manifest)
@@ -188,6 +203,13 @@ def replay_qualification(
         if _sha256(bundle / name) != expected_hash:
             raise QualificationError(f"bundle hash mismatch: {name}")
     traces = list(read_traces([bundle / "traces.jsonl"]))
+    coordinates = {
+        (trace["versions"].get("eval_pack_id"), trace["versions"].get("runner_protocol_version"))
+        for trace in traces
+    }
+    expected_coordinates = {(manifest.get("eval_pack_id"), manifest.get("runner_protocol_version"))}
+    if coordinates != expected_coordinates:
+        raise QualificationError("trace Eval Pack or runner protocol differs from manifest")
     matrix, aggregate, failures = derive_evidence(tasks, candidates, traces)
     expected = {
         "calibration_matrix.json": matrix,
@@ -202,5 +224,7 @@ def replay_qualification(
         "status": "passed",
         "traces_regraded": len(traces),
         "artifacts_verified": len(registered),
+        "eval_pack_id": manifest["eval_pack_id"],
+        "runner_protocol_version": manifest["runner_protocol_version"],
         "outcome_counts": aggregate["outcome_counts"],
     }
