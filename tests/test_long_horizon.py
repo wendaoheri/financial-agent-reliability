@@ -174,6 +174,7 @@ class LongHorizonTests(unittest.TestCase):
 
     def test_provider_failure_is_incomplete_and_excluded(self):
         with tempfile.TemporaryDirectory() as temporary:
+            adapter = FauxLongAdapter(fail_at=4)
             summary = run_long_horizon(
                 _task(),
                 _candidate(),
@@ -182,12 +183,25 @@ class LongHorizonTests(unittest.TestCase):
                 experiment_id="429",
                 versions={"config_sha256": "e" * 64},
                 steps=10,
-                adapter=FauxLongAdapter(fail_at=4),
+                adapter=adapter,
             )
             report = aggregate_soak([summary])
             self.assertEqual(summary["status"], "incomplete")
             self.assertFalse(summary["eligible_for_completed_aggregation"])
             self.assertEqual(report["completed_aggregation"]["runs"], 0)
+            resumed_adapter = FauxLongAdapter()
+            repeated = run_long_horizon(
+                _task(),
+                _candidate(),
+                repository_root=ROOT,
+                output_directory=pathlib.Path(temporary),
+                experiment_id="429",
+                versions={"config_sha256": "e" * 64},
+                steps=10,
+                adapter=resumed_adapter,
+            )
+            self.assertEqual(repeated["status"], "incomplete")
+            self.assertEqual(resumed_adapter.calls, 0)
 
     def test_provider_fault_matrix_has_explicit_incomplete_terminal_state(self):
         for code in (

@@ -22,6 +22,7 @@ from financial_agent_reliability.security import scan_persisted_value_for_secret
 
 SOAK_SCHEMA_VERSION = "0.1.0"
 _COMPLETE = {"completed", "recovered"}
+_TERMINAL = _COMPLETE | {"incomplete", "cancelled"}
 
 
 class SoakHardStop(ValueError):
@@ -235,7 +236,7 @@ def run_long_horizon(
     if any(index > steps for index in events):
         raise SoakHardStop("persisted soak step exceeds the configured target")
     resumed = bool(events)
-    if existing_checkpoint is not None and existing_checkpoint.get("status") in _COMPLETE:
+    if existing_checkpoint is not None and existing_checkpoint.get("status") in _TERMINAL:
         _atomic_jsonl(
             candidate_directory / "steps.jsonl", [events[index] for index in sorted(events)]
         )
