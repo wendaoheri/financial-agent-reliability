@@ -9,7 +9,7 @@ from io import StringIO
 from unittest.mock import patch
 
 from financial_agent_reliability.adapters.pi import PiAgentLiveAdapter
-from financial_agent_reliability.cli import main
+from financial_agent_reliability.cli import _bind_live_preflight, main
 from financial_agent_reliability.models import load_candidates
 from financial_agent_reliability.trace import read_traces
 
@@ -17,6 +17,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 TASKS = ROOT / "tasks" / "dev" / "tasks.jsonl"
 PI_CONFIG = ROOT / "configs" / "pi-offline.json"
 PI_LIVE_CONFIG = ROOT / "configs" / "pi-bailian-pilot.json"
+PI_CALIBRATION_CONFIG = ROOT / "configs" / "pi-bailian-calibration-v2.json"
 PHASE0_SLICES = ("fundamentals", "news_filings", "portfolio")
 
 
@@ -158,6 +159,55 @@ class PiAgentOfflineTests(unittest.TestCase):
             ).preflight(candidate)
         self.assertEqual(result, expected)
         adapter_class.return_value.preflight.assert_called_once_with(candidate)
+
+    def test_phase11_plan_has_eight_isolated_calibration_cells(self):
+        stdout = StringIO()
+        arguments = [
+            "plan-live",
+            "--tasks",
+            str(TASKS),
+            "--config",
+            str(PI_CALIBRATION_CONFIG),
+            "--slice",
+            "fundamentals",
+            "--slice",
+            "portfolio",
+            "--variant",
+            "positive_earnings",
+            "--variant",
+            "execute_trade",
+        ]
+        with redirect_stdout(stdout):
+            self.assertEqual(main(arguments), 0)
+        plan = json.loads(stdout.getvalue())
+        self.assertEqual(plan["matrix_cells"], 8)
+        self.assertEqual(plan["request_ceiling"]["preflight"], 4)
+        self.assertEqual(plan["request_ceiling"]["matrix"], 16)
+
+    def test_filtered_model_run_accepts_bound_preflight_superset(self):
+        candidates = load_candidates(PI_CALIBRATION_CONFIG)
+        with tempfile.TemporaryDirectory() as temporary:
+            path = pathlib.Path(temporary) / "preflight.json"
+            versions = {"config_sha256": "a" * 64}
+            path.write_text(
+                json.dumps(
+                    {
+                        "status": "passed",
+                        "config_sha256": "a" * 64,
+                        "models": [
+                            {
+                                "model": candidate.model,
+                                "status": "passed",
+                                "identity": {"exact_match": True},
+                            }
+                            for candidate in candidates
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            _bind_live_preflight(path, [candidates[0]], versions)
+        self.assertEqual(len(versions["preflight_sha256"]), 64)
 
 
 if __name__ == "__main__":

@@ -72,6 +72,22 @@ the pilot. The pilot uses the same slice filters as `plan-live`. It inherits onl
 `BENCH_BAILIAN_API_KEY`; the key never enters subprocess input, command arguments, config, trace, or
 report. No live command is part of the default verification suite.
 
+Phase 1.1 uses a new output contract rather than changing or rescoring the Phase 1 trace. It fixes
+the reason-code ontology, records only a redaction-safe invalid-output classification/length/hash,
+and runs each model independently so one model's safety hard stop cannot suppress evidence from a
+different model. Calculate the approved eight-cell calibration without network access:
+
+```bash
+uv run bench plan-live --tasks tasks/dev/tasks.jsonl \
+  --config configs/pi-bailian-calibration-v2.json \
+  --slice fundamentals --slice portfolio \
+  --variant positive_earnings --variant execute_trade
+```
+
+After one four-model exact-identity preflight, execute four separate filtered runs with the same
+bound preflight. Each run orders the normal calculation before the safety case and preserves the
+per-model hard stop. Phase 1 and Phase 1.1 traces must not be concatenated into one ranking.
+
 ## Live workflow
 
 Live calls require explicit approval and `BENCH_BAILIAN_API_KEY` in the environment:

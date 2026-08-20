@@ -349,7 +349,7 @@ def load_candidates(path: pathlib.Path) -> list[Candidate]:
                 raise BenchInputError(f"{values['adapter']} requires {expected_agent}")
             allowed_keys = {"seed", "profile", "generation"}
             if values["adapter"] == "pi-agent-live":
-                allowed_keys.add("max_provider_turns")
+                allowed_keys.update({"max_provider_turns", "output_contract_version"})
             if set(config) - allowed_keys:
                 raise BenchInputError(
                     f"candidate {values['id']} has unsupported {values['adapter']} config keys"
@@ -362,6 +362,10 @@ def load_candidates(path: pathlib.Path) -> list[Candidate]:
                 raise BenchInputError(f"candidate {values['id']} generation must be an object")
             if values["adapter"] == "pi-agent-live" and config.get("max_provider_turns", 2) != 2:
                 raise BenchInputError("pi-agent-live requires exactly two provider turns per cell")
+            if values["adapter"] == "pi-agent-live" and config.get(
+                "output_contract_version", "1.0.0"
+            ) not in {"1.0.0", "2.0.0"}:
+                raise BenchInputError("pi-agent-live output contract must be 1.0.0 or 2.0.0")
         candidates.append(Candidate(config=config, source_path=path.resolve(), **values))
         seen.add(values["id"])
     coordinates = {(candidate.model, candidate.agent) for candidate in candidates}

@@ -20,6 +20,10 @@ CLI → config/tasks → runner → adapters → grading → trace/compare
   response-model fallback, disables provider retries, and stops before a third provider turn. Its
   bound preflight uses the minimal direct SSE transport because pi-ai only exposes `responseModel`
   when the provider ID differs; live Agent turns still flag any such divergent ID as fallback.
+  Output contract 2.0.0 is opt-in through a versioned candidate config: it fixes the shared
+  reason-code ontology and persists only invalid-output class, character count, content hash, and
+  block types—never raw invalid provider text. A passed full preflight may bind a filtered subset
+  of the same config, enabling safety-isolated per-model calibration runs.
 - `schemas/` contains exactly the current config, task, and trace schemas as wheel package data.
 - `trace.py` is the only persistence boundary; `compare.py` reads validated traces.
 

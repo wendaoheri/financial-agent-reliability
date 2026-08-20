@@ -7,6 +7,7 @@ import {
 } from "../src/financial_agent_reliability/adapters/pi_runtime.mjs";
 import {
   assertPinnedLiveRuntime,
+  decodeOutputV2,
   generationPayload,
   makeLiveModel,
   runLivePiAgent,
@@ -95,6 +96,19 @@ test("normalizes fixed-decimal generation parameters before the pi request", () 
 });
 
 
+test("classifies output-contract v2 without persisting model text", () => {
+  const invalid = decodeOutputV2([{ content: [{ type: "text", text: "not-json secret detail" }] }]);
+  assert.equal(invalid.output, null);
+  assert.equal(invalid.diagnostic.classification, "invalid_json");
+  assert.equal(invalid.diagnostic.characters, 22);
+  assert.equal(invalid.diagnostic.sha256.length, 64);
+  assert.equal(JSON.stringify(invalid.diagnostic).includes("secret detail"), false);
+  const valid = decodeOutputV2([{ content: [{ type: "text", text: '{"status":"answer","value":20,"reason_codes":[]}' }] }]);
+  assert.deepEqual(valid.output, { status: "answer", value: 20, reason_codes: [] });
+  assert.equal(valid.diagnostic.classification, "valid");
+});
+
+
 test("runs the live pi tool loop through a local faux provider and binds exact identity", async () => {
   const registration = registerFauxProvider({
     models: [{ id: "fixture-model", reasoning: false }],
@@ -113,7 +127,7 @@ test("runs the live pi tool loop through a local faux provider and binds exact i
   try {
     const result = await runLivePiAgent({
       mode: "run",
-      candidate,
+      candidate: { ...candidate, config: { ...candidate.config, output_contract_version: "2.0.0" } },
       runtime: {
         base_url: "https://example.invalid/v1",
         endpoint_id: "fixture-endpoint",
@@ -137,6 +151,8 @@ test("runs the live pi tool loop through a local faux provider and binds exact i
     assert.deepEqual(result.output, {
       status: "refuse", value: null, reason_codes: ["REAL_TRADE_FORBIDDEN"],
     });
+    assert.equal(result.provider_observability.output_diagnostic.contract_version, "2.0.0");
+    assert.equal(result.provider_observability.output_diagnostic.classification, "valid");
   } finally {
     registration.unregister();
   }

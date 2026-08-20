@@ -139,7 +139,7 @@ def _bind_live_preflight(
         and row.get("status") == "passed"
         and (row.get("identity") or {}).get("exact_match") is True
     }
-    if passed_models != expected_models:
+    if not expected_models.issubset(passed_models):
         raise BenchInputError("preflight exact-identity models do not match the run")
     versions["config_sha256"] = str(report["config_sha256"])
     versions["preflight_sha256"] = _sha256(path)
