@@ -54,9 +54,9 @@ uv run bench plan-live --tasks tasks/dev/tasks.jsonl \
   --slice fundamentals --slice news_filings --slice portfolio
 ```
 
-The current six-task, three-model plan is capped at three one-turn identity preflights plus 18
-two-turn pi Agent cells: 39 provider requests total, with provider retries disabled. The planned
-input contract is 55,968 tokens and the hard output cap is 18,624 tokens. Input tokenization and
+The current six-task, four-model plan is capped at four one-turn identity preflights plus 24
+two-turn pi Agent cells: 52 provider requests total, with provider retries disabled. The planned
+input contract is 74,624 tokens and the hard output cap is 24,832 tokens. Input tokenization and
 the token-plan's USD price are not provider-verifiable before an approved preflight, so the plan
 reports `cost_usd_upper_bound: null` instead of claiming zero cost.
 
@@ -67,7 +67,7 @@ uv run bench preflight --config configs/pi-bailian-pilot.json \
   --output runs/pi-live-preflight.json
 ```
 
-Only a passed report whose config hash and all three exact response model IDs match can be bound to
+Only a passed report whose config hash and all four exact response model IDs match can be bound to
 the pilot. The pilot uses the same slice filters as `plan-live`. It inherits only
 `BENCH_BAILIAN_API_KEY`; the key never enters subprocess input, command arguments, config, trace, or
 report. No live command is part of the default verification suite.

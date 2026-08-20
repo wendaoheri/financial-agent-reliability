@@ -16,6 +16,13 @@
       "config": {"profile": "benchmark_fast", "seed": 20260819, "max_provider_turns": 2}
     },
     {
+      "id": "deepseek-v4-flash-0731__pi-agent-0.73.1",
+      "model": "deepseek-v4-flash-0731",
+      "agent": "pi-agent-0.73.1",
+      "adapter": "pi-agent-live",
+      "config": {"profile": "benchmark_fast", "seed": 20260819, "max_provider_turns": 2}
+    },
+    {
       "id": "deepseek-v4-pro-0813__pi-agent-0.73.1",
       "model": "deepseek-v4-pro-0813",
       "agent": "pi-agent-0.73.1",
@@ -53,6 +60,12 @@
       "model_id": "glm-5.2",
       "provider": "bailian",
       "allowed_response_model_ids": ["glm-5.2"],
+      "capabilities": {"stream": "supported", "reasoning": "optional", "reasoning_controls": ["enable_flag"], "reasoning_output": "reasoning_content"}
+    },
+    {
+      "model_id": "deepseek-v4-flash-0731",
+      "provider": "bailian",
+      "allowed_response_model_ids": ["deepseek-v4-flash-0731"],
       "capabilities": {"stream": "supported", "reasoning": "optional", "reasoning_controls": ["enable_flag"], "reasoning_output": "reasoning_content"}
     },
     {
