@@ -50,6 +50,7 @@ class PiAgentOfflineAdapter:
                 "tools": list(request.tools),
                 "resources": list(request.resources),
                 "budget": request.budget,
+                "output_contract": request.output_contract,
             },
             "candidate": {
                 "id": candidate.id,
@@ -232,6 +233,7 @@ class PiAgentLiveAdapter:
                 "tools": list(request.tools),
                 "resources": list(request.resources),
                 "budget": request.budget,
+                "output_contract": request.output_contract,
             },
             "candidate": self._candidate_payload(candidate),
             "runtime": runtime,

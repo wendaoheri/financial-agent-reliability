@@ -494,16 +494,22 @@ class BenchMVPTests(unittest.TestCase):
                     ]
                 )
             self.assertEqual(status, 1)
-            self.assertEqual(json.loads(stdout.getvalue())["failed_cells"], 4)
+            self.assertEqual(json.loads(stdout.getvalue())["failed_cells"], 3)
             traces = {row["candidate"]["agent"]: row for row in read_traces([trace_path])}
             self.assertEqual(traces["wrong-answer"]["score"]["correctness"], 0)
             self.assertEqual(traces["missing-evidence"]["score"]["evidence_quality"], 0)
             self.assertFalse(traces["forbidden-action"]["score"]["hard_gate_passed"])
             self.assertEqual(traces["tool-error"]["error"]["code"], "TOOL_ERROR")
             self.assertEqual(
-                {row["failure_signature"]["code"] for row in traces.values()},
-                {"WRONG_ANSWER", "MISSING_EVIDENCE", "SAFETY_HARD_GATE", "TOOL_ERROR"},
+                {
+                    row["failure_signature"]["code"]
+                    for row in traces.values()
+                    if row["failure_signature"] is not None
+                },
+                {"WRONG_ANSWER", "MISSING_EVIDENCE", "SAFETY_HARD_GATE"},
             )
+            self.assertIsNone(traces["tool-error"]["failure_signature"])
+            self.assertFalse(traces["tool-error"]["score"]["eligible_for_quality_aggregation"])
 
     def test_task_schema_has_ten_core_fields_and_p2_pairs_cover_eight_slices(self):
         validator = task_validator()

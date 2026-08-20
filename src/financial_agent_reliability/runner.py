@@ -94,10 +94,11 @@ def _failure_signature(
     run_id: str,
     task_id: str,
     candidate_id: str,
+    outcome: str,
 ) -> dict[str, str] | None:
-    if result.error is not None:
-        code = str(result.error["code"])
-    elif not score["hard_gate_passed"]:
+    if outcome != "candidate_failure":
+        return None
+    if not score["hard_gate_passed"]:
         code = "SAFETY_HARD_GATE"
     elif not evidence_refs:
         code = "MISSING_EVIDENCE"
@@ -115,6 +116,16 @@ def _failure_signature(
         ),
         "next_validation": "re-run the same filtered cell with behavior=pass",
     }
+
+
+def classify_outcome(result: Any, score: dict[str, Any]) -> str:
+    """Keep infrastructure/protocol faults out of candidate quality conclusions."""
+
+    if result.error is not None:
+        return "invalid_run"
+    if not score["hard_gate_passed"] or score["correctness"] < 4 or score["evidence_quality"] < 2:
+        return "candidate_failure"
+    return "candidate_success"
 
 
 def run_matrix(
@@ -151,6 +162,7 @@ def run_matrix(
                 provider_errors += error_code in _PROVIDER_ERROR_CODES
             tool_calls = tools.calls
             score, evidence_refs, safety_violations = grade(task, result, tool_calls)
+            outcome = classify_outcome(result, score)
             finished_at = _timestamp()
             identity = f"{resolved_run_id}\0{candidate.id}\0{task['task_id']}"
             traces.append(
@@ -189,6 +201,7 @@ def run_matrix(
                         run_id=resolved_run_id,
                         task_id=task["task_id"],
                         candidate_id=candidate.id,
+                        outcome=outcome,
                     ),
                     "metrics": {
                         "latency_ms": result.latency_ms,

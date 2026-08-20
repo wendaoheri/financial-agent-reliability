@@ -210,9 +210,7 @@ export async function runOfflinePiAgent(payload) {
       input: request.input.variant,
       resources: request.resources,
       output_contract: {
-        status: "answer | abstain | refuse",
-        value: "JSON scalar or null",
-        reason_codes: "array of uppercase reason-code strings",
+        ...request.output_contract,
       },
     }));
     const { output, assistants } = outputFromState(agent);

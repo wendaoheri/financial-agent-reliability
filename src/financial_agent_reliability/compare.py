@@ -77,6 +77,7 @@ def _wilson_interval(values: list[float]) -> dict[str, Any]:
 
 
 def _paired_contrasts(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    rows = [row for row in rows if row["score"]["eligible_for_quality_aggregation"]]
     contrasts: list[dict[str, Any]] = []
     for axis, other_axis in (("agent", "model"), ("model", "agent")):
         values = sorted({row["candidate"][axis] for row in rows})
@@ -136,7 +137,8 @@ def _paired_contrasts(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 
 def _summary(rows: list[dict[str, Any]], *, include_contrasts: bool = False) -> dict[str, Any]:
-    eligible = [row for row in rows if row["score"]["eligible_for_quality_aggregation"]]
+    valid = [row for row in rows if row["error"] is None]
+    eligible = [row for row in valid if row["score"]["eligible_for_quality_aggregation"]]
     signatures = Counter(
         row["failure_signature"]["code"] for row in rows if row.get("failure_signature") is not None
     )
@@ -145,16 +147,24 @@ def _summary(rows: list[dict[str, Any]], *, include_contrasts: bool = False) -> 
     )
     summary = {
         "runs": len(rows),
-        "errors": sum(row["error"] is not None for row in rows),
-        "hard_gate_failures": sum(not row["score"]["hard_gate_passed"] for row in rows),
+        "valid_runs": len(valid),
+        "invalid_runs_excluded": len(rows) - len(valid),
+        "errors": len(rows) - len(valid),
+        "hard_gate_failures": sum(not row["score"]["hard_gate_passed"] for row in valid),
         "scores": {
             "average_correctness": round(
-                sum(row["score"]["correctness"] for row in rows) / len(rows), 3
-            ),
+                sum(row["score"]["correctness"] for row in eligible) / len(eligible), 3
+            )
+            if eligible
+            else None,
             "average_evidence_quality": round(
-                sum(row["score"]["evidence_quality"] for row in rows) / len(rows), 3
-            ),
-            "safety_pass_rate": round(sum(row["score"]["safety"] for row in rows) / len(rows), 3),
+                sum(row["score"]["evidence_quality"] for row in eligible) / len(eligible), 3
+            )
+            if eligible
+            else None,
+            "safety_pass_rate": round(sum(row["score"]["safety"] for row in valid) / len(valid), 3)
+            if valid
+            else None,
             "eligible_quality_runs": len(eligible),
             "average_quality_score": round(quality_total / len(eligible), 3) if eligible else None,
         },
@@ -174,13 +184,20 @@ def _summary(rows: list[dict[str, Any]], *, include_contrasts: bool = False) -> 
         ],
         "uncertainty_95": {
             "average_correctness": _mean_interval(
-                [float(row["score"]["correctness"]) for row in rows]
-            ),
+                [float(row["score"]["correctness"]) for row in eligible]
+            )
+            if eligible
+            else None,
             "average_evidence_quality": _mean_interval(
-                [float(row["score"]["evidence_quality"]) for row in rows]
-            ),
-            "safety_pass_rate": _wilson_interval([float(row["score"]["safety"]) for row in rows]),
-            "effective_sample_size": len(rows),
+                [float(row["score"]["evidence_quality"]) for row in eligible]
+            )
+            if eligible
+            else None,
+            "safety_pass_rate": _wilson_interval([float(row["score"]["safety"]) for row in valid])
+            if valid
+            else None,
+            "effective_sample_size": len(eligible),
+            "safety_effective_sample_size": len(valid),
         },
     }
     if include_contrasts:
@@ -206,7 +223,7 @@ def compare_traces(traces: Iterable[dict[str, Any]]) -> dict[str, Any]:
         raise ValueError("compare requires at least one trace")
     candidates = _grouped(rows, lambda row: row["candidate"]["id"], "candidate_id")
     return {
-        "schema_version": "0.3.0",
+        "schema_version": "0.4.0",
         "matrix": {
             "models": sorted({row["candidate"]["model"] for row in rows}),
             "agents": sorted({row["candidate"]["agent"] for row in rows}),

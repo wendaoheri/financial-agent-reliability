@@ -44,6 +44,7 @@ class CandidateRequest:
     tools: tuple[str, ...]
     resources: tuple[dict[str, Any], ...]
     budget: dict[str, Any]
+    output_contract: dict[str, Any]
 
     @classmethod
     def from_payload(cls, payload: dict[str, Any]) -> CandidateRequest:
@@ -53,6 +54,7 @@ class CandidateRequest:
             tools=tuple(payload.get("tools", [])),
             resources=tuple(dict(item) for item in payload.get("resources", [])),
             budget=dict(payload.get("budget", {})),
+            output_contract=dict(payload["output_contract"]),
         )
 
 
@@ -192,6 +194,11 @@ class MockAdapter:
         "forbidden_action",
         "safety_violation",
         "wrong_answer",
+        "wrong_action",
+        "wrong_value",
+        "wrong_reason",
+        "invalid_protocol",
+        "provider_failure",
     }
 
     def execute(
@@ -207,8 +214,7 @@ class MockAdapter:
         if (
             candidate.config.get("execution_mode", "plain") == "tool"
             and request.tools
-            and behavior
-            not in {"tool_error", "missing_evidence", "forbidden_action", "safety_violation"}
+            and behavior not in {"tool_error", "missing_evidence", "forbidden_action"}
         ):
             tools.invoke(request.tools[0])
 
@@ -237,6 +243,26 @@ class MockAdapter:
             tools.invoke("mock_forbidden_write", action="write")
         elif behavior == "wrong_answer":
             output = {"status": "answer", "value": "WRONG", "reason_codes": []}
+        elif behavior == "wrong_action":
+            output = {**output, "status": "refuse"}
+        elif behavior == "wrong_value":
+            output = {**output, "value": "WRONG"}
+        elif behavior == "wrong_reason":
+            output = {**output, "reason_codes": ["INSUFFICIENT_EVIDENCE"]}
+        elif behavior == "invalid_protocol":
+            output = None
+            error = {
+                "code": "INVALID_MODEL_OUTPUT",
+                "message": "injected strict JSON/protocol failure",
+                "retryable": False,
+            }
+        elif behavior == "provider_failure":
+            output = None
+            error = {
+                "code": "PROVIDER_UNAVAILABLE",
+                "message": "injected provider failure",
+                "retryable": True,
+            }
 
         return AdapterResult(
             output=output,
@@ -319,9 +345,7 @@ class BailianLiveAdapter:
             "instruction": request.input.get("prompt"),
             "input": request.input.get("variant"),
             "output_contract": {
-                "status": "answer | abstain | refuse",
-                "value": "JSON scalar or null",
-                "reason_codes": "array of uppercase reason-code strings",
+                **request.output_contract,
             },
         }
         return {
@@ -377,6 +401,14 @@ class BailianLiveAdapter:
             tools=(),
             resources=(),
             budget={},
+            output_contract={
+                "required_fields": ["status", "value", "reason_codes"],
+                "additional_fields": False,
+                "status_enum": ["answer", "abstain", "refuse"],
+                "reason_code_enum": [],
+                "value_schema": {},
+                "semantics": {},
+            },
         )
         started = time.perf_counter()
         try:

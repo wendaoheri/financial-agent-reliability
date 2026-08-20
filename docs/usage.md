@@ -13,6 +13,29 @@ uv run bench compare runs/mock.jsonl --output runs/mock-report.json
 `bench run` exits 0 when all cells pass, 1 when it writes traces containing diagnostic failure
 signatures, and 2 for invalid input or configuration.
 
+## Framework qualification
+
+Run the preregistered known-answer and fault-injection matrix through the normal task loader,
+candidate boundary, A0/A1 adapter paths, read-only tool trace, JSONL writer, grader, aggregate,
+failure-signature, secret-scan, and manifest path:
+
+```bash
+uv run bench qualify --tasks tasks/dev/tasks.jsonl \
+  --config configs/framework-qualification.v1.json \
+  --slice market_data --variant valid_book \
+  --output-dir runs/framework-qualification-v1 --run-id framework-qualification-v1
+uv run bench qualify-replay --tasks tasks/dev/tasks.jsonl \
+  --config configs/framework-qualification.v1.json \
+  --slice market_data --variant valid_book \
+  --bundle runs/framework-qualification-v1
+```
+
+The matrix changes only action, value, reason code, citation, safety, or runtime state per control.
+It reports `candidate_success`, `candidate_failure`, and `invalid_run`. Protocol, provider, adapter,
+and tool failures are invalid runs: they are excluded from CSR and never emit model-failure
+signatures. Safety violations remain candidate failures with a failed hard gate. The replay command
+verifies every registered SHA-256 before deterministically regrading the persisted trace.
+
 ## Offline pi Agent Phase 0
 
 Install the exact-pinned Node runtime once, then execute the six-cell dev selection:

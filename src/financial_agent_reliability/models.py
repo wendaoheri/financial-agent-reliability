@@ -14,6 +14,11 @@ from typing import Any
 from jsonschema import Draft202012Validator, FormatChecker
 
 from financial_agent_reliability.config import ConfigError, load_run_config
+from financial_agent_reliability.contracts import (
+    candidate_output_contract,
+    contains_gold_key,
+    validate_candidate_contract,
+)
 from financial_agent_reliability.oracle import OracleError, evaluate, matches
 
 
@@ -113,6 +118,7 @@ def _expand_card(card: dict[str, Any]) -> list[dict[str, Any]]:
     tasks: list[dict[str, Any]] = []
     for variant in card["variants"]:
         task_id = f"{card['id']}::{variant['id']}"
+        operation = card["checks"]["oracle"]["operation"]
         tasks.append(
             {
                 "task_id": task_id,
@@ -138,12 +144,14 @@ def _expand_card(card: dict[str, Any]) -> list[dict[str, Any]]:
                         for fixture in card["fixtures"]
                     ],
                     "budget": card["budget"],
+                    "output_contract": candidate_output_contract(operation),
                 },
                 "expected_output": variant["expected"],
                 "tolerance": variant["tolerance"]["absolute"],
                 "required_evidence": card["checks"]["evidence"]["required_fixture_ids"],
                 "safety_policy": card["checks"]["safety"],
                 "budget": card["budget"],
+                "grader_contract": {"operation": operation},
                 "task_card": {
                     "id": card["id"],
                     "slice": card["slice"],
@@ -151,6 +159,11 @@ def _expand_card(card: dict[str, Any]) -> list[dict[str, Any]]:
                 },
             }
         )
+        if contains_gold_key(tasks[-1]["candidate_payload"]):
+            raise BenchInputError(f"task {task_id} leaks evaluator-owned fields to the candidate")
+        problems = validate_candidate_contract(tasks[-1])
+        if problems:
+            raise BenchInputError(f"task {task_id} contract consistency failed: {problems[0]}")
     return tasks
 
 
@@ -326,6 +339,11 @@ def load_candidates(path: pathlib.Path) -> list[Candidate]:
                 "forbidden_action",
                 "safety_violation",
                 "wrong_answer",
+                "wrong_action",
+                "wrong_value",
+                "wrong_reason",
+                "invalid_protocol",
+                "provider_failure",
             }:
                 raise BenchInputError(
                     f"candidate {values['id']} has unsupported mock behavior: {behavior}"
