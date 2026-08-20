@@ -6,7 +6,6 @@ import hashlib
 import json
 import os
 import pathlib
-import subprocess
 import uuid
 from datetime import UTC, datetime
 from typing import Any
@@ -75,34 +74,6 @@ def _atomic_jsonl(path: pathlib.Path, values: list[dict[str, Any]]) -> None:
         handle.flush()
         os.fsync(handle.fileno())
     os.replace(temporary, path)
-
-
-def soak_version_coordinates(
-    repository_root: pathlib.Path, versions: dict[str, Any]
-) -> dict[str, Any]:
-    """Add the exact code coordinate and cleanliness gate used by resumable live work."""
-
-    commit = subprocess.run(
-        ["git", "rev-parse", "HEAD"],
-        cwd=repository_root,
-        check=False,
-        capture_output=True,
-        text=True,
-    )
-    status = subprocess.run(
-        ["git", "status", "--porcelain", "--untracked-files=no"],
-        cwd=repository_root,
-        check=False,
-        capture_output=True,
-        text=True,
-    )
-    if commit.returncode != 0 or status.returncode != 0:
-        raise SoakHardStop("soak requires a readable Git worktree coordinate")
-    return {
-        **versions,
-        "git_commit": commit.stdout.strip(),
-        "git_dirty": bool(status.stdout.strip()),
-    }
 
 
 def _read_object(path: pathlib.Path) -> dict[str, Any]:
@@ -231,7 +202,7 @@ def run_long_horizon(
     step_directory = candidate_directory / "steps"
     existing_checkpoint = _read_object(checkpoint_path) if checkpoint_path.exists() else None
     if existing_checkpoint is not None and existing_checkpoint.get("fingerprint") != fingerprint:
-        raise SoakHardStop("checkpoint fingerprint drift; refusing cross-version resume")
+        raise SoakHardStop("checkpoint fingerprint drift; refusing cross-experiment resume")
     events = _load_steps(step_directory, fingerprint)
     if any(index > steps for index in events):
         raise SoakHardStop("persisted soak step exceeds the configured target")

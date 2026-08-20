@@ -5,7 +5,6 @@ from __future__ import annotations
 import hashlib
 import json
 import pathlib
-import subprocess
 import uuid
 from dataclasses import replace
 from datetime import UTC, datetime
@@ -44,38 +43,12 @@ def _token_estimate(value: Any) -> int:
     return (len(rendered) + 3) // 4
 
 
-def _git_state(root: pathlib.Path) -> dict[str, Any]:
-    try:
-        commit_result = subprocess.run(
-            ["git", "rev-parse", "HEAD"],
-            cwd=root,
-            check=False,
-            capture_output=True,
-            text=True,
-        )
-    except OSError:
-        return {"commit": None, "dirty": None}
-    if commit_result.returncode != 0:
-        return {"commit": None, "dirty": None}
-    dirty_result = subprocess.run(
-        ["git", "status", "--porcelain", "--untracked-files=no"],
-        cwd=root,
-        check=False,
-        capture_output=True,
-        text=True,
-    )
-    dirty = bool(dirty_result.stdout.strip()) if dirty_result.returncode == 0 else None
-    return {"commit": commit_result.stdout.strip(), "dirty": dirty}
-
-
 def _sha256(path: pathlib.Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def version_coordinates(
-    *, repository_root: pathlib.Path, tasks_path: pathlib.Path, config_path: pathlib.Path
-) -> dict[str, Any]:
-    """Return the version evidence needed to reproduce one lightweight run."""
+def version_coordinates(*, tasks_path: pathlib.Path, config_path: pathlib.Path) -> dict[str, Any]:
+    """Return only evaluation-asset and experiment coordinates for one run."""
 
     taskset_sha256 = _sha256(tasks_path)
     config_sha256 = _sha256(config_path)
@@ -95,18 +68,13 @@ def version_coordinates(
     eval_pack_id = hashlib.sha256(
         json.dumps(eval_pack_payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
     ).hexdigest()
-    coordinates: dict[str, Any] = {
+    return {
         "eval_pack_id": eval_pack_id,
         "runner_protocol_version": RUNNER_PROTOCOL_VERSION,
         "taskset_sha256": taskset_sha256,
         "config_sha256": config_sha256,
         "trace_schema_version": CURRENT_TRACE_VERSION,
     }
-    lock_path = repository_root / "uv.lock"
-    coordinates["python_lock_sha256"] = _sha256(lock_path) if lock_path.is_file() else None
-    node_lock_path = repository_root / "package-lock.json"
-    coordinates["node_lock_sha256"] = _sha256(node_lock_path) if node_lock_path.is_file() else None
-    return coordinates
 
 
 def _failure_signature(
@@ -162,7 +130,6 @@ def run_matrix(
     """Run a model × agent matrix sequentially and stop on provider error-rate breach."""
 
     resolved_run_id = run_id or f"run-{uuid.uuid4().hex}"
-    git = _git_state(repository_root)
     traces: list[dict[str, Any]] = []
     provider_attempts = 0
     provider_errors = 0
@@ -246,7 +213,6 @@ def run_matrix(
                         "cost_usd_estimate": "0.000000",
                         "cost_basis": result.cost_basis,
                     },
-                    "git": git,
                     "versions": versions or {"trace_schema_version": CURRENT_TRACE_VERSION},
                     "started_at": started_at,
                     "finished_at": finished_at,

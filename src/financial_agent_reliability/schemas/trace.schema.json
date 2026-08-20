@@ -8,10 +8,10 @@
     "schema_version", "trace_id", "run_id", "task", "candidate", "input",
     "agent_events", "tool_calls", "provider_identity", "provider_observability", "output", "error",
     "evidence_refs", "safety_violations", "score", "failure_signature", "metrics",
-    "git", "versions", "started_at", "finished_at"
+    "versions", "started_at", "finished_at"
   ],
   "properties": {
-    "schema_version": {"const": "0.5.0"},
+    "schema_version": {"const": "0.6.0"},
     "trace_id": {"type": "string", "minLength": 1},
     "run_id": {"type": "string", "minLength": 1},
     "task": {
@@ -161,23 +161,14 @@
         "cost_basis": {"enum": ["mock_zero", "token_plan_unpriced"]}
       }
     },
-    "git": {
-      "type": "object", "additionalProperties": false, "required": ["commit", "dirty"],
-      "properties": {
-        "commit": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"},
-        "dirty": {"type": ["boolean", "null"]}
-      }
-    },
     "versions": {
       "type": "object", "additionalProperties": false, "required": ["trace_schema_version"],
       "properties": {
-        "trace_schema_version": {"const": "0.5.0"},
+        "trace_schema_version": {"const": "0.6.0"},
         "eval_pack_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
         "runner_protocol_version": {"const": "1.0.0"},
         "taskset_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
         "config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-        "python_lock_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
-        "node_lock_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
         "preflight_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
       }
     },

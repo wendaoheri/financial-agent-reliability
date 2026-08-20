@@ -14,9 +14,9 @@ CLI → config/tasks → runner → adapters → grading → trace/compare
   deterministic zero-network controls. It reuses the central candidate-output validator, grading
   boundary, outcome classifier, and failure-signature policy; it has no provider adapter or
   standalone CLI.
-- `runner.py` owns sequential execution, read-only mock tools, version coordinates, grading, and
-  failure signatures. Git coordinates are best-effort and nullable for an installed wheel running
-  outside a worktree.
+- `runner.py` owns sequential execution, read-only mock tools, experiment coordinates, grading, and
+  failure signatures. Its trace coordinates cover evaluation assets, candidate configuration, the
+  trace schema, and experiment protocol only; framework Git and dependency coordinates are absent.
 - `adapters/` contains the Python adapter boundary, the minimal Bailian protocol boundary, and one
   narrow Node runtime boundary pinned to `pi-agent-core@0.73.1`. The offline pi adapter uses pi's
   real `Agent.prompt()` and sequential tool loop with a deterministic faux transport; it cannot

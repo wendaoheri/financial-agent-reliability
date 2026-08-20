@@ -24,7 +24,6 @@ from financial_agent_reliability.eval_pack import (
 from financial_agent_reliability.long_horizon import (
     aggregate_soak,
     run_long_horizon,
-    soak_version_coordinates,
 )
 from financial_agent_reliability.models import (
     BenchInputError,
@@ -291,11 +290,7 @@ def main(argv: list[str] | None = None) -> int:
             print(_render(report), end="")
             return 0 if report["status"] == "passed" else 2
         if args.command == "eval-run":
-            report = run_eval_pack(
-                args.pack,
-                args.output_dir,
-                repository_root=pathlib.Path.cwd(),
-            )
+            report = run_eval_pack(args.pack, args.output_dir)
             print(_render(report), end="")
             return 0
         if args.command == "eval-replay":
@@ -368,7 +363,6 @@ def main(argv: list[str] | None = None) -> int:
             if len(adapters) != 1:
                 raise BenchInputError("one run cannot mix mock and live adapters")
             versions = version_coordinates(
-                repository_root=pathlib.Path.cwd(),
                 tasks_path=args.tasks,
                 config_path=args.config,
             )
@@ -411,7 +405,6 @@ def main(argv: list[str] | None = None) -> int:
             )
             if args.command == "qualify":
                 versions = version_coordinates(
-                    repository_root=pathlib.Path.cwd(),
                     tasks_path=args.tasks,
                     config_path=args.config,
                 )
@@ -446,14 +439,10 @@ def main(argv: list[str] | None = None) -> int:
             if any(candidate.adapter != "pi-agent-live" for candidate in candidates):
                 raise BenchInputError("soak requires only pi-agent-live candidates")
             versions = version_coordinates(
-                repository_root=pathlib.Path.cwd(),
                 tasks_path=args.tasks,
                 config_path=args.config,
             )
             _bind_live_preflight(args.preflight, candidates, versions)
-            versions = soak_version_coordinates(pathlib.Path.cwd(), versions)
-            if versions["git_dirty"]:
-                raise BenchInputError("live soak requires a clean Git worktree")
             summaries = [
                 run_long_horizon(
                     tasks[0],

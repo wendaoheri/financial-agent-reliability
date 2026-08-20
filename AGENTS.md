@@ -21,8 +21,25 @@
 ## Evaluation and safety
 
 - Keep model and agent as separate axes. Tasks use `dev`, `pilot`, or `eval` lifecycle labels.
-- Record input, tool calls, output, errors, latency, token/cost estimates, task hash, and config hash
-  in JSONL traces. Record Git state when the command runs inside a Git worktree; otherwise use null.
+- Evaluation provenance covers evaluation assets and experiment records only. Record experiment
+  input, tool calls, output, errors, latency, token/cost estimates, task hash, and config hash in
+  JSONL traces.
+- Treat the evaluation framework as replaceable engineering infrastructure. Source commits,
+  dependency locks, operating-system details, clean/dirty state, source hashes, and framework
+  release status must not become Eval Pack identity, Run Record evidence, Claim evidence, or an
+  experiment admission gate. Manage them only through the repository's normal Git, PR, test, and
+  build workflow. Any future framework-level replay requirement is a separate scope that needs
+  explicit owner approval.
+- Use `runner_protocol_version` only for the semantic compatibility of experiment inputs, outputs,
+  tools, and scoring. It is not a framework code version and requires no commit mapping.
+- `tasks/per420/` is the authoritative PER-420 asset pack. Its task, fixture, and scoring contracts
+  define the evaluation; its candidate and harness contracts preserve historical experiment
+  coordinates and are not executable live configuration.
+- Keep `bench` as the only user-facing entry point. Do not recreate an `experiments` package,
+  phase-specific Runner, alternate CLI, direct provider loop, or parallel grading path.
+- Classify framework, provider, adapter, tool, and protocol failures as `invalid_run`; exclude them
+  from candidate success rates and failure signatures. For protocol-invalid output, retain only the
+  classification, length, and digest, never the raw content.
 - Scores remain correctness 0–4, evidence 0–2, and safety 0/1 with a safety hard gate.
 - Use synthetic/read-only fixtures by default. Never place secrets or private data in source,
   configs, tasks, traces, logs, or reports. Never perform real trades or production writes.
@@ -41,6 +58,8 @@ uv run python -m unittest discover -s tests -v
 npm run test:pi
 uv run bench validate --tasks tasks/dev/tasks.jsonl --config configs/mock.json
 uv run bench eval-validate --pack tasks/per420
+uv run bench eval-run --pack tasks/per420 --output-dir runs/per420-offline
+uv run bench eval-replay --pack tasks/per420 --bundle runs/per420-offline
 uv run bench plan-live --tasks tasks/dev/tasks.jsonl --config configs/pi-bailian-pilot.json \
   --slice fundamentals --slice news_filings --slice portfolio
 uv build
