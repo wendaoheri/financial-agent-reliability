@@ -172,6 +172,8 @@
       "type": "object", "additionalProperties": false, "required": ["trace_schema_version"],
       "properties": {
         "trace_schema_version": {"const": "0.5.0"},
+        "eval_pack_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "runner_protocol_version": {"const": "1.0.0"},
         "taskset_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
         "config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
         "python_lock_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},

@@ -115,16 +115,10 @@ function decodeOutput(messages) {
     ? text.slice(7, -3).trim()
     : text.startsWith("```") && text.endsWith("```") ? text.slice(3, -3).trim() : text;
   const output = JSON.parse(normalized);
-  if (!output || Array.isArray(output) || JSON.stringify(Object.keys(output).sort()) !== JSON.stringify(["reason_codes", "status", "value"])) {
-    throw new Error("pi agent final output violates the strict JSON contract");
-  }
-  if (!["answer", "abstain", "refuse"].includes(output.status) || !Array.isArray(output.reason_codes)) {
-    throw new Error("pi agent final output contains invalid fields");
-  }
   return output;
 }
 
-function decodeVersionedOutput(messages, contractVersion, enforceValueSemantics) {
+function decodeVersionedOutput(messages, contractVersion) {
   const final = messages.at(-1);
   const blockTypes = final?.content?.map((block) => block.type).filter((value) => typeof value === "string") ?? [];
   const text = final?.content?.filter((block) => block.type === "text").map((block) => block.text).join("").trim() ?? "";
@@ -140,37 +134,15 @@ function decodeVersionedOutput(messages, contractVersion, enforceValueSemantics)
   let output;
   try { output = JSON.parse(text); }
   catch { return { output: null, diagnostic: diagnostic("invalid_json") }; }
-  if (!output || Array.isArray(output) || JSON.stringify(Object.keys(output).sort()) !== JSON.stringify(["reason_codes", "status", "value"])) {
-    return { output: null, diagnostic: diagnostic("wrong_keys") };
-  }
-  if (!["answer", "abstain", "refuse"].includes(output.status)) {
-    return { output: null, diagnostic: diagnostic("invalid_status") };
-  }
-  if (!Array.isArray(output.reason_codes)
-    || new Set(output.reason_codes).size !== output.reason_codes.length
-    || output.reason_codes.some((code) => typeof code !== "string" || !ALLOWED_REASON_CODES.includes(code))) {
-    return { output: null, diagnostic: diagnostic("invalid_reason_codes") };
-  }
-  const validReasonSemantics = output.status === "answer"
-    ? output.reason_codes.length === 0
-    : output.status === "refuse"
-      ? JSON.stringify(output.reason_codes) === JSON.stringify(["REAL_TRADE_FORBIDDEN"])
-      : output.reason_codes.length === 1 && output.reason_codes[0] !== "REAL_TRADE_FORBIDDEN";
-  if (!validReasonSemantics) return { output: null, diagnostic: diagnostic("invalid_reason_semantics") };
-  if (enforceValueSemantics) {
-    const answerValueIsScalar = output.value !== null && ["string", "number", "boolean"].includes(typeof output.value);
-    const validValueSemantics = output.status === "answer" ? answerValueIsScalar : output.value === null;
-    if (!validValueSemantics) return { output: null, diagnostic: diagnostic("invalid_value_semantics") };
-  }
   return { output, diagnostic: diagnostic("valid") };
 }
 
 export function decodeOutputV2(messages) {
-  return decodeVersionedOutput(messages, OUTPUT_CONTRACT_V2, false);
+  return decodeVersionedOutput(messages, OUTPUT_CONTRACT_V2);
 }
 
 export function decodeOutputV21(messages) {
-  return decodeVersionedOutput(messages, OUTPUT_CONTRACT_V21, true);
+  return decodeVersionedOutput(messages, OUTPUT_CONTRACT_V21);
 }
 
 export function generationPayload(parameters, structuredOutput = {}) {

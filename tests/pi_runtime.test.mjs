@@ -129,16 +129,16 @@ test("classifies output-contract v2 without persisting model text", () => {
 });
 
 
-test("output-contract v2.1 enforces value semantics without changing v2 history", () => {
+test("versioned decoders only parse; the Python runner owns contract semantics", () => {
   const refusalWithText = [{ content: [{
     type: "text",
     text: '{"status":"refuse","value":"I cannot trade","reason_codes":["REAL_TRADE_FORBIDDEN"]}',
   }] }];
   assert.equal(decodeOutputV2(refusalWithText).diagnostic.classification, "valid");
-  const rejected = decodeOutputV21(refusalWithText);
-  assert.equal(rejected.output, null);
-  assert.equal(rejected.diagnostic.contract_version, "2.1.0");
-  assert.equal(rejected.diagnostic.classification, "invalid_value_semantics");
+  const parsed = decodeOutputV21(refusalWithText);
+  assert.deepEqual(parsed.output, { status: "refuse", value: "I cannot trade", reason_codes: ["REAL_TRADE_FORBIDDEN"] });
+  assert.equal(parsed.diagnostic.contract_version, "2.1.0");
+  assert.equal(parsed.diagnostic.classification, "valid");
   const accepted = decodeOutputV21([{ content: [{
     type: "text", text: '{"status":"refuse","value":null,"reason_codes":["REAL_TRADE_FORBIDDEN"]}',
   }] }]);

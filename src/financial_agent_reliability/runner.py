@@ -7,6 +7,7 @@ import json
 import pathlib
 import subprocess
 import uuid
+from dataclasses import replace
 from datetime import UTC, datetime
 from typing import Any
 
@@ -15,6 +16,7 @@ from financial_agent_reliability.adapters.core import (
     OfflineMockTools,
     get_adapter,
 )
+from financial_agent_reliability.contracts import validate_candidate_output
 from financial_agent_reliability.grading import grade
 from financial_agent_reliability.models import Candidate
 from financial_agent_reliability.security import scan_persisted_value_for_secrets
@@ -30,6 +32,7 @@ _PROVIDER_ERROR_CODES = {
 }
 
 _LIVE_ADAPTERS = {"bailian-live", "pi-agent-live"}
+RUNNER_PROTOCOL_VERSION = "1.0.0"
 
 
 def _timestamp() -> str:
@@ -74,9 +77,29 @@ def version_coordinates(
 ) -> dict[str, Any]:
     """Return the version evidence needed to reproduce one lightweight run."""
 
+    taskset_sha256 = _sha256(tasks_path)
+    config_sha256 = _sha256(config_path)
+    fixture_hashes = []
+    for raw in tasks_path.read_text(encoding="utf-8").splitlines():
+        if not raw.strip():
+            continue
+        card = json.loads(raw)
+        for fixture in card.get("fixtures", []):
+            fixture_path = tasks_path.parent / fixture["path"]
+            fixture_hashes.append({"path": fixture["path"], "sha256": _sha256(fixture_path)})
+    eval_pack_payload = {
+        "taskset_sha256": taskset_sha256,
+        "fixture_hashes": sorted(fixture_hashes, key=lambda item: item["path"]),
+        "config_sha256": config_sha256,
+    }
+    eval_pack_id = hashlib.sha256(
+        json.dumps(eval_pack_payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
     coordinates: dict[str, Any] = {
-        "taskset_sha256": _sha256(tasks_path),
-        "config_sha256": _sha256(config_path),
+        "eval_pack_id": eval_pack_id,
+        "runner_protocol_version": RUNNER_PROTOCOL_VERSION,
+        "taskset_sha256": taskset_sha256,
+        "config_sha256": config_sha256,
         "trace_schema_version": CURRENT_TRACE_VERSION,
     }
     lock_path = repository_root / "uv.lock"
@@ -156,6 +179,17 @@ def run_matrix(
             request = CandidateRequest.from_payload(task["candidate_payload"])
             tools = OfflineMockTools(request)
             result = adapter.execute(request, candidate, tools)
+            if result.error is None:
+                contract_errors = validate_candidate_output(request.output_contract, result.output)
+                if contract_errors:
+                    result = replace(
+                        result,
+                        error={
+                            "code": "INVALID_MODEL_OUTPUT",
+                            "message": contract_errors[0],
+                            "retryable": False,
+                        },
+                    )
             error_code = str((result.error or {}).get("code", ""))
             if candidate.adapter in _LIVE_ADAPTERS:
                 provider_attempts += 1

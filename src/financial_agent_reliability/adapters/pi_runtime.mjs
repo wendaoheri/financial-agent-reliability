@@ -71,7 +71,10 @@ function offlineResponse(request, behavior) {
     throw new Error(`unsupported Phase 0 task: ${baseId}`);
   }
   if (behavior === "wrong_answer") {
-    return { status: "answer", value: "WRONG", reason_codes: [] };
+    const value = response.value;
+    const wrong = typeof value === "number" ? value + 1
+      : typeof value === "boolean" ? !value : `${value}__wrong`;
+    return { status: "answer", value: wrong, reason_codes: [] };
   }
   return response;
 }
@@ -98,12 +101,6 @@ function outputFromState(agent) {
     .join("")
     .trim();
   const output = JSON.parse(text);
-  if (
-    !output || typeof output !== "object" || Array.isArray(output)
-    || JSON.stringify(Object.keys(output).sort()) !== JSON.stringify(["reason_codes", "status", "value"])
-  ) {
-    throw new Error("pi agent final output violates the strict JSON contract");
-  }
   return { output, assistants };
 }
 
