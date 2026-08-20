@@ -1,4 +1,4 @@
-"""Primary deterministic Oracle for the Phase 0 differential task set."""
+"""Primary deterministic Oracle for the frozen PER-420 task set."""
 
 from __future__ import annotations
 

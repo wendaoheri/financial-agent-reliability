@@ -5,6 +5,8 @@ from __future__ import annotations
 import math
 from typing import Any
 
+from jsonschema import Draft202012Validator
+
 OUTPUT_FIELDS = ("status", "value", "reason_codes")
 STATUS_ENUM = ("answer", "abstain", "refuse")
 REASON_CODE_ENUM = (
@@ -62,8 +64,27 @@ def validate_candidate_contract(task: dict[str, Any]) -> list[str]:
     )
 
 
-def validate_candidate_output(contract: dict[str, Any], output: Any) -> list[str]:
-    """Validate one parsed candidate output against the complete public contract."""
+def validate_candidate_output(
+    contract: dict[str, Any],
+    output: Any,
+    *,
+    family_contract: dict[str, Any] | None = None,
+) -> list[str]:
+    """Validate parsed output against either supported public protocol.
+
+    The regular benchmark contract declares ``required_fields``.  The frozen
+    PER-420 evaluation pack declares ``exact_keys`` plus one family-specific
+    value and reason-code contract.  Keeping both shapes behind this function
+    prevents an evaluation pack from growing a second parser or protocol gate.
+    """
+
+    if "exact_keys" in contract:
+        return _validate_differential_output(contract, family_contract, output)
+    return _validate_benchmark_output(contract, output)
+
+
+def _validate_benchmark_output(contract: dict[str, Any], output: Any) -> list[str]:
+    """Validate the compact benchmark protocol."""
 
     if not isinstance(output, dict):
         return ["output must be a JSON object"]
@@ -101,6 +122,57 @@ def validate_candidate_output(contract: dict[str, Any], output: Any) -> list[str
         return ["answer requires a non-null value and no reason codes"]
     if status in {"abstain", "refuse"} and (value is not None or len(reasons) != 1):
         return [f"{status} requires a null value and exactly one reason code"]
+    return []
+
+
+def _validate_differential_output(
+    contract: dict[str, Any], family_contract: dict[str, Any] | None, output: Any
+) -> list[str]:
+    """Validate the frozen PER-420 action/citation protocol."""
+
+    if not isinstance(output, dict):
+        return ["output must be a JSON object"]
+    exact_keys = contract.get("exact_keys")
+    if not isinstance(exact_keys, list) or not all(isinstance(item, str) for item in exact_keys):
+        return ["output contract exact_keys is invalid"]
+    if set(output) != set(exact_keys):
+        return ["output keys must exactly match the declared contract"]
+    if not isinstance(family_contract, dict):
+        return ["family output contract is required"]
+
+    action = output.get("action")
+    if action not in contract.get("allowed_actions", []):
+        return ["action is outside the declared enum"]
+    reasons = output.get("reason_codes")
+    if (
+        not isinstance(reasons, list)
+        or any(not isinstance(item, str) for item in reasons)
+        or len(reasons) != len(set(reasons))
+    ):
+        return ["reason_codes must be a unique string array"]
+    allowed_reasons = family_contract.get("allowed_reason_codes")
+    if not isinstance(allowed_reasons, list) or any(
+        item not in allowed_reasons for item in reasons
+    ):
+        return ["reason_codes contains an undeclared family code"]
+
+    citations = output.get("cited_record_ids")
+    if (
+        not isinstance(citations, list)
+        or any(not isinstance(item, str) for item in citations)
+        or len(citations) != len(set(citations))
+    ):
+        return ["cited_record_ids must be a unique string array"]
+
+    value = output.get("value")
+    if action == "answer":
+        if reasons:
+            return ["answer requires no reason codes"]
+        schema = family_contract.get("answer_value_schema")
+        if not isinstance(schema, dict) or not Draft202012Validator(schema).is_valid(value):
+            return ["answer value does not match the family schema"]
+    elif value is not None or len(reasons) != 1:
+        return [f"{action} requires a null value and exactly one reason code"]
     return []
 
 

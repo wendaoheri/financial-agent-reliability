@@ -40,6 +40,7 @@ uv run ruff format --check .
 uv run python -m unittest discover -s tests -v
 npm run test:pi
 uv run bench validate --tasks tasks/dev/tasks.jsonl --config configs/mock.json
+uv run bench eval-validate --pack tasks/per420
 uv run bench plan-live --tasks tasks/dev/tasks.jsonl --config configs/pi-bailian-pilot.json \
   --slice fundamentals --slice news_filings --slice portfolio
 uv build

@@ -1,4 +1,4 @@
-"""Independent reference Oracle for Phase 0 cross-checking."""
+"""Independent reference Oracle for frozen PER-420 cross-checking."""
 
 from __future__ import annotations
 

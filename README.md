@@ -34,6 +34,17 @@ uv run bench compare runs/pi-phase0.jsonl --output runs/pi-phase0-report.json
 模型响应来自确定性 fixture transport，仅验证 harness、工具循环、trace 与评分链，不能解释
 为三个真实模型的能力差异。
 
+PER-420 的八维评测设计已经固化为 `tasks/per420/` 下的任务、fixture 与来源证明资产。
+它不再维护平行 Runner，可通过唯一 CLI 做零网络校验和三分类回放：
+
+```bash
+uv run bench eval-validate --pack tasks/per420
+uv run bench eval-run --pack tasks/per420 --output-dir runs/per420-offline
+uv run bench eval-replay --pack tasks/per420 --bundle runs/per420-offline
+```
+
+详见 [`docs/differential-eval.md`](docs/differential-eval.md)。
+
 Phase 1 的零调用准备入口：
 
 ```bash
@@ -75,6 +86,7 @@ uv run ruff format --check .
 uv run python -m unittest discover -s tests -v
 npm run test:pi
 uv run bench validate --tasks tasks/dev/tasks.jsonl --config configs/mock.json
+uv run bench eval-validate --pack tasks/per420
 uv build
 ```
 

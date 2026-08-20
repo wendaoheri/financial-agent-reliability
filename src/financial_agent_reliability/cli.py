@@ -16,6 +16,11 @@ from financial_agent_reliability.adapters.generation import resolve_generation
 from financial_agent_reliability.adapters.pi import PiAgentLiveAdapter
 from financial_agent_reliability.compare import compare_traces
 from financial_agent_reliability.config import load_run_config
+from financial_agent_reliability.eval_pack import (
+    replay_eval_pack,
+    run_eval_pack,
+    validate_eval_pack,
+)
 from financial_agent_reliability.long_horizon import (
     aggregate_soak,
     run_long_horizon,
@@ -92,6 +97,23 @@ def _parser() -> argparse.ArgumentParser:
     replay.add_argument("--bundle", type=pathlib.Path, required=True)
     replay.add_argument("--slice", action="append", dest="slices")
     replay.add_argument("--variant", action="append", dest="variants")
+
+    eval_validate = subparsers.add_parser(
+        "eval-validate", help="validate a frozen differential evaluation pack"
+    )
+    eval_validate.add_argument("--pack", type=pathlib.Path, required=True)
+
+    eval_run = subparsers.add_parser(
+        "eval-run", help="run zero-network differential evaluation controls"
+    )
+    eval_run.add_argument("--pack", type=pathlib.Path, required=True)
+    eval_run.add_argument("--output-dir", type=pathlib.Path, required=True)
+
+    eval_replay = subparsers.add_parser(
+        "eval-replay", help="verify and regrade a differential evaluation bundle"
+    )
+    eval_replay.add_argument("--pack", type=pathlib.Path, required=True)
+    eval_replay.add_argument("--bundle", type=pathlib.Path, required=True)
 
     soak = subparsers.add_parser(
         "soak", help="run or resume a durable long-horizon pi harness qualification"
@@ -264,6 +286,22 @@ def _filtered(
 def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     try:
+        if args.command == "eval-validate":
+            report = validate_eval_pack(args.pack)
+            print(_render(report), end="")
+            return 0 if report["status"] == "passed" else 2
+        if args.command == "eval-run":
+            report = run_eval_pack(
+                args.pack,
+                args.output_dir,
+                repository_root=pathlib.Path.cwd(),
+            )
+            print(_render(report), end="")
+            return 0
+        if args.command == "eval-replay":
+            report = replay_eval_pack(args.pack, args.bundle)
+            print(_render(report), end="")
+            return 0
         if args.command in {
             "validate",
             "preflight",
