@@ -406,6 +406,12 @@ def _run_unit(
     try:
         while model_requests < max_requests:
             request["messages"] = messages
+            final_provider_turn = agent_variant == "A0" or any(
+                message.get("role") == "tool" for message in messages
+            )
+            if final_provider_turn:
+                request["parameters"]["response_format"] = {"type": "json_object"}
+                request["parameters"]["tool_choice"] = "none"
             try:
                 response, consumed, request_attempts = _call_with_budget(
                     transport,

@@ -81,6 +81,9 @@ class _PerfectTransport:
                 "accepted_parameters": list(request["parameters"]),
                 "fallback_detected": False,
             }
+        if request["messages"][-1]["role"] == "tool" or not request["tools"]:
+            assert request["parameters"]["response_format"] == {"type": "json_object"}
+            assert request["parameters"]["tool_choice"] == "none"
         checks = task["checks"]
         output = {
             "action": checks["expected_action"],
