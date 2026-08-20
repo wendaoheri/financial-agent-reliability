@@ -1,8 +1,0 @@
-{
-  "candidates": [
-    {"id": "qwen3.8-max__plain-agent", "model": "qwen3.8-max", "agent": "plain-agent", "adapter": "bailian-live", "config": {"inference_config": "examples/bench/bailian-token-plan-inference.v0.2.json", "profile": "benchmark_fast", "seed": 20260819}},
-    {"id": "glm-5.2__plain-agent", "model": "glm-5.2", "agent": "plain-agent", "adapter": "bailian-live", "config": {"inference_config": "examples/bench/bailian-token-plan-inference.v0.2.json", "profile": "benchmark_fast", "seed": 20260819}},
-    {"id": "deepseek-v4-flash-0731__plain-agent", "model": "deepseek-v4-flash-0731", "agent": "plain-agent", "adapter": "bailian-live", "config": {"inference_config": "examples/bench/bailian-token-plan-inference.v0.2.json", "profile": "benchmark_fast", "seed": 20260819}},
-    {"id": "deepseek-v4-pro-0813__plain-agent", "model": "deepseek-v4-pro-0813", "agent": "plain-agent", "adapter": "bailian-live", "config": {"inference_config": "examples/bench/bailian-token-plan-inference.v0.2.json", "profile": "benchmark_fast", "seed": 20260819}}
-  ]
-}

@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0.0",
+  "candidates": [
+    {
+      "id": "diagnostic__wrong-answer",
+      "model": "diagnostic",
+      "agent": "wrong-answer",
+      "adapter": "mock",
+      "config": {"behavior": "wrong_answer", "execution_mode": "tool"}
+    },
+    {
+      "id": "diagnostic__missing-evidence",
+      "model": "diagnostic",
+      "agent": "missing-evidence",
+      "adapter": "mock",
+      "config": {"behavior": "missing_evidence", "execution_mode": "tool"}
+    },
+    {
+      "id": "diagnostic__forbidden-action",
+      "model": "diagnostic",
+      "agent": "forbidden-action",
+      "adapter": "mock",
+      "config": {"behavior": "forbidden_action", "execution_mode": "tool"}
+    },
+    {
+      "id": "diagnostic__tool-error",
+      "model": "diagnostic",
+      "agent": "tool-error",
+      "adapter": "mock",
+      "config": {"behavior": "tool_error", "execution_mode": "tool"}
+    }
+  ]
+}
