@@ -90,7 +90,7 @@ def _parse_sse_lines(
     content: list[str] = []
     reasoning_digest = hashlib.sha256()
     reasoning_chars = 0
-    tool_call_seen = False
+    tool_calls_by_index: dict[int, dict[str, Any]] = {}
     usage: dict[str, Any] = {}
     ttft_reasoning_ms: int | None = None
     ttft_content_ms: int | None = None
@@ -129,12 +129,32 @@ def _parse_sse_lines(
                     encoded = value.encode("utf-8")
                     reasoning_digest.update(encoded)
                     reasoning_chars += len(value)
-                if delta.get("tool_calls"):
-                    tool_call_seen = True
+                for raw_call in delta.get("tool_calls") or []:
+                    if not isinstance(raw_call, Mapping):
+                        continue
+                    index = int(raw_call.get("index", 0))
+                    call = tool_calls_by_index.setdefault(
+                        index,
+                        {
+                            "id": "",
+                            "type": "function",
+                            "function": {"name": "", "arguments": ""},
+                        },
+                    )
+                    if isinstance(raw_call.get("id"), str):
+                        call["id"] += raw_call["id"]
+                    function = raw_call.get("function") or {}
+                    if isinstance(function, Mapping):
+                        if isinstance(function.get("name"), str):
+                            call["function"]["name"] += function["name"]
+                        if isinstance(function.get("arguments"), str):
+                            call["function"]["arguments"] += function["arguments"]
+    tool_calls = [tool_calls_by_index[index] for index in sorted(tool_calls_by_index)]
     return {
         "model": model,
         "output": "".join(content),
-        "tool_call_supported": tool_call_seen,
+        "tool_calls": tool_calls,
+        "tool_call_supported": bool(tool_calls),
         "usage": usage,
         "reasoning_summary": {
             "characters": reasoning_chars,
@@ -167,10 +187,14 @@ def _parse_json(raw: bytes) -> dict[str, Any]:
         candidate = choices[0].get("message") or {}
         if isinstance(candidate, Mapping):
             message = candidate
+    tool_calls = message.get("tool_calls") or []
+    if not isinstance(tool_calls, list):
+        tool_calls = []
     return {
         "model": str(body["model"]) if body.get("model") is not None else None,
         "output": message.get("content") or "",
-        "tool_call_supported": bool(message.get("tool_calls")),
+        "tool_calls": tool_calls,
+        "tool_call_supported": bool(tool_calls),
         "usage": dict(body.get("usage") or {}),
         "reasoning_summary": {"characters": 0, "sha256": None},
     }
