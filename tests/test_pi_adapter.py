@@ -6,7 +6,9 @@ import tempfile
 import unittest
 from contextlib import redirect_stdout
 from io import StringIO
+from unittest.mock import patch
 
+from financial_agent_reliability.adapters.pi import PiAgentLiveAdapter
 from financial_agent_reliability.cli import main
 from financial_agent_reliability.models import load_candidates
 from financial_agent_reliability.trace import read_traces
@@ -145,6 +147,17 @@ class PiAgentOfflineTests(unittest.TestCase):
         self.assertEqual(plan["token_ceiling"]["output_hard_cap"], 24832)
         self.assertIsNone(plan["cost_usd_upper_bound"])
         self.assertTrue(plan["approval_required"])
+
+    def test_live_pi_preflight_delegates_to_exact_sse_identity_transport(self):
+        candidate = load_candidates(PI_LIVE_CONFIG)[0]
+        expected = {"model": candidate.model, "status": "passed"}
+        with patch("financial_agent_reliability.adapters.core.BailianLiveAdapter") as adapter_class:
+            adapter_class.return_value.preflight.return_value = expected
+            result = PiAgentLiveAdapter(
+                ROOT, env={"BENCH_BAILIAN_API_KEY": "memory-only"}
+            ).preflight(candidate)
+        self.assertEqual(result, expected)
+        adapter_class.return_value.preflight.assert_called_once_with(candidate)
 
 
 if __name__ == "__main__":

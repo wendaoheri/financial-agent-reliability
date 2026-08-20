@@ -17,7 +17,9 @@ CLI → config/tasks → runner → adapters → grading → trace/compare
   real `Agent.prompt()` and sequential tool loop with a deterministic faux transport; it cannot
   access a provider, account, or production write API. The separately gated live pi adapter keeps
   the same Agent and read-only tool boundary, inherits its credential from the environment, rejects
-  response-model fallback, disables provider retries, and stops before a third provider turn.
+  response-model fallback, disables provider retries, and stops before a third provider turn. Its
+  bound preflight uses the minimal direct SSE transport because pi-ai only exposes `responseModel`
+  when the provider ID differs; live Agent turns still flag any such divergent ID as fallback.
 - `schemas/` contains exactly the current config, task, and trace schemas as wheel package data.
 - `trace.py` is the only persistence boundary; `compare.py` reads validated traces.
 
