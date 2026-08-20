@@ -12,7 +12,10 @@ from datetime import UTC, datetime
 from typing import Any, TypeVar
 
 from financial_agent_reliability.adapters.core import BailianLiveAdapter
+from financial_agent_reliability.adapters.generation import resolve_generation
+from financial_agent_reliability.adapters.pi import PiAgentLiveAdapter
 from financial_agent_reliability.compare import compare_traces
+from financial_agent_reliability.config import load_run_config
 from financial_agent_reliability.models import (
     BenchInputError,
     audit_taskset,
@@ -40,6 +43,15 @@ def _parser() -> argparse.ArgumentParser:
     )
     preflight.add_argument("--config", type=pathlib.Path, required=True)
     preflight.add_argument("--output", type=pathlib.Path, required=True)
+
+    plan = subparsers.add_parser(
+        "plan-live", help="calculate a no-network request and token ceiling"
+    )
+    plan.add_argument("--tasks", type=pathlib.Path, required=True)
+    plan.add_argument("--config", type=pathlib.Path, required=True)
+    plan.add_argument("--slice", action="append", dest="slices")
+    plan.add_argument("--variant", action="append", dest="variants")
+    plan.add_argument("--candidate", action="append", dest="candidate_ids")
 
     run = subparsers.add_parser("run", help="run a gated matrix and append JSONL traces")
     run.add_argument("--tasks", type=pathlib.Path, required=True, help="task JSONL file")
@@ -84,11 +96,16 @@ def _write_safe_json(path: pathlib.Path, value: dict[str, Any]) -> None:
 
 
 def _live_preflight(candidates: list[Any], config_path: pathlib.Path) -> dict[str, Any]:
-    if not candidates or any(candidate.adapter != "bailian-live" for candidate in candidates):
-        raise BenchInputError("preflight requires only bailian-live candidates")
+    adapters = {candidate.adapter for candidate in candidates}
+    if not candidates or len(adapters) != 1 or not adapters <= {"bailian-live", "pi-agent-live"}:
+        raise BenchInputError("preflight requires one supported live adapter")
     if len(candidates) > 4:
         raise BenchInputError("live preflight request budget exceeded: maximum is 4")
-    adapter = BailianLiveAdapter(pathlib.Path.cwd())
+    adapter = (
+        PiAgentLiveAdapter(pathlib.Path.cwd())
+        if adapters == {"pi-agent-live"}
+        else BailianLiveAdapter(pathlib.Path.cwd())
+    )
     rows = [adapter.preflight(candidate) for candidate in candidates]
     config_hashes = sorted({row["config_sha256"] for row in rows})
     config_hash = _sha256(config_path)
@@ -128,6 +145,62 @@ def _bind_live_preflight(
     versions["preflight_sha256"] = _sha256(path)
 
 
+def _live_plan(
+    tasks: list[dict[str, Any]], candidates: list[Any], config_path: pathlib.Path
+) -> dict[str, Any]:
+    if not candidates or any(candidate.adapter != "pi-agent-live" for candidate in candidates):
+        raise BenchInputError("plan-live requires only pi-agent-live candidates")
+    config = load_run_config(config_path)
+    preflight_input_tokens = 256 * len(candidates)
+    preflight_output_tokens = 64 * len(candidates)
+    matrix_input_tokens = 0
+    matrix_output_tokens = 0
+    for candidate in candidates:
+        model = next(item for item in config.models if item.model_id == candidate.model)
+        provider = config.provider(model.provider)
+        generation = dict(candidate.config.get("generation") or {})
+        generation["seed"] = int(candidate.config.get("seed", 20260819))
+        resolved = resolve_generation(
+            provider,
+            model,
+            profile=config.profile(candidate.config.get("profile")),
+            candidate=generation,
+        )
+        turns = int(candidate.config.get("max_provider_turns", 2))
+        matrix_output_tokens += len(tasks) * turns * int(resolved.resolved["max_output_tokens"])
+        matrix_input_tokens += sum(
+            turns * int(task.get("budget", {}).get("max_input_tokens", 0)) for task in tasks
+        )
+    preflight_requests = len(candidates)
+    matrix_requests = len(tasks) * sum(
+        int(candidate.config.get("max_provider_turns", 2)) for candidate in candidates
+    )
+    return {
+        "schema_version": "0.1.0",
+        "network_calls_performed": 0,
+        "models": [candidate.model for candidate in candidates],
+        "tasks": len(tasks),
+        "matrix_cells": len(tasks) * len(candidates),
+        "request_ceiling": {
+            "preflight": preflight_requests,
+            "matrix": matrix_requests,
+            "total": preflight_requests + matrix_requests,
+            "retries_per_request": 0,
+        },
+        "token_ceiling": {
+            "input_contract": preflight_input_tokens + matrix_input_tokens,
+            "output_hard_cap": preflight_output_tokens + matrix_output_tokens,
+            "total_planned": preflight_input_tokens
+            + matrix_input_tokens
+            + preflight_output_tokens
+            + matrix_output_tokens,
+        },
+        "cost_usd_upper_bound": None,
+        "cost_basis": "token_plan_unpriced",
+        "approval_required": True,
+    }
+
+
 T = TypeVar("T")
 
 
@@ -148,7 +221,7 @@ def _filtered(
 def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     try:
-        if args.command in {"validate", "preflight", "run"}:
+        if args.command in {"validate", "preflight", "plan-live", "run"}:
             if args.command != "preflight":
                 tasks = load_tasks(args.tasks)
             candidates = load_candidates(args.config)
@@ -174,6 +247,21 @@ def main(argv: list[str] | None = None) -> int:
             _write_safe_json(args.output, report)
             print(_render({**report, "output": str(args.output)}), end="")
             return 0 if report["status"] == "passed" else 2
+        if args.command == "plan-live":
+            tasks = _filtered(
+                tasks, args.slices, lambda task: task.get("task_card", {}).get("slice"), "slice"
+            )
+            tasks = _filtered(
+                tasks,
+                args.variants,
+                lambda task: task.get("task_card", {}).get("variant"),
+                "variant",
+            )
+            candidates = _filtered(
+                candidates, args.candidate_ids, lambda candidate: candidate.id, "candidate"
+            )
+            print(_render(_live_plan(tasks, candidates, args.config)), end="")
+            return 0
         if args.command == "run":
             tasks = _filtered(
                 tasks, args.slices, lambda task: task.get("task_card", {}).get("slice"), "slice"
@@ -195,9 +283,9 @@ def main(argv: list[str] | None = None) -> int:
                 tasks_path=args.tasks,
                 config_path=args.config,
             )
-            if adapters == {"bailian-live"}:
+            if adapters <= {"bailian-live", "pi-agent-live"}:
                 if args.preflight is None:
-                    raise BenchInputError("bailian-live run requires --preflight")
+                    raise BenchInputError("live run requires --preflight")
                 if len(tasks) * len(candidates) > 64:
                     raise BenchInputError("live matrix request budget exceeded: maximum is 64")
                 _bind_live_preflight(args.preflight, candidates, versions)

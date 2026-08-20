@@ -34,6 +34,18 @@ uv run bench compare runs/pi-phase0.jsonl --output runs/pi-phase0-report.json
 模型响应来自确定性 fixture transport，仅验证 harness、工具循环、trace 与评分链，不能解释
 为三个真实模型的能力差异。
 
+Phase 1 的零调用准备入口：
+
+```bash
+uv run bench plan-live --tasks tasks/dev/tasks.jsonl \
+  --config configs/pi-bailian-pilot.json \
+  --slice fundamentals --slice news_filings --slice portfolio
+```
+
+该命令只计算请求与 token 上限，不读取密钥、不访问 provider。真实 preflight 和 pilot 仍需
+分别获得付费/外部账号授权；`cost_usd_upper_bound: null` 表示 token-plan 配置没有可核验的
+美元单价，不能把它解释为零费用。
+
 `configs/` 是唯一的用户运行配置目录；`tasks/` 只保存任务和合成 fixture；运行输出只写入
 被忽略的 `runs/`。当前只有一个 CLI：`bench`。命令和 live provider 边界见
 [`docs/usage.md`](docs/usage.md)，代码边界见 [`docs/architecture.md`](docs/architecture.md)。

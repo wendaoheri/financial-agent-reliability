@@ -13,9 +13,11 @@ CLI → config/tasks → runner → adapters → grading → trace/compare
   failure signatures. Git coordinates are best-effort and nullable for an installed wheel running
   outside a worktree.
 - `adapters/` contains the Python adapter boundary, the minimal Bailian protocol boundary, and one
-  narrow Node bridge to the exact-pinned `pi-agent-core@0.73.1`. The offline pi adapter uses pi's
+  narrow Node runtime boundary pinned to `pi-agent-core@0.73.1`. The offline pi adapter uses pi's
   real `Agent.prompt()` and sequential tool loop with a deterministic faux transport; it cannot
-  access a provider, account, or production write API.
+  access a provider, account, or production write API. The separately gated live pi adapter keeps
+  the same Agent and read-only tool boundary, inherits its credential from the environment, rejects
+  response-model fallback, disables provider retries, and stops before a third provider turn.
 - `schemas/` contains exactly the current config, task, and trace schemas as wheel package data.
 - `trace.py` is the only persistence boundary; `compare.py` reads validated traces.
 
