@@ -81,7 +81,7 @@ def _join_url(base_url: str) -> str:
 def _parse_sse(raw: bytes) -> dict[str, Any]:
     model: str | None = None
     content: list[str] = []
-    tool_call_seen = False
+    tool_calls_by_index: dict[int, dict[str, Any]] = {}
     usage: dict[str, Any] = {}
     for line in raw.decode("utf-8", errors="replace").splitlines():
         if not line.startswith("data:"):
@@ -103,12 +103,32 @@ def _parse_sse(raw: bytes) -> dict[str, Any]:
             if isinstance(delta, Mapping):
                 if isinstance(delta.get("content"), str):
                     content.append(delta["content"])
-                if delta.get("tool_calls"):
-                    tool_call_seen = True
+                for raw_call in delta.get("tool_calls") or []:
+                    if not isinstance(raw_call, Mapping):
+                        continue
+                    index = int(raw_call.get("index", 0))
+                    call = tool_calls_by_index.setdefault(
+                        index,
+                        {
+                            "id": "",
+                            "type": "function",
+                            "function": {"name": "", "arguments": ""},
+                        },
+                    )
+                    if isinstance(raw_call.get("id"), str):
+                        call["id"] += raw_call["id"]
+                    function = raw_call.get("function") or {}
+                    if isinstance(function, Mapping):
+                        if isinstance(function.get("name"), str):
+                            call["function"]["name"] += function["name"]
+                        if isinstance(function.get("arguments"), str):
+                            call["function"]["arguments"] += function["arguments"]
+    tool_calls = [tool_calls_by_index[index] for index in sorted(tool_calls_by_index)]
     return {
         "model": model,
         "output": "".join(content),
-        "tool_call_supported": tool_call_seen,
+        "tool_calls": tool_calls,
+        "tool_call_supported": bool(tool_calls),
         "usage": usage,
     }
 
@@ -126,10 +146,14 @@ def _parse_json(raw: bytes) -> dict[str, Any]:
         candidate = choices[0].get("message") or {}
         if isinstance(candidate, Mapping):
             message = candidate
+    tool_calls = message.get("tool_calls") or []
+    if not isinstance(tool_calls, list):
+        tool_calls = []
     return {
         "model": str(body["model"]) if body.get("model") is not None else None,
         "output": message.get("content") or "",
-        "tool_call_supported": bool(message.get("tool_calls")),
+        "tool_calls": tool_calls,
+        "tool_call_supported": bool(tool_calls),
         "usage": dict(body.get("usage") or {}),
     }
 
