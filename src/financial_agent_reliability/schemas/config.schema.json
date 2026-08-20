@@ -18,7 +18,7 @@
           "id": {"type": "string", "minLength": 1},
           "model": {"type": "string", "minLength": 1},
           "agent": {"type": "string", "minLength": 1},
-          "adapter": {"enum": ["mock", "pi-agent-offline", "bailian-live"]},
+          "adapter": {"enum": ["mock", "pi-agent-offline", "pi-agent-live", "bailian-live"]},
           "config": {"type": "object"}
         }
       }

@@ -305,7 +305,12 @@ def load_candidates(path: pathlib.Path) -> list[Candidate]:
                 raise BenchInputError(f"candidate {index} requires non-empty {key}")
         if values["id"] in seen:
             raise BenchInputError(f"duplicate candidate id: {values['id']}")
-        if values["adapter"] not in {"mock", "pi-agent-offline", "bailian-live"}:
+        if values["adapter"] not in {
+            "mock",
+            "pi-agent-offline",
+            "pi-agent-live",
+            "bailian-live",
+        }:
             raise BenchInputError(f"unsupported candidate adapter: {values['adapter']}")
         config = item.get("config", {})
         if not isinstance(config, dict):
@@ -337,11 +342,17 @@ def load_candidates(path: pathlib.Path) -> list[Candidate]:
                     f"candidate {values['id']} has unsupported pi-agent-offline behavior"
                 )
         else:
-            if values["agent"] != "plain-agent":
-                raise BenchInputError("bailian-live only permits plain-agent")
-            if set(config) - {"seed", "profile", "generation"}:
+            expected_agent = (
+                "pi-agent-0.73.1" if values["adapter"] == "pi-agent-live" else "plain-agent"
+            )
+            if values["agent"] != expected_agent:
+                raise BenchInputError(f"{values['adapter']} requires {expected_agent}")
+            allowed_keys = {"seed", "profile", "generation"}
+            if values["adapter"] == "pi-agent-live":
+                allowed_keys.add("max_provider_turns")
+            if set(config) - allowed_keys:
                 raise BenchInputError(
-                    f"candidate {values['id']} has unsupported bailian-live config keys"
+                    f"candidate {values['id']} has unsupported {values['adapter']} config keys"
                 )
             if "seed" in config and not isinstance(config["seed"], int):
                 raise BenchInputError(f"candidate {values['id']} seed must be an integer")
@@ -349,6 +360,8 @@ def load_candidates(path: pathlib.Path) -> list[Candidate]:
                 raise BenchInputError(f"candidate {values['id']} profile must be a string")
             if "generation" in config and not isinstance(config["generation"], dict):
                 raise BenchInputError(f"candidate {values['id']} generation must be an object")
+            if values["adapter"] == "pi-agent-live" and config.get("max_provider_turns", 2) != 2:
+                raise BenchInputError("pi-agent-live requires exactly two provider turns per cell")
         candidates.append(Candidate(config=config, source_path=path.resolve(), **values))
         seen.add(values["id"])
     coordinates = {(candidate.model, candidate.agent) for candidate in candidates}

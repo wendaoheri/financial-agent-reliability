@@ -14,6 +14,7 @@ from financial_agent_reliability.trace import read_traces
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 TASKS = ROOT / "tasks" / "dev" / "tasks.jsonl"
 PI_CONFIG = ROOT / "configs" / "pi-offline.json"
+PI_LIVE_CONFIG = ROOT / "configs" / "pi-bailian-pilot.json"
 PHASE0_SLICES = ("fundamentals", "news_filings", "portfolio")
 
 
@@ -117,6 +118,32 @@ class PiAgentOfflineTests(unittest.TestCase):
             self.assertEqual(trace["score"]["correctness"], 0)
             self.assertEqual(trace["score"]["evidence_quality"], 2)
             self.assertTrue(trace["score"]["hard_gate_passed"])
+
+    def test_live_pi_plan_is_no_network_and_has_hard_request_ceiling(self):
+        candidates = load_candidates(PI_LIVE_CONFIG)
+        self.assertEqual({candidate.adapter for candidate in candidates}, {"pi-agent-live"})
+        stdout = StringIO()
+        arguments = [
+            "plan-live",
+            "--tasks",
+            str(TASKS),
+            "--config",
+            str(PI_LIVE_CONFIG),
+        ]
+        for slice_name in PHASE0_SLICES:
+            arguments.extend(["--slice", slice_name])
+        with redirect_stdout(stdout):
+            self.assertEqual(main(arguments), 0)
+        plan = json.loads(stdout.getvalue())
+        self.assertEqual(plan["network_calls_performed"], 0)
+        self.assertEqual(plan["matrix_cells"], 18)
+        self.assertEqual(plan["request_ceiling"]["preflight"], 3)
+        self.assertEqual(plan["request_ceiling"]["matrix"], 36)
+        self.assertEqual(plan["request_ceiling"]["total"], 39)
+        self.assertEqual(plan["request_ceiling"]["retries_per_request"], 0)
+        self.assertEqual(plan["token_ceiling"]["output_hard_cap"], 18624)
+        self.assertIsNone(plan["cost_usd_upper_bound"])
+        self.assertTrue(plan["approval_required"])
 
 
 if __name__ == "__main__":

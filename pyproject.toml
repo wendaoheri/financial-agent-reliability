@@ -1,6 +1,6 @@
 [project]
 name = "financial-agent-reliability"
-version = "0.3.0"
+version = "0.4.0"
 description = "Offline-first financial model × agent benchmark MVP"
 requires-python = ">=3.11"
 dependencies = ["jsonschema>=4.26.0"]

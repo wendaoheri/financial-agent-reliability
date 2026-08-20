@@ -98,7 +98,10 @@ def _cross_validate(raw: Mapping[str, Any]) -> None:
         if model["provider"] not in known_providers:
             raise ConfigError(f"unknown provider for model: {model['model_id']}")
     for candidate in raw["candidates"]:
-        if candidate["adapter"] == "bailian-live" and candidate["model"] not in known_models:
+        if (
+            candidate["adapter"] in {"bailian-live", "pi-agent-live"}
+            and candidate["model"] not in known_models
+        ):
             raise ConfigError(f"unknown live candidate model: {candidate['model']}")
 
 

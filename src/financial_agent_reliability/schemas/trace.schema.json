@@ -30,7 +30,7 @@
         "id": {"type": "string", "minLength": 1},
         "model": {"type": "string", "minLength": 1},
         "agent": {"type": "string", "minLength": 1},
-        "adapter": {"enum": ["mock", "pi-agent-offline", "bailian-live"]},
+        "adapter": {"enum": ["mock", "pi-agent-offline", "pi-agent-live", "bailian-live"]},
         "adapter_version": {"type": "string", "minLength": 1},
         "config": {"type": "object"},
         "config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}

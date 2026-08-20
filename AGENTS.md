@@ -27,6 +27,8 @@
 - Use synthetic/read-only fixtures by default. Never place secrets or private data in source,
   configs, tasks, traces, logs, or reports. Never perform real trades or production writes.
 - Paid model calls and external-account use require explicit owner approval.
+- `bench plan-live` is the required zero-network budget evidence before a live pi preflight. Never
+  infer approval for `bench preflight` or a live `bench run` from approval to implement the adapter.
 
 ## Verification
 
@@ -38,5 +40,7 @@ uv run ruff format --check .
 uv run python -m unittest discover -s tests -v
 npm run test:pi
 uv run bench validate --tasks tasks/dev/tasks.jsonl --config configs/mock.json
+uv run bench plan-live --tasks tasks/dev/tasks.jsonl --config configs/pi-bailian-pilot.json \
+  --slice fundamentals --slice news_filings --slice portfolio
 uv build
 ```

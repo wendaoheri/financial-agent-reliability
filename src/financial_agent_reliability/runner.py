@@ -29,6 +29,8 @@ _PROVIDER_ERROR_CODES = {
     "PROVIDER_REJECTED_REQUEST",
 }
 
+_LIVE_ADAPTERS = {"bailian-live", "pi-agent-live"}
+
 
 def _timestamp() -> str:
     return datetime.now(UTC).isoformat().replace("+00:00", "Z")
@@ -144,7 +146,7 @@ def run_matrix(
             tools = OfflineMockTools(request)
             result = adapter.execute(request, candidate, tools)
             error_code = str((result.error or {}).get("code", ""))
-            if candidate.adapter == "bailian-live":
+            if candidate.adapter in _LIVE_ADAPTERS:
                 provider_attempts += 1
                 provider_errors += error_code in _PROVIDER_ERROR_CODES
             tool_calls = tools.calls
@@ -206,7 +208,7 @@ def run_matrix(
             findings = scan_persisted_value_for_secrets(traces[-1])
             if findings:
                 raise ValueError("trace rejected by persisted-secret gate: " + ", ".join(findings))
-            if candidate.adapter == "bailian-live" and (
+            if candidate.adapter in _LIVE_ADAPTERS and (
                 not score["hard_gate_passed"]
                 or error_code == "IDENTITY_MISMATCH"
                 or (provider_attempts >= 10 and provider_errors / provider_attempts > 0.10)

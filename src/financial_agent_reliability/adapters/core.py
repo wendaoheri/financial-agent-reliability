@@ -491,12 +491,19 @@ class BailianLiveAdapter:
 
 
 def get_adapter(name: str, *, repository_root: pathlib.Path | None = None) -> CandidateAdapter:
-    if name == "pi-agent-offline":
+    if name in {"pi-agent-offline", "pi-agent-live"}:
         if repository_root is None:
-            raise ValueError("pi-agent-offline requires repository_root")
-        from financial_agent_reliability.adapters.pi import PiAgentOfflineAdapter
+            raise ValueError(f"{name} requires repository_root")
+        from financial_agent_reliability.adapters.pi import (
+            PiAgentLiveAdapter,
+            PiAgentOfflineAdapter,
+        )
 
-        return PiAgentOfflineAdapter(repository_root)
+        return (
+            PiAgentOfflineAdapter(repository_root)
+            if name == "pi-agent-offline"
+            else PiAgentLiveAdapter(repository_root)
+        )
     if name == "bailian-live":
         if repository_root is None:
             raise ValueError("bailian-live requires repository_root")
