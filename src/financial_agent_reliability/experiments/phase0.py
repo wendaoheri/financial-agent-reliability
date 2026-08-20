@@ -492,7 +492,16 @@ def assess_pilot_admission(
         "preflight_usage": {
             "input_tokens": sum(int(row.get("usage", {}).get("input_tokens", 0)) for row in rows),
             "output_tokens": sum(int(row.get("usage", {}).get("output_tokens", 0)) for row in rows),
-            "total_tokens": sum(int(row.get("usage", {}).get("total_tokens", 0)) for row in rows),
+            "total_tokens": sum(
+                int(
+                    row.get("usage", {}).get(
+                        "total_tokens",
+                        int(row.get("usage", {}).get("input_tokens", 0))
+                        + int(row.get("usage", {}).get("output_tokens", 0)),
+                    )
+                )
+                for row in rows
+            ),
         },
         "version": {
             **aggregate.get("version", {}),
