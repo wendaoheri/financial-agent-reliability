@@ -16,7 +16,11 @@ from financial_agent_reliability.adapters.generation import resolve_generation
 from financial_agent_reliability.adapters.pi import PiAgentLiveAdapter
 from financial_agent_reliability.compare import compare_traces
 from financial_agent_reliability.config import load_run_config
-from financial_agent_reliability.long_horizon import aggregate_soak, run_long_horizon
+from financial_agent_reliability.long_horizon import (
+    aggregate_soak,
+    run_long_horizon,
+    soak_version_coordinates,
+)
 from financial_agent_reliability.models import (
     BenchInputError,
     audit_taskset,
@@ -348,6 +352,9 @@ def main(argv: list[str] | None = None) -> int:
                 config_path=args.config,
             )
             _bind_live_preflight(args.preflight, candidates, versions)
+            versions = soak_version_coordinates(pathlib.Path.cwd(), versions)
+            if versions["git_dirty"]:
+                raise BenchInputError("live soak requires a clean Git worktree")
             summaries = [
                 run_long_horizon(
                     tasks[0],

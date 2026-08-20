@@ -10,6 +10,7 @@ from financial_agent_reliability.long_horizon import (
     SoakHardStop,
     aggregate_soak,
     run_long_horizon,
+    soak_version_coordinates,
 )
 from financial_agent_reliability.models import Candidate, load_tasks
 
@@ -86,6 +87,11 @@ def _task():
 
 
 class LongHorizonTests(unittest.TestCase):
+    def test_version_coordinates_include_clean_exact_commit(self):
+        versions = soak_version_coordinates(ROOT, {"config_sha256": "0" * 64})
+        self.assertRegex(versions["git_commit"], r"^[0-9a-f]{40}$")
+        self.assertIsInstance(versions["git_dirty"], bool)
+
     def test_fifty_steps_produce_one_hundred_turns_and_fifty_tools(self):
         with tempfile.TemporaryDirectory() as temporary:
             adapter = FauxLongAdapter()
@@ -103,6 +109,12 @@ class LongHorizonTests(unittest.TestCase):
             self.assertEqual(summary["provider_turns"], 100)
             self.assertEqual(summary["tool_calls"], 50)
             self.assertEqual(adapter.calls, 50)
+            trace = (
+                (pathlib.Path(temporary) / _candidate().id / "steps.jsonl")
+                .read_text(encoding="utf-8")
+                .splitlines()
+            )
+            self.assertEqual(len(trace), 50)
 
     def test_resume_after_durable_crash_does_not_repeat_committed_step(self):
         with tempfile.TemporaryDirectory() as temporary:

@@ -6,6 +6,7 @@ import hashlib
 import json
 import os
 import pathlib
+import subprocess
 import uuid
 from datetime import UTC, datetime
 from typing import Any
@@ -56,6 +57,51 @@ def _atomic_json(path: pathlib.Path, value: dict[str, Any]) -> None:
         handle.flush()
         os.fsync(handle.fileno())
     os.replace(temporary, path)
+
+
+def _atomic_jsonl(path: pathlib.Path, values: list[dict[str, Any]]) -> None:
+    for value in values:
+        findings = scan_persisted_value_for_secrets(value)
+        if findings:
+            raise SoakHardStop(
+                "persisted soak trace rejected by secret gate: " + ", ".join(findings)
+            )
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(f".{path.name}.{uuid.uuid4().hex}.tmp")
+    with temporary.open("wb") as handle:
+        for value in values:
+            handle.write(_canonical(value) + b"\n")
+        handle.flush()
+        os.fsync(handle.fileno())
+    os.replace(temporary, path)
+
+
+def soak_version_coordinates(
+    repository_root: pathlib.Path, versions: dict[str, Any]
+) -> dict[str, Any]:
+    """Add the exact code coordinate and cleanliness gate used by resumable live work."""
+
+    commit = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=repository_root,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    status = subprocess.run(
+        ["git", "status", "--porcelain", "--untracked-files=no"],
+        cwd=repository_root,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    if commit.returncode != 0 or status.returncode != 0:
+        raise SoakHardStop("soak requires a readable Git worktree coordinate")
+    return {
+        **versions,
+        "git_commit": commit.stdout.strip(),
+        "git_dirty": bool(status.stdout.strip()),
+    }
 
 
 def _read_object(path: pathlib.Path) -> dict[str, Any]:
@@ -190,6 +236,9 @@ def run_long_horizon(
         raise SoakHardStop("persisted soak step exceeds the configured target")
     resumed = bool(events)
     if existing_checkpoint is not None and existing_checkpoint.get("status") in _COMPLETE:
+        _atomic_jsonl(
+            candidate_directory / "steps.jsonl", [events[index] for index in sorted(events)]
+        )
         return _summary(
             checkpoint=existing_checkpoint, task=task, candidate=candidate, events=events
         )
@@ -281,6 +330,9 @@ def run_long_horizon(
         }
         _atomic_json(step_directory / f"{step_id}.json", event)
         events[index] = event
+        _atomic_jsonl(
+            candidate_directory / "steps.jsonl", [events[item] for item in sorted(events)]
+        )
         if crash_after_step == index:
             raise InjectedCrash(f"injected crash after durable commit of {step_id}")
         status = "incomplete" if result_error is not None else "running"
