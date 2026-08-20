@@ -5,7 +5,6 @@ from __future__ import annotations
 import hashlib
 import json
 import pathlib
-import subprocess
 from collections import Counter, defaultdict
 from collections.abc import Iterable, Mapping
 from copy import deepcopy
@@ -374,53 +373,14 @@ def validate_eval_pack(pack_directory: pathlib.Path) -> dict[str, Any]:
     }
 
 
-def _git_state(repository_root: pathlib.Path | None) -> dict[str, Any]:
-    if repository_root is None:
-        return {"commit": None, "dirty": None}
-    try:
-        commit = subprocess.run(
-            ["git", "rev-parse", "HEAD"],
-            cwd=repository_root,
-            check=False,
-            capture_output=True,
-            text=True,
-        )
-    except OSError:
-        return {"commit": None, "dirty": None}
-    if commit.returncode != 0:
-        return {"commit": None, "dirty": None}
-    dirty = subprocess.run(
-        ["git", "status", "--porcelain", "--untracked-files=no"],
-        cwd=repository_root,
-        check=False,
-        capture_output=True,
-        text=True,
-    )
-    return {
-        "commit": commit.stdout.strip(),
-        "dirty": bool(dirty.stdout.strip()) if dirty.returncode == 0 else None,
-    }
-
-
-def _version_evidence(
-    validation: dict[str, Any], repository_root: pathlib.Path | None
-) -> dict[str, Any]:
+def _version_evidence(validation: dict[str, Any]) -> dict[str, Any]:
     hashes = validation["asset_hashes"]
-    version: dict[str, Any] = {
+    return {
         "assets": hashes,
         "eval_pack_id": hashlib.sha256(_canonical(hashes).encode("utf-8")).hexdigest(),
         "eval_pack_protocol_version": EVAL_PACK_PROTOCOL_VERSION,
         "runner_protocol_version": RUNNER_PROTOCOL_VERSION,
-        "git": _git_state(repository_root),
-        "python_lock_sha256": None,
-        "node_lock_sha256": None,
     }
-    if repository_root is not None:
-        python_lock = repository_root / "uv.lock"
-        node_lock = repository_root / "package-lock.json"
-        version["python_lock_sha256"] = _sha256(python_lock) if python_lock.is_file() else None
-        version["node_lock_sha256"] = _sha256(node_lock) if node_lock.is_file() else None
-    return version
 
 
 def _mock_output(
@@ -615,8 +575,6 @@ def _write_json(path: pathlib.Path, value: Any) -> None:
 def run_eval_pack(
     pack_directory: pathlib.Path,
     output_directory: pathlib.Path,
-    *,
-    repository_root: pathlib.Path | None = None,
 ) -> dict[str, Any]:
     """Run deterministic controls and persist a closed, zero-network evidence bundle."""
 
@@ -629,7 +587,7 @@ def run_eval_pack(
     scoring_contract = _load(paths["scoring"])
     common_contract = task_set["candidate_output_contract"]
     family_contracts = task_set["family_output_contracts"]
-    version = _version_evidence(validation, repository_root)
+    version = _version_evidence(validation)
     normal_by_family = {
         task["notes"]["family_id"]: task
         for task in task_set["tasks"]

@@ -52,9 +52,10 @@ uv run bench eval-replay --pack tasks/per420 \
 The run emits deterministic success, candidate-failure, and protocol-invalid controls through the
 shared protocol, grading, and outcome gates. Invalid runs are excluded from CSR and their raw
 invalid output is not persisted. Replay verifies the bundle hashes and regrades every trace against
-the same assets. Code and Git coordinates remain trace information and do not enter the Eval Pack
-ID. The candidate and harness JSON files in this pack are frozen provenance, not active runtime
-configuration.
+the same assets. Framework source, Git state, dependency locks, and engineering environment are not
+written to traces and do not enter the Eval Pack ID. `runner_protocol_version` records experiment
+protocol semantics only. The candidate and harness JSON files in this pack are frozen provenance,
+not active runtime configuration.
 
 ## Offline pi Agent Phase 0
 
@@ -72,8 +73,9 @@ uv run bench compare runs/pi-phase0.jsonl --output runs/pi-phase0-report.json
 The adapter executes the real `pi-agent-core@0.73.1` `Agent.prompt()` lifecycle and one sequential
 read-only tool call per task. Its faux model transport is deterministic and has zero provider cost.
 The three model names are logical future-pilot coordinates, not claims that those live models ran.
-Each trace records compact Agent lifecycle events plus the Python and Node lock hashes. A live pi
-pilot remains out of scope until separately approved.
+Each trace records compact Agent lifecycle events plus task, candidate-config, trace-schema, and
+experiment-protocol coordinates. It contains no framework source or dependency-lock coordinates. A
+live pi pilot remains out of scope until separately approved.
 
 The deterministic failure-signature control is independently reproducible:
 
@@ -166,8 +168,9 @@ provider retries. Neither path can perform transactions.
 `bench soak` runs one filtered synthetic task as a durable sequence. A 50-step run executes 100
 provider turns and 50 simulated read-only tool calls per candidate. It writes one atomically
 committed step record plus a checkpoint and summary under the candidate directory. Re-running the
-same command resumes from committed steps; a task/config/lock/preflight fingerprint mismatch is
-rejected before another provider call.
+same command resumes from committed steps; a task/config/protocol/preflight fingerprint mismatch
+is rejected before another provider call. Git or framework dependency changes are outside this
+experiment fingerprint.
 
 ```bash
 uv run bench soak --tasks tasks/dev/tasks.jsonl \

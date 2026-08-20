@@ -70,9 +70,9 @@ uv run bench soak --tasks tasks/dev/tasks.jsonl \
   --output-dir runs/phase2/long-horizon-v1
 ```
 
-每步写入独立原子文件；同版本重启会跳过已提交步骤，配置、任务、锁文件或 preflight
-指纹变化时拒绝续跑。`incomplete`/`cancelled` 不进入完成聚合，模型身份漂移和非只读工具
-调用是全局硬停止。
+每步写入独立原子文件；同一实验坐标重启会跳过已提交步骤，配置、任务、协议或 preflight
+指纹变化时拒绝续跑。Git 状态和框架依赖不进入该指纹。`incomplete`/`cancelled` 不进入完成
+聚合，模型身份漂移和非只读工具调用是全局硬停止。
 
 `configs/` 是唯一的用户运行配置目录；`tasks/` 只保存任务和合成 fixture；运行输出只写入
 被忽略的 `runs/`。当前只有一个 CLI：`bench`。命令和 live provider 边界见

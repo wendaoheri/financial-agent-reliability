@@ -61,9 +61,7 @@ class FrameworkQualificationTests(unittest.TestCase):
                 repository_root=ROOT,
                 output_directory=bundle,
                 run_id="qualification-test",
-                versions=version_coordinates(
-                    repository_root=ROOT, tasks_path=TASKS, config_path=CONFIG
-                ),
+                versions=version_coordinates(tasks_path=TASKS, config_path=CONFIG),
             )
             self.assertEqual(manifest["status"], "passed")
             self.assertRegex(manifest["eval_pack_id"], r"^[0-9a-f]{64}$")
@@ -142,9 +140,7 @@ class FrameworkQualificationTests(unittest.TestCase):
                 candidates[:1],
                 repository_root=ROOT,
                 run_id="central-protocol-gate",
-                versions=version_coordinates(
-                    repository_root=ROOT, tasks_path=TASKS, config_path=CONFIG
-                ),
+                versions=version_coordinates(tasks_path=TASKS, config_path=CONFIG),
             )
         self.assertEqual(traces[0]["error"]["code"], "INVALID_MODEL_OUTPUT")
         self.assertFalse(traces[0]["score"]["eligible_for_quality_aggregation"])
@@ -160,9 +156,7 @@ class FrameworkQualificationTests(unittest.TestCase):
                 repository_root=ROOT,
                 output_directory=bundle,
                 run_id="tamper-test",
-                versions=version_coordinates(
-                    repository_root=ROOT, tasks_path=TASKS, config_path=CONFIG
-                ),
+                versions=version_coordinates(tasks_path=TASKS, config_path=CONFIG),
             )
             with (bundle / "aggregate.json").open("a", encoding="utf-8") as handle:
                 handle.write(" ")

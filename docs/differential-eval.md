@@ -33,7 +33,8 @@ uv run bench eval-replay --pack tasks/per420 \
 运行固定生成三类控制：`candidate_success`、`candidate_failure`、`invalid_run`。协议无效
 输出只保存分类、长度和 SHA-256，不保存原始内容；`invalid_run` 明确从 CSR 分母中排除。
 重评分命令先核验 manifest 中的资产哈希，再用同一 Eval Pack 重新执行中央协议、评分和
-三分类判定；代码和 Git 状态只作为 trace 信息，不进入 `eval_pack_id`。
+三分类判定。框架源码、Git 状态、依赖锁和工程环境既不写入 trace，也不进入
+`eval_pack_id`；`runner_protocol_version` 只表示实验协议语义兼容性。
 产物为：
 
 - `validation.json`：任务、fixture、双 Oracle、协议、引用与密钥门；

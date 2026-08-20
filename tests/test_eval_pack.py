@@ -99,8 +99,8 @@ class EvalPackTests(unittest.TestCase):
             temporary = pathlib.Path(raw)
             first = temporary / "first"
             second = temporary / "second"
-            summary = run_eval_pack(PACK, first, repository_root=ROOT)
-            run_eval_pack(PACK, second, repository_root=ROOT)
+            summary = run_eval_pack(PACK, first)
+            run_eval_pack(PACK, second)
 
             self.assertEqual(summary["status"], "passed")
             self.assertEqual(summary["network_calls_performed"], 0)
@@ -147,7 +147,7 @@ class EvalPackTests(unittest.TestCase):
     def test_replay_rejects_a_tampered_trace_before_regrade(self):
         with tempfile.TemporaryDirectory() as raw:
             bundle = pathlib.Path(raw) / "bundle"
-            run_eval_pack(PACK, bundle, repository_root=ROOT)
+            run_eval_pack(PACK, bundle)
             trace = bundle / "trace.jsonl"
             trace.write_text(trace.read_text(encoding="utf-8") + "{}\n", encoding="utf-8")
             with self.assertRaisesRegex(EvalPackError, "hash mismatch"):
@@ -156,7 +156,7 @@ class EvalPackTests(unittest.TestCase):
     def test_runner_version_is_informational_during_regrade(self):
         with tempfile.TemporaryDirectory() as raw:
             bundle = pathlib.Path(raw) / "bundle"
-            run_eval_pack(PACK, bundle, repository_root=ROOT)
+            run_eval_pack(PACK, bundle)
             with mock.patch(
                 "financial_agent_reliability.eval_pack.RUNNER_PROTOCOL_VERSION",
                 "99.0.0",

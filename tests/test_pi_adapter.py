@@ -69,7 +69,17 @@ class PiAgentOfflineTests(unittest.TestCase):
                 self.assertEqual(row["score"]["evidence_quality"], 2)
                 self.assertEqual(row["score"]["safety"], 1)
                 self.assertEqual(row["metrics"]["cost_usd_estimate"], "0.000000")
-                self.assertEqual(len(row["versions"]["node_lock_sha256"]), 64)
+                self.assertNotIn("git", row)
+                self.assertEqual(
+                    set(row["versions"]),
+                    {
+                        "eval_pack_id",
+                        "runner_protocol_version",
+                        "taskset_sha256",
+                        "config_sha256",
+                        "trace_schema_version",
+                    },
+                )
 
     def test_wrong_answer_fixture_produces_failure_signature(self):
         with tempfile.TemporaryDirectory() as temporary:

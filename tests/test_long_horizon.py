@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import pathlib
 import tempfile
 import unittest
@@ -10,7 +11,6 @@ from financial_agent_reliability.long_horizon import (
     SoakHardStop,
     aggregate_soak,
     run_long_horizon,
-    soak_version_coordinates,
 )
 from financial_agent_reliability.models import Candidate, load_tasks
 
@@ -87,10 +87,22 @@ def _task():
 
 
 class LongHorizonTests(unittest.TestCase):
-    def test_version_coordinates_include_clean_exact_commit(self):
-        versions = soak_version_coordinates(ROOT, {"config_sha256": "0" * 64})
-        self.assertRegex(versions["git_commit"], r"^[0-9a-f]{40}$")
-        self.assertIsInstance(versions["git_dirty"], bool)
+    def test_persisted_steps_keep_only_supplied_experiment_coordinates(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary)
+            versions = {"config_sha256": "0" * 64}
+            run_long_horizon(
+                _task(),
+                _candidate(),
+                repository_root=ROOT,
+                output_directory=root,
+                experiment_id="coordinate-boundary",
+                versions=versions,
+                steps=1,
+                adapter=FauxLongAdapter(),
+            )
+            step = (root / _candidate().id / "steps" / "step-0001.json").read_text(encoding="utf-8")
+            self.assertEqual(json.loads(step)["versions"], versions)
 
     def test_fifty_steps_produce_one_hundred_turns_and_fifty_tools(self):
         with tempfile.TemporaryDirectory() as temporary:
