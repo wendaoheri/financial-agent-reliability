@@ -46,6 +46,23 @@ uv run bench plan-live --tasks tasks/dev/tasks.jsonl \
 分别获得付费/外部账号授权；`cost_usd_upper_bound: null` 表示 token-plan 配置没有可核验的
 美元单价，不能把它解释为零费用。
 
+已获授权的长程 harness 资格验证使用可恢复的 `soak` 状态机。以下命令把一个合成只读
+任务重复执行 50 个持久化步骤；每步是一次两轮 pi 工具循环，因此每模型合计 100 个
+provider turns 和 50 次工具调用：
+
+```bash
+uv run bench soak --tasks tasks/dev/tasks.jsonl \
+  --config configs/pi-bailian-calibration-v3.json \
+  --slice portfolio --variant analyze_weight \
+  --preflight runs/phase2/preflight.json \
+  --steps 50 --experiment-id phase2-long-horizon-v1 \
+  --output-dir runs/phase2/long-horizon-v1
+```
+
+每步写入独立原子文件；同版本重启会跳过已提交步骤，配置、任务、锁文件或 preflight
+指纹变化时拒绝续跑。`incomplete`/`cancelled` 不进入完成聚合，模型身份漂移和非只读工具
+调用是全局硬停止。
+
 `configs/` 是唯一的用户运行配置目录；`tasks/` 只保存任务和合成 fixture；运行输出只写入
 被忽略的 `runs/`。当前只有一个 CLI：`bench`。命令和 live provider 边界见
 [`docs/usage.md`](docs/usage.md)，代码边界见 [`docs/architecture.md`](docs/architecture.md)。

@@ -16,6 +16,11 @@ from financial_agent_reliability.adapters.generation import resolve_generation
 from financial_agent_reliability.adapters.pi import PiAgentLiveAdapter
 from financial_agent_reliability.compare import compare_traces
 from financial_agent_reliability.config import load_run_config
+from financial_agent_reliability.long_horizon import (
+    aggregate_soak,
+    run_long_horizon,
+    soak_version_coordinates,
+)
 from financial_agent_reliability.models import (
     BenchInputError,
     audit_taskset,
@@ -63,6 +68,20 @@ def _parser() -> argparse.ArgumentParser:
     run.add_argument(
         "--candidate", action="append", dest="candidate_ids", help="run only this candidate id"
     )
+
+    soak = subparsers.add_parser(
+        "soak", help="run or resume a durable long-horizon pi harness qualification"
+    )
+    soak.add_argument("--tasks", type=pathlib.Path, required=True)
+    soak.add_argument("--config", type=pathlib.Path, required=True)
+    soak.add_argument("--output-dir", type=pathlib.Path, required=True)
+    soak.add_argument("--experiment-id", required=True)
+    soak.add_argument("--steps", type=int, default=50)
+    soak.add_argument("--slice", action="append", dest="slices")
+    soak.add_argument("--variant", action="append", dest="variants")
+    soak.add_argument("--candidate", action="append", dest="candidate_ids")
+    soak.add_argument("--preflight", type=pathlib.Path, required=True)
+    soak.add_argument("--cancel-file", type=pathlib.Path, default=None)
     run.add_argument(
         "--preflight",
         type=pathlib.Path,
@@ -221,7 +240,7 @@ def _filtered(
 def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     try:
-        if args.command in {"validate", "preflight", "plan-live", "run"}:
+        if args.command in {"validate", "preflight", "plan-live", "run", "soak"}:
             if args.command != "preflight":
                 tasks = load_tasks(args.tasks)
             candidates = load_candidates(args.config)
@@ -310,6 +329,49 @@ def main(argv: list[str] | None = None) -> int:
                 end="",
             )
             return 0 if not failed else 1
+        if args.command == "soak":
+            tasks = _filtered(
+                tasks, args.slices, lambda task: task.get("task_card", {}).get("slice"), "slice"
+            )
+            tasks = _filtered(
+                tasks,
+                args.variants,
+                lambda task: task.get("task_card", {}).get("variant"),
+                "variant",
+            )
+            if len(tasks) != 1:
+                raise BenchInputError("soak requires exactly one filtered task")
+            candidates = _filtered(
+                candidates, args.candidate_ids, lambda candidate: candidate.id, "candidate"
+            )
+            if any(candidate.adapter != "pi-agent-live" for candidate in candidates):
+                raise BenchInputError("soak requires only pi-agent-live candidates")
+            versions = version_coordinates(
+                repository_root=pathlib.Path.cwd(),
+                tasks_path=args.tasks,
+                config_path=args.config,
+            )
+            _bind_live_preflight(args.preflight, candidates, versions)
+            versions = soak_version_coordinates(pathlib.Path.cwd(), versions)
+            if versions["git_dirty"]:
+                raise BenchInputError("live soak requires a clean Git worktree")
+            summaries = [
+                run_long_horizon(
+                    tasks[0],
+                    candidate,
+                    repository_root=pathlib.Path.cwd(),
+                    output_directory=args.output_dir,
+                    experiment_id=args.experiment_id,
+                    versions=versions,
+                    steps=args.steps,
+                    cancel_file=args.cancel_file,
+                )
+                for candidate in candidates
+            ]
+            report = aggregate_soak(summaries)
+            _write_safe_json(args.output_dir / "report.json", report)
+            print(_render({**report, "output": str(args.output_dir / "report.json")}), end="")
+            return 0 if report["status"] == "completed" else 1
         if args.command == "compare":
             report = compare_traces(read_traces(args.traces))
             rendered = _render(report)

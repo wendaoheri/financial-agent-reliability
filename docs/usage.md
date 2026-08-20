@@ -117,3 +117,26 @@ The preflight is bound to the run-config hash and exact returned model identitie
 `bailian-live` path is plain-agent only. The `pi-agent-live` path uses the pinned Agent lifecycle,
 one simulated/read-only fixture tool, sequential execution, a two-turn ceiling, and zero automatic
 provider retries. Neither path can perform transactions.
+
+## Durable long-horizon qualification
+
+`bench soak` runs one filtered synthetic task as a durable sequence. A 50-step run executes 100
+provider turns and 50 simulated read-only tool calls per candidate. It writes one atomically
+committed step record plus a checkpoint and summary under the candidate directory. Re-running the
+same command resumes from committed steps; a task/config/lock/preflight fingerprint mismatch is
+rejected before another provider call.
+
+```bash
+uv run bench soak --tasks tasks/dev/tasks.jsonl \
+  --config configs/pi-bailian-calibration-v3.json \
+  --slice portfolio --variant analyze_weight \
+  --preflight runs/phase2/preflight.json \
+  --steps 50 --experiment-id phase2-long-horizon-v1 \
+  --output-dir runs/phase2/long-horizon-v1
+```
+
+Provider retries remain zero. A cancel-file passed with `--cancel-file` yields `cancelled` before
+the next step. Provider errors yield `incomplete`; neither terminal state enters the completed
+aggregate. Exact identity failure, fallback, a non-read tool call, duplicate tool execution, or a
+persisted-secret finding is a hard stop. This qualification measures workflow durability and
+provider binding, not task quality or model ranking.
