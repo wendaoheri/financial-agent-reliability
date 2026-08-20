@@ -5,6 +5,7 @@ import pathlib
 import tempfile
 import unittest
 
+from financial_agent_reliability.compare import compare_traces
 from financial_agent_reliability.models import load_candidates, load_tasks
 from financial_agent_reliability.qualification import (
     QualificationError,
@@ -12,6 +13,7 @@ from financial_agent_reliability.qualification import (
     run_qualification,
 )
 from financial_agent_reliability.runner import version_coordinates
+from financial_agent_reliability.trace import read_traces
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 TASKS = ROOT / "tasks" / "dev" / "tasks.jsonl"
@@ -69,6 +71,16 @@ class FrameworkQualificationTests(unittest.TestCase):
             self.assertEqual(aggregate["invalid_runs_excluded"], 3)
             failures = json.loads((bundle / "failure_signatures.json").read_text(encoding="utf-8"))
             self.assertEqual(len(failures), 6)
+            comparison = compare_traces(read_traces([bundle / "traces.jsonl"]))
+            self.assertEqual(comparison["schema_version"], "0.4.0")
+            self.assertEqual(comparison["overall"]["valid_runs"], 7)
+            self.assertEqual(comparison["overall"]["invalid_runs_excluded"], 3)
+            self.assertEqual(comparison["overall"]["scores"]["eligible_quality_runs"], 6)
+            self.assertEqual(comparison["overall"]["scores"]["average_correctness"], 2.0)
+            self.assertEqual(comparison["overall"]["scores"]["average_evidence_quality"], 1.333)
+            self.assertEqual(
+                comparison["overall"]["uncertainty_95"]["safety_effective_sample_size"], 7
+            )
             matrix = json.loads((bundle / "calibration_matrix.json").read_text(encoding="utf-8"))
             by_mutation = {row["mutation"]: row for row in matrix}
             baseline = by_mutation["NONE"]["actual"]["components"]
