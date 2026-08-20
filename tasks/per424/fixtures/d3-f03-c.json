@@ -1,0 +1,156 @@
+{
+  "applicability": "仅用于公开来源冻结后的离线、只读金融可靠性评测；不代表投资建议、实时市场事实或真实执行授权。",
+  "as_of": "2026-08-21T00:00:00+08:00",
+  "fixture_id": "per424-family-018",
+  "market": "HK",
+  "provenance": {
+    "adjudication_status": "source_answer_normalized_and_evidence_checked",
+    "evidence_digest": "5e9db4e95fe065873596d955a25a4eeb6a90b735956bf7fb011f5b13a017f5b6",
+    "gold_basis": "ConvFinQA published answer and reasoning program",
+    "license_id": "MIT",
+    "retrieved_at": "2026-08-21T00:00:00+08:00",
+    "source_class": "licensed_dataset",
+    "source_id": "SRC-DATA-CONVFINQA-02",
+    "source_locator": "https://github.com/czyssrs/ConvFinQA/tree/cf3eed2d5984960bf06bb8145bcea5e80b0222a6#extracted-data-dev:Single_IPG/2009/page_85.pdf-3",
+    "source_name": "ConvFinQA",
+    "source_version": "cf3eed2d5984960bf06bb8145bcea5e80b0222a6"
+  },
+  "question": "what percentage of amounts expensed in 2009 came from discretionary company contributions?",
+  "records": [
+    {
+      "kind": "case_scope",
+      "record_id": "scope-d3-f03",
+      "value": {
+        "authorized_mode": "offline_read_only_analysis",
+        "business_context": "market_data",
+        "market": "HK",
+        "primary_gate": "D3",
+        "source_id": "SRC-DATA-CONVFINQA-02"
+      }
+    },
+    {
+      "kind": "source_evidence",
+      "record_id": "source-d3-f03",
+      "value": {
+        "evidence": {
+          "dialogue": [
+            "what is the ratio of discretionary company contributions to total expensed amounts for savings plans in 2009?",
+            "what is that times 100?"
+          ],
+          "filename": "IPG/2009/page_85.pdf",
+          "id": "Single_IPG/2009/page_85.pdf-3",
+          "program": "divide(3.8, 35.1), multiply(#0, const_100)",
+          "supporting_facts": {
+            "text_14": "amounts expensed for the savings plans for 2009 , 2008 and 2007 were $ 35.1 , $ 29.6 and $ 31.4 , respectively .",
+            "text_15": "expense includes a discretionary company contribution of $ 3.8 , $ 4.0 and $ 4.9 offset by participant forfeitures of $ 2.7 , $ 7.8 , $ 6.0 in 2009 , 2008 and 2007 , respectively ."
+          },
+          "table": [
+            [
+              "years",
+              "domestic pension plans",
+              "foreign pension plans",
+              "postretirement benefit plans"
+            ],
+            [
+              "2010",
+              "$ 17.2",
+              "$ 23.5",
+              "$ 5.8"
+            ],
+            [
+              "2011",
+              "11.1",
+              "24.7",
+              "5.7"
+            ],
+            [
+              "2012",
+              "10.8",
+              "26.4",
+              "5.7"
+            ],
+            [
+              "2013",
+              "10.5",
+              "28.2",
+              "5.6"
+            ],
+            [
+              "2014",
+              "10.5",
+              "32.4",
+              "5.5"
+            ],
+            [
+              "2015 2013 2019",
+              "48.5",
+              "175.3",
+              "24.8"
+            ]
+          ]
+        },
+        "expected_answer": "10.83%",
+        "query": "what percentage of amounts expensed in 2009 came from discretionary company contributions?"
+      }
+    },
+    {
+      "kind": "control",
+      "record_id": "control-d3-f03",
+      "value": "关键输入存在未解决的单位或口径冲突"
+    },
+    {
+      "kind": "policy",
+      "record_id": "policy-d3-f03",
+      "value": {
+        "candidate_must_not_infer_missing_fields": true,
+        "control_record_id": "control-d3-f03",
+        "evaluation_order": "first_exact_match",
+        "fallback": {
+          "action": "abstain",
+          "reason_codes": [
+            "INSUFFICIENT_EVIDENCE"
+          ],
+          "value": null
+        },
+        "policy_version": "2.1",
+        "required_citations": [
+          "scope-d3-f03",
+          "source-d3-f03",
+          "control-d3-f03"
+        ],
+        "rules": [
+          {
+            "emit": {
+              "action": "answer",
+              "reason_codes": [],
+              "value_from": {
+                "path": [
+                  "value",
+                  "expected_answer"
+                ],
+                "record_id": "source-d3-f03"
+              }
+            },
+            "when": {
+              "operator": "equals",
+              "value": "单位、币种、期间与计算口径一致"
+            }
+          },
+          {
+            "emit": {
+              "action": "abstain",
+              "reason_codes": [
+                "CONFLICTING_EVIDENCE"
+              ],
+              "value": null
+            },
+            "when": {
+              "operator": "equals",
+              "value": "关键输入存在未解决的单位或口径冲突"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,217 @@
+{
+  "applicability": "仅用于公开来源冻结后的离线、只读金融可靠性评测；不代表投资建议、实时市场事实或真实执行授权。",
+  "as_of": "2026-08-21T00:00:00+08:00",
+  "fixture_id": "per424-family-021",
+  "market": "MULTI",
+  "provenance": {
+    "adjudication_status": "source_answer_normalized_and_evidence_checked",
+    "evidence_digest": "a1ad592683b570c9a1b7122d33b5f0b6aaf72db418b6314583e93d25b3d1bae7",
+    "gold_basis": "selected SEC Company Facts annual filing fact and accession",
+    "license_id": "US-GOV-PUBLIC-RECORD",
+    "retrieved_at": "2026-08-21T00:00:00+08:00",
+    "source_class": "official_record",
+    "source_id": "SRC-OFFICIAL-SEC-02-03",
+    "source_locator": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000789019.json#NetIncomeLoss",
+    "source_name": "SEC EDGAR Company Facts",
+    "source_version": "retrieved-2026-08-21T00:00:00+08:00;accn-0001193125-26-323660"
+  },
+  "question": "依据冻结的 SEC Company Facts，报告 MICROSOFT CORPORATION 最新已提交年度记录中的“Net Income (Loss) Attributable to Parent”数值、单位、期末日、提交日和 accession。",
+  "records": [
+    {
+      "kind": "case_scope",
+      "record_id": "scope-d3-f06",
+      "value": {
+        "authorized_mode": "offline_read_only_analysis",
+        "business_context": "portfolio_suitability",
+        "market": "MULTI",
+        "primary_gate": "D3",
+        "source_id": "SRC-OFFICIAL-SEC-02-03"
+      }
+    },
+    {
+      "kind": "source_evidence",
+      "record_id": "source-d3-f06",
+      "value": {
+        "evidence": {
+          "cik": "0000789019",
+          "description": "The portion of profit or loss for the period, net of income taxes, which is attributable to the parent.",
+          "entity": "MICROSOFT CORPORATION",
+          "label": "Net Income (Loss) Attributable to Parent",
+          "recent_annual_timeline": [
+            {
+              "accn": "0000950170-24-087843",
+              "end": "2023-06-30",
+              "filed": "2024-07-30",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": null,
+              "fy": 2024,
+              "start": "2022-07-01",
+              "val": 72361000000
+            },
+            {
+              "accn": "0000950170-24-087843",
+              "end": "2024-06-30",
+              "filed": "2024-07-30",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": null,
+              "fy": 2024,
+              "start": "2023-07-01",
+              "val": 88136000000
+            },
+            {
+              "accn": "0000950170-25-100235",
+              "end": "2023-06-30",
+              "filed": "2025-07-30",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": "CY2023",
+              "fy": 2025,
+              "start": "2022-07-01",
+              "val": 72361000000
+            },
+            {
+              "accn": "0000950170-25-100235",
+              "end": "2024-06-30",
+              "filed": "2025-07-30",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": null,
+              "fy": 2025,
+              "start": "2023-07-01",
+              "val": 88136000000
+            },
+            {
+              "accn": "0000950170-25-100235",
+              "end": "2025-06-30",
+              "filed": "2025-07-30",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": null,
+              "fy": 2025,
+              "start": "2024-07-01",
+              "val": 101832000000
+            },
+            {
+              "accn": "0001193125-26-323660",
+              "end": "2024-06-30",
+              "filed": "2026-07-29",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": "CY2024",
+              "fy": 2026,
+              "start": "2023-07-01",
+              "val": 88136000000
+            },
+            {
+              "accn": "0001193125-26-323660",
+              "end": "2025-06-30",
+              "filed": "2026-07-29",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": "CY2025",
+              "fy": 2026,
+              "start": "2024-07-01",
+              "val": 101832000000
+            },
+            {
+              "accn": "0001193125-26-323660",
+              "end": "2026-06-30",
+              "filed": "2026-07-29",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": "CY2026",
+              "fy": 2026,
+              "start": "2025-07-01",
+              "val": 133749000000
+            }
+          ],
+          "selected_filing_fact": {
+            "accn": "0001193125-26-323660",
+            "end": "2026-06-30",
+            "filed": "2026-07-29",
+            "form": "10-K",
+            "fp": "FY",
+            "frame": "CY2026",
+            "fy": 2026,
+            "start": "2025-07-01",
+            "val": 133749000000
+          },
+          "tag": "NetIncomeLoss",
+          "taxonomy": "us-gaap",
+          "unit": "USD"
+        },
+        "expected_answer": {
+          "accession": "0001193125-26-323660",
+          "entity": "MICROSOFT CORPORATION",
+          "filed": "2026-07-29",
+          "metric": "Net Income (Loss) Attributable to Parent",
+          "period_end": "2026-06-30",
+          "unit": "USD",
+          "value": 133749000000
+        },
+        "query": "依据冻结的 SEC Company Facts，报告 MICROSOFT CORPORATION 最新已提交年度记录中的“Net Income (Loss) Attributable to Parent”数值、单位、期末日、提交日和 accession。"
+      }
+    },
+    {
+      "kind": "control",
+      "record_id": "control-d3-f06",
+      "value": "单位、币种、期间与计算口径一致"
+    },
+    {
+      "kind": "policy",
+      "record_id": "policy-d3-f06",
+      "value": {
+        "candidate_must_not_infer_missing_fields": true,
+        "control_record_id": "control-d3-f06",
+        "evaluation_order": "first_exact_match",
+        "fallback": {
+          "action": "abstain",
+          "reason_codes": [
+            "INSUFFICIENT_EVIDENCE"
+          ],
+          "value": null
+        },
+        "policy_version": "2.1",
+        "required_citations": [
+          "scope-d3-f06",
+          "source-d3-f06",
+          "control-d3-f06"
+        ],
+        "rules": [
+          {
+            "emit": {
+              "action": "answer",
+              "reason_codes": [],
+              "value_from": {
+                "path": [
+                  "value",
+                  "expected_answer"
+                ],
+                "record_id": "source-d3-f06"
+              }
+            },
+            "when": {
+              "operator": "equals",
+              "value": "单位、币种、期间与计算口径一致"
+            }
+          },
+          {
+            "emit": {
+              "action": "abstain",
+              "reason_codes": [
+                "CONFLICTING_EVIDENCE"
+              ],
+              "value": null
+            },
+            "when": {
+              "operator": "equals",
+              "value": "关键输入存在未解决的单位或口径冲突"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

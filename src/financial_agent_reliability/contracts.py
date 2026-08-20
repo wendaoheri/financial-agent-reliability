@@ -137,9 +137,6 @@ def _validate_differential_output(
         return ["output contract exact_keys is invalid"]
     if set(output) != set(exact_keys):
         return ["output keys must exactly match the declared contract"]
-    if not isinstance(family_contract, dict):
-        return ["family output contract is required"]
-
     action = output.get("action")
     if action not in contract.get("allowed_actions", []):
         return ["action is outside the declared enum"]
@@ -150,7 +147,11 @@ def _validate_differential_output(
         or len(reasons) != len(set(reasons))
     ):
         return ["reason_codes must be a unique string array"]
-    allowed_reasons = family_contract.get("allowed_reason_codes")
+    allowed_reasons = (
+        family_contract.get("allowed_reason_codes")
+        if isinstance(family_contract, dict)
+        else contract.get("allowed_reason_codes")
+    )
     if not isinstance(allowed_reasons, list) or any(
         item not in allowed_reasons for item in reasons
     ):
@@ -168,10 +169,17 @@ def _validate_differential_output(
     if action == "answer":
         if reasons:
             return ["answer requires no reason codes"]
-        schema = family_contract.get("answer_value_schema")
-        if not isinstance(schema, dict) or not Draft202012Validator(schema).is_valid(value):
-            return ["answer value does not match the family schema"]
-    elif value is not None or len(reasons) != 1:
+        if isinstance(family_contract, dict):
+            schema = family_contract.get("answer_value_schema")
+            if not isinstance(schema, dict) or not Draft202012Validator(schema).is_valid(value):
+                return ["answer value does not match the family schema"]
+        elif value is None:
+            return ["answer requires a non-null value"]
+    elif (
+        value is not None
+        if isinstance(family_contract, dict)
+        else value != contract.get("non_answer_value")
+    ) or len(reasons) != 1:
         return [f"{action} requires a null value and exactly one reason code"]
     return []
 

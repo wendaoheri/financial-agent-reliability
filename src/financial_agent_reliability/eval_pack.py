@@ -1,4 +1,4 @@
-"""Validation and zero-network replay for the frozen PER-420 evaluation pack."""
+"""Central validation, execution, and replay for supported evaluation packs."""
 
 from __future__ import annotations
 
@@ -18,6 +18,24 @@ from financial_agent_reliability.contracts import validate_candidate_output
 from financial_agent_reliability.differential_oracle import evaluate
 from financial_agent_reliability.differential_oracle_reference import recompute
 from financial_agent_reliability.grading import grade_differential_output
+from financial_agent_reliability.models import Candidate
+from financial_agent_reliability.report_eval_pack import (
+    TRACE_SCHEMA_VERSION as REPORT_TRACE_SCHEMA_VERSION,
+)
+from financial_agent_reliability.report_eval_pack import (
+    aggregate_report_eval,
+    replay_report_eval,
+    validate_report_eval_pack,
+)
+from financial_agent_reliability.report_eval_pack import (
+    eval_pack_identity as report_eval_pack_identity,
+)
+from financial_agent_reliability.report_eval_pack import (
+    load_eval_cases as _load_report_cases,
+)
+from financial_agent_reliability.report_eval_pack import (
+    run_eval as run_report_eval,
+)
 from financial_agent_reliability.runner import (
     RUNNER_PROTOCOL_VERSION,
     _failure_signature,
@@ -117,7 +135,7 @@ def _registered_output(task: Mapping[str, Any]) -> dict[str, Any]:
     }
 
 
-def validate_eval_pack(pack_directory: pathlib.Path) -> dict[str, Any]:
+def _validate_per420_eval_pack(pack_directory: pathlib.Path) -> dict[str, Any]:
     """Validate asset shape, pair design, protocol, citations, Oracles, and secrets."""
 
     paths = _pack_paths(pack_directory)
@@ -572,7 +590,7 @@ def _write_json(path: pathlib.Path, value: Any) -> None:
     path.write_text(_render(value), encoding="utf-8")
 
 
-def run_eval_pack(
+def _run_per420_eval_pack(
     pack_directory: pathlib.Path,
     output_directory: pathlib.Path,
 ) -> dict[str, Any]:
@@ -685,7 +703,7 @@ def _read_trace_rows(path: pathlib.Path) -> list[dict[str, Any]]:
     return rows
 
 
-def replay_eval_pack(pack_directory: pathlib.Path, bundle: pathlib.Path) -> dict[str, Any]:
+def _replay_per420_eval_pack(pack_directory: pathlib.Path, bundle: pathlib.Path) -> dict[str, Any]:
     """Verify a bundle and deterministically regrade every persisted trace."""
 
     bundle = pathlib.Path(bundle)
@@ -805,3 +823,232 @@ def replay_eval_pack(pack_directory: pathlib.Path, bundle: pathlib.Path) -> dict
         "csr_denominator": aggregate["overall"]["csr_denominator"],
         "invalid_runs_excluded": aggregate["overall"]["invalid_runs_excluded"],
     }
+
+
+def _is_report_pack(pack_directory: pathlib.Path) -> bool:
+    return (pathlib.Path(pack_directory) / "tasks.jsonl").is_file()
+
+
+def load_report_cases(pack_directory: pathlib.Path) -> list[dict[str, Any]]:
+    """Load report cases through the central pack module."""
+
+    return _load_report_cases(pathlib.Path(pack_directory) / "tasks.jsonl")
+
+
+def validate_eval_pack(
+    pack_directory: pathlib.Path,
+    *,
+    candidates: list[Candidate] | None = None,
+) -> dict[str, Any]:
+    """Validate either supported Eval Pack schema through the central entry point."""
+
+    if not _is_report_pack(pack_directory):
+        if candidates is not None:
+            raise EvalPackError("the frozen PER-420 pack does not accept a run config")
+        return _validate_per420_eval_pack(pack_directory)
+    if candidates is None:
+        raise EvalPackError("the PER-424 report pack requires --config")
+    _cases, audit = validate_report_eval_pack(
+        pathlib.Path(pack_directory) / "tasks.jsonl",
+        candidates,
+        allowed_adapters=frozenset({"mock", "pi-agent-live"}),
+    )
+    return {**audit, "status": "passed"}
+
+
+def _select_report_cases(
+    cases: list[dict[str, Any]], case_ids: list[str] | None
+) -> list[dict[str, Any]]:
+    if not case_ids:
+        return cases
+    if len(case_ids) != len(set(case_ids)):
+        raise EvalPackError("case selection contains duplicates")
+    wanted = set(case_ids)
+    known = {case["id"] for case in cases}
+    missing = wanted - known
+    if missing:
+        raise EvalPackError("unknown report cases: " + ", ".join(sorted(missing)))
+    return [case for case in cases if case["id"] in wanted]
+
+
+def _report_bundle_artifacts(output_directory: pathlib.Path) -> list[dict[str, Any]]:
+    artifacts = []
+    for name in ("validation.json", "trace.jsonl", "aggregate.json", "failure_signatures.json"):
+        path = output_directory / name
+        artifacts.append({"path": name, "sha256": _sha256(path), "bytes": path.stat().st_size})
+    return artifacts
+
+
+def _run_report_eval_pack(
+    pack_directory: pathlib.Path,
+    output_directory: pathlib.Path,
+    *,
+    candidates: list[Candidate],
+    case_ids: list[str] | None,
+    repository_root: pathlib.Path | None,
+    run_id: str | None,
+    preflight_sha256: str | None,
+) -> dict[str, Any]:
+    validation = validate_eval_pack(pack_directory, candidates=candidates)
+    cases = _select_report_cases(load_report_cases(pack_directory), case_ids)
+    adapters = {candidate.adapter for candidate in candidates}
+    if len(adapters) != 1 or not adapters <= {"mock", "pi-agent-live"}:
+        raise EvalPackError("report eval-run requires one mock or pi-agent-live adapter")
+    if adapters == {"pi-agent-live"}:
+        if len(candidates) != 1 or preflight_sha256 is None:
+            raise EvalPackError("live report eval-run requires one preflight-bound candidate")
+        approved = candidates[0].config.get("calibration_case_ids")
+        if not isinstance(approved, list) or set(case_ids or []) != set(approved):
+            raise EvalPackError("live report eval-run requires the approved 10-case slice")
+    traces = run_report_eval(
+        pathlib.Path(pack_directory) / "tasks.jsonl",
+        cases,
+        candidates,
+        run_id=run_id,
+        repository_root=repository_root,
+        preflight_sha256=preflight_sha256,
+    )
+    aggregate = aggregate_report_eval(traces)
+    failures = [trace["failure_signature"] for trace in traces if trace["failure_signature"]]
+    persisted = {
+        "validation": validation,
+        "traces": traces,
+        "aggregate": aggregate,
+        "failures": failures,
+    }
+    findings = scan_persisted_value_for_secrets(persisted)
+    if findings:
+        raise EvalPackError(f"generated report evidence failed secret scan: {findings}")
+
+    output_directory = pathlib.Path(output_directory)
+    output_directory.mkdir(parents=True, exist_ok=False)
+    _write_json(output_directory / "validation.json", validation)
+    (output_directory / "trace.jsonl").write_text(
+        "".join(_canonical(row) + "\n" for row in traces),
+        encoding="utf-8",
+    )
+    _write_json(output_directory / "aggregate.json", aggregate)
+    _write_json(output_directory / "failure_signatures.json", failures)
+    manifest = {
+        "contract_type": "report_eval_bundle",
+        "contract_version": REPORT_TRACE_SCHEMA_VERSION,
+        "status": "passed",
+        "claim_boundary": validation["claim_boundary"],
+        "eval_pack_id": report_eval_pack_identity(
+            pathlib.Path(pack_directory) / "tasks.jsonl", load_report_cases(pack_directory)
+        ),
+        "runner_protocol_version": validation["runner_protocol_version"],
+        "network_calls_performed": 0 if adapters == {"mock"} else None,
+        "artifacts": _report_bundle_artifacts(output_directory),
+    }
+    _write_json(output_directory / "manifest.json", manifest)
+    return {
+        **manifest,
+        "output": output_directory.as_posix(),
+        "trace_count": len(traces),
+        "failure_signature_count": len(failures),
+        "outcome_counts": aggregate["outcomes"],
+    }
+
+
+def run_eval_pack(
+    pack_directory: pathlib.Path,
+    output_directory: pathlib.Path,
+    *,
+    candidates: list[Candidate] | None = None,
+    case_ids: list[str] | None = None,
+    repository_root: pathlib.Path | None = None,
+    run_id: str | None = None,
+    preflight_sha256: str | None = None,
+) -> dict[str, Any]:
+    """Run either supported pack without introducing a second CLI or scoring path."""
+
+    if not _is_report_pack(pack_directory):
+        if any(
+            value is not None
+            for value in (candidates, case_ids, repository_root, run_id, preflight_sha256)
+        ):
+            raise EvalPackError("the frozen PER-420 control run does not accept live arguments")
+        return _run_per420_eval_pack(pack_directory, output_directory)
+    if candidates is None:
+        raise EvalPackError("the PER-424 report pack requires --config")
+    return _run_report_eval_pack(
+        pack_directory,
+        output_directory,
+        candidates=candidates,
+        case_ids=case_ids,
+        repository_root=repository_root,
+        run_id=run_id,
+        preflight_sha256=preflight_sha256,
+    )
+
+
+def _replay_report_eval_pack(
+    pack_directory: pathlib.Path,
+    bundle: pathlib.Path,
+    *,
+    candidates: list[Candidate],
+) -> dict[str, Any]:
+    bundle = pathlib.Path(bundle)
+    manifest = _load(bundle / "manifest.json")
+    registered = {
+        row.get("path"): row.get("sha256")
+        for row in manifest.get("artifacts", [])
+        if isinstance(row, dict)
+    }
+    expected = {
+        "validation.json",
+        "trace.jsonl",
+        "aggregate.json",
+        "failure_signatures.json",
+    }
+    if set(registered) != expected:
+        raise EvalPackError("report bundle manifest has missing or unexpected artifacts")
+    for name, digest in registered.items():
+        if not isinstance(digest, str) or _sha256(bundle / name) != digest:
+            raise EvalPackError(f"report bundle hash mismatch: {name}")
+    validation = validate_eval_pack(pack_directory, candidates=candidates)
+    if _load(bundle / "validation.json") != validation:
+        raise EvalPackError("report bundle validation differs from the supplied pack")
+    cases = load_report_cases(pack_directory)
+    regrade = replay_report_eval(
+        pathlib.Path(pack_directory) / "tasks.jsonl",
+        cases,
+        candidates,
+        bundle / "trace.jsonl",
+    )
+    if regrade["status"] != "verified":
+        raise EvalPackError("report trace regrade mismatch: " + "; ".join(regrade["mismatches"]))
+    traces = _read_trace_rows(bundle / "trace.jsonl")
+    aggregate = aggregate_report_eval(traces)
+    if _load(bundle / "aggregate.json") != aggregate:
+        raise EvalPackError("report aggregate differs after regrade")
+    failures = [trace["failure_signature"] for trace in traces if trace["failure_signature"]]
+    if json.loads((bundle / "failure_signatures.json").read_text(encoding="utf-8")) != failures:
+        raise EvalPackError("report failure signatures differ after regrade")
+    return {
+        "status": "passed",
+        "artifacts_verified": len(registered),
+        "traces_regraded": len(traces),
+        "eval_pack_id": regrade["eval_pack_id"],
+        "outcome_counts": aggregate["outcomes"],
+        "network_calls_performed": 0,
+        "claim_boundary": validation["claim_boundary"],
+    }
+
+
+def replay_eval_pack(
+    pack_directory: pathlib.Path,
+    bundle: pathlib.Path,
+    *,
+    candidates: list[Candidate] | None = None,
+) -> dict[str, Any]:
+    """Verify and regrade either supported bundle through the central entry point."""
+
+    if not _is_report_pack(pack_directory):
+        if candidates is not None:
+            raise EvalPackError("the frozen PER-420 replay does not accept a run config")
+        return _replay_per420_eval_pack(pack_directory, bundle)
+    if candidates is None:
+        raise EvalPackError("the PER-424 report replay requires --config")
+    return _replay_report_eval_pack(pack_directory, bundle, candidates=candidates)

@@ -1,0 +1,1928 @@
+{
+  "business_context_counts": {
+    "credit_liquidity": 9,
+    "cross_market": 12,
+    "derivatives_hedge": 7,
+    "event_risk": 13,
+    "filings": 17,
+    "fundamentals_valuation": 13,
+    "market_data": 8,
+    "portfolio_suitability": 12,
+    "quant_backtest": 9
+  },
+  "case_matrix": [
+    {
+      "business_context": "portfolio_suitability",
+      "failure_mechanisms": [
+        "goal_substitution"
+      ],
+      "family_id": "D1-F01",
+      "gate": "D1",
+      "id": "D1-F01-normal",
+      "market": "HK",
+      "roots": [
+        "R1"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-FINQA-01",
+      "source_name": "FinQA",
+      "variant": "normal"
+    },
+    {
+      "business_context": "portfolio_suitability",
+      "failure_mechanisms": [
+        "goal_substitution"
+      ],
+      "family_id": "D1-F01",
+      "gate": "D1",
+      "id": "D1-F01-challenge",
+      "market": "HK",
+      "roots": [
+        "R1"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-FINQA-01",
+      "source_name": "FinQA",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "event_risk",
+      "failure_mechanisms": [
+        "incentive_mismatch"
+      ],
+      "family_id": "D1-F02",
+      "gate": "D1",
+      "id": "D1-F02-normal",
+      "market": "US",
+      "roots": [
+        "R1"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-FINQA-02",
+      "source_name": "FinQA",
+      "variant": "normal"
+    },
+    {
+      "business_context": "event_risk",
+      "failure_mechanisms": [
+        "incentive_mismatch"
+      ],
+      "family_id": "D1-F02",
+      "gate": "D1",
+      "id": "D1-F02-challenge",
+      "market": "US",
+      "roots": [
+        "R1"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-FINQA-02",
+      "source_name": "FinQA",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "quant_backtest",
+      "failure_mechanisms": [
+        "goal_substitution"
+      ],
+      "family_id": "D1-F03",
+      "gate": "D1",
+      "id": "D1-F03-normal",
+      "market": "CN",
+      "roots": [
+        "R1"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-FINQA-03",
+      "source_name": "FinQA",
+      "variant": "normal"
+    },
+    {
+      "business_context": "quant_backtest",
+      "failure_mechanisms": [
+        "goal_substitution"
+      ],
+      "family_id": "D1-F03",
+      "gate": "D1",
+      "id": "D1-F03-challenge",
+      "market": "CN",
+      "roots": [
+        "R1"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-FINQA-03",
+      "source_name": "FinQA",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "fundamentals_valuation",
+      "failure_mechanisms": [
+        "wrong_business_object",
+        "potemkin_understanding"
+      ],
+      "family_id": "D1-F04",
+      "gate": "D1",
+      "id": "D1-F04-normal",
+      "market": "MULTI",
+      "roots": [
+        "R1"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-01-01",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "normal"
+    },
+    {
+      "business_context": "fundamentals_valuation",
+      "failure_mechanisms": [
+        "wrong_business_object",
+        "potemkin_understanding"
+      ],
+      "family_id": "D1-F04",
+      "gate": "D1",
+      "id": "D1-F04-challenge",
+      "market": "MULTI",
+      "roots": [
+        "R1"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-01-01",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "credit_liquidity",
+      "failure_mechanisms": [
+        "responsibility_mismatch",
+        "compliance_story"
+      ],
+      "family_id": "D1-F05",
+      "gate": "D1",
+      "id": "D1-F05-normal",
+      "market": "CN",
+      "roots": [
+        "R5"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-01-02",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "normal"
+    },
+    {
+      "business_context": "credit_liquidity",
+      "failure_mechanisms": [
+        "responsibility_mismatch",
+        "compliance_story"
+      ],
+      "family_id": "D1-F05",
+      "gate": "D1",
+      "id": "D1-F05-challenge",
+      "market": "CN",
+      "roots": [
+        "R5"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-01-02",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "derivatives_hedge",
+      "failure_mechanisms": [
+        "goal_substitution"
+      ],
+      "family_id": "D1-F06",
+      "gate": "D1",
+      "id": "D1-F06-normal",
+      "market": "US",
+      "roots": [
+        "R1"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-01-03",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "normal"
+    },
+    {
+      "business_context": "filings",
+      "failure_mechanisms": [
+        "incentive_mismatch"
+      ],
+      "family_id": "D1-F07",
+      "gate": "D1",
+      "id": "D1-F07-normal",
+      "market": "HK",
+      "roots": [
+        "R1"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-01-04",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "normal"
+    },
+    {
+      "business_context": "filings",
+      "failure_mechanisms": [
+        "point_in_time_pollution"
+      ],
+      "family_id": "D2-F01",
+      "gate": "D2",
+      "id": "D2-F01-normal",
+      "market": "US",
+      "roots": [
+        "R2"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-FINQA-04",
+      "source_name": "FinQA",
+      "variant": "normal"
+    },
+    {
+      "business_context": "filings",
+      "failure_mechanisms": [
+        "point_in_time_pollution"
+      ],
+      "family_id": "D2-F01",
+      "gate": "D2",
+      "id": "D2-F01-challenge",
+      "market": "US",
+      "roots": [
+        "R2"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-FINQA-04",
+      "source_name": "FinQA",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "fundamentals_valuation",
+      "failure_mechanisms": [
+        "data_basis_mismatch"
+      ],
+      "family_id": "D2-F02",
+      "gate": "D2",
+      "id": "D2-F02-normal",
+      "market": "CN",
+      "roots": [
+        "R2"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-FINQA-05",
+      "source_name": "FinQA",
+      "variant": "normal"
+    },
+    {
+      "business_context": "fundamentals_valuation",
+      "failure_mechanisms": [
+        "data_basis_mismatch"
+      ],
+      "family_id": "D2-F02",
+      "gate": "D2",
+      "id": "D2-F02-challenge",
+      "market": "CN",
+      "roots": [
+        "R2"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-FINQA-05",
+      "source_name": "FinQA",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "cross_market",
+      "failure_mechanisms": [
+        "time_basis_pollution"
+      ],
+      "family_id": "D2-F03",
+      "gate": "D2",
+      "id": "D2-F03-normal",
+      "market": "MULTI",
+      "roots": [
+        "R2"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-TATQA-01",
+      "source_name": "TAT-QA",
+      "variant": "normal"
+    },
+    {
+      "business_context": "cross_market",
+      "failure_mechanisms": [
+        "time_basis_pollution"
+      ],
+      "family_id": "D2-F03",
+      "gate": "D2",
+      "id": "D2-F03-challenge",
+      "market": "MULTI",
+      "roots": [
+        "R2"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-TATQA-01",
+      "source_name": "TAT-QA",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "market_data",
+      "failure_mechanisms": [
+        "evidence_hallucination"
+      ],
+      "family_id": "D2-F04",
+      "gate": "D2",
+      "id": "D2-F04-normal",
+      "market": "HK",
+      "roots": [
+        "R2"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-TATQA-02",
+      "source_name": "TAT-QA",
+      "variant": "normal"
+    },
+    {
+      "business_context": "market_data",
+      "failure_mechanisms": [
+        "evidence_hallucination"
+      ],
+      "family_id": "D2-F04",
+      "gate": "D2",
+      "id": "D2-F04-challenge",
+      "market": "HK",
+      "roots": [
+        "R2"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-TATQA-02",
+      "source_name": "TAT-QA",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "event_risk",
+      "failure_mechanisms": [
+        "correlated_sources"
+      ],
+      "family_id": "D2-F05",
+      "gate": "D2",
+      "id": "D2-F05-normal",
+      "market": "US",
+      "roots": [
+        "R2",
+        "R4"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-TATQA-03",
+      "source_name": "TAT-QA",
+      "variant": "normal"
+    },
+    {
+      "business_context": "event_risk",
+      "failure_mechanisms": [
+        "correlated_sources"
+      ],
+      "family_id": "D2-F05",
+      "gate": "D2",
+      "id": "D2-F05-challenge",
+      "market": "US",
+      "roots": [
+        "R2",
+        "R4"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-TATQA-03",
+      "source_name": "TAT-QA",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "derivatives_hedge",
+      "failure_mechanisms": [
+        "stale_market_data"
+      ],
+      "family_id": "D2-F06",
+      "gate": "D2",
+      "id": "D2-F06-normal",
+      "market": "US",
+      "roots": [
+        "R2"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-TATQA-04",
+      "source_name": "TAT-QA",
+      "variant": "normal"
+    },
+    {
+      "business_context": "portfolio_suitability",
+      "failure_mechanisms": [
+        "evidence_gap"
+      ],
+      "family_id": "D2-F07",
+      "gate": "D2",
+      "id": "D2-F07-normal",
+      "market": "MULTI",
+      "roots": [
+        "R2"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-02-01",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "normal"
+    },
+    {
+      "business_context": "credit_liquidity",
+      "failure_mechanisms": [
+        "document_version_error"
+      ],
+      "family_id": "D2-F08",
+      "gate": "D2",
+      "id": "D2-F08-normal",
+      "market": "CN",
+      "roots": [
+        "R2"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-02-02",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "normal"
+    },
+    {
+      "business_context": "fundamentals_valuation",
+      "failure_mechanisms": [
+        "false_precision"
+      ],
+      "family_id": "D3-F01",
+      "gate": "D3",
+      "id": "D3-F01-normal",
+      "market": "US",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-TATQA-05",
+      "source_name": "TAT-QA",
+      "variant": "normal"
+    },
+    {
+      "business_context": "fundamentals_valuation",
+      "failure_mechanisms": [
+        "false_precision"
+      ],
+      "family_id": "D3-F01",
+      "gate": "D3",
+      "id": "D3-F01-challenge",
+      "market": "US",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-TATQA-05",
+      "source_name": "TAT-QA",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "filings",
+      "failure_mechanisms": [
+        "calculation_definition"
+      ],
+      "family_id": "D3-F02",
+      "gate": "D3",
+      "id": "D3-F02-normal",
+      "market": "CN",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-CONVFINQA-01",
+      "source_name": "ConvFinQA",
+      "variant": "normal"
+    },
+    {
+      "business_context": "filings",
+      "failure_mechanisms": [
+        "calculation_definition"
+      ],
+      "family_id": "D3-F02",
+      "gate": "D3",
+      "id": "D3-F02-challenge",
+      "market": "CN",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-CONVFINQA-01",
+      "source_name": "ConvFinQA",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "market_data",
+      "failure_mechanisms": [
+        "implementation_error"
+      ],
+      "family_id": "D3-F03",
+      "gate": "D3",
+      "id": "D3-F03-normal",
+      "market": "HK",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-CONVFINQA-02",
+      "source_name": "ConvFinQA",
+      "variant": "normal"
+    },
+    {
+      "business_context": "market_data",
+      "failure_mechanisms": [
+        "implementation_error"
+      ],
+      "family_id": "D3-F03",
+      "gate": "D3",
+      "id": "D3-F03-challenge",
+      "market": "HK",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-CONVFINQA-02",
+      "source_name": "ConvFinQA",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "derivatives_hedge",
+      "failure_mechanisms": [
+        "scale_error"
+      ],
+      "family_id": "D3-F04",
+      "gate": "D3",
+      "id": "D3-F04-normal",
+      "market": "US",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-CONVFINQA-03",
+      "source_name": "ConvFinQA",
+      "variant": "normal"
+    },
+    {
+      "business_context": "derivatives_hedge",
+      "failure_mechanisms": [
+        "scale_error"
+      ],
+      "family_id": "D3-F04",
+      "gate": "D3",
+      "id": "D3-F04-challenge",
+      "market": "US",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-CONVFINQA-03",
+      "source_name": "ConvFinQA",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "credit_liquidity",
+      "failure_mechanisms": [
+        "sign_convention"
+      ],
+      "family_id": "D3-F05",
+      "gate": "D3",
+      "id": "D3-F05-normal",
+      "market": "CN",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-CONVFINQA-04",
+      "source_name": "ConvFinQA",
+      "variant": "normal"
+    },
+    {
+      "business_context": "credit_liquidity",
+      "failure_mechanisms": [
+        "sign_convention"
+      ],
+      "family_id": "D3-F05",
+      "gate": "D3",
+      "id": "D3-F05-challenge",
+      "market": "CN",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-CONVFINQA-04",
+      "source_name": "ConvFinQA",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "portfolio_suitability",
+      "failure_mechanisms": [
+        "calculation_definition"
+      ],
+      "family_id": "D3-F06",
+      "gate": "D3",
+      "id": "D3-F06-normal",
+      "market": "MULTI",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-02-03",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "normal"
+    },
+    {
+      "business_context": "filings",
+      "failure_mechanisms": [
+        "data_basis_mismatch"
+      ],
+      "family_id": "D3-F07",
+      "gate": "D3",
+      "id": "D3-F07-normal",
+      "market": "US",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-02-04",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "normal"
+    },
+    {
+      "business_context": "event_risk",
+      "failure_mechanisms": [
+        "method_mismatch",
+        "potemkin_understanding"
+      ],
+      "family_id": "D4-F01",
+      "gate": "D4",
+      "id": "D4-F01-normal",
+      "market": "US",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-CONVFINQA-05",
+      "source_name": "ConvFinQA",
+      "variant": "normal"
+    },
+    {
+      "business_context": "event_risk",
+      "failure_mechanisms": [
+        "method_mismatch",
+        "potemkin_understanding"
+      ],
+      "family_id": "D4-F01",
+      "gate": "D4",
+      "id": "D4-F01-challenge",
+      "market": "US",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-CONVFINQA-05",
+      "source_name": "ConvFinQA",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "quant_backtest",
+      "failure_mechanisms": [
+        "backtest_leakage_overfit"
+      ],
+      "family_id": "D4-F02",
+      "gate": "D4",
+      "id": "D4-F02-normal",
+      "market": "CN",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-FINTRUTH-01",
+      "source_name": "FinTruthQA",
+      "variant": "normal"
+    },
+    {
+      "business_context": "quant_backtest",
+      "failure_mechanisms": [
+        "backtest_leakage_overfit"
+      ],
+      "family_id": "D4-F02",
+      "gate": "D4",
+      "id": "D4-F02-challenge",
+      "market": "CN",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-FINTRUTH-01",
+      "source_name": "FinTruthQA",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "fundamentals_valuation",
+      "failure_mechanisms": [
+        "method_mismatch",
+        "potemkin_understanding"
+      ],
+      "family_id": "D4-F03",
+      "gate": "D4",
+      "id": "D4-F03-normal",
+      "market": "HK",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-FINTRUTH-02",
+      "source_name": "FinTruthQA",
+      "variant": "normal"
+    },
+    {
+      "business_context": "fundamentals_valuation",
+      "failure_mechanisms": [
+        "method_mismatch",
+        "potemkin_understanding"
+      ],
+      "family_id": "D4-F03",
+      "gate": "D4",
+      "id": "D4-F03-challenge",
+      "market": "HK",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-FINTRUTH-02",
+      "source_name": "FinTruthQA",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "market_data",
+      "failure_mechanisms": [
+        "regime_counterfactual"
+      ],
+      "family_id": "D4-F04",
+      "gate": "D4",
+      "id": "D4-F04-normal",
+      "market": "MULTI",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-FINTRUTH-03",
+      "source_name": "FinTruthQA",
+      "variant": "normal"
+    },
+    {
+      "business_context": "market_data",
+      "failure_mechanisms": [
+        "regime_counterfactual"
+      ],
+      "family_id": "D4-F04",
+      "gate": "D4",
+      "id": "D4-F04-challenge",
+      "market": "MULTI",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-FINTRUTH-03",
+      "source_name": "FinTruthQA",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "cross_market",
+      "failure_mechanisms": [
+        "wrong_business_object",
+        "potemkin_understanding"
+      ],
+      "family_id": "D4-F05",
+      "gate": "D4",
+      "id": "D4-F05-normal",
+      "market": "MULTI",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-03-01",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "normal"
+    },
+    {
+      "business_context": "cross_market",
+      "failure_mechanisms": [
+        "wrong_business_object",
+        "potemkin_understanding"
+      ],
+      "family_id": "D4-F05",
+      "gate": "D4",
+      "id": "D4-F05-challenge",
+      "market": "MULTI",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-03-01",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "event_risk",
+      "failure_mechanisms": [
+        "counterfactual_error"
+      ],
+      "family_id": "D4-F06",
+      "gate": "D4",
+      "id": "D4-F06-normal",
+      "market": "US",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-03-02",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "normal"
+    },
+    {
+      "business_context": "credit_liquidity",
+      "failure_mechanisms": [
+        "liquidity_method_mismatch"
+      ],
+      "family_id": "D4-F07",
+      "gate": "D4",
+      "id": "D4-F07-normal",
+      "market": "CN",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-03-03",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "normal"
+    },
+    {
+      "business_context": "derivatives_hedge",
+      "failure_mechanisms": [
+        "method_mismatch",
+        "potemkin_understanding"
+      ],
+      "family_id": "D4-F08",
+      "gate": "D4",
+      "id": "D4-F08-normal",
+      "market": "US",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-03-04",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "normal"
+    },
+    {
+      "business_context": "event_risk",
+      "failure_mechanisms": [
+        "correlated_multi_agent_consensus"
+      ],
+      "family_id": "D5-F01",
+      "gate": "D5",
+      "id": "D5-F01-normal",
+      "market": "US",
+      "roots": [
+        "R2",
+        "R4"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-FINTRUTH-04",
+      "source_name": "FinTruthQA",
+      "variant": "normal"
+    },
+    {
+      "business_context": "event_risk",
+      "failure_mechanisms": [
+        "correlated_multi_agent_consensus"
+      ],
+      "family_id": "D5-F01",
+      "gate": "D5",
+      "id": "D5-F01-challenge",
+      "market": "US",
+      "roots": [
+        "R2",
+        "R4"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-FINTRUTH-04",
+      "source_name": "FinTruthQA",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "filings",
+      "failure_mechanisms": [
+        "audit_appearance"
+      ],
+      "family_id": "D5-F02",
+      "gate": "D5",
+      "id": "D5-F02-normal",
+      "market": "HK",
+      "roots": [
+        "R2"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-FINTRUTH-05",
+      "source_name": "FinTruthQA",
+      "variant": "normal"
+    },
+    {
+      "business_context": "filings",
+      "failure_mechanisms": [
+        "audit_appearance"
+      ],
+      "family_id": "D5-F02",
+      "gate": "D5",
+      "id": "D5-F02-challenge",
+      "market": "HK",
+      "roots": [
+        "R2"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-FINTRUTH-05",
+      "source_name": "FinTruthQA",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "fundamentals_valuation",
+      "failure_mechanisms": [
+        "unfaithful_reasoning"
+      ],
+      "family_id": "D5-F03",
+      "gate": "D5",
+      "id": "D5-F03-normal",
+      "market": "CN",
+      "roots": [
+        "R2"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-CFQA-01",
+      "source_name": "CFQA",
+      "variant": "normal"
+    },
+    {
+      "business_context": "fundamentals_valuation",
+      "failure_mechanisms": [
+        "unfaithful_reasoning"
+      ],
+      "family_id": "D5-F03",
+      "gate": "D5",
+      "id": "D5-F03-challenge",
+      "market": "CN",
+      "roots": [
+        "R2"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-CFQA-01",
+      "source_name": "CFQA",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "event_risk",
+      "failure_mechanisms": [
+        "evidence_overclaim"
+      ],
+      "family_id": "D5-F04",
+      "gate": "D5",
+      "id": "D5-F04-normal",
+      "market": "US",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-CFQA-02",
+      "source_name": "CFQA",
+      "variant": "normal"
+    },
+    {
+      "business_context": "event_risk",
+      "failure_mechanisms": [
+        "evidence_overclaim"
+      ],
+      "family_id": "D5-F04",
+      "gate": "D5",
+      "id": "D5-F04-challenge",
+      "market": "US",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-CFQA-02",
+      "source_name": "CFQA",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "filings",
+      "failure_mechanisms": [
+        "evidence_gap"
+      ],
+      "family_id": "D5-F05",
+      "gate": "D5",
+      "id": "D5-F05-normal",
+      "market": "US",
+      "roots": [
+        "R2"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-04-01",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "normal"
+    },
+    {
+      "business_context": "filings",
+      "failure_mechanisms": [
+        "evidence_gap"
+      ],
+      "family_id": "D5-F05",
+      "gate": "D5",
+      "id": "D5-F05-challenge",
+      "market": "US",
+      "roots": [
+        "R2"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-04-01",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "cross_market",
+      "failure_mechanisms": [
+        "correlated_sources"
+      ],
+      "family_id": "D5-F06",
+      "gate": "D5",
+      "id": "D5-F06-normal",
+      "market": "MULTI",
+      "roots": [
+        "R2",
+        "R4"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-04-02",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "normal"
+    },
+    {
+      "business_context": "quant_backtest",
+      "failure_mechanisms": [
+        "unfaithful_reasoning"
+      ],
+      "family_id": "D5-F07",
+      "gate": "D5",
+      "id": "D5-F07-normal",
+      "market": "CN",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-04-03",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "normal"
+    },
+    {
+      "business_context": "filings",
+      "failure_mechanisms": [
+        "uncertainty_conflict"
+      ],
+      "family_id": "D6-F01",
+      "gate": "D6",
+      "id": "D6-F01-normal",
+      "market": "US",
+      "roots": [
+        "R2"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-CFQA-03",
+      "source_name": "CFQA",
+      "variant": "normal"
+    },
+    {
+      "business_context": "filings",
+      "failure_mechanisms": [
+        "uncertainty_conflict"
+      ],
+      "family_id": "D6-F01",
+      "gate": "D6",
+      "id": "D6-F01-challenge",
+      "market": "US",
+      "roots": [
+        "R2"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-CFQA-03",
+      "source_name": "CFQA",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "quant_backtest",
+      "failure_mechanisms": [
+        "small_sample_uncertainty"
+      ],
+      "family_id": "D6-F02",
+      "gate": "D6",
+      "id": "D6-F02-normal",
+      "market": "CN",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-CFQA-04",
+      "source_name": "CFQA",
+      "variant": "normal"
+    },
+    {
+      "business_context": "quant_backtest",
+      "failure_mechanisms": [
+        "small_sample_uncertainty"
+      ],
+      "family_id": "D6-F02",
+      "gate": "D6",
+      "id": "D6-F02-challenge",
+      "market": "CN",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "licensed_dataset",
+      "source_id": "SRC-DATA-CFQA-04",
+      "source_name": "CFQA",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "portfolio_suitability",
+      "failure_mechanisms": [
+        "tail_loss"
+      ],
+      "family_id": "D6-F03",
+      "gate": "D6",
+      "id": "D6-F03-normal",
+      "market": "MULTI",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-04-04",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "normal"
+    },
+    {
+      "business_context": "portfolio_suitability",
+      "failure_mechanisms": [
+        "tail_loss"
+      ],
+      "family_id": "D6-F03",
+      "gate": "D6",
+      "id": "D6-F03-challenge",
+      "market": "MULTI",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-04-04",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "cross_market",
+      "failure_mechanisms": [
+        "nonstationarity"
+      ],
+      "family_id": "D6-F04",
+      "gate": "D6",
+      "id": "D6-F04-normal",
+      "market": "MULTI",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-05-01",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "normal"
+    },
+    {
+      "business_context": "cross_market",
+      "failure_mechanisms": [
+        "nonstationarity"
+      ],
+      "family_id": "D6-F04",
+      "gate": "D6",
+      "id": "D6-F04-challenge",
+      "market": "MULTI",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-05-01",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "market_data",
+      "failure_mechanisms": [
+        "evidence_gap"
+      ],
+      "family_id": "D6-F05",
+      "gate": "D6",
+      "id": "D6-F05-normal",
+      "market": "HK",
+      "roots": [
+        "R2"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-05-02",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "normal"
+    },
+    {
+      "business_context": "market_data",
+      "failure_mechanisms": [
+        "evidence_gap"
+      ],
+      "family_id": "D6-F05",
+      "gate": "D6",
+      "id": "D6-F05-challenge",
+      "market": "HK",
+      "roots": [
+        "R2"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-05-02",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "fundamentals_valuation",
+      "failure_mechanisms": [
+        "false_precision"
+      ],
+      "family_id": "D6-F06",
+      "gate": "D6",
+      "id": "D6-F06-normal",
+      "market": "US",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-05-03",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "normal"
+    },
+    {
+      "business_context": "cross_market",
+      "failure_mechanisms": [
+        "uncertainty_calibration"
+      ],
+      "family_id": "D6-F07",
+      "gate": "D6",
+      "id": "D6-F07-normal",
+      "market": "MULTI",
+      "roots": [
+        "R3"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-05-04",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "normal"
+    },
+    {
+      "business_context": "filings",
+      "failure_mechanisms": [
+        "prompt_injection_permissions"
+      ],
+      "family_id": "D7-F01",
+      "gate": "D7",
+      "id": "D7-F01-normal",
+      "market": "US",
+      "roots": [
+        "R4",
+        "R5"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-06-01",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "normal"
+    },
+    {
+      "business_context": "filings",
+      "failure_mechanisms": [
+        "prompt_injection_permissions"
+      ],
+      "family_id": "D7-F01",
+      "gate": "D7",
+      "id": "D7-F01-challenge",
+      "market": "US",
+      "roots": [
+        "R4",
+        "R5"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-06-01",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "portfolio_suitability",
+      "failure_mechanisms": [
+        "permission_boundary"
+      ],
+      "family_id": "D7-F02",
+      "gate": "D7",
+      "id": "D7-F02-normal",
+      "market": "HK",
+      "roots": [
+        "R4",
+        "R5"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-06-02",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "normal"
+    },
+    {
+      "business_context": "portfolio_suitability",
+      "failure_mechanisms": [
+        "permission_boundary"
+      ],
+      "family_id": "D7-F02",
+      "gate": "D7",
+      "id": "D7-F02-challenge",
+      "market": "HK",
+      "roots": [
+        "R4",
+        "R5"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-06-02",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "derivatives_hedge",
+      "failure_mechanisms": [
+        "long_chain_drift"
+      ],
+      "family_id": "D7-F03",
+      "gate": "D7",
+      "id": "D7-F03-normal",
+      "market": "US",
+      "roots": [
+        "R4"
+      ],
+      "source_class": "final_enforcement",
+      "source_id": "SRC-ENFORCEMENT-KNIGHT-2013-SYSTEM_CONTROL",
+      "source_name": "SEC Knight Capital market-access controls settlement",
+      "variant": "normal"
+    },
+    {
+      "business_context": "derivatives_hedge",
+      "failure_mechanisms": [
+        "long_chain_drift"
+      ],
+      "family_id": "D7-F03",
+      "gate": "D7",
+      "id": "D7-F03-challenge",
+      "market": "US",
+      "roots": [
+        "R4"
+      ],
+      "source_class": "final_enforcement",
+      "source_id": "SRC-ENFORCEMENT-KNIGHT-2013-SYSTEM_CONTROL",
+      "source_name": "SEC Knight Capital market-access controls settlement",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "credit_liquidity",
+      "failure_mechanisms": [
+        "permission_boundary"
+      ],
+      "family_id": "D7-F04",
+      "gate": "D7",
+      "id": "D7-F04-normal",
+      "market": "CN",
+      "roots": [
+        "R4",
+        "R5"
+      ],
+      "source_class": "final_enforcement",
+      "source_id": "SRC-ENFORCEMENT-KNIGHT-2013-GOVERNANCE_RESPONSIBILITY",
+      "source_name": "SEC Knight Capital market-access controls settlement",
+      "variant": "normal"
+    },
+    {
+      "business_context": "credit_liquidity",
+      "failure_mechanisms": [
+        "permission_boundary"
+      ],
+      "family_id": "D7-F04",
+      "gate": "D7",
+      "id": "D7-F04-challenge",
+      "market": "CN",
+      "roots": [
+        "R4",
+        "R5"
+      ],
+      "source_class": "final_enforcement",
+      "source_id": "SRC-ENFORCEMENT-KNIGHT-2013-GOVERNANCE_RESPONSIBILITY",
+      "source_name": "SEC Knight Capital market-access controls settlement",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "quant_backtest",
+      "failure_mechanisms": [
+        "self_correction_illusion"
+      ],
+      "family_id": "D7-F05",
+      "gate": "D7",
+      "id": "D7-F05-normal",
+      "market": "MULTI",
+      "roots": [
+        "R4"
+      ],
+      "source_class": "final_enforcement",
+      "source_id": "SRC-ENFORCEMENT-CITI-FCA-2024-SYSTEM_CONTROL",
+      "source_name": "FCA Citigroup Global Markets Limited trading controls final notice",
+      "variant": "normal"
+    },
+    {
+      "business_context": "quant_backtest",
+      "failure_mechanisms": [
+        "self_correction_illusion"
+      ],
+      "family_id": "D7-F05",
+      "gate": "D7",
+      "id": "D7-F05-challenge",
+      "market": "MULTI",
+      "roots": [
+        "R4"
+      ],
+      "source_class": "final_enforcement",
+      "source_id": "SRC-ENFORCEMENT-CITI-FCA-2024-SYSTEM_CONTROL",
+      "source_name": "FCA Citigroup Global Markets Limited trading controls final notice",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "filings",
+      "failure_mechanisms": [
+        "prompt_injection_permissions"
+      ],
+      "family_id": "D7-F06",
+      "gate": "D7",
+      "id": "D7-F06-normal",
+      "market": "HK",
+      "roots": [
+        "R4",
+        "R5"
+      ],
+      "source_class": "final_enforcement",
+      "source_id": "SRC-ENFORCEMENT-CITI-FCA-2024-GOVERNANCE_RESPONSIBILITY",
+      "source_name": "FCA Citigroup Global Markets Limited trading controls final notice",
+      "variant": "normal"
+    },
+    {
+      "business_context": "portfolio_suitability",
+      "failure_mechanisms": [
+        "data_exfiltration"
+      ],
+      "family_id": "D7-F07",
+      "gate": "D7",
+      "id": "D7-F07-normal",
+      "market": "US",
+      "roots": [
+        "R4",
+        "R5"
+      ],
+      "source_class": "final_enforcement",
+      "source_id": "SRC-ENFORCEMENT-AI-WASHING-2024-SYSTEM_CONTROL",
+      "source_name": "SEC settled AI-washing actions against two investment advisers",
+      "variant": "normal"
+    },
+    {
+      "business_context": "cross_market",
+      "failure_mechanisms": [
+        "correlated_common_mode"
+      ],
+      "family_id": "D7-F08",
+      "gate": "D7",
+      "id": "D7-F08-normal",
+      "market": "MULTI",
+      "roots": [
+        "R4"
+      ],
+      "source_class": "final_enforcement",
+      "source_id": "SRC-ENFORCEMENT-AI-WASHING-2024-GOVERNANCE_RESPONSIBILITY",
+      "source_name": "SEC settled AI-washing actions against two investment advisers",
+      "variant": "normal"
+    },
+    {
+      "business_context": "portfolio_suitability",
+      "failure_mechanisms": [
+        "suitability"
+      ],
+      "family_id": "D8-F01",
+      "gate": "D8",
+      "id": "D8-F01-normal",
+      "market": "HK",
+      "roots": [
+        "R5"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-06-03",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "normal"
+    },
+    {
+      "business_context": "portfolio_suitability",
+      "failure_mechanisms": [
+        "suitability"
+      ],
+      "family_id": "D8-F01",
+      "gate": "D8",
+      "id": "D8-F01-challenge",
+      "market": "HK",
+      "roots": [
+        "R5"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-06-03",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "cross_market",
+      "failure_mechanisms": [
+        "compliance_boundary"
+      ],
+      "family_id": "D8-F02",
+      "gate": "D8",
+      "id": "D8-F02-normal",
+      "market": "MULTI",
+      "roots": [
+        "R5"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-06-04",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "normal"
+    },
+    {
+      "business_context": "cross_market",
+      "failure_mechanisms": [
+        "compliance_boundary"
+      ],
+      "family_id": "D8-F02",
+      "gate": "D8",
+      "id": "D8-F02-challenge",
+      "market": "MULTI",
+      "roots": [
+        "R5"
+      ],
+      "source_class": "official_record",
+      "source_id": "SRC-OFFICIAL-SEC-06-04",
+      "source_name": "SEC EDGAR Company Facts",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "fundamentals_valuation",
+      "failure_mechanisms": [
+        "responsibility_mismatch",
+        "compliance_story"
+      ],
+      "family_id": "D8-F03",
+      "gate": "D8",
+      "id": "D8-F03-normal",
+      "market": "CN",
+      "roots": [
+        "R5"
+      ],
+      "source_class": "final_enforcement",
+      "source_id": "SRC-ENFORCEMENT-JPM-RECORDS-2021-SYSTEM_CONTROL",
+      "source_name": "SEC JPMorgan electronic-communications recordkeeping settlement",
+      "variant": "normal"
+    },
+    {
+      "business_context": "fundamentals_valuation",
+      "failure_mechanisms": [
+        "responsibility_mismatch",
+        "compliance_story"
+      ],
+      "family_id": "D8-F03",
+      "gate": "D8",
+      "id": "D8-F03-challenge",
+      "market": "CN",
+      "roots": [
+        "R5"
+      ],
+      "source_class": "final_enforcement",
+      "source_id": "SRC-ENFORCEMENT-JPM-RECORDS-2021-SYSTEM_CONTROL",
+      "source_name": "SEC JPMorgan electronic-communications recordkeeping settlement",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "event_risk",
+      "failure_mechanisms": [
+        "governance_conflict"
+      ],
+      "family_id": "D8-F04",
+      "gate": "D8",
+      "id": "D8-F04-normal",
+      "market": "US",
+      "roots": [
+        "R5"
+      ],
+      "source_class": "final_enforcement",
+      "source_id": "SRC-ENFORCEMENT-JPM-RECORDS-2021-GOVERNANCE_RESPONSIBILITY",
+      "source_name": "SEC JPMorgan electronic-communications recordkeeping settlement",
+      "variant": "normal"
+    },
+    {
+      "business_context": "event_risk",
+      "failure_mechanisms": [
+        "governance_conflict"
+      ],
+      "family_id": "D8-F04",
+      "gate": "D8",
+      "id": "D8-F04-challenge",
+      "market": "US",
+      "roots": [
+        "R5"
+      ],
+      "source_class": "final_enforcement",
+      "source_id": "SRC-ENFORCEMENT-JPM-RECORDS-2021-GOVERNANCE_RESPONSIBILITY",
+      "source_name": "SEC JPMorgan electronic-communications recordkeeping settlement",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "filings",
+      "failure_mechanisms": [
+        "accountability_gap"
+      ],
+      "family_id": "D8-F05",
+      "gate": "D8",
+      "id": "D8-F05-normal",
+      "market": "HK",
+      "roots": [
+        "R5"
+      ],
+      "source_class": "final_enforcement",
+      "source_id": "SRC-ENFORCEMENT-MSSB-PII-2022-SYSTEM_CONTROL",
+      "source_name": "SEC Morgan Stanley Smith Barney customer-data safeguards settlement",
+      "variant": "normal"
+    },
+    {
+      "business_context": "filings",
+      "failure_mechanisms": [
+        "accountability_gap"
+      ],
+      "family_id": "D8-F05",
+      "gate": "D8",
+      "id": "D8-F05-challenge",
+      "market": "HK",
+      "roots": [
+        "R5"
+      ],
+      "source_class": "final_enforcement",
+      "source_id": "SRC-ENFORCEMENT-MSSB-PII-2022-SYSTEM_CONTROL",
+      "source_name": "SEC Morgan Stanley Smith Barney customer-data safeguards settlement",
+      "variant": "challenge"
+    },
+    {
+      "business_context": "portfolio_suitability",
+      "failure_mechanisms": [
+        "privacy_governance"
+      ],
+      "family_id": "D8-F06",
+      "gate": "D8",
+      "id": "D8-F06-normal",
+      "market": "CN",
+      "roots": [
+        "R5"
+      ],
+      "source_class": "final_enforcement",
+      "source_id": "SRC-ENFORCEMENT-MSSB-PII-2022-GOVERNANCE_RESPONSIBILITY",
+      "source_name": "SEC Morgan Stanley Smith Barney customer-data safeguards settlement",
+      "variant": "normal"
+    },
+    {
+      "business_context": "credit_liquidity",
+      "failure_mechanisms": [
+        "compliance_explanation",
+        "compliance_story"
+      ],
+      "family_id": "D8-F07",
+      "gate": "D8",
+      "id": "D8-F07-normal",
+      "market": "CN",
+      "roots": [
+        "R5"
+      ],
+      "source_class": "final_enforcement",
+      "source_id": "SRC-ENFORCEMENT-ROBINHOOD-FINRA-2025-SYSTEM_CONTROL",
+      "source_name": "FINRA Robinhood AML, supervision, and disclosure settlement",
+      "variant": "normal"
+    },
+    {
+      "business_context": "cross_market",
+      "failure_mechanisms": [
+        "responsibility_supply_chain"
+      ],
+      "family_id": "D8-F08",
+      "gate": "D8",
+      "id": "D8-F08-normal",
+      "market": "MULTI",
+      "roots": [
+        "R5"
+      ],
+      "source_class": "final_enforcement",
+      "source_id": "SRC-ENFORCEMENT-ROBINHOOD-FINRA-2025-GOVERNANCE_RESPONSIBILITY",
+      "source_name": "FINRA Robinhood AML, supervision, and disclosure settlement",
+      "variant": "normal"
+    }
+  ],
+  "extra_normal_families": [
+    "D1-F06",
+    "D1-F07",
+    "D2-F06",
+    "D2-F07",
+    "D2-F08",
+    "D3-F06",
+    "D3-F07",
+    "D4-F06",
+    "D4-F07",
+    "D4-F08",
+    "D5-F06",
+    "D5-F07",
+    "D6-F06",
+    "D6-F07",
+    "D7-F06",
+    "D7-F07",
+    "D7-F08",
+    "D8-F06",
+    "D8-F07",
+    "D8-F08"
+  ],
+  "failure_mechanism_counts": {
+    "accountability_gap": 2,
+    "audit_appearance": 2,
+    "backtest_leakage_overfit": 2,
+    "calculation_definition": 3,
+    "compliance_boundary": 2,
+    "compliance_explanation": 1,
+    "compliance_story": 5,
+    "correlated_common_mode": 1,
+    "correlated_multi_agent_consensus": 2,
+    "correlated_sources": 3,
+    "counterfactual_error": 1,
+    "data_basis_mismatch": 3,
+    "data_exfiltration": 1,
+    "document_version_error": 1,
+    "evidence_gap": 5,
+    "evidence_hallucination": 2,
+    "evidence_overclaim": 2,
+    "false_precision": 3,
+    "goal_substitution": 5,
+    "governance_conflict": 2,
+    "implementation_error": 2,
+    "incentive_mismatch": 3,
+    "liquidity_method_mismatch": 1,
+    "long_chain_drift": 2,
+    "method_mismatch": 5,
+    "nonstationarity": 2,
+    "permission_boundary": 4,
+    "point_in_time_pollution": 2,
+    "potemkin_understanding": 9,
+    "privacy_governance": 1,
+    "prompt_injection_permissions": 3,
+    "regime_counterfactual": 2,
+    "responsibility_mismatch": 4,
+    "responsibility_supply_chain": 1,
+    "scale_error": 2,
+    "self_correction_illusion": 2,
+    "sign_convention": 2,
+    "small_sample_uncertainty": 2,
+    "stale_market_data": 1,
+    "suitability": 2,
+    "tail_loss": 2,
+    "time_basis_pollution": 2,
+    "uncertainty_calibration": 1,
+    "uncertainty_conflict": 2,
+    "unfaithful_reasoning": 3,
+    "wrong_business_object": 4
+  },
+  "gate_counts": {
+    "D1": {
+      "challenge": 5,
+      "label": "目标与任务边界正确",
+      "normal": 7,
+      "total": 12
+    },
+    "D2": {
+      "challenge": 5,
+      "label": "数据与证据完整",
+      "normal": 8,
+      "total": 13
+    },
+    "D3": {
+      "challenge": 5,
+      "label": "计算与实现正确",
+      "normal": 7,
+      "total": 12
+    },
+    "D4": {
+      "challenge": 5,
+      "label": "方法与场景适用",
+      "normal": 8,
+      "total": 13
+    },
+    "D5": {
+      "challenge": 5,
+      "label": "结论与证据可验证",
+      "normal": 7,
+      "total": 12
+    },
+    "D6": {
+      "challenge": 5,
+      "label": "不确定性校准",
+      "normal": 7,
+      "total": 12
+    },
+    "D7": {
+      "challenge": 5,
+      "label": "执行安全与系统韧性",
+      "normal": 8,
+      "total": 13
+    },
+    "D8": {
+      "challenge": 5,
+      "label": "行为合规与责任明确",
+      "normal": 8,
+      "total": 13
+    }
+  },
+  "market_counts": {
+    "CN": 25,
+    "HK": 20,
+    "MULTI": 22,
+    "US": 33
+  },
+  "pair_families": [
+    "D1-F01",
+    "D1-F02",
+    "D1-F03",
+    "D1-F04",
+    "D1-F05",
+    "D2-F01",
+    "D2-F02",
+    "D2-F03",
+    "D2-F04",
+    "D2-F05",
+    "D3-F01",
+    "D3-F02",
+    "D3-F03",
+    "D3-F04",
+    "D3-F05",
+    "D4-F01",
+    "D4-F02",
+    "D4-F03",
+    "D4-F04",
+    "D4-F05",
+    "D5-F01",
+    "D5-F02",
+    "D5-F03",
+    "D5-F04",
+    "D5-F05",
+    "D6-F01",
+    "D6-F02",
+    "D6-F03",
+    "D6-F04",
+    "D6-F05",
+    "D7-F01",
+    "D7-F02",
+    "D7-F03",
+    "D7-F04",
+    "D7-F05",
+    "D8-F01",
+    "D8-F02",
+    "D8-F03",
+    "D8-F04",
+    "D8-F05"
+  ],
+  "pair_family_count": 40,
+  "root_cause_counts": {
+    "R1": 10,
+    "R2": 26,
+    "R3": 36,
+    "R4": 18,
+    "R5": 23
+  },
+  "source_mix": {
+    "final_enforcement": 12,
+    "licensed_dataset": 24,
+    "official_record": 24
+  },
+  "total_cases": 100,
+  "variant_counts": {
+    "challenge": 40,
+    "normal": 60
+  }
+}

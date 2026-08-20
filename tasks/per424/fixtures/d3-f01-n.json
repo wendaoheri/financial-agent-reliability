@@ -1,0 +1,167 @@
+{
+  "applicability": "仅用于公开来源冻结后的离线、只读金融可靠性评测；不代表投资建议、实时市场事实或真实执行授权。",
+  "as_of": "2026-08-21T00:00:00+08:00",
+  "fixture_id": "per424-family-016",
+  "market": "US",
+  "provenance": {
+    "adjudication_status": "source_answer_normalized_and_evidence_checked",
+    "evidence_digest": "94abda3d9333b19de9366b93cffaf7ce04a065fb454cda0bdfb8c5c1414f1f90",
+    "gold_basis": "TAT-QA published answer, scale, and derivation",
+    "license_id": "CC-BY-4.0",
+    "retrieved_at": "2026-08-21T00:00:00+08:00",
+    "source_class": "licensed_dataset",
+    "source_id": "SRC-DATA-TATQA-05",
+    "source_locator": "https://github.com/NExTplusplus/TAT-QA/blob/870accc41953dcde885aabeb963d94aabdc0fbc3/dataset_raw/tatqa_dataset_dev.json#348d031d-73ab-4b35-af46-998cfef25775",
+    "source_name": "TAT-QA",
+    "source_version": "870accc41953dcde885aabeb963d94aabdc0fbc3"
+  },
+  "question": "What is the percentage change in the valuation allowance from 2018 to 2019?",
+  "records": [
+    {
+      "kind": "case_scope",
+      "record_id": "scope-d3-f01",
+      "value": {
+        "authorized_mode": "offline_read_only_analysis",
+        "business_context": "fundamentals_valuation",
+        "market": "US",
+        "primary_gate": "D3",
+        "source_id": "SRC-DATA-TATQA-05"
+      }
+    },
+    {
+      "kind": "source_evidence",
+      "record_id": "source-d3-f01",
+      "value": {
+        "evidence": {
+          "answer_from": "table-text",
+          "derivation": "(19,911-15,916)/15,916",
+          "paragraphs": [
+            {
+              "order": 1,
+              "text": "NOTE 13 - TAXES ON INCOME",
+              "uid": "55cd7a56-3ca9-4cee-9ab8-95e9273f9344"
+            },
+            {
+              "order": 2,
+              "text": "B. Deferred income taxes:",
+              "uid": "bf925226-c078-48c6-b550-0e60b03ab2b7"
+            },
+            {
+              "order": 3,
+              "text": "Deferred income taxes reflect the net tax effects of temporary differences between the carrying amounts of assets and liabilities for financial reporting purposes and the amounts used for income tax purposes. Significant components of the Company's deferred tax assets are as follows:",
+              "uid": "45c2e15c-f858-42c6-a978-fbf23b831de2"
+            },
+            {
+              "order": 4,
+              "text": "As of December 31, 2019, the Company has provided a full valuation allowances of $19,911 in respect of deferred tax assets resulting from tax loss carryforward and other temporary differences. Management currently believes that because the Company has a history of losses, it is more likely than not that the deferred tax regarding the loss carryforward and other temporary differences will not be realized in the foreseeable future.",
+              "uid": "571cf3e5-7ff8-4494-97d5-8e6bb6ebb571"
+            }
+          ],
+          "scale": "percent",
+          "table": [
+            [
+              "",
+              "December 31",
+              ""
+            ],
+            [
+              "",
+              "2019",
+              "2 0 1 8"
+            ],
+            [
+              "",
+              "U.S. $ in thousands",
+              ""
+            ],
+            [
+              "Operating loss carryforward",
+              "73,260",
+              "57,768"
+            ],
+            [
+              "Net deferred tax asset before valuation allowance",
+              "19,911",
+              "15,916"
+            ],
+            [
+              "Valuation allowance",
+              "(19,911)",
+              "(15,916)"
+            ],
+            [
+              "Net deferred tax asset",
+              "795",
+              "772"
+            ]
+          ],
+          "table_uid": "f8ac9ddd-9872-4681-902d-a0ee7c0ee83a"
+        },
+        "expected_answer": {
+          "answer": 25.1,
+          "scale": "percent"
+        },
+        "query": "What is the percentage change in the valuation allowance from 2018 to 2019?"
+      }
+    },
+    {
+      "kind": "control",
+      "record_id": "control-d3-f01",
+      "value": "单位、币种、期间与计算口径一致"
+    },
+    {
+      "kind": "policy",
+      "record_id": "policy-d3-f01",
+      "value": {
+        "candidate_must_not_infer_missing_fields": true,
+        "control_record_id": "control-d3-f01",
+        "evaluation_order": "first_exact_match",
+        "fallback": {
+          "action": "abstain",
+          "reason_codes": [
+            "INSUFFICIENT_EVIDENCE"
+          ],
+          "value": null
+        },
+        "policy_version": "2.1",
+        "required_citations": [
+          "scope-d3-f01",
+          "source-d3-f01",
+          "control-d3-f01"
+        ],
+        "rules": [
+          {
+            "emit": {
+              "action": "answer",
+              "reason_codes": [],
+              "value_from": {
+                "path": [
+                  "value",
+                  "expected_answer"
+                ],
+                "record_id": "source-d3-f01"
+              }
+            },
+            "when": {
+              "operator": "equals",
+              "value": "单位、币种、期间与计算口径一致"
+            }
+          },
+          {
+            "emit": {
+              "action": "abstain",
+              "reason_codes": [
+                "CONFLICTING_EVIDENCE"
+              ],
+              "value": null
+            },
+            "when": {
+              "operator": "equals",
+              "value": "关键输入存在未解决的单位或口径冲突"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

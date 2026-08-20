@@ -1,0 +1,10 @@
+{
+  "claim_boundary": "offline_mock_only_no_model_or_agent_ranking",
+  "eval_pack_id": "per424-report-eight-gates-100-dev-v2.1",
+  "manifest_digest": "decaf285c6e5cf16294d0e7288a6c3d7e0b84a5ae8deb81eadc8ade37f467603",
+  "mismatches": [],
+  "network_calls_performed": 0,
+  "runner_protocol_version": "financial-differential-eval/2.0",
+  "status": "verified",
+  "traces_regraded": 100
+}

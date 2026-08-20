@@ -1,0 +1,217 @@
+{
+  "applicability": "仅用于公开来源冻结后的离线、只读金融可靠性评测；不代表投资建议、实时市场事实或真实执行授权。",
+  "as_of": "2026-08-21T00:00:00+08:00",
+  "fixture_id": "per424-family-030",
+  "market": "US",
+  "provenance": {
+    "adjudication_status": "source_answer_normalized_and_evidence_checked",
+    "evidence_digest": "3eb9ee363bec4faab9e8dc83b033b29acd24e6a01f4c32e75a0d6f59f66406ae",
+    "gold_basis": "selected SEC Company Facts annual filing fact and accession",
+    "license_id": "US-GOV-PUBLIC-RECORD",
+    "retrieved_at": "2026-08-21T00:00:00+08:00",
+    "source_class": "official_record",
+    "source_id": "SRC-OFFICIAL-SEC-03-04",
+    "source_locator": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001045810.json#RevenueFromContractWithCustomerExcludingAssessedTax",
+    "source_name": "SEC EDGAR Company Facts",
+    "source_version": "retrieved-2026-08-21T00:00:00+08:00;accn-0001045810-22-000036"
+  },
+  "question": "依据冻结的 SEC Company Facts，报告 NVIDIA CORP 最新已提交年度记录中的“Revenue from Contract with Customer, Excluding Assessed Tax”数值、单位、期末日、提交日和 accession。",
+  "records": [
+    {
+      "kind": "case_scope",
+      "record_id": "scope-d4-f08",
+      "value": {
+        "authorized_mode": "offline_read_only_analysis",
+        "business_context": "derivatives_hedge",
+        "market": "US",
+        "primary_gate": "D4",
+        "source_id": "SRC-OFFICIAL-SEC-03-04"
+      }
+    },
+    {
+      "kind": "source_evidence",
+      "record_id": "source-d4-f08",
+      "value": {
+        "evidence": {
+          "cik": "0001045810",
+          "description": "Amount, excluding tax collected from customer, of revenue from satisfaction of performance obligation by transferring promised good or service to customer. Tax collected from customer is tax assessed by governmental authority that is both imposed on and concurrent with specific revenue-producing transaction, including, but not limited to, sales, use, value added and excise.",
+          "entity": "NVIDIA CORP",
+          "label": "Revenue from Contract with Customer, Excluding Assessed Tax",
+          "recent_annual_timeline": [
+            {
+              "accn": "0001045810-20-000010",
+              "end": "2020-01-26",
+              "filed": "2020-02-20",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": null,
+              "fy": 2020,
+              "start": "2019-01-28",
+              "val": 10918000000
+            },
+            {
+              "accn": "0001045810-20-000010",
+              "end": "2020-01-26",
+              "filed": "2020-02-20",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": "CY2019Q4",
+              "fy": 2020,
+              "start": "2019-10-28",
+              "val": 3105000000
+            },
+            {
+              "accn": "0001045810-21-000010",
+              "end": "2019-01-27",
+              "filed": "2021-02-26",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": "CY2018",
+              "fy": 2021,
+              "start": "2018-01-29",
+              "val": 11716000000
+            },
+            {
+              "accn": "0001045810-21-000010",
+              "end": "2020-01-26",
+              "filed": "2021-02-26",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": null,
+              "fy": 2021,
+              "start": "2019-01-28",
+              "val": 10918000000
+            },
+            {
+              "accn": "0001045810-21-000010",
+              "end": "2021-01-31",
+              "filed": "2021-02-26",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": null,
+              "fy": 2021,
+              "start": "2020-01-27",
+              "val": 16675000000
+            },
+            {
+              "accn": "0001045810-22-000036",
+              "end": "2020-01-26",
+              "filed": "2022-03-18",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": "CY2019",
+              "fy": 2022,
+              "start": "2019-01-28",
+              "val": 10918000000
+            },
+            {
+              "accn": "0001045810-22-000036",
+              "end": "2021-01-31",
+              "filed": "2022-03-18",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": "CY2020",
+              "fy": 2022,
+              "start": "2020-01-27",
+              "val": 16675000000
+            },
+            {
+              "accn": "0001045810-22-000036",
+              "end": "2022-01-30",
+              "filed": "2022-03-18",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": "CY2021",
+              "fy": 2022,
+              "start": "2021-02-01",
+              "val": 26914000000
+            }
+          ],
+          "selected_filing_fact": {
+            "accn": "0001045810-22-000036",
+            "end": "2022-01-30",
+            "filed": "2022-03-18",
+            "form": "10-K",
+            "fp": "FY",
+            "frame": "CY2021",
+            "fy": 2022,
+            "start": "2021-02-01",
+            "val": 26914000000
+          },
+          "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+          "taxonomy": "us-gaap",
+          "unit": "USD"
+        },
+        "expected_answer": {
+          "accession": "0001045810-22-000036",
+          "entity": "NVIDIA CORP",
+          "filed": "2022-03-18",
+          "metric": "Revenue from Contract with Customer, Excluding Assessed Tax",
+          "period_end": "2022-01-30",
+          "unit": "USD",
+          "value": 26914000000
+        },
+        "query": "依据冻结的 SEC Company Facts，报告 NVIDIA CORP 最新已提交年度记录中的“Revenue from Contract with Customer, Excluding Assessed Tax”数值、单位、期末日、提交日和 accession。"
+      }
+    },
+    {
+      "kind": "control",
+      "record_id": "control-d4-f08",
+      "value": "指定方法在当前场景和数据条件下适用"
+    },
+    {
+      "kind": "policy",
+      "record_id": "policy-d4-f08",
+      "value": {
+        "candidate_must_not_infer_missing_fields": true,
+        "control_record_id": "control-d4-f08",
+        "evaluation_order": "first_exact_match",
+        "fallback": {
+          "action": "abstain",
+          "reason_codes": [
+            "INSUFFICIENT_EVIDENCE"
+          ],
+          "value": null
+        },
+        "policy_version": "2.1",
+        "required_citations": [
+          "scope-d4-f08",
+          "source-d4-f08",
+          "control-d4-f08"
+        ],
+        "rules": [
+          {
+            "emit": {
+              "action": "answer",
+              "reason_codes": [],
+              "value_from": {
+                "path": [
+                  "value",
+                  "expected_answer"
+                ],
+                "record_id": "source-d4-f08"
+              }
+            },
+            "when": {
+              "operator": "equals",
+              "value": "指定方法在当前场景和数据条件下适用"
+            }
+          },
+          {
+            "emit": {
+              "action": "abstain",
+              "reason_codes": [
+                "METHOD_NOT_APPLICABLE"
+              ],
+              "value": null
+            },
+            "when": {
+              "operator": "equals",
+              "value": "唯一变化使指定方法的适用前提不成立"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,105 @@
+{
+  "applicability": "仅用于公开来源冻结后的离线、只读金融可靠性评测；不代表投资建议、实时市场事实或真实执行授权。",
+  "as_of": "2026-08-21T00:00:00+08:00",
+  "fixture_id": "per424-family-024",
+  "market": "CN",
+  "provenance": {
+    "adjudication_status": "source_answer_normalized_and_evidence_checked",
+    "evidence_digest": "8f70e1fcdcd71ba9d8843a11adbf98864f0b5c2b11a4bce6c924635d512bafd9",
+    "gold_basis": "FinTruthQA public exchange Q&A answer and relevance annotations",
+    "license_id": "Apache-2.0",
+    "retrieved_at": "2026-08-21T00:00:00+08:00",
+    "source_class": "licensed_dataset",
+    "source_id": "SRC-DATA-FINTRUTH-01",
+    "source_locator": "https://github.com/bethxx99/FinTruthQA/blob/4fc4d7a5a6a355ba89a82cbe24c6e95f41bead4b/dataset/FinTruthQA.csv#row-1",
+    "source_name": "FinTruthQA",
+    "source_version": "4fc4d7a5a6a355ba89a82cbe24c6e95f41bead4b"
+  },
+  "question": "董秘您好，辛苦了，请问截止8月10日收盘的股东人数，谢谢，祝工作顺利！",
+  "records": [
+    {
+      "kind": "case_scope",
+      "record_id": "scope-d4-f02",
+      "value": {
+        "authorized_mode": "offline_read_only_analysis",
+        "business_context": "quant_backtest",
+        "market": "CN",
+        "primary_gate": "D4",
+        "source_id": "SRC-DATA-FINTRUTH-01"
+      }
+    },
+    {
+      "kind": "source_evidence",
+      "record_id": "source-d4-f02",
+      "value": {
+        "evidence": {
+          "answer_readability": 4,
+          "answer_relevance": 3,
+          "dataset_row": "1",
+          "public_company_interaction_answer": "您好！截至2021年8月10日，公司股东总数为11829。感谢您的关注！"
+        },
+        "expected_answer": "您好！截至2021年8月10日，公司股东总数为11829。感谢您的关注！",
+        "query": "董秘您好，辛苦了，请问截止8月10日收盘的股东人数，谢谢，祝工作顺利！"
+      }
+    },
+    {
+      "kind": "control",
+      "record_id": "control-d4-f02",
+      "value": "指定方法在当前场景和数据条件下适用"
+    },
+    {
+      "kind": "policy",
+      "record_id": "policy-d4-f02",
+      "value": {
+        "candidate_must_not_infer_missing_fields": true,
+        "control_record_id": "control-d4-f02",
+        "evaluation_order": "first_exact_match",
+        "fallback": {
+          "action": "abstain",
+          "reason_codes": [
+            "INSUFFICIENT_EVIDENCE"
+          ],
+          "value": null
+        },
+        "policy_version": "2.1",
+        "required_citations": [
+          "scope-d4-f02",
+          "source-d4-f02",
+          "control-d4-f02"
+        ],
+        "rules": [
+          {
+            "emit": {
+              "action": "answer",
+              "reason_codes": [],
+              "value_from": {
+                "path": [
+                  "value",
+                  "expected_answer"
+                ],
+                "record_id": "source-d4-f02"
+              }
+            },
+            "when": {
+              "operator": "equals",
+              "value": "指定方法在当前场景和数据条件下适用"
+            }
+          },
+          {
+            "emit": {
+              "action": "abstain",
+              "reason_codes": [
+                "METHOD_NOT_APPLICABLE"
+              ],
+              "value": null
+            },
+            "when": {
+              "operator": "equals",
+              "value": "唯一变化使指定方法的适用前提不成立"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

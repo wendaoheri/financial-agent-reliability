@@ -1,0 +1,157 @@
+{
+  "applicability": "仅用于公开来源冻结后的离线、只读金融可靠性评测；不代表投资建议、实时市场事实或真实执行授权。",
+  "as_of": "2026-08-21T00:00:00+08:00",
+  "fixture_id": "per424-family-009",
+  "market": "CN",
+  "provenance": {
+    "adjudication_status": "source_answer_normalized_and_evidence_checked",
+    "evidence_digest": "7971e284f2ebd797b5d10919943e467bf3a4a9235ce3beac7f4c93c733080657",
+    "gold_basis": "FinQA published answer and supporting facts/program",
+    "license_id": "MIT",
+    "retrieved_at": "2026-08-21T00:00:00+08:00",
+    "source_class": "licensed_dataset",
+    "source_id": "SRC-DATA-FINQA-05",
+    "source_locator": "https://github.com/czyssrs/FinQA/blob/0f16e2867befa6840783e58be38c9efb9229d742/dataset/dev.json#ETR/2004/page_213.pdf-2",
+    "source_name": "FinQA",
+    "source_version": "0f16e2867befa6840783e58be38c9efb9229d742"
+  },
+  "question": "what are the deferred fuel cost revisions as a percentage of the increase in fuel cost recovery revenues?",
+  "records": [
+    {
+      "kind": "case_scope",
+      "record_id": "scope-d2-f02",
+      "value": {
+        "authorized_mode": "offline_read_only_analysis",
+        "business_context": "fundamentals_valuation",
+        "market": "CN",
+        "primary_gate": "D2",
+        "source_id": "SRC-DATA-FINQA-05"
+      }
+    },
+    {
+      "kind": "source_evidence",
+      "record_id": "source-d2-f02",
+      "value": {
+        "evidence": {
+          "context": [
+            "entergy louisiana , inc .",
+            "management's financial discussion and analysis gross operating revenues , fuel and purchased power expenses , and other regulatory credits gross operating revenues increased primarily due to : 2022 an increase of $ 98.0 million in fuel cost recovery revenues due to higher fuel rates ; and 2022 an increase due to volume/weather , as discussed above .",
+            "the increase was partially offset by the following : 2022 a decrease of $ 31.9 million in the price applied to unbilled sales , as discussed above ; 2022 a decrease of $ 12.2 million in rate refund provisions , as discussed above ; and 2022 a decrease of $ 5.2 million in gross wholesale revenue due to decreased sales to affiliated systems .",
+            "fuel and purchased power expenses increased primarily due to : 2022 an increase in the recovery from customers of deferred fuel costs ; and 2022 an increase in the market price of natural gas .",
+            "other regulatory credits increased primarily due to : 2022 the deferral in 2004 of $ 14.3 million of capacity charges related to generation resource planning as allowed by the lpsc ; 2022 the amortization in 2003 of $ 11.8 million of deferred capacity charges , as discussed above ; and 2022 the deferral in 2004 of $ 11.4 million related to entergy's voluntary severance program , in accordance with a proposed stipulation with the lpsc staff .",
+            "2003 compared to 2002 net revenue , which is entergy louisiana's measure of gross margin , consists of operating revenues net of : 1 ) fuel , fuel-related , and purchased power expenses and 2 ) other regulatory charges ( credits ) .",
+            "following is an analysis of the change in net revenue comparing 2003 to 2002. .",
+            "the deferred fuel cost revisions variance resulted from a revised unbilled sales pricing estimate made in december 2002 and a further revision made in the first quarter of 2003 to more closely align the fuel component of that pricing with expected recoverable fuel costs .",
+            "the asset retirement obligation variance was due to the implementation of sfas 143 , \"accounting for asset retirement obligations\" adopted in january 2003 .",
+            "see \"critical accounting estimates\" for more details on sfas 143 .",
+            "the increase was offset by decommissioning expense and had no effect on net income .",
+            "the volume variance was due to a decrease in electricity usage in the service territory .",
+            "billed usage decreased 1868 gwh in the industrial sector including the loss of a large industrial customer to cogeneration. ."
+          ],
+          "filename": "ETR/2004/page_213.pdf",
+          "program": "divide(59.1, 98.0)",
+          "supporting_facts": {
+            "table_2": "the deferred fuel cost revisions of ( in millions ) is 59.1 ;",
+            "text_1": "management's financial discussion and analysis gross operating revenues , fuel and purchased power expenses , and other regulatory credits gross operating revenues increased primarily due to : 2022 an increase of $ 98.0 million in fuel cost recovery revenues due to higher fuel rates ; and 2022 an increase due to volume/weather , as discussed above .",
+            "text_6": "following is an analysis of the change in net revenue comparing 2003 to 2002. ."
+          },
+          "table": [
+            [
+              "",
+              "( in millions )"
+            ],
+            [
+              "2002 net revenue",
+              "$ 922.9"
+            ],
+            [
+              "deferred fuel cost revisions",
+              "59.1"
+            ],
+            [
+              "asset retirement obligation",
+              "8.2"
+            ],
+            [
+              "volume",
+              "-16.2 ( 16.2 )"
+            ],
+            [
+              "vidalia settlement",
+              "-9.2 ( 9.2 )"
+            ],
+            [
+              "other",
+              "8.9"
+            ],
+            [
+              "2003 net revenue",
+              "$ 973.7"
+            ]
+          ]
+        },
+        "expected_answer": "60.3%",
+        "query": "what are the deferred fuel cost revisions as a percentage of the increase in fuel cost recovery revenues?"
+      }
+    },
+    {
+      "kind": "control",
+      "record_id": "control-d2-f02",
+      "value": "来源版本与题目截止时点一致"
+    },
+    {
+      "kind": "policy",
+      "record_id": "policy-d2-f02",
+      "value": {
+        "candidate_must_not_infer_missing_fields": true,
+        "control_record_id": "control-d2-f02",
+        "evaluation_order": "first_exact_match",
+        "fallback": {
+          "action": "abstain",
+          "reason_codes": [
+            "INSUFFICIENT_EVIDENCE"
+          ],
+          "value": null
+        },
+        "policy_version": "2.1",
+        "required_citations": [
+          "scope-d2-f02",
+          "source-d2-f02",
+          "control-d2-f02"
+        ],
+        "rules": [
+          {
+            "emit": {
+              "action": "answer",
+              "reason_codes": [],
+              "value_from": {
+                "path": [
+                  "value",
+                  "expected_answer"
+                ],
+                "record_id": "source-d2-f02"
+              }
+            },
+            "when": {
+              "operator": "equals",
+              "value": "来源版本与题目截止时点一致"
+            }
+          },
+          {
+            "emit": {
+              "action": "abstain",
+              "reason_codes": [
+                "FUTURE_INFORMATION"
+              ],
+              "value": null
+            },
+            "when": {
+              "operator": "equals",
+              "value": "来源记录在题目截止时点之后才公开"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

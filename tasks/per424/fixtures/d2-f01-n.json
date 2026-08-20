@@ -1,0 +1,144 @@
+{
+  "applicability": "仅用于公开来源冻结后的离线、只读金融可靠性评测；不代表投资建议、实时市场事实或真实执行授权。",
+  "as_of": "2026-08-21T00:00:00+08:00",
+  "fixture_id": "per424-family-008",
+  "market": "US",
+  "provenance": {
+    "adjudication_status": "source_answer_normalized_and_evidence_checked",
+    "evidence_digest": "d3cd12ca4784d729a7e4aa64d69e7ad3fa32bf4649c9a9541cc3c438f7c15c6a",
+    "gold_basis": "FinQA published answer and supporting facts/program",
+    "license_id": "MIT",
+    "retrieved_at": "2026-08-21T00:00:00+08:00",
+    "source_class": "licensed_dataset",
+    "source_id": "SRC-DATA-FINQA-04",
+    "source_locator": "https://github.com/czyssrs/FinQA/blob/0f16e2867befa6840783e58be38c9efb9229d742/dataset/dev.json#ETR/2011/page_341.pdf-3",
+    "source_name": "FinQA",
+    "source_version": "0f16e2867befa6840783e58be38c9efb9229d742"
+  },
+  "question": "in 2010 what was the net change in net revenue in millions",
+  "records": [
+    {
+      "kind": "case_scope",
+      "record_id": "scope-d2-f01",
+      "value": {
+        "authorized_mode": "offline_read_only_analysis",
+        "business_context": "filings",
+        "market": "US",
+        "primary_gate": "D2",
+        "source_id": "SRC-DATA-FINQA-04"
+      }
+    },
+    {
+      "kind": "source_evidence",
+      "record_id": "source-d2-f01",
+      "value": {
+        "evidence": {
+          "context": [
+            "entergy mississippi , inc .",
+            "management 2019s financial discussion and analysis 2010 compared to 2009 net revenue consists of operating revenues net of : 1 ) fuel , fuel-related expenses , and gas purchased for resale , 2 ) purchased power expenses , and 3 ) other regulatory charges ( credits ) .",
+            "following is an analysis of the change in net revenue comparing 2010 to 2009 .",
+            "amount ( in millions ) .",
+            "the volume/weather variance is primarily due to an increase of 1046 gwh , or 8% ( 8 % ) , in billed electricity usage in all sectors , primarily due to the effect of more favorable weather on the residential sector .",
+            "gross operating revenues , fuel and purchased power expenses , and other regulatory charges ( credits ) gross operating revenues increased primarily due to an increase of $ 22 million in power management rider revenue as the result of higher rates , the volume/weather variance discussed above , and an increase in grand gulf rider revenue as a result of higher rates and increased usage , offset by a decrease of $ 23.5 million in fuel cost recovery revenues due to lower fuel rates .",
+            "fuel and purchased power expenses decreased primarily due to a decrease in deferred fuel expense as a result of prior over-collections , offset by an increase in the average market price of purchased power coupled with increased net area demand .",
+            "other regulatory charges increased primarily due to increased recovery of costs associated with the power management recovery rider .",
+            "other income statement variances 2011 compared to 2010 other operation and maintenance expenses decreased primarily due to : a $ 5.4 million decrease in compensation and benefits costs primarily resulting from an increase in the accrual for incentive-based compensation in 2010 and a decrease in stock option expense ; and the sale of $ 4.9 million of surplus oil inventory .",
+            "the decrease was partially offset by an increase of $ 3.9 million in legal expenses due to the deferral in 2010 of certain litigation expenses in accordance with regulatory treatment .",
+            "taxes other than income taxes increased primarily due to an increase in ad valorem taxes due to a higher 2011 assessment as compared to 2010 , partially offset by higher capitalized property taxes as compared with prior year .",
+            "depreciation and amortization expenses increased primarily due to an increase in plant in service .",
+            "interest expense decreased primarily due to a revision caused by ferc 2019s acceptance of a change in the treatment of funds received from independent power producers for transmission interconnection projects. ."
+          ],
+          "filename": "ETR/2011/page_341.pdf",
+          "program": "add(18.9, 0.3)",
+          "supporting_facts": {
+            "table_2": "the volume/weather of amount ( in millions ) is 18.9 ;",
+            "table_3": "the other of amount ( in millions ) is -0.3 ( 0.3 ) ;"
+          },
+          "table": [
+            [
+              "",
+              "amount ( in millions )"
+            ],
+            [
+              "2009 net revenue",
+              "$ 536.7"
+            ],
+            [
+              "volume/weather",
+              "18.9"
+            ],
+            [
+              "other",
+              "-0.3 ( 0.3 )"
+            ],
+            [
+              "2010 net revenue",
+              "$ 555.3"
+            ]
+          ]
+        },
+        "expected_answer": "18.6",
+        "query": "in 2010 what was the net change in net revenue in millions"
+      }
+    },
+    {
+      "kind": "control",
+      "record_id": "control-d2-f01",
+      "value": "来源版本与题目截止时点一致"
+    },
+    {
+      "kind": "policy",
+      "record_id": "policy-d2-f01",
+      "value": {
+        "candidate_must_not_infer_missing_fields": true,
+        "control_record_id": "control-d2-f01",
+        "evaluation_order": "first_exact_match",
+        "fallback": {
+          "action": "abstain",
+          "reason_codes": [
+            "INSUFFICIENT_EVIDENCE"
+          ],
+          "value": null
+        },
+        "policy_version": "2.1",
+        "required_citations": [
+          "scope-d2-f01",
+          "source-d2-f01",
+          "control-d2-f01"
+        ],
+        "rules": [
+          {
+            "emit": {
+              "action": "answer",
+              "reason_codes": [],
+              "value_from": {
+                "path": [
+                  "value",
+                  "expected_answer"
+                ],
+                "record_id": "source-d2-f01"
+              }
+            },
+            "when": {
+              "operator": "equals",
+              "value": "来源版本与题目截止时点一致"
+            }
+          },
+          {
+            "emit": {
+              "action": "abstain",
+              "reason_codes": [
+                "FUTURE_INFORMATION"
+              ],
+              "value": null
+            },
+            "when": {
+              "operator": "equals",
+              "value": "来源记录在题目截止时点之后才公开"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "applicability": "仅用于公开来源冻结后的离线、只读金融可靠性评测；不代表投资建议、实时市场事实或真实执行授权。",
+  "as_of": "2026-08-21T00:00:00+08:00",
+  "fixture_id": "per424-family-056",
+  "market": "US",
+  "provenance": {
+    "adjudication_status": "source_answer_normalized_and_evidence_checked",
+    "evidence_digest": "32dbd4878f9ec484f50f08f4bb32063560fa4524230b675d1cf6922ed5e4f722",
+    "gold_basis": "final or settled regulator record; normalized facts independently checked",
+    "license_id": "PUBLIC-REGULATORY-RECORD",
+    "retrieved_at": "2026-08-21T00:00:00+08:00",
+    "source_class": "final_enforcement",
+    "source_id": "SRC-ENFORCEMENT-JPM-RECORDS-2021-GOVERNANCE_RESPONSIBILITY",
+    "source_locator": "https://www.sec.gov/newsroom/press-releases/2021-262",
+    "source_name": "SEC JPMorgan electronic-communications recordkeeping settlement",
+    "source_version": "SEC-2021-262;2021-12-17"
+  },
+  "question": "根据终局监管记录，指出 J.P. Morgan Securities LLC 的治理责任链缺口及已确认处置边界。",
+  "records": [
+    {
+      "kind": "case_scope",
+      "record_id": "scope-d8-f04",
+      "value": {
+        "authorized_mode": "offline_read_only_analysis",
+        "business_context": "event_risk",
+        "market": "US",
+        "primary_gate": "D8",
+        "source_id": "SRC-ENFORCEMENT-JPM-RECORDS-2021-GOVERNANCE_RESPONSIBILITY"
+      }
+    },
+    {
+      "kind": "source_evidence",
+      "record_id": "source-d8-f04",
+      "value": {
+        "evidence": {
+          "aspect": "governance_responsibility",
+          "entity": "J.P. Morgan Securities LLC",
+          "record_status": "final_or_settled_regulatory_record",
+          "remedy": "admitted findings, settled order, censure, $125 million penalty, consultant",
+          "verified_facts": [
+            "The firm admitted widespread and longstanding failures to preserve written communications.",
+            "Employees and supervisors used personal texts, WhatsApp, and personal email for securities business from at least January 2018 through November 2020.",
+            "The SEC order imposed a $125 million penalty and required compliance improvements and a consultant review."
+          ]
+        },
+        "expected_answer": {
+          "aspect": "governance_responsibility",
+          "entity": "J.P. Morgan Securities LLC",
+          "finding": [
+            "The firm admitted widespread and longstanding failures to preserve written communications.",
+            "Employees and supervisors used personal texts, WhatsApp, and personal email for securities business from at least January 2018 through November 2020.",
+            "The SEC order imposed a $125 million penalty and required compliance improvements and a consultant review."
+          ],
+          "record_status": "final_or_settled_regulatory_record",
+          "remedy": "admitted findings, settled order, censure, $125 million penalty, consultant"
+        },
+        "query": "根据终局监管记录，指出 J.P. Morgan Securities LLC 的治理责任链缺口及已确认处置边界。"
+      }
+    },
+    {
+      "kind": "control",
+      "record_id": "control-d8-f04",
+      "value": "责任主体或最终授权链无法闭合"
+    },
+    {
+      "kind": "policy",
+      "record_id": "policy-d8-f04",
+      "value": {
+        "candidate_must_not_infer_missing_fields": true,
+        "control_record_id": "control-d8-f04",
+        "evaluation_order": "first_exact_match",
+        "fallback": {
+          "action": "abstain",
+          "reason_codes": [
+            "INSUFFICIENT_EVIDENCE"
+          ],
+          "value": null
+        },
+        "policy_version": "2.1",
+        "required_citations": [
+          "scope-d8-f04",
+          "source-d8-f04",
+          "control-d8-f04"
+        ],
+        "rules": [
+          {
+            "emit": {
+              "action": "answer",
+              "reason_codes": [],
+              "value_from": {
+                "path": [
+                  "value",
+                  "expected_answer"
+                ],
+                "record_id": "source-d8-f04"
+              }
+            },
+            "when": {
+              "operator": "equals",
+              "value": "记录终局状态、授权与责任主体均可核验"
+            }
+          },
+          {
+            "emit": {
+              "action": "escalate",
+              "reason_codes": [
+                "MISSING_APPROVAL"
+              ],
+              "value": null
+            },
+            "when": {
+              "operator": "equals",
+              "value": "责任主体或最终授权链无法闭合"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

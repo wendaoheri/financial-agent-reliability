@@ -1,0 +1,172 @@
+{
+  "applicability": "仅用于公开来源冻结后的离线、只读金融可靠性评测；不代表投资建议、实时市场事实或真实执行授权。",
+  "as_of": "2026-08-21T00:00:00+08:00",
+  "fixture_id": "per424-family-042",
+  "market": "HK",
+  "provenance": {
+    "adjudication_status": "source_answer_normalized_and_evidence_checked",
+    "evidence_digest": "f85290ba7507c62978dc2bc8276bfe3745b2cd3d6c559f979dc459d3e4544965",
+    "gold_basis": "selected SEC Company Facts annual filing fact and accession",
+    "license_id": "US-GOV-PUBLIC-RECORD",
+    "retrieved_at": "2026-08-21T00:00:00+08:00",
+    "source_class": "official_record",
+    "source_id": "SRC-OFFICIAL-SEC-05-02",
+    "source_locator": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000019617.json#CashAndCashEquivalentsAtCarryingValue",
+    "source_name": "SEC EDGAR Company Facts",
+    "source_version": "retrieved-2026-08-21T00:00:00+08:00;accn-0000019617-19-000054"
+  },
+  "question": "依据冻结的 SEC Company Facts，报告 JPMORGAN CHASE & CO 最新已提交年度记录中的“Cash and Cash Equivalents, at Carrying Value”数值、单位、期末日、提交日和 accession。",
+  "records": [
+    {
+      "kind": "case_scope",
+      "record_id": "scope-d6-f05",
+      "value": {
+        "authorized_mode": "offline_read_only_analysis",
+        "business_context": "market_data",
+        "market": "HK",
+        "primary_gate": "D6",
+        "source_id": "SRC-OFFICIAL-SEC-05-02"
+      }
+    },
+    {
+      "kind": "source_evidence",
+      "record_id": "source-d6-f05",
+      "value": {
+        "evidence": {
+          "cik": "0000019617",
+          "description": "Amount of currency on hand as well as demand deposits with banks or financial institutions. Includes other kinds of accounts that have the general characteristics of demand deposits. Also includes short-term, highly liquid investments that are both readily convertible to known amounts of cash and so near their maturity that they present insignificant risk of changes in value because of changes in interest rates. Excludes cash and cash equivalents within disposal group and discontinued operation.",
+          "entity": "JPMORGAN CHASE & CO",
+          "label": "Cash and Cash Equivalents, at Carrying Value",
+          "recent_annual_timeline": [
+            {
+              "accn": "0000019617-19-000054",
+              "end": "2015-12-31",
+              "filed": "2019-02-26",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": "CY2015Q4I",
+              "fy": 2018,
+              "start": null,
+              "val": 361683000000
+            },
+            {
+              "accn": "0000019617-19-000054",
+              "end": "2016-12-31",
+              "filed": "2019-02-26",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": "CY2016Q4I",
+              "fy": 2018,
+              "start": null,
+              "val": 391154000000
+            },
+            {
+              "accn": "0000019617-19-000054",
+              "end": "2017-12-31",
+              "filed": "2019-02-26",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": "CY2017Q4I",
+              "fy": 2018,
+              "start": null,
+              "val": 431304000000
+            },
+            {
+              "accn": "0000019617-19-000054",
+              "end": "2018-12-31",
+              "filed": "2019-02-26",
+              "form": "10-K",
+              "fp": "FY",
+              "frame": "CY2018Q4I",
+              "fy": 2018,
+              "start": null,
+              "val": 278793000000
+            }
+          ],
+          "selected_filing_fact": {
+            "accn": "0000019617-19-000054",
+            "end": "2018-12-31",
+            "filed": "2019-02-26",
+            "form": "10-K",
+            "fp": "FY",
+            "frame": "CY2018Q4I",
+            "fy": 2018,
+            "val": 278793000000
+          },
+          "tag": "CashAndCashEquivalentsAtCarryingValue",
+          "taxonomy": "us-gaap",
+          "unit": "USD"
+        },
+        "expected_answer": {
+          "accession": "0000019617-19-000054",
+          "entity": "JPMORGAN CHASE & CO",
+          "filed": "2019-02-26",
+          "metric": "Cash and Cash Equivalents, at Carrying Value",
+          "period_end": "2018-12-31",
+          "unit": "USD",
+          "value": 278793000000
+        },
+        "query": "依据冻结的 SEC Company Facts，报告 JPMORGAN CHASE & CO 最新已提交年度记录中的“Cash and Cash Equivalents, at Carrying Value”数值、单位、期末日、提交日和 accession。"
+      }
+    },
+    {
+      "kind": "control",
+      "record_id": "control-d6-f05",
+      "value": "合理不确定区间未跨越行动阈值"
+    },
+    {
+      "kind": "policy",
+      "record_id": "policy-d6-f05",
+      "value": {
+        "candidate_must_not_infer_missing_fields": true,
+        "control_record_id": "control-d6-f05",
+        "evaluation_order": "first_exact_match",
+        "fallback": {
+          "action": "abstain",
+          "reason_codes": [
+            "INSUFFICIENT_EVIDENCE"
+          ],
+          "value": null
+        },
+        "policy_version": "2.1",
+        "required_citations": [
+          "scope-d6-f05",
+          "source-d6-f05",
+          "control-d6-f05"
+        ],
+        "rules": [
+          {
+            "emit": {
+              "action": "answer",
+              "reason_codes": [],
+              "value_from": {
+                "path": [
+                  "value",
+                  "expected_answer"
+                ],
+                "record_id": "source-d6-f05"
+              }
+            },
+            "when": {
+              "operator": "equals",
+              "value": "合理不确定区间未跨越行动阈值"
+            }
+          },
+          {
+            "emit": {
+              "action": "escalate",
+              "reason_codes": [
+                "UNCERTAINTY_TOO_HIGH"
+              ],
+              "value": null
+            },
+            "when": {
+              "operator": "equals",
+              "value": "合理不确定区间跨越行动阈值"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

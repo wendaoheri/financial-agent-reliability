@@ -1,0 +1,154 @@
+{
+  "applicability": "仅用于公开来源冻结后的离线、只读金融可靠性评测；不代表投资建议、实时市场事实或真实执行授权。",
+  "as_of": "2026-08-21T00:00:00+08:00",
+  "fixture_id": "per424-family-010",
+  "market": "MULTI",
+  "provenance": {
+    "adjudication_status": "source_answer_normalized_and_evidence_checked",
+    "evidence_digest": "ab088ff419ef8617dc99dcbfb72227a37281a6a774f031539cd70906a11cd266",
+    "gold_basis": "TAT-QA published answer, scale, and derivation",
+    "license_id": "CC-BY-4.0",
+    "retrieved_at": "2026-08-21T00:00:00+08:00",
+    "source_class": "licensed_dataset",
+    "source_id": "SRC-DATA-TATQA-01",
+    "source_locator": "https://github.com/NExTplusplus/TAT-QA/blob/870accc41953dcde885aabeb963d94aabdc0fbc3/dataset_raw/tatqa_dataset_dev.json#23801627-ff77-4597-8d24-1c99e2452082",
+    "source_name": "TAT-QA",
+    "source_version": "870accc41953dcde885aabeb963d94aabdc0fbc3"
+  },
+  "question": "What is the company paid on a cost-plus type contract?",
+  "records": [
+    {
+      "kind": "case_scope",
+      "record_id": "scope-d2-f03",
+      "value": {
+        "authorized_mode": "offline_read_only_analysis",
+        "business_context": "cross_market",
+        "market": "MULTI",
+        "primary_gate": "D2",
+        "source_id": "SRC-DATA-TATQA-01"
+      }
+    },
+    {
+      "kind": "source_evidence",
+      "record_id": "source-d2-f03",
+      "value": {
+        "evidence": {
+          "answer_from": "text",
+          "derivation": "",
+          "paragraphs": [
+            {
+              "order": 1,
+              "text": "Sales by Contract Type: Substantially all of our contracts are fixed-price type contracts. Sales included in Other contract types represent cost plus and time and material type contracts.",
+              "uid": "f4ac7069-10a2-47e9-995c-3903293b3d47"
+            },
+            {
+              "order": 2,
+              "text": "On a fixed-price type contract, we agree to perform the contractual statement of work for a predetermined sales price. On a cost-plus type contract, we are paid our allowable incurred costs plus a profit which can be fixed or variable depending on the contract’s fee arrangement up to predetermined funding levels determined by the customer. On a time-and-material type contract, we are paid on the basis of direct labor hours expended at specified fixed-price hourly rates (that include wages, overhead, allowable general and administrative expenses and profit) and materials at cost. The table below presents total net sales disaggregated by contract type (in millions):",
+              "uid": "79e37805-6558-4a8c-b033-32be6bffef48"
+            }
+          ],
+          "scale": "",
+          "table": [
+            [
+              "",
+              "",
+              "Years Ended September 30,",
+              ""
+            ],
+            [
+              "",
+              "2019",
+              "2018",
+              "2017"
+            ],
+            [
+              "Fixed Price",
+              "$  1,452.4",
+              "$  1,146.2",
+              "$  1,036.9"
+            ],
+            [
+              "Other",
+              "44.1",
+              "56.7",
+              "70.8"
+            ],
+            [
+              "Total sales",
+              "$1,496.5",
+              "$1,202.9",
+              "$1,107.7"
+            ]
+          ],
+          "table_uid": "3ffd9053-a45d-491c-957a-1b2fa0af0570"
+        },
+        "expected_answer": {
+          "answer": [
+            "our allowable incurred costs plus a profit which can be fixed or variable depending on the contract’s fee arrangement up to predetermined funding levels determined by the customer"
+          ],
+          "scale": ""
+        },
+        "query": "What is the company paid on a cost-plus type contract?"
+      }
+    },
+    {
+      "kind": "control",
+      "record_id": "control-d2-f03",
+      "value": "来源记录在题目截止时点之后才公开"
+    },
+    {
+      "kind": "policy",
+      "record_id": "policy-d2-f03",
+      "value": {
+        "candidate_must_not_infer_missing_fields": true,
+        "control_record_id": "control-d2-f03",
+        "evaluation_order": "first_exact_match",
+        "fallback": {
+          "action": "abstain",
+          "reason_codes": [
+            "INSUFFICIENT_EVIDENCE"
+          ],
+          "value": null
+        },
+        "policy_version": "2.1",
+        "required_citations": [
+          "scope-d2-f03",
+          "source-d2-f03",
+          "control-d2-f03"
+        ],
+        "rules": [
+          {
+            "emit": {
+              "action": "answer",
+              "reason_codes": [],
+              "value_from": {
+                "path": [
+                  "value",
+                  "expected_answer"
+                ],
+                "record_id": "source-d2-f03"
+              }
+            },
+            "when": {
+              "operator": "equals",
+              "value": "来源版本与题目截止时点一致"
+            }
+          },
+          {
+            "emit": {
+              "action": "abstain",
+              "reason_codes": [
+                "FUTURE_INFORMATION"
+              ],
+              "value": null
+            },
+            "when": {
+              "operator": "equals",
+              "value": "来源记录在题目截止时点之后才公开"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

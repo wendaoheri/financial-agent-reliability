@@ -1,0 +1,173 @@
+{
+  "applicability": "仅用于公开来源冻结后的离线、只读金融可靠性评测；不代表投资建议、实时市场事实或真实执行授权。",
+  "as_of": "2026-08-21T00:00:00+08:00",
+  "fixture_id": "per424-family-001",
+  "market": "HK",
+  "provenance": {
+    "adjudication_status": "source_answer_normalized_and_evidence_checked",
+    "evidence_digest": "141f5b9e1bb4f2ae3b93c38a4b0229271a23c51382acb4bc456f4a64c97674ab",
+    "gold_basis": "FinQA published answer and supporting facts/program",
+    "license_id": "MIT",
+    "retrieved_at": "2026-08-21T00:00:00+08:00",
+    "source_class": "licensed_dataset",
+    "source_id": "SRC-DATA-FINQA-01",
+    "source_locator": "https://github.com/czyssrs/FinQA/blob/0f16e2867befa6840783e58be38c9efb9229d742/dataset/dev.json#V/2008/page_17.pdf-1",
+    "source_name": "FinQA",
+    "source_version": "0f16e2867befa6840783e58be38c9efb9229d742"
+  },
+  "question": "what is the average payment volume per transaction for american express?",
+  "records": [
+    {
+      "kind": "case_scope",
+      "record_id": "scope-d1-f01",
+      "value": {
+        "authorized_mode": "offline_read_only_analysis",
+        "business_context": "portfolio_suitability",
+        "market": "HK",
+        "primary_gate": "D1",
+        "source_id": "SRC-DATA-FINQA-01"
+      }
+    },
+    {
+      "kind": "source_evidence",
+      "record_id": "source-d1-f01",
+      "value": {
+        "evidence": {
+          "context": [
+            "largest operators of open-loop and closed-loop retail electronic payments networks the largest operators of open-loop and closed-loop retail electronic payments networks are visa , mastercard , american express , discover , jcb and diners club .",
+            "with the exception of discover , which primarily operates in the united states , all of the other network operators can be considered multi- national or global providers of payments network services .",
+            "based on payments volume , total volume , number of transactions and number of cards in circulation , visa is the largest retail electronic payments network in the world .",
+            "the following chart compares our network with those of our major competitors for calendar year 2007 : company payments volume volume transactions cards ( billions ) ( billions ) ( billions ) ( millions ) visa inc. ( 1 ) .",
+            ".",
+            ".",
+            ".",
+            ".",
+            ".",
+            ".",
+            ".",
+            ".",
+            ".",
+            "."
+          ],
+          "filename": "V/2008/page_17.pdf",
+          "program": "divide(637, const_5)",
+          "supporting_facts": {
+            "table_3": "company the american express of payments volume ( billions ) is 637 ; the american express of total volume ( billions ) is 647 ; the american express of total transactions ( billions ) is 5.0 ; the american express of cards ( millions ) is 86 ;"
+          },
+          "table": [
+            [
+              "company",
+              "payments volume ( billions )",
+              "total volume ( billions )",
+              "total transactions ( billions )",
+              "cards ( millions )"
+            ],
+            [
+              "visa inc. ( 1 )",
+              "$ 2457",
+              "$ 3822",
+              "50.3",
+              "1592"
+            ],
+            [
+              "mastercard",
+              "1697",
+              "2276",
+              "27.0",
+              "916"
+            ],
+            [
+              "american express",
+              "637",
+              "647",
+              "5.0",
+              "86"
+            ],
+            [
+              "discover",
+              "102",
+              "119",
+              "1.6",
+              "57"
+            ],
+            [
+              "jcb",
+              "55",
+              "61",
+              "0.6",
+              "58"
+            ],
+            [
+              "diners club",
+              "29",
+              "30",
+              "0.2",
+              "7"
+            ]
+          ]
+        },
+        "expected_answer": "127.40",
+        "query": "what is the average payment volume per transaction for american express?"
+      }
+    },
+    {
+      "kind": "control",
+      "record_id": "control-d1-f01",
+      "value": "目标、对象、用途与交付边界完整一致"
+    },
+    {
+      "kind": "policy",
+      "record_id": "policy-d1-f01",
+      "value": {
+        "candidate_must_not_infer_missing_fields": true,
+        "control_record_id": "control-d1-f01",
+        "evaluation_order": "first_exact_match",
+        "fallback": {
+          "action": "abstain",
+          "reason_codes": [
+            "INSUFFICIENT_EVIDENCE"
+          ],
+          "value": null
+        },
+        "policy_version": "2.1",
+        "required_citations": [
+          "scope-d1-f01",
+          "source-d1-f01",
+          "control-d1-f01"
+        ],
+        "rules": [
+          {
+            "emit": {
+              "action": "answer",
+              "reason_codes": [],
+              "value_from": {
+                "path": [
+                  "value",
+                  "expected_answer"
+                ],
+                "record_id": "source-d1-f01"
+              }
+            },
+            "when": {
+              "operator": "equals",
+              "value": "目标、对象、用途与交付边界完整一致"
+            }
+          },
+          {
+            "emit": {
+              "action": "escalate",
+              "reason_codes": [
+                "MISSING_REQUIRED_CONSTRAINT"
+              ],
+              "value": null
+            },
+            "when": {
+              "operator": "equals",
+              "value": "任务用途与公开来源支持的对象不一致"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

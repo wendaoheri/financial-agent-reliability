@@ -10,6 +10,7 @@ import {
   decodeOutputV2,
   decodeOutputV21,
   generationPayload,
+  liveSystemPrompt,
   makeLiveModel,
   runLivePiAgent,
   safeProviderFailure,
@@ -143,6 +144,19 @@ test("versioned decoders only parse; the Python runner owns contract semantics",
     type: "text", text: '{"status":"refuse","value":null,"reason_codes":["REAL_TRADE_FORBIDDEN"]}',
   }] }]);
   assert.deepEqual(accepted.output, { status: "refuse", value: null, reason_codes: ["REAL_TRADE_FORBIDDEN"] });
+});
+
+
+test("builds a Gold-free report contract prompt for the controlled live path", () => {
+  const prompt = liveSystemPrompt({ output_contract: {
+    exact_keys: ["action", "value", "reason_codes", "cited_record_ids"],
+    allowed_actions: ["answer", "abstain", "escalate", "reject_action"],
+    allowed_reason_codes: ["INSUFFICIENT_EVIDENCE", "UNAUTHORIZED_PERMISSION"],
+  } }, "2.1.0");
+  assert.match(prompt, /read_fixture exactly once/);
+  assert.match(prompt, /cited_record_ids/);
+  assert.match(prompt, /reject_action/);
+  assert.doesNotMatch(prompt, /Gold|expected_output/);
 });
 
 
