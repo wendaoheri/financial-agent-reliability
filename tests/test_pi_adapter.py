@@ -18,6 +18,7 @@ TASKS = ROOT / "tasks" / "dev" / "tasks.jsonl"
 PI_CONFIG = ROOT / "configs" / "pi-offline.json"
 PI_LIVE_CONFIG = ROOT / "configs" / "pi-bailian-pilot.json"
 PI_CALIBRATION_CONFIG = ROOT / "configs" / "pi-bailian-calibration-v2.json"
+PI_CONTRACT_V21_CONFIG = ROOT / "configs" / "pi-bailian-calibration-v3.json"
 PHASE0_SLICES = ("fundamentals", "news_filings", "portfolio")
 
 
@@ -183,6 +184,14 @@ class PiAgentOfflineTests(unittest.TestCase):
         self.assertEqual(plan["matrix_cells"], 8)
         self.assertEqual(plan["request_ceiling"]["preflight"], 4)
         self.assertEqual(plan["request_ceiling"]["matrix"], 16)
+
+    def test_v21_config_is_additive_and_enables_all_four_candidates(self):
+        candidates = load_candidates(PI_CONTRACT_V21_CONFIG)
+        self.assertEqual(len(candidates), 4)
+        self.assertEqual(
+            {candidate.config["output_contract_version"] for candidate in candidates},
+            {"2.1.0"},
+        )
 
     def test_filtered_model_run_accepts_bound_preflight_superset(self):
         candidates = load_candidates(PI_CALIBRATION_CONFIG)

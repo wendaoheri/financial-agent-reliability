@@ -364,8 +364,10 @@ def load_candidates(path: pathlib.Path) -> list[Candidate]:
                 raise BenchInputError("pi-agent-live requires exactly two provider turns per cell")
             if values["adapter"] == "pi-agent-live" and config.get(
                 "output_contract_version", "1.0.0"
-            ) not in {"1.0.0", "2.0.0"}:
-                raise BenchInputError("pi-agent-live output contract must be 1.0.0 or 2.0.0")
+            ) not in {"1.0.0", "2.0.0", "2.1.0"}:
+                raise BenchInputError(
+                    "pi-agent-live output contract must be 1.0.0, 2.0.0, or 2.1.0"
+                )
         candidates.append(Candidate(config=config, source_path=path.resolve(), **values))
         seen.add(values["id"])
     coordinates = {(candidate.model, candidate.agent) for candidate in candidates}

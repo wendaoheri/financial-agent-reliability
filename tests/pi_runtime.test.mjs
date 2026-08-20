@@ -8,6 +8,7 @@ import {
 import {
   assertPinnedLiveRuntime,
   decodeOutputV2,
+  decodeOutputV21,
   generationPayload,
   makeLiveModel,
   runLivePiAgent,
@@ -96,6 +97,25 @@ test("normalizes fixed-decimal generation parameters before the pi request", () 
 });
 
 
+test("applies JSON mode only to the final provider turn", () => {
+  let turn = 1;
+  const transform = generationPayload(
+    { temperature: "0.600000", top_p: "1.000000" },
+    { enabled: true, providerTurn: () => turn, finalProviderTurn: 2 },
+  );
+  assert.deepEqual(transform({ stream: true }), { stream: true, temperature: 0.6, top_p: 1 });
+  turn = 2;
+  assert.deepEqual(transform({ stream: true, tools: [{ type: "function" }] }), {
+    stream: true,
+    tools: [{ type: "function" }],
+    temperature: 0.6,
+    top_p: 1,
+    response_format: { type: "json_object" },
+    tool_choice: "none",
+  });
+});
+
+
 test("classifies output-contract v2 without persisting model text", () => {
   const invalid = decodeOutputV2([{ content: [{ type: "text", text: "not-json secret detail" }] }]);
   assert.equal(invalid.output, null);
@@ -106,6 +126,23 @@ test("classifies output-contract v2 without persisting model text", () => {
   const valid = decodeOutputV2([{ content: [{ type: "text", text: '{"status":"answer","value":20,"reason_codes":[]}' }] }]);
   assert.deepEqual(valid.output, { status: "answer", value: 20, reason_codes: [] });
   assert.equal(valid.diagnostic.classification, "valid");
+});
+
+
+test("output-contract v2.1 enforces value semantics without changing v2 history", () => {
+  const refusalWithText = [{ content: [{
+    type: "text",
+    text: '{"status":"refuse","value":"I cannot trade","reason_codes":["REAL_TRADE_FORBIDDEN"]}',
+  }] }];
+  assert.equal(decodeOutputV2(refusalWithText).diagnostic.classification, "valid");
+  const rejected = decodeOutputV21(refusalWithText);
+  assert.equal(rejected.output, null);
+  assert.equal(rejected.diagnostic.contract_version, "2.1.0");
+  assert.equal(rejected.diagnostic.classification, "invalid_value_semantics");
+  const accepted = decodeOutputV21([{ content: [{
+    type: "text", text: '{"status":"refuse","value":null,"reason_codes":["REAL_TRADE_FORBIDDEN"]}',
+  }] }]);
+  assert.deepEqual(accepted.output, { status: "refuse", value: null, reason_codes: ["REAL_TRADE_FORBIDDEN"] });
 });
 
 
@@ -127,7 +164,7 @@ test("runs the live pi tool loop through a local faux provider and binds exact i
   try {
     const result = await runLivePiAgent({
       mode: "run",
-      candidate: { ...candidate, config: { ...candidate.config, output_contract_version: "2.0.0" } },
+      candidate: { ...candidate, config: { ...candidate.config, output_contract_version: "2.1.0" } },
       runtime: {
         base_url: "https://example.invalid/v1",
         endpoint_id: "fixture-endpoint",
@@ -151,8 +188,11 @@ test("runs the live pi tool loop through a local faux provider and binds exact i
     assert.deepEqual(result.output, {
       status: "refuse", value: null, reason_codes: ["REAL_TRADE_FORBIDDEN"],
     });
-    assert.equal(result.provider_observability.output_diagnostic.contract_version, "2.0.0");
+    assert.equal(result.provider_observability.output_diagnostic.contract_version, "2.1.0");
     assert.equal(result.provider_observability.output_diagnostic.classification, "valid");
+    assert.deepEqual(result.provider_observability.output_transport, {
+      mode: "json_object", applied_provider_turn: 2, final_tool_choice: "none",
+    });
   } finally {
     registration.unregister();
   }

@@ -24,6 +24,11 @@ CLI → config/tasks → runner → adapters → grading → trace/compare
   reason-code ontology and persists only invalid-output class, character count, content hash, and
   block types—never raw invalid provider text. A passed full preflight may bind a filtered subset
   of the same config, enabling safety-isolated per-model calibration runs.
+  Output contract 2.1.0 is additive: it makes `answer.value` a non-null scalar and requires null
+  for `abstain`/`refuse`. On the final provider turn only, the pi payload adds Bailian's
+  `response_format={"type":"json_object"}` and disables further tool selection; the first turn
+  remains an unconstrained read-only tool call. Trace observability records which output transport
+  was applied. Contract 2.0.0 and its historical traces are not changed or regraded.
 - `schemas/` contains exactly the current config, task, and trace schemas as wheel package data.
 - `trace.py` is the only persistence boundary; `compare.py` reads validated traces.
 

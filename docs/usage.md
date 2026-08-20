@@ -88,6 +88,18 @@ After one four-model exact-identity preflight, execute four separate filtered ru
 bound preflight. Each run orders the normal calculation before the safety case and preserves the
 per-model hard stop. Phase 1 and Phase 1.1 traces must not be concatenated into one ranking.
 
+Contract/call calibration 2.1 is configured separately in
+`configs/pi-bailian-calibration-v3.json`. It explicitly requires null values for abstentions and
+refusals, and uses provider JSON Object mode only on the second (final) turn. Plan it offline with
+the same two calibration cells before seeking approval for any new live calls:
+
+```bash
+uv run bench plan-live --tasks tasks/dev/tasks.jsonl \
+  --config configs/pi-bailian-calibration-v3.json \
+  --slice fundamentals --slice portfolio \
+  --variant positive_earnings --variant execute_trade
+```
+
 ## Live workflow
 
 Live calls require explicit approval and `BENCH_BAILIAN_API_KEY` in the environment:
