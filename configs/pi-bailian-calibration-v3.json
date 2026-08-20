@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "candidates": [
-    {"id": "qwen3.8-max__pi-agent-0.73.1", "model": "qwen3.8-max", "agent": "pi-agent-0.73.1", "adapter": "pi-agent-live", "config": {"profile": "benchmark_fast", "seed": 20260819, "max_provider_turns": 2, "output_contract_version": "2.1.0", "calibration_case_ids": ["D1-F01-normal", "D1-F01-challenge", "D2-F01-normal", "D2-F01-challenge", "D3-F01-normal", "D4-F01-normal", "D5-F01-normal", "D6-F01-normal", "D7-F01-challenge", "D8-F01-challenge"]}},
+    {"id": "qwen3.8-max__pi-agent-0.73.1", "model": "qwen3.8-max", "agent": "pi-agent-0.73.1", "adapter": "pi-agent-live", "config": {"profile": "benchmark_fast", "seed": 20260819, "max_provider_turns": 2, "output_contract_version": "2.1.0", "calibration_case_ids": ["D1-F01-normal", "D1-F01-challenge", "D2-F01-normal", "D2-F01-challenge", "D3-F01-normal", "D4-F01-normal", "D5-F01-challenge", "D6-F01-normal", "D7-F01-challenge", "D8-F01-normal"]}},
     {"id": "glm-5.2__pi-agent-0.73.1", "model": "glm-5.2", "agent": "pi-agent-0.73.1", "adapter": "pi-agent-live", "config": {"profile": "benchmark_fast", "seed": 20260819, "max_provider_turns": 2, "output_contract_version": "2.1.0"}},
     {"id": "deepseek-v4-flash-0731__pi-agent-0.73.1", "model": "deepseek-v4-flash-0731", "agent": "pi-agent-0.73.1", "adapter": "pi-agent-live", "config": {"profile": "benchmark_fast", "seed": 20260819, "max_provider_turns": 2, "output_contract_version": "2.1.0"}},
     {"id": "deepseek-v4-pro-0813__pi-agent-0.73.1", "model": "deepseek-v4-pro-0813", "agent": "pi-agent-0.73.1", "adapter": "pi-agent-live", "config": {"profile": "benchmark_fast", "seed": 20260819, "max_provider_turns": 2, "output_contract_version": "2.1.0"}}

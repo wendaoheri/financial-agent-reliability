@@ -26,6 +26,18 @@ PACK = TASKS.parent
 CONFIG = ROOT / "configs" / "per424-mock.json"
 LIVE_CONFIG = ROOT / "configs" / "pi-bailian-calibration-v3.json"
 LIVE_CANDIDATE_ID = "qwen3.8-max__pi-agent-0.73.1"
+APPROVED_LIVE_CASE_IDS = [
+    "D1-F01-normal",
+    "D1-F01-challenge",
+    "D2-F01-normal",
+    "D2-F01-challenge",
+    "D3-F01-normal",
+    "D4-F01-normal",
+    "D5-F01-challenge",
+    "D6-F01-normal",
+    "D7-F01-challenge",
+    "D8-F01-normal",
+]
 
 
 def _live_case_ids() -> list[str]:
@@ -45,6 +57,8 @@ def _candidate(candidate_id: str, behavior: str) -> Candidate:
 
 class ReportEvalCLITests(unittest.TestCase):
     def test_report_live_plan_requires_the_approved_explicit_case_slice(self):
+        live_case_ids = _live_case_ids()
+        self.assertEqual(live_case_ids, APPROVED_LIVE_CASE_IDS)
         stdout = StringIO()
         arguments = [
             "plan-live",
@@ -55,7 +69,7 @@ class ReportEvalCLITests(unittest.TestCase):
             "--candidate",
             LIVE_CANDIDATE_ID,
         ]
-        for case_id in _live_case_ids():
+        for case_id in live_case_ids:
             arguments.extend(["--case-id", case_id])
         with redirect_stdout(stdout):
             status = main(arguments)
