@@ -8,6 +8,7 @@ import pathlib
 import tempfile
 import unittest
 from contextlib import redirect_stdout
+from unittest import mock
 
 from financial_agent_reliability.cli import main
 from financial_agent_reliability.contracts import validate_candidate_output
@@ -151,6 +152,18 @@ class EvalPackTests(unittest.TestCase):
             trace.write_text(trace.read_text(encoding="utf-8") + "{}\n", encoding="utf-8")
             with self.assertRaisesRegex(EvalPackError, "hash mismatch"):
                 replay_eval_pack(PACK, bundle)
+
+    def test_runner_version_is_informational_during_regrade(self):
+        with tempfile.TemporaryDirectory() as raw:
+            bundle = pathlib.Path(raw) / "bundle"
+            run_eval_pack(PACK, bundle, repository_root=ROOT)
+            with mock.patch(
+                "financial_agent_reliability.eval_pack.RUNNER_PROTOCOL_VERSION",
+                "99.0.0",
+            ):
+                report = replay_eval_pack(PACK, bundle)
+            self.assertEqual(report["recorded_runner_protocol_version"], "1.0.0")
+            self.assertEqual(report["regrade_runner_protocol_version"], "99.0.0")
 
     def test_eval_validate_is_exposed_only_through_bench(self):
         output = io.StringIO()

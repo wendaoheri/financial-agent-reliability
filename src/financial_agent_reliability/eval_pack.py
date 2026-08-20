@@ -763,8 +763,6 @@ def replay_eval_pack(pack_directory: pathlib.Path, bundle: pathlib.Path) -> dict
     ).hexdigest()
     if manifest.get("eval_pack_id") != eval_pack_id:
         raise EvalPackError("bundle Eval Pack ID differs from the supplied assets")
-    if manifest.get("runner_protocol_version") != RUNNER_PROTOCOL_VERSION:
-        raise EvalPackError("bundle runner protocol is not supported")
 
     paths = _pack_paths(pack_directory)
     task_set = _load(paths["tasks"])
@@ -797,6 +795,9 @@ def replay_eval_pack(pack_directory: pathlib.Path, bundle: pathlib.Path) -> dict
     version = traces[0]["versions"]
     if version.get("eval_pack_id") != eval_pack_id:
         raise EvalPackError("trace Eval Pack ID differs from the supplied assets")
+    recorded_runner_version = manifest.get("runner_protocol_version")
+    if version.get("runner_protocol_version") != recorded_runner_version:
+        raise EvalPackError("bundle runner coordinates are internally inconsistent")
 
     failures: list[dict[str, str]] = []
     for persisted in traces:
@@ -840,7 +841,8 @@ def replay_eval_pack(pack_directory: pathlib.Path, bundle: pathlib.Path) -> dict
         "artifacts_verified": len(registered),
         "traces_regraded": len(traces),
         "eval_pack_id": eval_pack_id,
-        "runner_protocol_version": RUNNER_PROTOCOL_VERSION,
+        "recorded_runner_protocol_version": recorded_runner_version,
+        "regrade_runner_protocol_version": RUNNER_PROTOCOL_VERSION,
         "outcome_counts": aggregate["overall"]["outcome_counts"],
         "csr_denominator": aggregate["overall"]["csr_denominator"],
         "invalid_runs_excluded": aggregate["overall"]["invalid_runs_excluded"],
