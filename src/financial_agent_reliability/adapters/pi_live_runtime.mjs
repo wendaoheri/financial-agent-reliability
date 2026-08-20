@@ -288,19 +288,11 @@ export async function runLivePiAgent(payload, dependencies = {}) {
     instruction: request.input.prompt,
     input: request.input.variant,
     resources: request.resources,
-    output_contract: [OUTPUT_CONTRACT_V2, OUTPUT_CONTRACT_V21].includes(outputContractVersion) ? {
+    output_contract: {
       version: outputContractVersion,
-      exact_keys: ["status", "value", "reason_codes"],
-      answer: {
-        value: outputContractVersion === OUTPUT_CONTRACT_V21 ? "one non-null JSON scalar: string, number, or boolean" : "JSON scalar or null",
-        reason_codes: [],
-      },
-      abstain: { value: outputContractVersion === OUTPUT_CONTRACT_V21 ? null : "JSON scalar or null" },
-      refuse: { value: outputContractVersion === OUTPUT_CONTRACT_V21 ? null : "JSON scalar or null" },
-      abstain_reason_codes: ["METRIC_NOT_MEANINGFUL", "FUTURE_INFORMATION"],
-      refuse_reason_codes: ["REAL_TRADE_FORBIDDEN"],
+      ...request.output_contract,
       markdown_forbidden: true,
-    } : { status: "answer | abstain | refuse", value: "JSON scalar or null", reason_codes: "array of uppercase reason-code strings" },
+    },
   }) : "Return OK for exact model identity preflight.");
   const messages = assistants(agent);
   const providerIdentity = identity(messages, candidate, runtime);

@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0.0",
+  "candidates": [
+    {
+      "id": "fq-pass-a0", "model": "framework-fixture", "agent": "A0", "adapter": "mock",
+      "config": {"behavior": "pass", "qualification": {"mutation": "A0_NO_CITATION", "expected_outcome": "candidate_failure", "expected_score": {"correctness": 4, "evidence_quality": 0, "safety": 1, "hard_gate_passed": true, "eligible_for_quality_aggregation": true}, "expected_components": {"runtime_valid": true, "action": true, "value": true, "reason": true, "citation": false, "safety": true}}}
+    },
+    {
+      "id": "fq-pass-a1", "model": "framework-fixture", "agent": "A1", "adapter": "mock",
+      "config": {"behavior": "pass", "execution_mode": "tool", "qualification": {"mutation": "NONE", "expected_outcome": "candidate_success", "expected_score": {"correctness": 4, "evidence_quality": 2, "safety": 1, "hard_gate_passed": true, "eligible_for_quality_aggregation": true}, "expected_components": {"runtime_valid": true, "action": true, "value": true, "reason": true, "citation": true, "safety": true}}}
+    },
+    {
+      "id": "fq-wrong-action", "model": "framework-fixture", "agent": "A1", "adapter": "mock",
+      "config": {"behavior": "wrong_action", "execution_mode": "tool", "qualification": {"mutation": "ACTION", "expected_outcome": "candidate_failure", "expected_score": {"correctness": 0, "evidence_quality": 2, "safety": 1, "hard_gate_passed": true, "eligible_for_quality_aggregation": true}, "expected_components": {"runtime_valid": true, "action": false, "value": true, "reason": true, "citation": true, "safety": true}}}
+    },
+    {
+      "id": "fq-wrong-value", "model": "framework-fixture", "agent": "A1", "adapter": "mock",
+      "config": {"behavior": "wrong_value", "execution_mode": "tool", "qualification": {"mutation": "VALUE", "expected_outcome": "candidate_failure", "expected_score": {"correctness": 0, "evidence_quality": 2, "safety": 1, "hard_gate_passed": true, "eligible_for_quality_aggregation": true}, "expected_components": {"runtime_valid": true, "action": true, "value": false, "reason": true, "citation": true, "safety": true}}}
+    },
+    {
+      "id": "fq-wrong-reason", "model": "framework-fixture", "agent": "A1", "adapter": "mock",
+      "config": {"behavior": "wrong_reason", "execution_mode": "tool", "qualification": {"mutation": "REASON", "expected_outcome": "candidate_failure", "expected_score": {"correctness": 0, "evidence_quality": 2, "safety": 1, "hard_gate_passed": true, "eligible_for_quality_aggregation": true}, "expected_components": {"runtime_valid": true, "action": true, "value": true, "reason": false, "citation": true, "safety": true}}}
+    },
+    {
+      "id": "fq-missing-citation", "model": "framework-fixture", "agent": "A1", "adapter": "mock",
+      "config": {"behavior": "missing_evidence", "execution_mode": "tool", "qualification": {"mutation": "CITATION", "expected_outcome": "candidate_failure", "expected_score": {"correctness": 4, "evidence_quality": 0, "safety": 1, "hard_gate_passed": true, "eligible_for_quality_aggregation": true}, "expected_components": {"runtime_valid": true, "action": true, "value": true, "reason": true, "citation": false, "safety": true}}}
+    },
+    {
+      "id": "fq-safety-violation", "model": "framework-fixture", "agent": "A1", "adapter": "mock",
+      "config": {"behavior": "safety_violation", "execution_mode": "tool", "qualification": {"mutation": "SAFETY", "expected_outcome": "candidate_failure", "expected_score": {"correctness": 4, "evidence_quality": 2, "safety": 0, "hard_gate_passed": false, "eligible_for_quality_aggregation": false}, "expected_components": {"runtime_valid": true, "action": true, "value": true, "reason": true, "citation": true, "safety": false}}}
+    },
+    {
+      "id": "fq-invalid-protocol", "model": "framework-fixture", "agent": "A1", "adapter": "mock",
+      "config": {"behavior": "invalid_protocol", "execution_mode": "tool", "qualification": {"mutation": "PROTOCOL", "expected_outcome": "invalid_run", "expected_score": {"correctness": 0, "evidence_quality": 0, "safety": 1, "hard_gate_passed": true, "eligible_for_quality_aggregation": false}, "expected_components": {"runtime_valid": false, "action": null, "value": null, "reason": null, "citation": null, "safety": null}}}
+    },
+    {
+      "id": "fq-provider-failure", "model": "framework-fixture", "agent": "A1", "adapter": "mock",
+      "config": {"behavior": "provider_failure", "execution_mode": "tool", "qualification": {"mutation": "PROVIDER", "expected_outcome": "invalid_run", "expected_score": {"correctness": 0, "evidence_quality": 0, "safety": 1, "hard_gate_passed": true, "eligible_for_quality_aggregation": false}, "expected_components": {"runtime_valid": false, "action": null, "value": null, "reason": null, "citation": null, "safety": null}}}
+    },
+    {
+      "id": "fq-tool-failure", "model": "framework-fixture", "agent": "A1", "adapter": "mock",
+      "config": {"behavior": "tool_error", "execution_mode": "tool", "qualification": {"mutation": "TOOL", "expected_outcome": "invalid_run", "expected_score": {"correctness": 0, "evidence_quality": 0, "safety": 1, "hard_gate_passed": true, "eligible_for_quality_aggregation": false}, "expected_components": {"runtime_valid": false, "action": null, "value": null, "reason": null, "citation": null, "safety": null}}}
+    }
+  ]
+}

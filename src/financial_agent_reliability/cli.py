@@ -27,6 +27,11 @@ from financial_agent_reliability.models import (
     load_candidates,
     load_tasks,
 )
+from financial_agent_reliability.qualification import (
+    QualificationError,
+    replay_qualification,
+    run_qualification,
+)
 from financial_agent_reliability.runner import run_matrix, version_coordinates
 from financial_agent_reliability.security import scan_persisted_value_for_secrets
 from financial_agent_reliability.trace import append_traces, read_traces
@@ -68,6 +73,25 @@ def _parser() -> argparse.ArgumentParser:
     run.add_argument(
         "--candidate", action="append", dest="candidate_ids", help="run only this candidate id"
     )
+
+    qualify = subparsers.add_parser(
+        "qualify", help="run the offline framework qualification mutation matrix"
+    )
+    qualify.add_argument("--tasks", type=pathlib.Path, required=True)
+    qualify.add_argument("--config", type=pathlib.Path, required=True)
+    qualify.add_argument("--output-dir", type=pathlib.Path, required=True)
+    qualify.add_argument("--run-id", required=True)
+    qualify.add_argument("--slice", action="append", dest="slices")
+    qualify.add_argument("--variant", action="append", dest="variants")
+
+    replay = subparsers.add_parser(
+        "qualify-replay", help="verify and deterministically regrade a qualification bundle"
+    )
+    replay.add_argument("--tasks", type=pathlib.Path, required=True)
+    replay.add_argument("--config", type=pathlib.Path, required=True)
+    replay.add_argument("--bundle", type=pathlib.Path, required=True)
+    replay.add_argument("--slice", action="append", dest="slices")
+    replay.add_argument("--variant", action="append", dest="variants")
 
     soak = subparsers.add_parser(
         "soak", help="run or resume a durable long-horizon pi harness qualification"
@@ -240,7 +264,15 @@ def _filtered(
 def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     try:
-        if args.command in {"validate", "preflight", "plan-live", "run", "soak"}:
+        if args.command in {
+            "validate",
+            "preflight",
+            "plan-live",
+            "run",
+            "soak",
+            "qualify",
+            "qualify-replay",
+        }:
             if args.command != "preflight":
                 tasks = load_tasks(args.tasks)
             candidates = load_candidates(args.config)
@@ -329,6 +361,35 @@ def main(argv: list[str] | None = None) -> int:
                 end="",
             )
             return 0 if not failed else 1
+        if args.command in {"qualify", "qualify-replay"}:
+            tasks = _filtered(
+                tasks, args.slices, lambda task: task.get("task_card", {}).get("slice"), "slice"
+            )
+            tasks = _filtered(
+                tasks,
+                args.variants,
+                lambda task: task.get("task_card", {}).get("variant"),
+                "variant",
+            )
+            if args.command == "qualify":
+                versions = version_coordinates(
+                    repository_root=pathlib.Path.cwd(),
+                    tasks_path=args.tasks,
+                    config_path=args.config,
+                )
+                manifest = run_qualification(
+                    tasks,
+                    candidates,
+                    repository_root=pathlib.Path.cwd(),
+                    output_directory=args.output_dir,
+                    run_id=args.run_id,
+                    versions=versions,
+                )
+                print(_render({**manifest, "output": str(args.output_dir)}), end="")
+                return 0
+            report = replay_qualification(tasks, candidates, args.bundle)
+            print(_render(report), end="")
+            return 0
         if args.command == "soak":
             tasks = _filtered(
                 tasks, args.slices, lambda task: task.get("task_card", {}).get("slice"), "slice"
@@ -380,7 +441,7 @@ def main(argv: list[str] | None = None) -> int:
                 args.output.write_text(rendered, encoding="utf-8")
             print(rendered, end="")
             return 0
-    except (BenchInputError, OSError, ValueError) as exc:
+    except (BenchInputError, QualificationError, OSError, ValueError) as exc:
         print(_render({"status": "error", "error": str(exc)}), end="", file=sys.stderr)
         return 2
     return 2
