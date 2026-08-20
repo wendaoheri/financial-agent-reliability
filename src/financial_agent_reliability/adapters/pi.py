@@ -212,32 +212,13 @@ class PiAgentLiveAdapter:
         }
 
     def preflight(self, candidate: Candidate) -> dict[str, object]:
-        runtime, config_sha256 = self._runtime(candidate)
-        payload = {
-            "mode": "preflight",
-            "candidate": self._candidate_payload(candidate),
-            "runtime": {**runtime, "max_provider_turns": 1},
-        }
-        started = time.perf_counter()
-        result = self._invoke(payload, float(runtime["timeout_ms"]) / 1000 + 5)
-        identity = result.get("provider_identity")
-        passed = (
-            result.get("error") is None
-            and isinstance(identity, dict)
-            and identity.get("exact_match") is True
-        )
-        return {
-            "model": candidate.model,
-            "status": "passed" if passed else "blocked",
-            "failure_type": None
-            if passed
-            else str((result.get("error") or {}).get("code", "identity_mismatch")).lower(),
-            "identity": identity,
-            "latency_ms": max(0, round((time.perf_counter() - started) * 1000)),
-            "usage": result.get("usage") or {"input_tokens": 0, "output_tokens": 0},
-            "config_sha256": config_sha256,
-            "generation_profile": runtime["generation_profile"],
-        }
+        # pi-ai stores the requested model in AssistantMessage.model and only
+        # populates responseModel when the provider returns a *different* ID.
+        # Use the minimal direct transport here so the bound preflight retains
+        # affirmative exact-response identity evidence from the raw SSE model.
+        from financial_agent_reliability.adapters.core import BailianLiveAdapter
+
+        return BailianLiveAdapter(self._root, env=self._env).preflight(candidate)
 
     def execute(
         self, request: CandidateRequest, candidate: Candidate, tools: OfflineMockTools

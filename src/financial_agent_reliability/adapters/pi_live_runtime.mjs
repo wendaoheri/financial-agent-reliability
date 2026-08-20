@@ -40,8 +40,9 @@ export function makeLiveModel(runtime, candidate) {
     compat: {
       supportsDeveloperRole: false,
       supportsReasoningEffort: false,
+      supportsStore: false,
       supportsStrictMode: false,
-      supportsUsageInStreaming: true,
+      supportsUsageInStreaming: false,
       maxTokensField: "max_tokens",
     },
   };
@@ -62,7 +63,9 @@ function assistants(agent) {
 }
 
 function identity(messages, candidate, runtime) {
-  const responseModels = messages.map((message) => message.responseModel ?? null);
+  // pi-ai preserves an explicit responseModel only when it differs from the
+  // requested model. Exact responses retain message.model.
+  const responseModels = messages.map((message) => message.responseModel ?? message.model ?? null);
   return {
     requested_model: candidate.model,
     response_model: responseModels.at(-1) ?? null,
@@ -98,7 +101,7 @@ function decodeOutput(messages) {
 function generationPayload(parameters) {
   return (payload) => {
     const next = { ...payload };
-    for (const key of ["seed", "temperature", "top_p", "enable_thinking", "reasoning_effort", "thinking_budget"]) {
+    for (const key of ["max_tokens", "seed", "temperature", "top_p", "enable_thinking", "reasoning_effort", "thinking_budget"]) {
       if (key in parameters) next[key] = parameters[key];
     }
     return next;
@@ -175,10 +178,13 @@ export async function runLivePiAgent(payload, dependencies = {}) {
   }) : "Return OK for exact model identity preflight.");
   const messages = assistants(agent);
   const providerIdentity = identity(messages, candidate, runtime);
+  const providerError = messages.find((message) => message.stopReason === "error");
   const thinking = messages.flatMap((message) => message.content.filter((block) => block.type === "thinking").map((block) => block.thinking)).join("");
   let output = null;
   let error = null;
-  if (!providerIdentity.exact_match) {
+  if (providerError) {
+    error = { code: "PROVIDER_REJECTED_REQUEST", message: "provider rejected the pi request", retryable: false };
+  } else if (!providerIdentity.exact_match) {
     error = { code: "IDENTITY_MISMATCH", message: "exact model identity failed", retryable: false };
   } else if (mode === "run") {
     try { output = decodeOutput(messages); }

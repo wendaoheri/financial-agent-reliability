@@ -67,6 +67,8 @@ test("builds the exact-pinned live model without making a network call", () => {
   assert.equal(model.api, "openai-completions");
   assert.equal(model.id, "fixture-model");
   assert.equal(model.compat.maxTokensField, "max_tokens");
+  assert.equal(model.compat.supportsStore, false);
+  assert.equal(model.compat.supportsUsageInStreaming, false);
 });
 
 
