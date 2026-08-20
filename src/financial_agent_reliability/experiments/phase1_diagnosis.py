@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import pathlib
 from typing import Any
@@ -112,6 +113,38 @@ def diagnose(
         raise ValueError(f"diagnosis failed secret scan: {findings}")
     (output_directory / "diagnosis.json").write_text(
         json.dumps(diagnosis, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    artifact_names = (
+        "trace.jsonl",
+        "aggregate.json",
+        "failure_signatures.json",
+        "manifest.json",
+        "diagnosis.json",
+    )
+    bundle_manifest = {
+        "contract_type": "differential_eval_evidence_bundle_manifest",
+        "contract_version": "2.0.0",
+        "pilot_outcome": diagnosis["outcome"],
+        "artifacts": [
+            {
+                "path": name,
+                "sha256": hashlib.sha256((output_directory / name).read_bytes()).hexdigest(),
+                "size_bytes": (output_directory / name).stat().st_size,
+            }
+            for name in artifact_names
+        ],
+        "security": {
+            "secret_scan_passed": True,
+            "synthetic_read_only": True,
+            "credentials_persisted": False,
+        },
+    }
+    bundle_findings = scan_persisted_value_for_secrets(bundle_manifest)
+    if bundle_findings:
+        raise ValueError(f"bundle manifest failed secret scan: {bundle_findings}")
+    (output_directory / "bundle.manifest.json").write_text(
+        json.dumps(bundle_manifest, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
         encoding="utf-8",
     )
     return diagnosis

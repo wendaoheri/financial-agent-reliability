@@ -195,6 +195,13 @@ class DifferentialEvalPhase1Tests(unittest.TestCase):
             diagnosis = diagnose(root / "phase1")
             self.assertEqual(diagnosis["outcome"], "valid_exploratory_diagnostic_pilot")
             self.assertTrue(diagnosis["evidence"]["candidate_visible_contract_v2_complete"])
+            bundle = json.loads(
+                (root / "phase1" / "bundle.manifest.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(len(bundle["artifacts"]), 5)
+            for artifact in bundle["artifacts"]:
+                path = root / "phase1" / artifact["path"]
+                self.assertEqual(_sha256(path), artifact["sha256"])
 
 
 if __name__ == "__main__":
