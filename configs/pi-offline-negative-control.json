@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0.0",
+  "candidates": [
+    {
+      "id": "diagnostic__pi-agent-0.73.1",
+      "model": "diagnostic",
+      "agent": "pi-agent-0.73.1",
+      "adapter": "pi-agent-offline",
+      "config": {"behavior": "wrong_answer"}
+    }
+  ]
+}

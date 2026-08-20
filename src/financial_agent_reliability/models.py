@@ -305,7 +305,7 @@ def load_candidates(path: pathlib.Path) -> list[Candidate]:
                 raise BenchInputError(f"candidate {index} requires non-empty {key}")
         if values["id"] in seen:
             raise BenchInputError(f"duplicate candidate id: {values['id']}")
-        if values["adapter"] not in {"mock", "bailian-live"}:
+        if values["adapter"] not in {"mock", "pi-agent-offline", "bailian-live"}:
             raise BenchInputError(f"unsupported candidate adapter: {values['adapter']}")
         config = item.get("config", {})
         if not isinstance(config, dict):
@@ -324,6 +324,17 @@ def load_candidates(path: pathlib.Path) -> list[Candidate]:
             }:
                 raise BenchInputError(
                     f"candidate {values['id']} has unsupported mock behavior: {behavior}"
+                )
+        elif values["adapter"] == "pi-agent-offline":
+            if values["agent"] != "pi-agent-0.73.1":
+                raise BenchInputError("pi-agent-offline requires pi-agent-0.73.1")
+            if set(config) - {"behavior"}:
+                raise BenchInputError(
+                    f"candidate {values['id']} has unsupported pi-agent-offline config keys"
+                )
+            if config.get("behavior", "pass") not in {"pass", "wrong_answer"}:
+                raise BenchInputError(
+                    f"candidate {values['id']} has unsupported pi-agent-offline behavior"
                 )
         else:
             if values["agent"] != "plain-agent":

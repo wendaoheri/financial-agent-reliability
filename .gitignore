@@ -8,6 +8,7 @@ dist/
 build/
 *.egg-info/
 runs/
+node_modules/
 
 # Multica agent-runtime / platform-local files — not part of the research project
 .agent_context/
