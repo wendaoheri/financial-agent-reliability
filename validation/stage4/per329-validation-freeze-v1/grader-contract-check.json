@@ -1,7 +1,0 @@
-{
-  "file_hash_mismatches": [],
-  "files": 15,
-  "recomputed_contract_bundle_sha256": "deeed28a5bbaaba537a2568df1c2636f93ec82916245893d712d808e80a3ce44",
-  "recorded_contract_bundle_sha256": "deeed28a5bbaaba537a2568df1c2636f93ec82916245893d712d808e80a3ce44",
-  "status": "pass"
-}

@@ -9,45 +9,45 @@ from contextlib import redirect_stderr, redirect_stdout
 from io import StringIO
 from unittest.mock import patch
 
-from financial_agent_reliability.bench.adapters import (
+from financial_agent_reliability.adapters.core import (
     AdapterResult,
     BailianLiveAdapter,
     CandidateRequest,
     MockAdapter,
     OfflineMockTools,
 )
-from financial_agent_reliability.bench.cli import main
-from financial_agent_reliability.bench.model import (
+from financial_agent_reliability.adapters.http import BailianHTTPError
+from financial_agent_reliability.cli import main
+from financial_agent_reliability.models import (
     BenchInputError,
     audit_taskset,
     load_candidates,
     load_tasks,
     task_validator,
 )
-from financial_agent_reliability.bench.trace import append_traces, read_traces, trace_validator
-from financial_agent_reliability.bench.runner import run_matrix
-from financial_agent_reliability.providers.bailian_http import BailianHTTPError
-
+from financial_agent_reliability.runner import _git_state, run_matrix
+from financial_agent_reliability.trace import append_traces, read_traces, trace_validator
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-TASKS = ROOT / "examples" / "bench" / "mock-tasks.jsonl"
-CANDIDATES = ROOT / "examples" / "bench" / "mock-candidates.json"
-NEGATIVE_CONTROLS = ROOT / "examples" / "bench" / "negative-control-candidates.json"
-AUDIT = ROOT / "examples" / "bench" / "taskset-audit.v0.2.json"
-LIVE_CANDIDATES = ROOT / "examples" / "bench" / "bailian-token-plan-candidates.v0.1.json"
-V2_LIVE_CANDIDATES = ROOT / "examples" / "bench" / "bailian-token-plan-candidates.v0.2.json"
+TASKS = ROOT / "tasks" / "dev" / "tasks.jsonl"
+CANDIDATES = ROOT / "configs" / "mock.json"
+NEGATIVE_CONTROLS = ROOT / "tests" / "fixtures" / "negative-control.json"
+LIVE_CANDIDATES = ROOT / "configs" / "bailian-token-plan.json"
 
 
 class BenchMVPTests(unittest.TestCase):
+    def test_non_git_directory_has_nullable_source_coordinates(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            self.assertEqual(
+                _git_state(pathlib.Path(temporary)),
+                {"commit": None, "dirty": None},
+            )
+
     def test_trace_schema_is_valid_and_checkable(self):
         validator = trace_validator()
         validator.check_schema(validator.schema)
-        legacy_validator = trace_validator("0.1.0")
-        legacy_validator.check_schema(legacy_validator.schema)
-        prior_validator = trace_validator("0.2.0")
-        prior_validator.check_schema(prior_validator.schema)
-        v03_validator = trace_validator("0.3.0")
-        v03_validator.check_schema(v03_validator.schema)
+        with self.assertRaisesRegex(ValueError, "unsupported trace"):
+            trace_validator("0.3.0")
 
     def test_bailian_live_candidate_boundary_and_exact_identity(self):
         candidates = load_candidates(LIVE_CANDIDATES)
@@ -63,9 +63,7 @@ class BenchMVPTests(unittest.TestCase):
                 captured.append(request)
                 return {
                     "model": candidate.model,
-                    "output": json.dumps(
-                        {"status": "answer", "value": 1.5, "reason_codes": []}
-                    ),
+                    "output": json.dumps({"status": "answer", "value": 1.5, "reason_codes": []}),
                     "usage": {"input_tokens": 11, "output_tokens": 7},
                 }
 
@@ -92,8 +90,8 @@ class BenchMVPTests(unittest.TestCase):
         self.assertNotIn("oracle", rendered_request)
         self.assertNotIn("memory-only-test-value", rendered_request)
 
-    def test_v2_live_profile_controls_stream_and_reasoning_without_network(self):
-        candidate = load_candidates(V2_LIVE_CANDIDATES)[0]
+    def test_live_profile_controls_stream_and_reasoning_without_network(self):
+        candidate = load_candidates(LIVE_CANDIDATES)[0]
         captured = []
 
         def transport_factory(_settings, *, timeout_seconds):
@@ -103,9 +101,7 @@ class BenchMVPTests(unittest.TestCase):
                 captured.append(request)
                 return {
                     "model": candidate.model,
-                    "output": json.dumps(
-                        {"status": "answer", "value": 1.5, "reason_codes": []}
-                    ),
+                    "output": json.dumps({"status": "answer", "value": 1.5, "reason_codes": []}),
                     "usage": {"input_tokens": 11, "output_tokens": 7},
                     "stream_metrics": {
                         "mode": "streaming",
@@ -140,8 +136,8 @@ class BenchMVPTests(unittest.TestCase):
         self.assertEqual(profile["resolved"]["reasoning"]["mode"], "on")
         self.assertEqual(result.provider_observability["http"]["request_id"], "fixture-request")
 
-    def test_v2_live_error_retains_sanitized_429_evidence(self):
-        candidate = load_candidates(V2_LIVE_CANDIDATES)[1]
+    def test_live_error_retains_sanitized_429_evidence(self):
+        candidate = load_candidates(LIVE_CANDIDATES)[1]
 
         def transport_factory(_settings, *, timeout_seconds):
             def transport(_request):
@@ -166,7 +162,7 @@ class BenchMVPTests(unittest.TestCase):
         self.assertEqual(result.provider_observability["http"]["request_id"], "request-123")
 
     def test_live_matrix_rotates_models_and_waits_for_minimum_error_sample(self):
-        candidates = load_candidates(V2_LIVE_CANDIDATES)
+        candidates = load_candidates(LIVE_CANDIDATES)
         tasks = load_tasks(TASKS)[:3]
         first_task = tasks[0]["task_id"]
         failing = {candidates[0].id, candidates[1].id}
@@ -185,7 +181,7 @@ class BenchMVPTests(unittest.TestCase):
                 return MockAdapter().execute(request, candidate, tools)
 
         with patch(
-            "financial_agent_reliability.bench.runner.get_adapter",
+            "financial_agent_reliability.runner.get_adapter",
             return_value=FixtureAdapter(),
         ):
             traces = run_matrix(
@@ -206,10 +202,19 @@ class BenchMVPTests(unittest.TestCase):
             output = pathlib.Path(temporary) / "trace.jsonl"
             stderr = StringIO()
             with redirect_stdout(StringIO()), redirect_stderr(stderr):
-                status = main([
-                    "run", "--tasks", str(TASKS), "--candidates", str(LIVE_CANDIDATES),
-                    "--output", str(output), "--run-id", "missing-preflight",
-                ])
+                status = main(
+                    [
+                        "run",
+                        "--tasks",
+                        str(TASKS),
+                        "--config",
+                        str(LIVE_CANDIDATES),
+                        "--output",
+                        str(output),
+                        "--run-id",
+                        "missing-preflight",
+                    ]
+                )
             self.assertEqual(status, 2)
             self.assertIn("requires --preflight", stderr.getvalue())
             self.assertFalse(output.exists())
@@ -217,7 +222,7 @@ class BenchMVPTests(unittest.TestCase):
     def test_validate_accepts_model_agent_axes(self):
         stdout = StringIO()
         with redirect_stdout(stdout):
-            status = main(["validate", "--tasks", str(TASKS), "--candidates", str(CANDIDATES)])
+            status = main(["validate", "--tasks", str(TASKS), "--config", str(CANDIDATES)])
         self.assertEqual(status, 0)
         result = json.loads(stdout.getvalue())
         self.assertEqual(result["status"], "valid")
@@ -237,7 +242,7 @@ class BenchMVPTests(unittest.TestCase):
                         "run",
                         "--tasks",
                         str(TASKS),
-                        "--candidates",
+                        "--config",
                         str(CANDIDATES),
                         "--output",
                         str(trace_path),
@@ -282,14 +287,22 @@ class BenchMVPTests(unittest.TestCase):
             self.assertTrue(all(len(row["tool_calls"]) == 1 for row in tool))
             self.assertTrue(all(row["tool_calls"][0]["action"] == "read" for row in tool))
             self.assertTrue(all(row["tool_calls"][0]["status"] == "ok" for row in tool))
-            self.assertTrue(all(row["metrics"]["cost_usd_estimate"] == "0.000000" for row in traces))
-            self.assertTrue(all(row["score"] == {
-                "correctness": 4,
-                "evidence_quality": 0,
-                "safety": 1,
-                "hard_gate_passed": True,
-                "eligible_for_quality_aggregation": True,
-            } for row in plain))
+            self.assertTrue(
+                all(row["metrics"]["cost_usd_estimate"] == "0.000000" for row in traces)
+            )
+            self.assertTrue(
+                all(
+                    row["score"]
+                    == {
+                        "correctness": 4,
+                        "evidence_quality": 0,
+                        "safety": 1,
+                        "hard_gate_passed": True,
+                        "eligible_for_quality_aggregation": True,
+                    }
+                    for row in plain
+                )
+            )
             self.assertTrue(all(row["score"]["evidence_quality"] == 2 for row in tool))
             self.assertTrue(all(len(row["versions"]["taskset_sha256"]) == 64 for row in traces))
 
@@ -303,7 +316,7 @@ class BenchMVPTests(unittest.TestCase):
                         "run",
                         "--tasks",
                         str(TASKS),
-                        "--candidates",
+                        "--config",
                         str(CANDIDATES),
                         "--output",
                         str(trace_path),
@@ -321,20 +334,20 @@ class BenchMVPTests(unittest.TestCase):
             self.assertEqual(status, 0)
             self.assertEqual(before, after)
             report = json.loads(report_path.read_text(encoding="utf-8"))
-            self.assertEqual(len(report["candidates"]), 4)
-            self.assertTrue(all(row["traces"] == 16 for row in report["candidates"]))
+            self.assertEqual(len(report["by_candidate"]), 4)
+            self.assertTrue(all(row["runs"] == 16 for row in report["by_candidate"]))
             self.assertEqual(len(report["by_slice"]), 8)
             self.assertEqual(len(report["by_variant"]), 16)
             self.assertEqual(len(report["by_model"]), 2)
             self.assertEqual(len(report["by_agent"]), 2)
-            self.assertEqual(report["overall"]["operational_metrics"]["cost_usd_estimate"], "0.000000")
+            self.assertEqual(
+                report["overall"]["operational_metrics"]["cost_usd_estimate"], "0.000000"
+            )
             agent_contrast = next(
-                item for item in report["overall"]["paired_contrasts"]
-                if item["axis"] == "agent"
+                item for item in report["overall"]["paired_contrasts"] if item["axis"] == "agent"
             )
             model_contrast = next(
-                item for item in report["overall"]["paired_contrasts"]
-                if item["axis"] == "model"
+                item for item in report["overall"]["paired_contrasts"] if item["axis"] == "model"
             )
             self.assertEqual(agent_contrast["status"], "identifiable")
             self.assertEqual(agent_contrast["delta_intervals_95"]["evidence_quality"]["mean"], 2.0)
@@ -351,10 +364,21 @@ class BenchMVPTests(unittest.TestCase):
             trace_path = pathlib.Path(temporary) / "trace.jsonl"
             status = main(
                 [
-                    "run", "--tasks", str(TASKS), "--candidates", str(CANDIDATES),
-                    "--output", str(trace_path), "--run-id", "filtered",
-                    "--slice", "portfolio", "--variant", "execute_trade",
-                    "--candidate", "mock-small__plain-agent",
+                    "run",
+                    "--tasks",
+                    str(TASKS),
+                    "--config",
+                    str(CANDIDATES),
+                    "--output",
+                    str(trace_path),
+                    "--run-id",
+                    "filtered",
+                    "--slice",
+                    "portfolio",
+                    "--variant",
+                    "execute_trade",
+                    "--candidate",
+                    "mock-small__plain-agent",
                 ]
             )
             self.assertEqual(status, 1)
@@ -371,10 +395,22 @@ class BenchMVPTests(unittest.TestCase):
                 trace_path = root / f"trace-{index}.jsonl"
                 report_path = root / f"report-{index}.json"
                 with redirect_stdout(StringIO()):
-                    self.assertEqual(main([
-                        "run", "--tasks", str(TASKS), "--candidates", str(CANDIDATES),
-                        "--output", str(trace_path), "--run-id", f"repeat-{index}",
-                    ]), 1)
+                    self.assertEqual(
+                        main(
+                            [
+                                "run",
+                                "--tasks",
+                                str(TASKS),
+                                "--config",
+                                str(CANDIDATES),
+                                "--output",
+                                str(trace_path),
+                                "--run-id",
+                                f"repeat-{index}",
+                            ]
+                        ),
+                        1,
+                    )
                     self.assertEqual(
                         main(["compare", str(trace_path), "--output", str(report_path)]), 0
                     )
@@ -384,11 +420,37 @@ class BenchMVPTests(unittest.TestCase):
     def test_candidate_axes_must_form_a_complete_cartesian_matrix(self):
         with tempfile.TemporaryDirectory() as temporary:
             path = pathlib.Path(temporary) / "candidates.json"
-            path.write_text(json.dumps({"candidates": [
-                {"id": "m1-a1", "model": "m1", "agent": "a1", "adapter": "mock"},
-                {"id": "m1-a2", "model": "m1", "agent": "a2", "adapter": "mock"},
-                {"id": "m2-a1", "model": "m2", "agent": "a1", "adapter": "mock"},
-            ]}), encoding="utf-8")
+            path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "1.0.0",
+                        "candidates": [
+                            {
+                                "id": "m1-a1",
+                                "model": "m1",
+                                "agent": "a1",
+                                "adapter": "mock",
+                                "config": {},
+                            },
+                            {
+                                "id": "m1-a2",
+                                "model": "m1",
+                                "agent": "a2",
+                                "adapter": "mock",
+                                "config": {},
+                            },
+                            {
+                                "id": "m2-a1",
+                                "model": "m2",
+                                "agent": "a1",
+                                "adapter": "mock",
+                                "config": {},
+                            },
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
             with self.assertRaisesRegex(BenchInputError, "matrix is incomplete: m2×a2"):
                 load_candidates(path)
 
@@ -414,11 +476,23 @@ class BenchMVPTests(unittest.TestCase):
             trace_path = root / "trace.jsonl"
             stdout = StringIO()
             with redirect_stdout(stdout):
-                status = main([
-                    "run", "--tasks", str(TASKS), "--candidates", str(NEGATIVE_CONTROLS),
-                    "--output", str(trace_path), "--run-id", "failures",
-                    "--slice", "market_data", "--variant", "valid_book",
-                ])
+                status = main(
+                    [
+                        "run",
+                        "--tasks",
+                        str(TASKS),
+                        "--config",
+                        str(NEGATIVE_CONTROLS),
+                        "--output",
+                        str(trace_path),
+                        "--run-id",
+                        "failures",
+                        "--slice",
+                        "market_data",
+                        "--variant",
+                        "valid_book",
+                    ]
+                )
             self.assertEqual(status, 1)
             self.assertEqual(json.loads(stdout.getvalue())["failed_cells"], 4)
             traces = {row["candidate"]["agent"]: row for row in read_traces([trace_path])}
@@ -437,7 +511,18 @@ class BenchMVPTests(unittest.TestCase):
         cards = [json.loads(line) for line in TASKS.read_text(encoding="utf-8").splitlines()]
         self.assertEqual(
             set(validator.schema["properties"]),
-            {"id", "slice", "prompt", "fixtures", "tools", "budget", "checks", "tags", "variants", "notes"},
+            {
+                "id",
+                "slice",
+                "prompt",
+                "fixtures",
+                "tools",
+                "budget",
+                "checks",
+                "tags",
+                "variants",
+                "notes",
+            },
         )
         self.assertEqual(
             {card["slice"] for card in cards},
@@ -455,13 +540,6 @@ class BenchMVPTests(unittest.TestCase):
         self.assertTrue(all(len(card["variants"]) >= 2 for card in cards))
         self.assertTrue(all(card["tags"]["lifecycle"] == "dev" for card in cards))
 
-    def test_committed_taskset_audit_matches_fresh_machine_checks(self):
-        committed = json.loads(AUDIT.read_text(encoding="utf-8"))
-        fresh = audit_taskset(TASKS)
-        for field in ("cards", "variants", "slices", "lifecycles", "checks"):
-            self.assertEqual(committed[field], fresh[field])
-        self.assertTrue(all(result["passed"] for result in fresh["checks"].values()))
-
     def test_audit_rejects_future_information_and_unpiloted_eval(self):
         cards = [json.loads(line) for line in TASKS.read_text(encoding="utf-8").splitlines()]
         cards[3]["variants"][1]["expected"] = {
@@ -477,23 +555,13 @@ class BenchMVPTests(unittest.TestCase):
         self.assertFalse(audit["checks"]["future_information"]["passed"])
         self.assertFalse(audit["checks"]["eval_without_pilot"]["passed"])
 
-    def test_scoring_contract_keeps_safety_as_hard_gate_and_cost_separate(self):
-        contract_path = ROOT / "src" / "financial_agent_reliability" / "bench" / "contracts" / "scoring-contract.v0.1.json"
-        contract = json.loads(contract_path.read_text(encoding="utf-8"))
-        self.assertEqual(contract["dimensions"]["correctness"]["range"], [0, 4])
-        self.assertEqual(contract["dimensions"]["evidence_quality"]["range"], [0, 2])
-        self.assertEqual(contract["dimensions"]["safety"]["allowed"], [0, 1])
-        self.assertTrue(contract["dimensions"]["safety"]["hard_gate"])
-        self.assertNotIn("latency_ms", contract["dimensions"])
-        self.assertIn("latency_ms", contract["reported_separately"])
-
     def test_tampered_gold_is_rejected_by_oracle_recomputation(self):
         cards = [json.loads(line) for line in TASKS.read_text(encoding="utf-8").splitlines()]
         cards[2]["variants"][0]["expected"]["value"] = 99.0
         with tempfile.TemporaryDirectory() as temporary:
             root = pathlib.Path(temporary)
             (root / "fixtures").mkdir()
-            source_fixture = ROOT / "examples" / "bench" / "fixtures" / "us-filing-synthetic.json"
+            source_fixture = ROOT / "tasks" / "dev" / "fixtures" / "us-filing-synthetic.json"
             (root / "fixtures" / source_fixture.name).write_bytes(source_fixture.read_bytes())
             path = root / "tasks.jsonl"
             path.write_text(json.dumps(cards[2]) + "\n", encoding="utf-8")
@@ -506,19 +574,21 @@ class BenchMVPTests(unittest.TestCase):
             path.write_text(
                 json.dumps(
                     {
+                        "schema_version": "1.0.0",
                         "candidates": [
                             {
                                 "id": "paid",
                                 "model": "live-model",
                                 "agent": "plain",
                                 "adapter": "live",
+                                "config": {},
                             }
-                        ]
+                        ],
                     }
                 ),
                 encoding="utf-8",
             )
-            with self.assertRaisesRegex(BenchInputError, "unsupported candidate adapter"):
+            with self.assertRaisesRegex(BenchInputError, "run config schema failed"):
                 load_candidates(path)
 
     def test_duplicate_task_ids_are_rejected(self):
@@ -535,10 +605,10 @@ class BenchMVPTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             trace_path = pathlib.Path(temporary) / "trace.jsonl"
             trace = {
-                "schema_version": "0.2.0",
+                "schema_version": "0.4.0",
                 "trace_id": "trace",
                 "run_id": "run",
-                "task": {"id": "task", "slice": "legacy", "variant": "default"},
+                "task": {"id": "task", "slice": "market_data", "variant": "default"},
                 "candidate": {
                     "id": "candidate",
                     "model": "mock",
@@ -550,6 +620,8 @@ class BenchMVPTests(unittest.TestCase):
                 },
                 "input": {},
                 "tool_calls": [],
+                "provider_identity": None,
+                "provider_observability": None,
                 "output": {},
                 "error": None,
                 "evidence_refs": [],
@@ -567,9 +639,10 @@ class BenchMVPTests(unittest.TestCase):
                     "input_tokens_estimate": 0,
                     "output_tokens_estimate": 0,
                     "cost_usd_estimate": "0.000000",
+                    "cost_basis": "mock_zero",
                 },
                 "git": {"commit": "0" * 40, "dirty": False},
-                "versions": {"trace_schema_version": "0.2.0"},
+                "versions": {"trace_schema_version": "0.4.0"},
                 "started_at": "2026-08-18T00:00:00Z",
                 "finished_at": "2026-08-18T00:00:00Z",
             }

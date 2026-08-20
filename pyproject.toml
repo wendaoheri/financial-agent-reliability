@@ -1,17 +1,15 @@
 [project]
 name = "financial-agent-reliability"
-version = "0.2.0"
-description = "金融 Agent 可靠性研究:可验证评测 harness、契约体系与冻结证据库"
+version = "0.3.0"
+description = "Offline-first financial model × agent benchmark MVP"
 requires-python = ">=3.11"
-dependencies = [
-    "jsonschema>=4.26.0",
-]
+dependencies = ["jsonschema>=4.26.0"]
 
 [project.scripts]
-bench = "financial_agent_reliability.bench.cli:main"
-fareli-harness = "financial_agent_reliability.harness.cli:main"
-fareli-report = "financial_agent_reliability.reporting.report:main"
-fareli-retro = "financial_agent_reliability.retrospective.cli:main"
+bench = "financial_agent_reliability.cli:main"
+
+[dependency-groups]
+dev = ["ruff>=0.12.0"]
 
 [build-system]
 requires = ["hatchling"]
@@ -22,11 +20,18 @@ packages = ["src/financial_agent_reliability"]
 
 [tool.hatch.build.targets.sdist]
 include = [
-    "src/financial_agent_reliability",
-    "tests",
-    "configs",
-    "baseline",
-    "docs",
-    "README.md",
-    "AGENTS.md",
+  "src/financial_agent_reliability",
+  "configs",
+  "tasks",
+  "tests",
+  "docs",
+  "README.md",
+  "AGENTS.md",
 ]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

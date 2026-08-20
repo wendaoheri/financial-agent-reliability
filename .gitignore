@@ -6,13 +6,7 @@ __pycache__/
 .mypy_cache/
 dist/
 build/
-# PER-323/PER-328: baseline v2 collection-lineage artifacts must be versioned.
-# Negate the generic `build/` rule above for this specific path and its contents,
-# so the manifest-registered artifacts under baseline/v2/build/ are committed.
-!baseline/v2/build/
-!baseline/v2/build/**
 *.egg-info/
-node_modules/
 runs/
 
 # Multica agent-runtime / platform-local files — not part of the research project
