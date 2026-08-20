@@ -4,11 +4,16 @@ The application has one dependency direction:
 
 ```text
 CLI → config/tasks → runner → adapters → grading → trace/compare
+                  ↘ eval pack → shared protocol/grading → trace/aggregate
 ```
 
 - `config.py` validates one run-config file. Credential values are resolved only inside the live
   adapter and are excluded from representations and persisted values.
 - `models.py` validates task cards, fixture boundaries, Gold recomputation, and candidate matrices.
+- `eval_pack.py` validates frozen PER-420 assets from an explicitly supplied directory and emits
+  deterministic zero-network controls. It reuses the central candidate-output validator, grading
+  boundary, outcome classifier, and failure-signature policy; it has no provider adapter or
+  standalone CLI.
 - `runner.py` owns sequential execution, read-only mock tools, version coordinates, grading, and
   failure signatures. Git coordinates are best-effort and nullable for an installed wheel running
   outside a worktree.
@@ -29,8 +34,13 @@ CLI → config/tasks → runner → adapters → grading → trace/compare
   `response_format={"type":"json_object"}` and disables further tool selection; the first turn
   remains an unconstrained read-only tool call. Trace observability records which output transport
   was applied. Contract 2.0.0 and its historical traces are not changed or regraded.
-- `schemas/` contains exactly the current config, task, and trace schemas as wheel package data.
-- `trace.py` is the only persistence boundary; `compare.py` reads validated traces.
+- `schemas/` contains the current config, task, trace, and differential-task schemas as wheel
+  package data.
+- `differential_oracle.py` and `differential_oracle_reference.py` independently recompute PER-420
+  Gold. The task, fixture, scoring, candidate-coordinate, and historical harness assets live
+  together under `tasks/per420/`; the last two are provenance only and are not active run configs.
+- `trace.py` is the normal matrix persistence boundary; `compare.py` reads validated traces. The
+  eval-pack path writes its own closed, hashed offline-control bundle.
 
 There are no compatibility layers. Package resources locate the pi bridge; the adapter receives the
 working directory only to resolve the checked-in Node lock and dependency installation. Historical

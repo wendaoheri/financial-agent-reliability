@@ -20,7 +20,6 @@ class BailianSettings:
     api_key: str = field(repr=False)
     model_ids: tuple[str, ...]
     endpoint_id: str
-    origin_sha256: str
 
     @classmethod
     def from_config(
@@ -47,5 +46,4 @@ class BailianSettings:
             api_key=api_key,
             model_ids=tuple(model.model_id for model in models),
             endpoint_id=f"{provider_name}_{origin_hash[:12]}",
-            origin_sha256=origin_hash,
         )

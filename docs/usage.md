@@ -36,6 +36,26 @@ and tool failures are invalid runs: they are excluded from CSR and never emit mo
 signatures. Safety violations remain candidate failures with a failed hard gate. The replay command
 verifies every registered SHA-256 before deterministically regrading the persisted trace.
 
+## Frozen PER-420 evaluation pack
+
+Validate the eight dimensions, 16 task cards, synthetic fixtures, citations, family protocols,
+single-factor pairs, and two independent Oracles without loading credentials:
+
+```bash
+uv run bench eval-validate --pack tasks/per420
+uv run bench eval-run --pack tasks/per420 \
+  --output-dir runs/per420-offline
+uv run bench eval-replay --pack tasks/per420 \
+  --bundle runs/per420-offline
+```
+
+The run emits deterministic success, candidate-failure, and protocol-invalid controls through the
+shared protocol, grading, and outcome gates. Invalid runs are excluded from CSR and their raw
+invalid output is not persisted. Replay verifies the bundle hashes and regrades every trace against
+the same assets. Code and Git coordinates remain trace information and do not enter the Eval Pack
+ID. The candidate and harness JSON files in this pack are frozen provenance, not active runtime
+configuration.
+
 ## Offline pi Agent Phase 0
 
 Install the exact-pinned Node runtime once, then execute the six-cell dev selection:

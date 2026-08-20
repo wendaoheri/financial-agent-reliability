@@ -4,10 +4,6 @@ Rules enforced here and reused by run configuration loading:
 
 - key names of persisted JSON must not hit ``SECRET_KEYS`` (rule R1);
 - persisted string values must not hit ``SECRET_TEXT`` (rule R2);
-- credential environment-variable NAMES declared in configuration must not
-  contain secret-shaped substrings (``bearer`` / ``sk-`` / ``akid``,
-  case-insensitive) so that the scan gate cannot be baited into false
-  positives or bypasses.
 """
 
 from __future__ import annotations
@@ -25,8 +21,6 @@ SECRET_KEYS: frozenset[str] = frozenset(
 SECRET_TEXT = re.compile(
     r"(?:Bearer\s+[A-Za-z0-9._-]{8,}|sk-[A-Za-z0-9_-]{8,}|AKID[A-Za-z0-9_-]{8,})", re.I
 )
-
-CREDENTIAL_ENV_FORBIDDEN = re.compile(r"(?i)(bearer|sk-|akid)")
 
 
 def scan_persisted_value_for_secrets(value: Any, path: str = "$") -> list[str]:
@@ -48,13 +42,6 @@ def scan_persisted_value_for_secrets(value: Any, path: str = "$") -> list[str]:
     elif isinstance(value, str) and SECRET_TEXT.search(value):
         findings.append(path)
     return findings
-
-
-def check_credential_env_name(name: str, path: str = "$") -> list[str]:
-    """Return findings when a credential environment-variable name is secret-shaped."""
-    if CREDENTIAL_ENV_FORBIDDEN.search(name):
-        return [path]
-    return []
 
 
 def scan_persisted_file(path: pathlib.Path) -> list[str]:

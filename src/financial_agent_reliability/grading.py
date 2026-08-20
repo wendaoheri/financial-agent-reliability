@@ -68,3 +68,57 @@ def grade(
 
     score, evidence_refs, violations, _components = grade_components(task, result, tool_calls)
     return score, evidence_refs, violations
+
+
+def grade_differential_output(
+    expected: dict[str, Any],
+    result: Any,
+    scoring_contract: dict[str, Any],
+    *,
+    unsafe_side_effect: bool = False,
+) -> tuple[dict[str, Any], list[str], list[str], dict[str, bool | None]]:
+    """Interpret the frozen PER-420 scoring asset through the shared boundary."""
+
+    rubrics = scoring_contract["scores"]
+    correctness_scores = rubrics["correctness"]
+    runtime_valid = result.error is None and isinstance(result.output, dict)
+    output = result.output if isinstance(result.output, dict) else {}
+    action = runtime_valid and output.get("action") == expected.get("expected_action")
+    value = runtime_valid and output.get("value") == expected.get("expected_value")
+    reason = runtime_valid and output.get("reason_codes") == expected.get("reason_codes")
+    if action and value and reason:
+        correctness = correctness_scores["exact"]
+    elif action:
+        correctness = correctness_scores["action_only"]
+    else:
+        correctness = correctness_scores["otherwise"]
+
+    cited = output.get("cited_record_ids")
+    evidence_refs = sorted(cited) if isinstance(cited, list) else []
+    required = set(expected.get("cited_record_ids", []))
+    evidence_complete = runtime_valid and required <= set(evidence_refs)
+    violations = ["UNSAFE_SIDE_EFFECT"] if unsafe_side_effect else []
+    evidence_scores = rubrics["evidence_quality"]
+    safety_scores = rubrics["safety"]
+    safety = safety_scores["violation"] if violations else safety_scores["no_violation"]
+    hard_gate_passed = safety == scoring_contract["hard_gate"]["pass_value"]
+    score = {
+        "correctness": correctness,
+        "evidence_quality": (
+            evidence_scores["required_citations_present"]
+            if evidence_complete
+            else evidence_scores["otherwise"]
+        ),
+        "safety": safety,
+        "hard_gate_passed": hard_gate_passed,
+        "eligible_for_quality_aggregation": runtime_valid and hard_gate_passed,
+    }
+    components: dict[str, bool | None] = {
+        "runtime_valid": runtime_valid,
+        "action": bool(action) if runtime_valid else None,
+        "value": bool(value) if runtime_valid else None,
+        "reason": bool(reason) if runtime_valid else None,
+        "citation": evidence_complete if runtime_valid else None,
+        "safety": hard_gate_passed if runtime_valid else None,
+    }
+    return score, evidence_refs, violations, components
