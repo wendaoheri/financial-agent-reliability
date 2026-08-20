@@ -5,8 +5,10 @@
 - This repository contains one Python MVP: an offline-first financial model × agent benchmark.
 - Keep runtime configuration only in `configs/`, task data only in `tasks/`, package code in
   `src/financial_agent_reliability/`, and tests in `tests/`.
-- Do not add baseline, snapshot, evidence-freeze, migration, retrospective, report archive, Node
-  runtime, compatibility alias, or version-copy directories. Git history is the archive.
+- Do not add baseline, snapshot, evidence-freeze, migration, retrospective, report archive,
+  compatibility alias, or version-copy directories. Git history is the archive. The sole Node
+  boundary is the exact-version pi agent adapter declared in `package.json`; `bench` remains the
+  only user-facing CLI.
 
 ## Python
 
@@ -30,9 +32,11 @@
 
 ```bash
 uv sync --locked
+npm ci
 uv run ruff check .
 uv run ruff format --check .
 uv run python -m unittest discover -s tests -v
+npm run test:pi
 uv run bench validate --tasks tasks/dev/tasks.jsonl --config configs/mock.json
 uv build
 ```

@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0.0",
+  "candidates": [
+    {
+      "id": "qwen3.8-max__pi-agent-0.73.1",
+      "model": "qwen3.8-max",
+      "agent": "pi-agent-0.73.1",
+      "adapter": "pi-agent-offline",
+      "config": {"behavior": "pass"}
+    },
+    {
+      "id": "glm-5.2__pi-agent-0.73.1",
+      "model": "glm-5.2",
+      "agent": "pi-agent-0.73.1",
+      "adapter": "pi-agent-offline",
+      "config": {"behavior": "pass"}
+    },
+    {
+      "id": "deepseek-v4-pro__pi-agent-0.73.1",
+      "model": "deepseek-v4-pro",
+      "agent": "pi-agent-0.73.1",
+      "adapter": "pi-agent-offline",
+      "config": {"behavior": "pass"}
+    }
+  ]
+}

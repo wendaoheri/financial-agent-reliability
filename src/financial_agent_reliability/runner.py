@@ -79,11 +79,19 @@ def version_coordinates(
     }
     lock_path = repository_root / "uv.lock"
     coordinates["python_lock_sha256"] = _sha256(lock_path) if lock_path.is_file() else None
+    node_lock_path = repository_root / "package-lock.json"
+    coordinates["node_lock_sha256"] = _sha256(node_lock_path) if node_lock_path.is_file() else None
     return coordinates
 
 
 def _failure_signature(
-    result: Any, score: dict[str, Any], evidence_refs: list[str]
+    result: Any,
+    score: dict[str, Any],
+    evidence_refs: list[str],
+    *,
+    run_id: str,
+    task_id: str,
+    candidate_id: str,
 ) -> dict[str, str] | None:
     if result.error is not None:
         code = str(result.error["code"])
@@ -98,7 +106,11 @@ def _failure_signature(
     return {
         "code": code,
         "phenomenon": code.lower().replace("_", " "),
+        "trigger_condition": f"candidate={candidate_id}; task={task_id}",
         "attribution_hypothesis": "candidate adapter behavior",
+        "reproduction_evidence": (
+            f"run_id={run_id}; task_id={task_id}; candidate_id={candidate_id}"
+        ),
         "next_validation": "re-run the same filtered cell with behavior=pass",
     }
 
@@ -159,6 +171,7 @@ def run_matrix(
                         "config_sha256": candidate.config_sha256,
                     },
                     "input": task["input"],
+                    "agent_events": list(result.agent_events),
                     "tool_calls": tool_calls,
                     "provider_identity": result.provider_identity,
                     "provider_observability": result.provider_observability,
@@ -167,7 +180,14 @@ def run_matrix(
                     "evidence_refs": evidence_refs,
                     "safety_violations": safety_violations,
                     "score": score,
-                    "failure_signature": _failure_signature(result, score, evidence_refs),
+                    "failure_signature": _failure_signature(
+                        result,
+                        score,
+                        evidence_refs,
+                        run_id=resolved_run_id,
+                        task_id=task["task_id"],
+                        candidate_id=candidate.id,
+                    ),
                     "metrics": {
                         "latency_ms": result.latency_ms,
                         "input_tokens_estimate": result.input_tokens

@@ -15,7 +15,7 @@ from financial_agent_reliability.security import (
     scan_persisted_value_for_secrets,
 )
 
-CURRENT_TRACE_VERSION = "0.4.0"
+CURRENT_TRACE_VERSION = "0.5.0"
 
 
 def trace_validator(version: str = CURRENT_TRACE_VERSION) -> Draft202012Validator:

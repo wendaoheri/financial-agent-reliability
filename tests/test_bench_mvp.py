@@ -189,7 +189,7 @@ class BenchMVPTests(unittest.TestCase):
                 candidates,
                 repository_root=ROOT,
                 run_id="round-robin-fixture",
-                versions={"trace_schema_version": "0.4.0"},
+                versions={"trace_schema_version": "0.5.0"},
             )
         self.assertEqual(len(traces), 10)
         self.assertEqual(
@@ -605,7 +605,7 @@ class BenchMVPTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             trace_path = pathlib.Path(temporary) / "trace.jsonl"
             trace = {
-                "schema_version": "0.4.0",
+                "schema_version": "0.5.0",
                 "trace_id": "trace",
                 "run_id": "run",
                 "task": {"id": "task", "slice": "market_data", "variant": "default"},
@@ -619,6 +619,7 @@ class BenchMVPTests(unittest.TestCase):
                     "config_sha256": "0" * 64,
                 },
                 "input": {},
+                "agent_events": [],
                 "tool_calls": [],
                 "provider_identity": None,
                 "provider_observability": None,
@@ -642,7 +643,7 @@ class BenchMVPTests(unittest.TestCase):
                     "cost_basis": "mock_zero",
                 },
                 "git": {"commit": "0" * 40, "dirty": False},
-                "versions": {"trace_schema_version": "0.4.0"},
+                "versions": {"trace_schema_version": "0.5.0"},
                 "started_at": "2026-08-18T00:00:00Z",
                 "finished_at": "2026-08-18T00:00:00Z",
             }

@@ -32,6 +32,7 @@ class AdapterResult:
     provider_identity: dict[str, Any] | None = None
     cost_basis: str = "mock_zero"
     provider_observability: dict[str, Any] | None = None
+    agent_events: tuple[dict[str, Any], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -490,6 +491,12 @@ class BailianLiveAdapter:
 
 
 def get_adapter(name: str, *, repository_root: pathlib.Path | None = None) -> CandidateAdapter:
+    if name == "pi-agent-offline":
+        if repository_root is None:
+            raise ValueError("pi-agent-offline requires repository_root")
+        from financial_agent_reliability.adapters.pi import PiAgentOfflineAdapter
+
+        return PiAgentOfflineAdapter(repository_root)
     if name == "bailian-live":
         if repository_root is None:
             raise ValueError("bailian-live requires repository_root")

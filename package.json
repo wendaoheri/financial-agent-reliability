@@ -1,0 +1,13 @@
+{
+  "name": "financial-agent-reliability-pi-runtime",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:pi": "node --test tests/pi_runtime.test.mjs"
+  },
+  "dependencies": {
+    "@mariozechner/pi-agent-core": "0.73.1",
+    "@mariozechner/pi-ai": "0.73.1"
+  }
+}

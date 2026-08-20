@@ -27,6 +27,8 @@ include = [
   "docs",
   "README.md",
   "AGENTS.md",
+  "package.json",
+  "package-lock.json",
 ]
 
 [tool.ruff]

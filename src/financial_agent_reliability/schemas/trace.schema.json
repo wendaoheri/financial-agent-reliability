@@ -6,12 +6,12 @@
   "additionalProperties": false,
   "required": [
     "schema_version", "trace_id", "run_id", "task", "candidate", "input",
-    "tool_calls", "provider_identity", "provider_observability", "output", "error",
+    "agent_events", "tool_calls", "provider_identity", "provider_observability", "output", "error",
     "evidence_refs", "safety_violations", "score", "failure_signature", "metrics",
     "git", "versions", "started_at", "finished_at"
   ],
   "properties": {
-    "schema_version": {"const": "0.4.0"},
+    "schema_version": {"const": "0.5.0"},
     "trace_id": {"type": "string", "minLength": 1},
     "run_id": {"type": "string", "minLength": 1},
     "task": {
@@ -30,13 +30,14 @@
         "id": {"type": "string", "minLength": 1},
         "model": {"type": "string", "minLength": 1},
         "agent": {"type": "string", "minLength": 1},
-        "adapter": {"enum": ["mock", "bailian-live"]},
+        "adapter": {"enum": ["mock", "pi-agent-offline", "bailian-live"]},
         "adapter_version": {"type": "string", "minLength": 1},
         "config": {"type": "object"},
         "config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
       }
     },
     "input": {},
+    "agent_events": {"type": "array", "items": {"type": "object"}},
     "tool_calls": {"type": "array", "items": {"type": "object"}},
     "provider_identity": {
       "oneOf": [
@@ -119,11 +120,13 @@
     },
     "failure_signature": {
       "type": ["object", "null"], "additionalProperties": false,
-      "required": ["code", "phenomenon", "attribution_hypothesis", "next_validation"],
+      "required": ["code", "phenomenon", "trigger_condition", "attribution_hypothesis", "reproduction_evidence", "next_validation"],
       "properties": {
         "code": {"type": "string", "minLength": 1},
         "phenomenon": {"type": "string", "minLength": 1},
+        "trigger_condition": {"type": "string", "minLength": 1},
         "attribution_hypothesis": {"type": "string", "minLength": 1},
+        "reproduction_evidence": {"type": "string", "minLength": 1},
         "next_validation": {"type": "string", "minLength": 1}
       }
     },
@@ -148,10 +151,11 @@
     "versions": {
       "type": "object", "additionalProperties": false, "required": ["trace_schema_version"],
       "properties": {
-        "trace_schema_version": {"const": "0.4.0"},
+        "trace_schema_version": {"const": "0.5.0"},
         "taskset_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
         "config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
         "python_lock_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+        "node_lock_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
         "preflight_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
       }
     },
