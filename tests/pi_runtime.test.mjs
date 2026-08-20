@@ -7,8 +7,10 @@ import {
 } from "../src/financial_agent_reliability/adapters/pi_runtime.mjs";
 import {
   assertPinnedLiveRuntime,
+  generationPayload,
   makeLiveModel,
   runLivePiAgent,
+  safeProviderFailure,
 } from "../src/financial_agent_reliability/adapters/pi_live_runtime.mjs";
 import {
   fauxAssistantMessage,
@@ -69,6 +71,27 @@ test("builds the exact-pinned live model without making a network call", () => {
   assert.equal(model.compat.maxTokensField, "max_tokens");
   assert.equal(model.compat.supportsStore, false);
   assert.equal(model.compat.supportsUsageInStreaming, false);
+});
+
+
+test("extracts only allowlisted provider failure metadata", () => {
+  assert.deepEqual(
+    safeProviderFailure('400 {"error":{"code":"invalid_parameter","message":"secret detail"}}'),
+    { status: 400, provider_code: "invalid_parameter", parameter: null },
+  );
+  assert.deepEqual(
+    safeProviderFailure("400 invalid max_tokens code='invalid_parameter'"),
+    { status: 400, provider_code: "invalid_parameter", parameter: "max_tokens" },
+  );
+  assert.deepEqual(safeProviderFailure("network failed"), { status: null, provider_code: null, parameter: null });
+});
+
+
+test("normalizes fixed-decimal generation parameters before the pi request", () => {
+  assert.deepEqual(
+    generationPayload({ temperature: "0.600000", top_p: "1.000000", reasoning_effort: "low" })({ stream: true }),
+    { stream: true, temperature: 0.6, top_p: 1, reasoning_effort: "low" },
+  );
 });
 
 

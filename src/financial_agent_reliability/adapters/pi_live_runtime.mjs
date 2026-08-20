@@ -98,13 +98,33 @@ function decodeOutput(messages) {
   return output;
 }
 
-function generationPayload(parameters) {
+export function generationPayload(parameters) {
   return (payload) => {
     const next = { ...payload };
     for (const key of ["max_tokens", "seed", "temperature", "top_p", "enable_thinking", "reasoning_effort", "thinking_budget"]) {
-      if (key in parameters) next[key] = parameters[key];
+      if (!(key in parameters)) continue;
+      const value = parameters[key];
+      next[key] = ["max_tokens", "seed", "temperature", "top_p", "thinking_budget"].includes(key) && typeof value === "string"
+        ? Number(value)
+        : value;
     }
     return next;
+  };
+}
+
+export function safeProviderFailure(errorMessage) {
+  if (typeof errorMessage !== "string") return { status: null, provider_code: null, parameter: null };
+  const statusMatch = errorMessage.match(/(?:^|\b)([45]\d{2})(?:\b|$)/);
+  const codeMatch = errorMessage.match(/["']?code["']?\s*[:=]\s*["']([A-Za-z0-9_.-]{1,64})["']/i);
+  const knownParameters = [
+    "enable_thinking", "max_tokens", "messages", "reasoning_effort", "seed",
+    "stream", "temperature", "tool_choice", "tools", "top_p",
+  ];
+  const parameter = knownParameters.find((name) => new RegExp(`\\b${name}\\b`, "i").test(errorMessage)) ?? null;
+  return {
+    status: statusMatch ? Number(statusMatch[1]) : null,
+    provider_code: codeMatch?.[1] ?? null,
+    parameter,
   };
 }
 
@@ -179,6 +199,12 @@ export async function runLivePiAgent(payload, dependencies = {}) {
   const messages = assistants(agent);
   const providerIdentity = identity(messages, candidate, runtime);
   const providerError = messages.find((message) => message.stopReason === "error");
+  if (providerError) {
+    const failure = safeProviderFailure(providerError.errorMessage);
+    http.status = failure.status;
+    http.provider_code = failure.provider_code;
+    http.error_origin = failure.parameter ? `provider_payload:${failure.parameter}` : "provider_payload";
+  }
   const thinking = messages.flatMap((message) => message.content.filter((block) => block.type === "thinking").map((block) => block.thinking)).join("");
   let output = null;
   let error = null;
