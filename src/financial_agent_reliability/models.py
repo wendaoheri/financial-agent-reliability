@@ -372,6 +372,7 @@ def load_candidates(path: pathlib.Path) -> list[Candidate]:
                         "max_provider_turns",
                         "output_contract_version",
                         "calibration_case_ids",
+                        "live_eval_stages",
                     }
                 )
             if set(config) - allowed_keys:
@@ -402,6 +403,15 @@ def load_candidates(path: pathlib.Path) -> list[Candidate]:
             ):
                 raise BenchInputError(
                     "pi-agent-live calibration_case_ids must contain 10 unique case ids"
+                )
+            live_eval_stages = config.get("live_eval_stages")
+            if live_eval_stages is not None and (
+                not isinstance(live_eval_stages, list)
+                or len(live_eval_stages) != len(set(live_eval_stages))
+                or set(live_eval_stages) != {"smoke", "calibration", "baseline", "supplemental"}
+            ):
+                raise BenchInputError(
+                    "pi-agent-live live_eval_stages must register all four live stages"
                 )
         candidates.append(Candidate(config=config, source_path=path.resolve(), **values))
         seen.add(values["id"])

@@ -17,6 +17,7 @@ from financial_agent_reliability.adapters.pi import PiAgentLiveAdapter
 from financial_agent_reliability.compare import compare_traces
 from financial_agent_reliability.config import load_run_config
 from financial_agent_reliability.eval_pack import (
+    aggregate_eval_bundles,
     load_report_cases,
     replay_eval_pack,
     run_eval_pack,
@@ -68,6 +69,12 @@ def _parser() -> argparse.ArgumentParser:
     plan.add_argument("--variant", action="append", dest="variants")
     plan.add_argument("--candidate", action="append", dest="candidate_ids")
     plan.add_argument("--case-id", action="append", dest="case_ids")
+    plan.add_argument("--output", type=pathlib.Path, default=None)
+    plan.add_argument(
+        "--live-stage",
+        choices=("smoke", "calibration", "baseline", "supplemental"),
+        default=None,
+    )
 
     run = subparsers.add_parser("run", help="run a gated matrix and append JSONL traces")
     run.add_argument("--tasks", type=pathlib.Path, required=True, help="task JSONL file")
@@ -115,6 +122,11 @@ def _parser() -> argparse.ArgumentParser:
     eval_run.add_argument("--candidate", action="append", dest="candidate_ids")
     eval_run.add_argument("--case-id", action="append", dest="case_ids")
     eval_run.add_argument("--preflight", type=pathlib.Path, default=None)
+    eval_run.add_argument(
+        "--live-stage",
+        choices=("smoke", "calibration", "baseline", "supplemental"),
+        default=None,
+    )
 
     eval_replay = subparsers.add_parser(
         "eval-replay", help="verify and regrade a differential evaluation bundle"
@@ -122,6 +134,17 @@ def _parser() -> argparse.ArgumentParser:
     eval_replay.add_argument("--pack", type=pathlib.Path, required=True)
     eval_replay.add_argument("--bundle", type=pathlib.Path, required=True)
     eval_replay.add_argument("--config", type=pathlib.Path, default=None)
+
+    eval_aggregate = subparsers.add_parser(
+        "eval-aggregate", help="verify and aggregate candidate-isolated live baseline bundles"
+    )
+    eval_aggregate.add_argument("--pack", type=pathlib.Path, required=True)
+    eval_aggregate.add_argument("--config", type=pathlib.Path, required=True)
+    eval_aggregate.add_argument(
+        "--bundle", type=pathlib.Path, action="append", dest="bundles", required=True
+    )
+    eval_aggregate.add_argument("--output", type=pathlib.Path, required=True)
+    eval_aggregate.add_argument("--invalid-run-limit", type=int, default=5)
 
     soak = subparsers.add_parser(
         "soak", help="run or resume a durable long-horizon pi harness qualification"
@@ -247,7 +270,11 @@ def _bind_live_preflight(
 
 
 def _live_plan(
-    tasks: list[dict[str, Any]], candidates: list[Any], config_path: pathlib.Path
+    tasks: list[dict[str, Any]],
+    candidates: list[Any],
+    config_path: pathlib.Path,
+    *,
+    live_stage: str | None = None,
 ) -> dict[str, Any]:
     if not candidates or any(candidate.adapter != "pi-agent-live" for candidate in candidates):
         raise BenchInputError("plan-live requires only pi-agent-live candidates")
@@ -277,7 +304,9 @@ def _live_plan(
     return {
         "schema_version": "0.1.0",
         "network_calls_performed": 0,
+        "config_sha256": _sha256(config_path),
         "models": [candidate.model for candidate in candidates],
+        "live_stage": live_stage,
         "case_ids": [task.get("id", task.get("task_id")) for task in tasks],
         "tasks": len(tasks),
         "matrix_cells": len(tasks) * len(candidates),
@@ -334,17 +363,42 @@ def _exactly_filtered(
     return [value for value in values if str(key(value)) in wanted]
 
 
-def _validate_report_live_slice(candidates: list[Any], selected: list[str] | None) -> None:
-    if selected is None:
-        raise BenchInputError("report live execution requires explicit --case-id selection")
+def _validate_report_live_slice(
+    candidates: list[Any],
+    selected: list[str] | None,
+    *,
+    live_stage: str | None,
+    all_case_ids: set[str],
+) -> None:
     if len(candidates) != 1:
         raise BenchInputError("report live execution requires one explicitly selected candidate")
     candidate = candidates[0]
+    if live_stage is None:
+        raise BenchInputError("report live execution requires --live-stage")
+    allowed_stages = candidate.config.get("live_eval_stages")
+    if not isinstance(allowed_stages, list) or live_stage not in allowed_stages:
+        raise BenchInputError(f"candidate does not approve report live stage: {live_stage}")
     approved = candidate.config.get("calibration_case_ids")
-    if not isinstance(approved, list) or set(selected) != set(approved):
-        raise BenchInputError("report live selection must match the 10 approved calibration cases")
-    if len(selected) != 10:
-        raise BenchInputError("report live execution requires exactly 10 calibration cases")
+    if not isinstance(approved, list) or len(approved) != 10 or len(set(approved)) != 10:
+        raise BenchInputError("candidate must register exactly 10 calibration cases")
+    if not set(approved) <= all_case_ids:
+        raise BenchInputError("candidate calibration selection contains unknown cases")
+    if live_stage == "smoke":
+        if selected is None or len(selected) != 1 or selected[0] not in approved:
+            raise BenchInputError("report live smoke requires one registered calibration case")
+    elif live_stage == "calibration":
+        if selected is None or set(selected) != set(approved):
+            raise BenchInputError(
+                "report live calibration must match the 10 registered calibration cases"
+            )
+    elif live_stage == "baseline":
+        if selected is not None:
+            raise BenchInputError("report live baseline runs the full pack without --case-id")
+        if len(all_case_ids) != 100:
+            raise BenchInputError("report live baseline requires an exact 100-case pack")
+    elif live_stage == "supplemental":
+        if selected is None or not selected or not set(selected) <= all_case_ids:
+            raise BenchInputError("report live supplemental requires explicit pack case IDs")
     if candidate.adapter != "pi-agent-live":
         raise BenchInputError("report live execution requires pi-agent-live")
 
@@ -387,7 +441,13 @@ def main(argv: list[str] | None = None) -> int:
                         raise BenchInputError(
                             "report live execution requires one explicitly selected candidate"
                         )
-                    _validate_report_live_slice(candidates, args.case_ids)
+                    all_case_ids = {case["id"] for case in load_report_cases(args.pack)}
+                    _validate_report_live_slice(
+                        candidates,
+                        args.case_ids,
+                        live_stage=args.live_stage,
+                        all_case_ids=all_case_ids,
+                    )
                     if args.preflight is None:
                         raise BenchInputError("live report eval-run requires --preflight")
                     versions = {"config_sha256": _sha256(args.config)}
@@ -395,6 +455,8 @@ def main(argv: list[str] | None = None) -> int:
                     preflight_sha256 = versions["preflight_sha256"]
                 elif args.preflight is not None:
                     raise BenchInputError("mock eval-run does not accept --preflight")
+                elif args.live_stage is not None:
+                    raise BenchInputError("mock eval-run does not accept --live-stage")
             report = run_eval_pack(
                 args.pack,
                 args.output_dir,
@@ -403,14 +465,28 @@ def main(argv: list[str] | None = None) -> int:
                 repository_root=pathlib.Path.cwd() if candidates is not None else None,
                 run_id=args.run_id,
                 preflight_sha256=preflight_sha256,
+                live_stage=args.live_stage,
             )
             print(_render(report), end="")
+            if report.get("status") in {"paused", "operationally_invalid"}:
+                return 1
             return 1 if report.get("outcome_counts", {}).get("invalid_run") else 0
         if args.command == "eval-replay":
             candidates = load_candidates(args.config) if args.config is not None else None
             report = replay_eval_pack(args.pack, args.bundle, candidates=candidates)
             print(_render(report), end="")
             return 0
+        if args.command == "eval-aggregate":
+            candidates = load_candidates(args.config)
+            report = aggregate_eval_bundles(
+                args.pack,
+                args.bundles,
+                candidates=candidates,
+                invalid_run_limit=args.invalid_run_limit,
+            )
+            _write_safe_json(args.output, report)
+            print(_render({**report, "output": str(args.output)}), end="")
+            return 1 if report["status"] == "partial" else 0
         if args.command in {
             "validate",
             "preflight",
@@ -465,12 +541,18 @@ def main(argv: list[str] | None = None) -> int:
                     raise BenchInputError(
                         "report live plans use explicit --case-id selection, not slices or variants"
                     )
+                all_case_ids = {task["id"] for task in tasks}
                 tasks = _exactly_filtered(tasks, args.case_ids, lambda task: task["id"], "case")
                 if args.candidate_ids is None:
                     raise BenchInputError(
                         "report live execution requires one explicitly selected candidate"
                     )
-                _validate_report_live_slice(candidates, args.case_ids)
+                _validate_report_live_slice(
+                    candidates,
+                    args.case_ids,
+                    live_stage=args.live_stage,
+                    all_case_ids=all_case_ids,
+                )
             else:
                 tasks = _filtered(
                     tasks,
@@ -484,7 +566,15 @@ def main(argv: list[str] | None = None) -> int:
                     lambda task: task.get("task_card", {}).get("variant"),
                     "variant",
                 )
-            print(_render(_live_plan(tasks, candidates, args.config)), end="")
+            report = _live_plan(
+                tasks,
+                candidates,
+                args.config,
+                live_stage=args.live_stage if report_live_plan else None,
+            )
+            if args.output is not None:
+                _write_safe_json(args.output, report)
+            print(_render(report), end="")
             return 0
         if args.command == "run":
             tasks = _filtered(

@@ -10,6 +10,11 @@ from unittest.mock import patch
 
 from financial_agent_reliability.adapters.core import AdapterResult
 from financial_agent_reliability.cli import main
+from financial_agent_reliability.eval_pack import (
+    aggregate_eval_bundles,
+    replay_eval_pack,
+    run_eval_pack,
+)
 from financial_agent_reliability.models import Candidate, load_candidates
 from financial_agent_reliability.report_eval_pack import (
     _derive_mock_output,
@@ -69,6 +74,8 @@ class ReportEvalCLITests(unittest.TestCase):
             str(LIVE_CONFIG),
             "--candidate",
             LIVE_CANDIDATE_ID,
+            "--live-stage",
+            "calibration",
         ]
         for case_id in live_case_ids:
             arguments.extend(["--case-id", case_id])
@@ -88,8 +95,8 @@ class ReportEvalCLITests(unittest.TestCase):
             },
         )
         self.assertEqual(plan["token_ceiling"]["input_contract"], 480256)
-        self.assertEqual(plan["token_ceiling"]["output_hard_cap"], 10304)
-        self.assertEqual(plan["token_ceiling"]["total_planned"], 490560)
+        self.assertEqual(plan["token_ceiling"]["output_hard_cap"], 81984)
+        self.assertEqual(plan["token_ceiling"]["total_planned"], 562240)
 
         stderr = StringIO()
         with redirect_stdout(StringIO()), redirect_stderr(stderr):
@@ -102,12 +109,37 @@ class ReportEvalCLITests(unittest.TestCase):
                     str(LIVE_CONFIG),
                     "--candidate",
                     LIVE_CANDIDATE_ID,
+                    "--live-stage",
+                    "calibration",
                     "--case-id",
                     "D1-F02-normal",
                 ]
             )
         self.assertEqual(rejected, 2)
-        self.assertIn("approved calibration cases", stderr.getvalue())
+        self.assertIn("registered calibration cases", stderr.getvalue())
+
+        baseline_stdout = StringIO()
+        with redirect_stdout(baseline_stdout):
+            baseline_status = main(
+                [
+                    "plan-live",
+                    "--tasks",
+                    str(TASKS),
+                    "--config",
+                    str(LIVE_CONFIG),
+                    "--candidate",
+                    LIVE_CANDIDATE_ID,
+                    "--live-stage",
+                    "baseline",
+                ]
+            )
+        self.assertEqual(baseline_status, 0)
+        baseline = json.loads(baseline_stdout.getvalue())
+        self.assertEqual(baseline["matrix_cells"], 100)
+        self.assertEqual(baseline["request_ceiling"]["total"], 201)
+        self.assertEqual(baseline["token_ceiling"]["input_contract"], 4800256)
+        self.assertEqual(baseline["token_ceiling"]["output_hard_cap"], 819264)
+        self.assertEqual(baseline["token_ceiling"]["total_planned"], 5619520)
 
     def test_report_live_run_requires_preflight_before_adapter_execution(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -122,6 +154,10 @@ class ReportEvalCLITests(unittest.TestCase):
                 LIVE_CANDIDATE_ID,
                 "--output-dir",
                 str(output),
+                "--live-stage",
+                "calibration",
+                "--run-id",
+                "preflight-required",
             ]
             for case_id in _live_case_ids():
                 arguments.extend(["--case-id", case_id])
@@ -220,6 +256,82 @@ class ReportEvalCLITests(unittest.TestCase):
                             trace_path,
                         )
                     self.assertEqual(replay["status"], "verified")
+
+    def test_live_report_baseline_resumes_from_atomic_case_checkpoints(self):
+        candidate = next(
+            item for item in load_candidates(LIVE_CONFIG) if item.id == LIVE_CANDIDATE_ID
+        )
+
+        class FixtureAdapter:
+            version = "fixture"
+
+            def __init__(self, *, interrupt_on: int | None = None) -> None:
+                self.calls = 0
+                self.interrupt_on = interrupt_on
+
+            def execute(self, request, _candidate, tools):
+                self.calls += 1
+                if self.interrupt_on == self.calls:
+                    raise KeyboardInterrupt
+                fixture = dict(request.resources[0])
+                tools.invoke("read_fixture")
+                return AdapterResult(
+                    output=_derive_mock_output(fixture),
+                    error=None,
+                    latency_ms=1,
+                    input_tokens=10,
+                    output_tokens=5,
+                    provider_identity={"exact_match": True},
+                    cost_basis="token_plan_unpriced",
+                )
+
+        with tempfile.TemporaryDirectory() as temporary:
+            output = pathlib.Path(temporary) / "durable-live"
+            interrupted = FixtureAdapter(interrupt_on=2)
+            with patch(
+                "financial_agent_reliability.report_eval_pack.get_adapter",
+                return_value=interrupted,
+            ):
+                with self.assertRaises(KeyboardInterrupt):
+                    run_eval_pack(
+                        PACK,
+                        output,
+                        candidates=[candidate],
+                        repository_root=ROOT,
+                        run_id="durable-live",
+                        preflight_sha256="f" * 64,
+                        live_stage="baseline",
+                    )
+            self.assertEqual(len(list((output / ".checkpoint" / "cases").glob("*.json"))), 1)
+
+            resumed = FixtureAdapter()
+            with patch(
+                "financial_agent_reliability.report_eval_pack.get_adapter",
+                return_value=resumed,
+            ):
+                report = run_eval_pack(
+                    PACK,
+                    output,
+                    candidates=[candidate],
+                    repository_root=ROOT,
+                    run_id="durable-live",
+                    preflight_sha256="f" * 64,
+                    live_stage="baseline",
+                )
+            self.assertEqual(report["status"], "completed")
+            self.assertEqual(report["trace_count"], 100)
+            self.assertEqual(resumed.calls, 99)
+            self.assertFalse((output / ".checkpoint").exists())
+            replay = replay_eval_pack(PACK, output, candidates=load_candidates(LIVE_CONFIG))
+            self.assertEqual(replay["status"], "passed")
+            self.assertEqual(
+                replay["claim_boundary"],
+                "controlled_live_internal_diagnostic_no_model_or_agent_ranking",
+            )
+            aggregate = aggregate_eval_bundles(PACK, [output], candidates=[candidate])
+            self.assertEqual(aggregate["status"], "completed")
+            self.assertEqual(aggregate["first_attempt_cells"], 100)
+            self.assertEqual(aggregate["candidates"][candidate.id]["unique_cases"], 100)
 
     def test_eval_validate_enforces_the_exact_report_pack(self):
         stdout = StringIO()

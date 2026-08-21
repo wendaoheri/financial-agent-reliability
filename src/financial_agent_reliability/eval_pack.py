@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import pathlib
+import shutil
 from collections import Counter, defaultdict
 from collections.abc import Iterable, Mapping
 from copy import deepcopy
@@ -26,9 +27,6 @@ from financial_agent_reliability.report_eval_pack import (
     aggregate_report_eval,
     replay_report_eval,
     validate_report_eval_pack,
-)
-from financial_agent_reliability.report_eval_pack import (
-    eval_pack_identity as report_eval_pack_identity,
 )
 from financial_agent_reliability.report_eval_pack import (
     load_eval_cases as _load_report_cases,
@@ -879,35 +877,115 @@ def _report_bundle_artifacts(output_directory: pathlib.Path) -> list[dict[str, A
     return artifacts
 
 
-def _run_report_eval_pack(
-    pack_directory: pathlib.Path,
-    output_directory: pathlib.Path,
-    *,
-    candidates: list[Candidate],
+def _atomic_write_text(path: pathlib.Path, value: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(f".{path.name}.tmp")
+    temporary.write_text(value, encoding="utf-8")
+    temporary.replace(path)
+
+
+def _atomic_write_json(path: pathlib.Path, value: Any) -> None:
+    _atomic_write_text(path, _canonical(value) + "\n")
+
+
+def _report_live_stage_cases(
+    candidate: Candidate,
+    cases: list[dict[str, Any]],
     case_ids: list[str] | None,
-    repository_root: pathlib.Path | None,
-    run_id: str | None,
-    preflight_sha256: str | None,
+    live_stage: str | None,
+) -> None:
+    if live_stage is None:
+        raise EvalPackError("live report eval-run requires --live-stage")
+    stages = candidate.config.get("live_eval_stages")
+    if not isinstance(stages, list) or live_stage not in stages:
+        raise EvalPackError(f"candidate does not approve report live stage: {live_stage}")
+    calibration = candidate.config.get("calibration_case_ids")
+    if not isinstance(calibration, list) or len(calibration) != 10 or len(set(calibration)) != 10:
+        raise EvalPackError("live candidate must register exactly 10 calibration cases")
+    selected = {case["id"] for case in cases}
+    if live_stage == "smoke":
+        if case_ids is None or len(case_ids) != 1 or case_ids[0] not in calibration:
+            raise EvalPackError("live smoke requires one registered calibration case")
+    elif live_stage == "calibration":
+        if case_ids is None or set(case_ids) != set(calibration):
+            raise EvalPackError("live calibration requires the registered 10-case slice")
+    elif live_stage == "baseline":
+        if case_ids is not None or len(cases) != 100:
+            raise EvalPackError("live baseline requires the full 100-case pack")
+    elif live_stage == "supplemental":
+        if case_ids is None or not case_ids or selected != set(case_ids):
+            raise EvalPackError("live supplemental requires explicit pack case IDs")
+
+
+def _report_checkpoint_identity(
+    *,
+    validation: dict[str, Any],
+    candidate: Candidate,
+    cases: list[dict[str, Any]],
+    run_id: str,
+    preflight_sha256: str,
+    live_stage: str,
 ) -> dict[str, Any]:
-    validation = validate_eval_pack(pack_directory, candidates=candidates)
-    cases = _select_report_cases(load_report_cases(pack_directory), case_ids)
-    adapters = {candidate.adapter for candidate in candidates}
-    if len(adapters) != 1 or not adapters <= {"mock", "pi-agent-live"}:
-        raise EvalPackError("report eval-run requires one mock or pi-agent-live adapter")
-    if adapters == {"pi-agent-live"}:
-        if len(candidates) != 1 or preflight_sha256 is None:
-            raise EvalPackError("live report eval-run requires one preflight-bound candidate")
-        approved = candidates[0].config.get("calibration_case_ids")
-        if not isinstance(approved, list) or set(case_ids or []) != set(approved):
-            raise EvalPackError("live report eval-run requires the approved 10-case slice")
-    traces = run_report_eval(
-        pathlib.Path(pack_directory) / "tasks.jsonl",
-        cases,
-        candidates,
-        run_id=run_id,
-        repository_root=repository_root,
-        preflight_sha256=preflight_sha256,
+    run_config_digest = (
+        _sha256(candidate.source_path)
+        if candidate.source_path.is_file()
+        else candidate.config_sha256
     )
+    return {
+        "contract_type": "report_eval_checkpoint",
+        "contract_version": REPORT_TRACE_SCHEMA_VERSION,
+        "eval_pack_id": validation["eval_pack_id"],
+        "manifest_digest": validation["manifest_digest"],
+        "runner_protocol_version": validation["runner_protocol_version"],
+        "candidate_id": candidate.id,
+        "candidate_config_digest": candidate.config_sha256,
+        "run_config_digest": run_config_digest,
+        "preflight_sha256": preflight_sha256,
+        "run_id": run_id,
+        "live_stage": live_stage,
+        "case_ids": [case["id"] for case in cases],
+    }
+
+
+def _retryable_provider_invalid(trace: dict[str, Any]) -> bool:
+    error = trace.get("error")
+    return bool(
+        trace.get("outcome") == "invalid_run"
+        and isinstance(error, dict)
+        and error.get("retryable") is True
+    )
+
+
+def _paused_live_report(
+    output_directory: pathlib.Path,
+    traces: list[dict[str, Any]],
+    *,
+    reason: str,
+    live_stage: str,
+) -> dict[str, Any]:
+    aggregate = aggregate_report_eval(traces)
+    report = {
+        "contract_type": "report_eval_checkpoint",
+        "status": "paused",
+        "reason": reason,
+        "live_stage": live_stage,
+        "trace_count": len(traces),
+        "outcome_counts": aggregate["outcomes"],
+        "output": output_directory.as_posix(),
+    }
+    _atomic_write_json(output_directory / "checkpoint-report.json", report)
+    return report
+
+
+def _finalize_report_bundle(
+    output_directory: pathlib.Path,
+    validation: dict[str, Any],
+    traces: list[dict[str, Any]],
+    *,
+    adapters: set[str],
+    live_stage: str | None,
+    run_id: str | None,
+) -> dict[str, Any]:
     aggregate = aggregate_report_eval(traces)
     failures = [trace["failure_signature"] for trace in traces if trace["failure_signature"]]
     persisted = {
@@ -919,29 +997,38 @@ def _run_report_eval_pack(
     findings = scan_persisted_value_for_secrets(persisted)
     if findings:
         raise EvalPackError(f"generated report evidence failed secret scan: {findings}")
-
-    output_directory = pathlib.Path(output_directory)
-    output_directory.mkdir(parents=True, exist_ok=False)
-    _write_json(output_directory / "validation.json", validation)
-    (output_directory / "trace.jsonl").write_text(
+    _atomic_write_json(output_directory / "validation.json", validation)
+    _atomic_write_text(
+        output_directory / "trace.jsonl",
         "".join(_canonical(row) + "\n" for row in traces),
-        encoding="utf-8",
     )
-    _write_json(output_directory / "aggregate.json", aggregate)
-    _write_json(output_directory / "failure_signatures.json", failures)
+    _atomic_write_json(output_directory / "aggregate.json", aggregate)
+    _atomic_write_json(output_directory / "failure_signatures.json", failures)
+    invalid_runs = aggregate["outcomes"]["invalid_run"]
+    status = "passed"
+    if adapters == {"pi-agent-live"}:
+        if live_stage == "baseline" and invalid_runs > 5:
+            status = "operationally_invalid"
+        elif invalid_runs:
+            status = "completed_with_invalids"
+        else:
+            status = "completed"
     manifest = {
         "contract_type": "report_eval_bundle",
         "contract_version": REPORT_TRACE_SCHEMA_VERSION,
-        "status": "passed",
+        "status": status,
+        "live_stage": live_stage,
+        "run_id": run_id,
         "claim_boundary": validation["claim_boundary"],
-        "eval_pack_id": report_eval_pack_identity(
-            pathlib.Path(pack_directory) / "tasks.jsonl", load_report_cases(pack_directory)
-        ),
+        "eval_pack_id": validation["eval_pack_id"],
         "runner_protocol_version": validation["runner_protocol_version"],
         "network_calls_performed": 0 if adapters == {"mock"} else None,
         "artifacts": _report_bundle_artifacts(output_directory),
     }
-    _write_json(output_directory / "manifest.json", manifest)
+    _atomic_write_json(output_directory / "manifest.json", manifest)
+    checkpoint = output_directory / ".checkpoint"
+    if checkpoint.is_dir():
+        shutil.rmtree(checkpoint)
     return {
         **manifest,
         "output": output_directory.as_posix(),
@@ -949,6 +1036,161 @@ def _run_report_eval_pack(
         "failure_signature_count": len(failures),
         "outcome_counts": aggregate["outcomes"],
     }
+
+
+def _run_live_report_eval_pack(
+    pack_directory: pathlib.Path,
+    output_directory: pathlib.Path,
+    *,
+    validation: dict[str, Any],
+    cases: list[dict[str, Any]],
+    candidate: Candidate,
+    repository_root: pathlib.Path | None,
+    run_id: str | None,
+    preflight_sha256: str | None,
+    live_stage: str | None,
+) -> dict[str, Any]:
+    if not run_id:
+        raise EvalPackError("durable live report eval-run requires --run-id")
+    if preflight_sha256 is None:
+        raise EvalPackError("live report eval-run requires bound preflight evidence")
+    if live_stage is None:
+        raise EvalPackError("live report eval-run requires --live-stage")
+    output_directory = pathlib.Path(output_directory)
+    if (output_directory / "manifest.json").exists():
+        raise EvalPackError("report eval output bundle is already complete")
+    checkpoint_directory = output_directory / ".checkpoint"
+    steps_directory = checkpoint_directory / "cases"
+    output_directory.mkdir(parents=True, exist_ok=True)
+    steps_directory.mkdir(parents=True, exist_ok=True)
+    identity = _report_checkpoint_identity(
+        validation=validation,
+        candidate=candidate,
+        cases=cases,
+        run_id=run_id,
+        preflight_sha256=preflight_sha256,
+        live_stage=live_stage,
+    )
+    identity_path = checkpoint_directory / "identity.json"
+    if identity_path.exists():
+        if _load(identity_path) != identity:
+            raise EvalPackError("live report checkpoint fingerprint mismatch")
+    else:
+        _atomic_write_json(identity_path, identity)
+
+    traces: list[dict[str, Any]] = []
+    consecutive_retryable_invalids = 0
+    for index, case in enumerate(cases):
+        case_digest = hashlib.sha256(case["id"].encode()).hexdigest()
+        step_path = steps_directory / f"{index:03d}-{case_digest}.json"
+        if step_path.exists():
+            trace = _load(step_path)
+            if (
+                trace.get("run_id") != run_id
+                or (trace.get("task") or {}).get("id") != case["id"]
+                or (trace.get("candidate") or {}).get("id") != candidate.id
+            ):
+                raise EvalPackError(f"live report checkpoint case mismatch: {case['id']}")
+        else:
+            rows = run_report_eval(
+                pathlib.Path(pack_directory) / "tasks.jsonl",
+                [case],
+                [candidate],
+                run_id=run_id,
+                repository_root=repository_root,
+                preflight_sha256=preflight_sha256,
+            )
+            trace = rows[0]
+            _atomic_write_json(step_path, trace)
+        traces.append(trace)
+        error_code = str((trace.get("error") or {}).get("code", ""))
+        if error_code == "IDENTITY_MISMATCH":
+            return _paused_live_report(
+                output_directory,
+                traces,
+                reason="identity_hard_stop",
+                live_stage=live_stage,
+            )
+        if live_stage in {"smoke", "calibration"} and trace["outcome"] == "invalid_run":
+            return _paused_live_report(
+                output_directory,
+                traces,
+                reason="preflight_stage_invalid_run",
+                live_stage=live_stage,
+            )
+        if _retryable_provider_invalid(trace):
+            consecutive_retryable_invalids += 1
+        else:
+            consecutive_retryable_invalids = 0
+        if live_stage == "baseline" and consecutive_retryable_invalids >= 3:
+            return _paused_live_report(
+                output_directory,
+                traces,
+                reason="provider_circuit_breaker",
+                live_stage=live_stage,
+            )
+
+    return _finalize_report_bundle(
+        output_directory,
+        validation,
+        traces,
+        adapters={"pi-agent-live"},
+        live_stage=live_stage,
+        run_id=run_id,
+    )
+
+
+def _run_report_eval_pack(
+    pack_directory: pathlib.Path,
+    output_directory: pathlib.Path,
+    *,
+    candidates: list[Candidate],
+    case_ids: list[str] | None,
+    repository_root: pathlib.Path | None,
+    run_id: str | None,
+    preflight_sha256: str | None,
+    live_stage: str | None,
+) -> dict[str, Any]:
+    validation = validate_eval_pack(pack_directory, candidates=candidates)
+    cases = _select_report_cases(load_report_cases(pack_directory), case_ids)
+    adapters = {candidate.adapter for candidate in candidates}
+    if len(adapters) != 1 or not adapters <= {"mock", "pi-agent-live"}:
+        raise EvalPackError("report eval-run requires one mock or pi-agent-live adapter")
+    if adapters == {"pi-agent-live"}:
+        if len(candidates) != 1 or preflight_sha256 is None:
+            raise EvalPackError("live report eval-run requires one preflight-bound candidate")
+        _report_live_stage_cases(candidates[0], cases, case_ids, live_stage)
+        return _run_live_report_eval_pack(
+            pack_directory,
+            output_directory,
+            validation=validation,
+            cases=cases,
+            candidate=candidates[0],
+            repository_root=repository_root,
+            run_id=run_id,
+            preflight_sha256=preflight_sha256,
+            live_stage=live_stage,
+        )
+    if live_stage is not None:
+        raise EvalPackError("mock report eval-run does not accept a live stage")
+    traces = run_report_eval(
+        pathlib.Path(pack_directory) / "tasks.jsonl",
+        cases,
+        candidates,
+        run_id=run_id,
+        repository_root=repository_root,
+        preflight_sha256=preflight_sha256,
+    )
+    output_directory = pathlib.Path(output_directory)
+    output_directory.mkdir(parents=True, exist_ok=False)
+    return _finalize_report_bundle(
+        output_directory,
+        validation,
+        traces,
+        adapters=adapters,
+        live_stage=None,
+        run_id=run_id,
+    )
 
 
 def run_eval_pack(
@@ -960,13 +1202,21 @@ def run_eval_pack(
     repository_root: pathlib.Path | None = None,
     run_id: str | None = None,
     preflight_sha256: str | None = None,
+    live_stage: str | None = None,
 ) -> dict[str, Any]:
     """Run either supported pack without introducing a second CLI or scoring path."""
 
     if not _is_report_pack(pack_directory):
         if any(
             value is not None
-            for value in (candidates, case_ids, repository_root, run_id, preflight_sha256)
+            for value in (
+                candidates,
+                case_ids,
+                repository_root,
+                run_id,
+                preflight_sha256,
+                live_stage,
+            )
         ):
             raise EvalPackError("the frozen PER-420 control run does not accept live arguments")
         return _run_per420_eval_pack(pack_directory, output_directory)
@@ -980,6 +1230,7 @@ def run_eval_pack(
         repository_root=repository_root,
         run_id=run_id,
         preflight_sha256=preflight_sha256,
+        live_stage=live_stage,
     )
 
 
@@ -1052,3 +1303,86 @@ def replay_eval_pack(
     if candidates is None:
         raise EvalPackError("the PER-424 report replay requires --config")
     return _replay_report_eval_pack(pack_directory, bundle, candidates=candidates)
+
+
+def aggregate_eval_bundles(
+    pack_directory: pathlib.Path,
+    bundles: list[pathlib.Path],
+    *,
+    candidates: list[Candidate],
+    invalid_run_limit: int = 5,
+) -> dict[str, Any]:
+    """Verify and aggregate candidate-isolated first-attempt live baseline bundles."""
+
+    if not _is_report_pack(pack_directory):
+        raise EvalPackError("eval aggregate requires a report Eval Pack")
+    if not bundles:
+        raise EvalPackError("eval aggregate requires at least one bundle")
+    if invalid_run_limit < 0:
+        raise EvalPackError("invalid run limit must be non-negative")
+    expected_candidates = {candidate.id for candidate in candidates}
+    expected_cases = {case["id"] for case in load_report_cases(pack_directory)}
+    traces: list[dict[str, Any]] = []
+    replay_reports: list[dict[str, Any]] = []
+    seen_cells: set[tuple[str, str]] = set()
+    run_ids: set[str] = set()
+    for bundle in bundles:
+        bundle = pathlib.Path(bundle)
+        manifest = _load(bundle / "manifest.json")
+        if manifest.get("live_stage") != "baseline":
+            raise EvalPackError(f"aggregate rejects non-baseline bundle: {bundle}")
+        replay = _replay_report_eval_pack(pack_directory, bundle, candidates=candidates)
+        replay_reports.append({"bundle": bundle.as_posix(), **replay})
+        for trace in _read_trace_rows(bundle / "trace.jsonl"):
+            cell = (str(trace["candidate"]["id"]), str(trace["task"]["id"]))
+            if cell in seen_cells:
+                raise EvalPackError(f"duplicate first-attempt cell: {cell[0]} / {cell[1]}")
+            seen_cells.add(cell)
+            traces.append(trace)
+            run_ids.add(str(trace["run_id"]))
+    aggregate = aggregate_report_eval(traces)
+    candidate_rows: dict[str, Any] = {}
+    for candidate_id in sorted(expected_candidates | {cell[0] for cell in seen_cells}):
+        rows = [trace for trace in traces if trace["candidate"]["id"] == candidate_id]
+        case_ids = {trace["task"]["id"] for trace in rows}
+        invalid_runs = sum(trace["outcome"] == "invalid_run" for trace in rows)
+        complete = len(rows) == len(expected_cases) and case_ids == expected_cases
+        if not complete or candidate_id not in expected_candidates:
+            status = "partial"
+        elif invalid_runs > invalid_run_limit:
+            status = "operationally_invalid"
+        elif invalid_runs:
+            status = "completed_with_invalids"
+        else:
+            status = "completed"
+        candidate_rows[candidate_id] = {
+            "status": status,
+            "cells": len(rows),
+            "unique_cases": len(case_ids),
+            "invalid_runs": invalid_runs,
+        }
+    statuses = {row["status"] for row in candidate_rows.values()}
+    incomplete_statuses = {"partial", "operationally_invalid"}
+    if set(candidate_rows) != expected_candidates or statuses & incomplete_statuses:
+        status = "partial"
+    elif "completed_with_invalids" in statuses:
+        status = "completed_with_invalids"
+    else:
+        status = "completed"
+    return {
+        "contract_type": "report_eval_baseline_aggregate",
+        "contract_version": REPORT_TRACE_SCHEMA_VERSION,
+        "status": status,
+        "claim_boundary": "controlled_live_internal_diagnostic_no_model_or_agent_ranking",
+        "eval_pack_id": aggregate["eval_pack_id"],
+        "manifest_digest": aggregate["manifest_digest"],
+        "runner_protocol_version": RUNNER_PROTOCOL_VERSION,
+        "invalid_run_limit_per_candidate": invalid_run_limit,
+        "first_attempt_cells": len(traces),
+        "run_ids": sorted(run_ids),
+        "candidates": candidate_rows,
+        "outcome_counts": aggregate["outcomes"],
+        "aggregate": aggregate,
+        "bundle_replays": replay_reports,
+        "network_calls_performed": 0,
+    }

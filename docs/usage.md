@@ -104,7 +104,7 @@ uv run bench plan-live --tasks tasks/dev/tasks.jsonl \
 
 The current six-task, four-model plan is capped at four one-turn identity preflights plus 24
 two-turn pi Agent cells: 52 provider requests total, with provider retries disabled. The planned
-input contract is 74,624 tokens and the hard output cap is 24,832 tokens. Input tokenization and
+input contract is 74,624 tokens and the hard output cap is 196,864 tokens. Input tokenization and
 the token-plan's USD price are not provider-verifiable before an approved preflight, so the plan
 reports `cost_usd_upper_bound: null` instead of claiming zero cost.
 
@@ -119,6 +119,63 @@ Only a passed report whose config hash and all four exact response model IDs mat
 the run. The run uses the same slice filters as `plan-live`. It inherits only
 `BENCH_BAILIAN_API_KEY`; the key never enters subprocess input, command arguments, config, trace, or
 report. No live command is part of the default verification suite.
+
+### PER-424 internal live baseline
+
+PER-424 live execution separates disposable framework checks from first-attempt baseline evidence.
+Every live command selects exactly one candidate so candidates can run concurrently without sharing
+failure state. `smoke` accepts one registered calibration case, `calibration` requires the registered
+10-case slice, `baseline` runs the complete 100-case pack, and `supplemental` requires explicit case
+IDs. All four candidates use reasoning mode `on`; the provider adapter maps that policy to each
+model's supported control. An omitted output limit resolves to the framework's 4096-token technical
+ceiling. DeepSeek Pro uses a 32768-token candidate ceiling because calibration showed that its
+reasoning stream can exhaust 4096 tokens before emitting contract output.
+
+Calculate the zero-network ceiling before a fresh four-model preflight:
+
+```bash
+uv run bench plan-live --tasks tasks/per424/tasks.jsonl \
+  --config configs/pi-bailian-live.json \
+  --candidate qwen3.8-max__pi-agent-0.73.1 \
+  --live-stage baseline
+uv run bench preflight --config configs/pi-bailian-live.json \
+  --output runs/per424-live/preflight.json
+```
+
+After smoke and calibration pass, start each candidate in a separate output directory. A baseline
+run commits every completed case atomically and resumes only when its Eval Pack, candidate config,
+run config, preflight, run ID, stage, and case-list fingerprints match exactly:
+
+```bash
+uv run bench eval-run --pack tasks/per424 \
+  --config configs/pi-bailian-live.json \
+  --candidate qwen3.8-max__pi-agent-0.73.1 \
+  --live-stage baseline --preflight runs/per424-live/preflight.json \
+  --run-id per424-qwen38-baseline \
+  --output-dir runs/per424-live/qwen38-baseline
+uv run bench eval-replay --pack tasks/per424 \
+  --config configs/pi-bailian-live.json \
+  --bundle runs/per424-live/qwen38-baseline
+```
+
+Three consecutive retryable provider failures pause that candidate. An identity mismatch is an
+immediate hard stop. A completed 100-case candidate with more than five invalid runs is marked
+`operationally_invalid`; invalid runs remain excluded from the reliability-pass denominator.
+Candidate-isolated baseline bundles can be verified and combined without a second grading path:
+
+```bash
+uv run bench eval-aggregate --pack tasks/per424 \
+  --config configs/pi-bailian-live.json \
+  --bundle runs/per424-live/qwen38-baseline \
+  --bundle runs/per424-live/glm52-baseline \
+  --bundle runs/per424-live/deepseek-flash-baseline \
+  --bundle runs/per424-live/deepseek-pro-baseline \
+  --output runs/per424-live/baseline-summary.json
+```
+
+These are internal dev observations only. They do not establish unseen-task generalization or a
+public model ranking. Provider token-plan pricing remains unverified; live traces record a null USD
+estimate with the `token_plan_unpriced` basis instead of claiming zero cost.
 
 For an isolated eight-cell dev calibration, filter the same current config explicitly:
 

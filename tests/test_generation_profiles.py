@@ -13,9 +13,11 @@ from financial_agent_reliability.adapters.generation import (
 )
 from financial_agent_reliability.adapters.http import _parse_sse
 from financial_agent_reliability.config import load_run_config
+from financial_agent_reliability.models import load_candidates
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 LIVE_CONFIG = ROOT / "configs" / "plain-bailian-live.json"
+PI_LIVE_CONFIG = ROOT / "configs" / "pi-bailian-live.json"
 
 
 def _provider(generation: dict | None = None):
@@ -65,6 +67,30 @@ class GenerationProfileTests(unittest.TestCase):
                 _model("unsupported", []),
                 candidate={"reasoning": {"mode": "on"}},
             )
+
+    def test_pi_live_models_use_capability_adapted_reasoning_on(self):
+        config = load_run_config(PI_LIVE_CONFIG)
+        candidates = {candidate.model: candidate for candidate in load_candidates(PI_LIVE_CONFIG)}
+        for model in config.models_for_provider("bailian"):
+            with self.subTest(model=model.model_id):
+                generation = dict(candidates[model.model_id].config.get("generation") or {})
+                generation["seed"] = 20260819
+                resolved = resolve_generation(
+                    config.provider("bailian"),
+                    model,
+                    profile=config.profile("benchmark_fast"),
+                    candidate=generation,
+                )
+                self.assertEqual(resolved.resolved["reasoning"]["mode"], "on")
+                if model.model_id == "qwen3.8-max":
+                    self.assertEqual(resolved.resolved["max_output_tokens"], 4096)
+                    self.assertEqual(resolved.effective_parameters["reasoning_effort"], "low")
+                elif model.model_id == "deepseek-v4-pro-0813":
+                    self.assertEqual(resolved.resolved["max_output_tokens"], 32768)
+                    self.assertTrue(resolved.effective_parameters["enable_thinking"])
+                else:
+                    self.assertEqual(resolved.resolved["max_output_tokens"], 4096)
+                    self.assertTrue(resolved.effective_parameters["enable_thinking"])
 
     def test_optional_reasoning_emits_enable_flag(self):
         resolved = resolve_generation(

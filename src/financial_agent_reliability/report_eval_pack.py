@@ -491,7 +491,7 @@ def validate_report_eval_pack(
         },
         "network_calls_performed": 0,
         "claim_boundary": (
-            "controlled_live_calibration_no_model_or_agent_ranking"
+            "controlled_live_internal_diagnostic_no_model_or_agent_ranking"
             if adapters == {"pi-agent-live"}
             else "offline_mock_only_no_model_or_agent_ranking"
         ),
@@ -907,7 +907,7 @@ def run_eval(
                     ),
                     "output_tokens_estimate": result.output_tokens
                     or len(json.dumps(output, ensure_ascii=False, sort_keys=True)),
-                    "cost_usd_estimate": "0.000000",
+                    "cost_usd_estimate": None if live else "0.000000",
                     "cost_basis": result.cost_basis if live else "offline_mock_zero",
                 },
             }
@@ -950,14 +950,35 @@ def append_eval_traces(path: pathlib.Path, traces: list[dict[str, Any]]) -> int:
 
 def aggregate_report_eval(traces: list[dict[str, Any]]) -> dict[str, Any]:
     def summarize(rows: list[dict[str, Any]]) -> dict[str, Any]:
+        valid = [row for row in rows if row["outcome"] != "invalid_run"]
+        latencies = sorted(int(row["metrics"]["latency_ms"]) for row in rows)
+
+        def percentile(fraction: float) -> int | None:
+            if not latencies:
+                return None
+            index = min(len(latencies) - 1, max(0, round((len(latencies) - 1) * fraction)))
+            return latencies[index]
+
         return {
             "cells": len(rows),
             "candidate_success": sum(row["outcome"] == "candidate_success" for row in rows),
             "candidate_failure": sum(row["outcome"] == "candidate_failure" for row in rows),
             "invalid_run": sum(row["outcome"] == "invalid_run" for row in rows),
             "reliability_pass_rate": (
-                round(sum(row["reliability_pass"] for row in rows) / len(rows), 6) if rows else None
+                round(sum(row["reliability_pass"] for row in valid) / len(valid), 6)
+                if valid
+                else None
             ),
+            "valid_cells": len(valid),
+            "operational_metrics": {
+                "latency_ms_p50": percentile(0.50),
+                "latency_ms_p95": percentile(0.95),
+                "input_tokens": sum(int(row["metrics"]["input_tokens_estimate"]) for row in rows),
+                "output_tokens": sum(int(row["metrics"]["output_tokens_estimate"]) for row in rows),
+                "cost_basis": sorted(
+                    {str(row["metrics"].get("cost_basis", "unspecified")) for row in rows}
+                ),
+            },
         }
 
     def grouped(values: set[str], selector: Any) -> dict[str, Any]:
@@ -985,6 +1006,10 @@ def aggregate_report_eval(traces: list[dict[str, Any]]) -> dict[str, Any]:
             name: outcomes.get(name, 0)
             for name in ("candidate_success", "candidate_failure", "invalid_run")
         },
+        "by_candidate": grouped(
+            {trace["candidate"]["id"] for trace in traces},
+            lambda trace: {trace["candidate"]["id"]},
+        ),
         "by_gate": grouped(set(GATES), lambda trace: {trace["task"]["primary_gate"]}),
         "by_variant": grouped(variants, lambda trace: {trace["task"]["variant"]}),
         "by_business_context": grouped(contexts, lambda trace: {trace["task"]["business_context"]}),
@@ -993,7 +1018,7 @@ def aggregate_report_eval(traces: list[dict[str, Any]]) -> dict[str, Any]:
         ),
         "by_root_cause": grouped(roots, lambda trace: set(trace["task"]["root_causes"])),
         "claim_boundary": (
-            "controlled_live_calibration_no_model_or_agent_ranking"
+            "controlled_live_internal_diagnostic_no_model_or_agent_ranking"
             if any(trace["candidate"]["adapter"] == "pi-agent-live" for trace in traces)
             else "offline_mock_only_no_model_or_agent_ranking"
         ),
@@ -1078,6 +1103,7 @@ def replay_report_eval(
                 mismatches.append(f"line {line_number}: {key} differs after regrade")
     if not count:
         raise BenchInputError("eval replay input contains no traces")
+    live = any(candidate.adapter == "pi-agent-live" for candidate in candidates)
     return {
         "status": "verified" if not mismatches else "mismatch",
         "traces_regraded": count,
@@ -1086,5 +1112,9 @@ def replay_report_eval(
         "manifest_digest": expected_manifest_digest,
         "runner_protocol_version": RUNNER_PROTOCOL_VERSION,
         "network_calls_performed": 0,
-        "claim_boundary": "offline_mock_only_no_model_or_agent_ranking",
+        "claim_boundary": (
+            "controlled_live_internal_diagnostic_no_model_or_agent_ranking"
+            if live
+            else "offline_mock_only_no_model_or_agent_ranking"
+        ),
     }

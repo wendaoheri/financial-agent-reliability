@@ -155,7 +155,7 @@ class PiAgentOfflineTests(unittest.TestCase):
         self.assertEqual(plan["request_ceiling"]["matrix"], 48)
         self.assertEqual(plan["request_ceiling"]["total"], 52)
         self.assertEqual(plan["request_ceiling"]["retries_per_request"], 0)
-        self.assertEqual(plan["token_ceiling"]["output_hard_cap"], 24832)
+        self.assertEqual(plan["token_ceiling"]["output_hard_cap"], 540928)
         self.assertIsNone(plan["cost_usd_upper_bound"])
         self.assertTrue(plan["approval_required"])
 
@@ -200,6 +200,16 @@ class PiAgentOfflineTests(unittest.TestCase):
         self.assertEqual(
             {candidate.config["output_contract_version"] for candidate in candidates},
             {"2.1.0"},
+        )
+        self.assertTrue(
+            all(len(candidate.config["calibration_case_ids"]) == 10 for candidate in candidates)
+        )
+        self.assertTrue(
+            all(
+                set(candidate.config["live_eval_stages"])
+                == {"smoke", "calibration", "baseline", "supplemental"}
+                for candidate in candidates
+            )
         )
 
     def test_live_config_rejects_removed_output_contracts(self):
