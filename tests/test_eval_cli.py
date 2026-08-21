@@ -357,6 +357,10 @@ class ReportEvalCLITests(unittest.TestCase):
             )
             aggregate = aggregate_eval_bundles(PACK, [output], candidates=[candidate])
             self.assertEqual(aggregate["status"], "completed")
+            self.assertEqual(
+                aggregate["runner_protocol_version"],
+                "financial-differential-eval/3.0",
+            )
             self.assertEqual(aggregate["first_attempt_cells"], 100)
             self.assertEqual(aggregate["candidates"][candidate.id]["unique_cases"], 100)
             migration = analyze_eval_migration(

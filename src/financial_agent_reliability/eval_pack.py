@@ -21,6 +21,9 @@ from financial_agent_reliability.differential_oracle_reference import recompute
 from financial_agent_reliability.grading import grade_differential_output, grade_report_case
 from financial_agent_reliability.models import Candidate
 from financial_agent_reliability.report_eval_pack import (
+    RUNNER_PROTOCOL_VERSION as REPORT_RUNNER_PROTOCOL_VERSION,
+)
+from financial_agent_reliability.report_eval_pack import (
     TRACE_SCHEMA_VERSION as REPORT_TRACE_SCHEMA_VERSION,
 )
 from financial_agent_reliability.report_eval_pack import (
@@ -1579,7 +1582,7 @@ def aggregate_eval_bundles(
         "claim_boundary": "controlled_live_internal_diagnostic_no_model_or_agent_ranking",
         "eval_pack_id": aggregate["eval_pack_id"],
         "manifest_digest": aggregate["manifest_digest"],
-        "runner_protocol_version": RUNNER_PROTOCOL_VERSION,
+        "runner_protocol_version": REPORT_RUNNER_PROTOCOL_VERSION,
         "invalid_run_limit_per_candidate": invalid_run_limit,
         "first_attempt_cells": len(traces),
         "run_ids": sorted(run_ids),
