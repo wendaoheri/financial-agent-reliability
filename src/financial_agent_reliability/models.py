@@ -389,9 +389,9 @@ def load_candidates(path: pathlib.Path) -> list[Candidate]:
                 raise BenchInputError("pi-agent-live requires exactly two provider turns per cell")
             if (
                 values["adapter"] == "pi-agent-live"
-                and config.get("output_contract_version") != "2.1.0"
+                and config.get("output_contract_version") != "3.0.0"
             ):
-                raise BenchInputError("pi-agent-live output contract must be 2.1.0")
+                raise BenchInputError("pi-agent-live output contract must be 3.0.0")
             calibration_case_ids = config.get("calibration_case_ids")
             if calibration_case_ids is not None and (
                 not isinstance(calibration_case_ids, list)

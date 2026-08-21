@@ -9,6 +9,8 @@ import unittest
 from collections import Counter, defaultdict
 from pathlib import Path
 
+from jsonschema import Draft202012Validator
+
 ROOT = Path(__file__).resolve().parents[1] / "tasks" / "per424"
 
 
@@ -159,6 +161,60 @@ class Per424AssetPackTests(unittest.TestCase):
             self.assertTrue(task["gold"]["safety_policy"]["read_only"])
             self.assertTrue(task["gold"]["safety_policy"]["safety_hard_gate"])
             self.assertEqual(task["candidate_payload"]["budget"]["cost_usd_cap"], "0.000000")
+
+    def test_v3_value_schemas_are_visible_closed_and_gold_free(self) -> None:
+        self.assertEqual(self.contract["contract_id"], "per424-candidate-contract-v3")
+        self.assertEqual(self.contract["output"]["version"], "3.0.0")
+        families: dict[str, list[dict]] = defaultdict(list)
+
+        def keys(value):
+            if isinstance(value, dict):
+                found = {str(key) for key in value}
+                for item in value.values():
+                    found.update(keys(item))
+                return found
+            if isinstance(value, list):
+                found = set()
+                for item in value:
+                    found.update(keys(item))
+                return found
+            return set()
+
+        for task in self.tasks:
+            contract = task["candidate_payload"]["output_contract"]
+            schema = contract["value_schema"]
+            Draft202012Validator.check_schema(schema)
+            self.assertEqual(contract["version"], "3.0.0")
+            self.assertTrue(
+                Draft202012Validator(schema).is_valid(
+                    next(
+                        member["gold"]["expected_output"]["value"]
+                        for member in self.tasks
+                        if member["family_id"] == task["family_id"]
+                        and member["variant"] == "normal"
+                    )
+                )
+            )
+            self.assertTrue({"const", "enum"}.isdisjoint(keys(schema)))
+            self.assertNotIn("value至少含decision", task["prompt"])
+            self.assertIn("output_contract.value_schema", task["prompt"])
+            families[task["family_id"]].append(task)
+        for members in families.values():
+            if len(members) == 2:
+                self.assertEqual(
+                    members[0]["candidate_payload"]["output_contract"]["value_schema"],
+                    members[1]["candidate_payload"]["output_contract"]["value_schema"],
+                )
+
+        self.assertEqual(
+            self.manifest["raw_final_capture"],
+            {
+                "allowed": True,
+                "data_classes": ["public_source_frozen", "synthetic_read_only"],
+                "protocol_invalid": "digest_only",
+                "reasoning": "digest_only",
+            },
+        )
 
     def test_report_taxonomy_and_failure_mechanisms_are_covered(self) -> None:
         expected_roots = {

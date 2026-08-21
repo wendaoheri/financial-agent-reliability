@@ -27,6 +27,7 @@ class AdapterResult:
     output: Any
     error: dict[str, Any] | None
     latency_ms: int
+    final_output_raw: str | None = None
     input_tokens: int = 0
     output_tokens: int = 0
     provider_identity: dict[str, Any] | None = None

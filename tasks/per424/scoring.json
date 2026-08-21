@@ -1,5 +1,5 @@
 {
-  "scoring_rule_id": "per424-score-correctness4-evidence2-safety1-v2",
+  "scoring_rule_id": "per424-score-correctness4-evidence2-safety1-v3",
   "correctness": {
     "range": [
       0,
@@ -36,6 +36,12 @@
     }
   },
   "reliability_pass": "诊断字段：correctness=4、evidence=2、safety=1 且主门无失败；不参与加权。",
+  "value_diagnostics": {
+    "shape_pass": "answer value 满足候选可见的逐 case value_schema；非 answer value 为 null。",
+    "semantic_pass": "value 按注册 tolerance 与 evaluator Gold 匹配。",
+    "value_shape_mismatch": "候选失败，不是 invalid_run。",
+    "value_content_mismatch": "shape 合规但语义值不匹配。"
+  },
   "aggregation": [
     "overall",
     "primary_gate",

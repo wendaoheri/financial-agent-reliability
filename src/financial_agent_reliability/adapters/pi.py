@@ -269,6 +269,11 @@ class PiAgentLiveAdapter:
             output=result.get("output"),
             error=result.get("error"),
             latency_ms=max(0, int(result.get("latency_ms", 0))),
+            final_output_raw=(
+                str(result["final_output_raw"])
+                if isinstance(result.get("final_output_raw"), str)
+                else None
+            ),
             input_tokens=max(0, int(usage.get("input_tokens", 0))),
             output_tokens=max(0, int(usage.get("output_tokens", 0))),
             provider_identity=result.get("provider_identity"),

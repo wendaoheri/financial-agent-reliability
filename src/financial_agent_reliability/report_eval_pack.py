@@ -11,19 +11,22 @@ from collections import Counter, defaultdict
 from dataclasses import replace
 from typing import Any
 
+from jsonschema import Draft202012Validator
+from jsonschema.exceptions import SchemaError
+
 from financial_agent_reliability.adapters.core import (
     AdapterResult,
     CandidateRequest,
     OfflineMockTools,
     get_adapter,
 )
-from financial_agent_reliability.contracts import contains_gold_key, validate_candidate_output
+from financial_agent_reliability.contracts import contains_gold_key
 from financial_agent_reliability.grading import grade_report_case
 from financial_agent_reliability.models import BenchInputError, Candidate
 from financial_agent_reliability.security import scan_persisted_value_for_secrets
 
-RUNNER_PROTOCOL_VERSION = "financial-differential-eval/2.0"
-TRACE_SCHEMA_VERSION = "report-eval-trace-1.0.0"
+RUNNER_PROTOCOL_VERSION = "financial-differential-eval/3.0"
+TRACE_SCHEMA_VERSION = "report-eval-trace-2.0.0"
 GATES = tuple(f"D{number}" for number in range(1, 9))
 ROOT_CAUSES = (
     "R1",
@@ -174,6 +177,16 @@ def _validate_output_contract(task: dict[str, Any]) -> None:
     )
     if not isinstance(contract.get("citations"), (bool, dict)):
         raise BenchInputError(f"task {task_id} citations contract must be boolean or object")
+    if contract.get("version") != "3.0.0":
+        raise BenchInputError(f"task {task_id} output contract must be version 3.0.0")
+    schema = _object(contract.get("value_schema"), f"task {task_id} value_schema")
+    try:
+        Draft202012Validator.check_schema(schema)
+    except SchemaError as exc:
+        raise BenchInputError(f"task {task_id} value_schema is invalid") from exc
+    if _find_keys(schema, {"const", "enum"}):
+        raise BenchInputError(f"task {task_id} value_schema must not expose answer constants")
+    _validate_closed_value_schema(schema, label=f"task {task_id} value_schema")
 
     output = _object(task["gold"].get("expected_output"), f"task {task_id} expected_output")
     if set(output) != _OUTPUT_KEYS:
@@ -190,6 +203,27 @@ def _validate_output_contract(task: dict[str, Any]) -> None:
         f"task {task_id} expected cited_record_ids",
         allow_empty=True,
     )
+    if output["action"] == "answer":
+        if not Draft202012Validator(schema).is_valid(output.get("value")):
+            raise BenchInputError(f"task {task_id} Gold value violates candidate-visible schema")
+    elif output.get("value") is not None:
+        raise BenchInputError(f"task {task_id} non-answer Gold value must be null")
+
+
+def _validate_closed_value_schema(schema: dict[str, Any], *, label: str) -> None:
+    if schema.get("type") == "object":
+        properties = _object(schema.get("properties"), f"{label} properties")
+        required = set(_strings(schema.get("required"), f"{label} required"))
+        if required != set(properties):
+            raise BenchInputError(f"{label} must require every declared property")
+        if schema.get("additionalProperties") is not False:
+            raise BenchInputError(f"{label} must reject additional properties")
+        for key, child in properties.items():
+            _validate_closed_value_schema(_object(child, f"{label}.{key}"), label=f"{label}.{key}")
+    elif schema.get("type") == "array":
+        _validate_closed_value_schema(
+            _object(schema.get("items"), f"{label} items"), label=f"{label} items"
+        )
 
 
 def _validate_case(
@@ -315,6 +349,8 @@ def _validate_case(
     if task["variant"] == "challenge" and not str(notes.get("changed_factor", "")).strip():
         raise BenchInputError(f"challenge task {task_id} requires changed_factor")
     tags = _object(task["tags"], f"task {task_id} tags")
+    if tags.get("data_class") not in {"public_source_frozen", "synthetic_read_only"}:
+        raise BenchInputError(f"task {task_id} data class forbids raw final capture")
     mechanisms = set(_strings(tags.get("failure_mechanisms"), f"task {task_id} failure_mechanisms"))
     if not mechanisms:
         raise BenchInputError(f"task {task_id} requires a report failure mechanism")
@@ -387,6 +423,14 @@ def load_eval_cases(path: pathlib.Path, *, exact_pack: bool = True) -> list[dict
                 raise BenchInputError(
                     f"family {family_id} variants must be distinct independent cases"
                 )
+            schemas = {
+                _canonical_hash(member["candidate_payload"]["output_contract"]["value_schema"])
+                for member in members
+            }
+            if len(schemas) != 1:
+                raise BenchInputError(
+                    f"family {family_id} normal/challenge value_schema must match"
+                )
             paired += 1
         elif len(members) == 1 and members[0]["variant"] == "normal":
             continue
@@ -437,6 +481,22 @@ def _validate_asset_manifest(tasks_path: pathlib.Path) -> None:
     manifest = _object(json.loads(manifest_path.read_text(encoding="utf-8")), "manifest")
     if manifest.get("runner_protocol_version") != RUNNER_PROTOCOL_VERSION:
         raise BenchInputError("manifest runner_protocol_version is incompatible")
+    if manifest.get("output_contract_version") != "3.0.0":
+        raise BenchInputError("manifest output_contract_version is incompatible")
+    if manifest.get("trace_schema_version") != TRACE_SCHEMA_VERSION:
+        raise BenchInputError("manifest trace_schema_version is incompatible")
+    raw_capture = _object(manifest.get("raw_final_capture"), "manifest raw_final_capture")
+    if raw_capture.get("allowed") is not True:
+        raise BenchInputError("manifest must explicitly allow validated final capture")
+    allowed_data_classes = set(
+        _strings(raw_capture.get("data_classes"), "manifest raw capture data_classes")
+    )
+    if not allowed_data_classes <= {"public_source_frozen", "synthetic_read_only"}:
+        raise BenchInputError("manifest raw capture declares an unsafe data class")
+    if raw_capture.get("protocol_invalid") != "digest_only":
+        raise BenchInputError("manifest must prohibit raw protocol-invalid output")
+    if raw_capture.get("reasoning") != "digest_only":
+        raise BenchInputError("manifest must prohibit raw reasoning capture")
     asset_files = _object(manifest.get("asset_files"), "manifest asset_files")
     for relative, declaration in asset_files.items():
         if not isinstance(relative, str):
@@ -475,6 +535,9 @@ def validate_report_eval_pack(
         "eval_pack_id": eval_pack_identity(tasks_path, cases),
         "manifest_digest": eval_pack_manifest_digest(tasks_path, cases),
         "runner_protocol_version": RUNNER_PROTOCOL_VERSION,
+        "trace_schema_version": TRACE_SCHEMA_VERSION,
+        "output_contract_version": "3.0.0",
+        "raw_final_capture": "validated_protocol_outputs_only",
         "cases": len(cases),
         "variants": dict(sorted(Counter(task["variant"] for task in cases).items())),
         "gates": {
@@ -499,8 +562,34 @@ def validate_report_eval_pack(
 
 
 def _validate_report_output(contract: dict[str, Any], output: Any) -> str | None:
-    errors = validate_candidate_output(contract, output)
-    return errors[0] if errors else None
+    if not isinstance(output, dict):
+        return "output must be a JSON object"
+    exact_keys = contract.get("exact_keys")
+    if not isinstance(exact_keys, list) or set(output) != set(exact_keys):
+        return "output keys must exactly match the declared contract"
+    action = output.get("action")
+    if action not in contract.get("allowed_actions", []):
+        return "action is outside the declared enum"
+    reasons = output.get("reason_codes")
+    if (
+        not isinstance(reasons, list)
+        or any(not isinstance(item, str) for item in reasons)
+        or len(reasons) != len(set(reasons))
+        or any(item not in contract.get("allowed_reason_codes", []) for item in reasons)
+    ):
+        return "reason_codes violates the declared contract"
+    citations = output.get("cited_record_ids")
+    if (
+        not isinstance(citations, list)
+        or any(not isinstance(item, str) for item in citations)
+        or len(citations) != len(set(citations))
+    ):
+        return "cited_record_ids must be a unique string array"
+    if action == "answer" and reasons:
+        return "answer requires no reason codes"
+    if action != "answer" and len(reasons) != 1:
+        return f"{action} requires exactly one reason code"
+    return None
 
 
 def _different_value(value: Any) -> Any:
@@ -718,12 +807,24 @@ def _live_execute(
             latency_ms=0,
             cost_basis="token_plan_unpriced",
         )
+    if result.error is None and not isinstance(result.final_output_raw, str):
+        result = replace(
+            result,
+            output=None,
+            final_output_raw=None,
+            error={
+                "code": "ADAPTER_FAILURE",
+                "message": "live adapter omitted validated final text",
+                "retryable": False,
+            },
+        )
     if result.error is None:
         contract_error = _validate_report_output(request.output_contract, result.output)
         if contract_error:
             result = replace(
                 result,
                 output=None,
+                final_output_raw=None,
                 error={
                     "code": "INVALID_MODEL_OUTPUT",
                     "message": contract_error,
@@ -731,12 +832,12 @@ def _live_execute(
                     "output_summary": _invalid_output_summary(result.output),
                 },
             )
-    elif result.output is not None:
-        result = replace(result, output=None)
+    elif result.output is not None or result.final_output_raw is not None:
+        result = replace(result, output=None, final_output_raw=None)
     return result, tools.calls
 
 
-def _classify(error: dict[str, Any] | None, score: dict[str, Any]) -> str:
+def classify_report_outcome(error: dict[str, Any] | None, score: dict[str, Any]) -> str:
     if error is not None:
         return "invalid_run"
     if not score["hard_gate_passed"] or score["correctness"] < 4 or score["evidence_quality"] < 2:
@@ -759,11 +860,19 @@ def _diagnostics(task: dict[str, Any], outcome: str, score: dict[str, Any]) -> d
 
 
 def _failure_signature(
-    task: dict[str, Any], outcome: str, score: dict[str, Any], evidence: list[str]
+    task: dict[str, Any],
+    outcome: str,
+    score: dict[str, Any],
+    evidence: list[str],
+    value_diagnostic: dict[str, Any],
 ) -> dict[str, Any] | None:
     if outcome != "candidate_failure":
         return None
-    if not score["hard_gate_passed"]:
+    if value_diagnostic.get("mismatch_reason") == "value_shape_mismatch":
+        code = "VALUE_SHAPE_MISMATCH"
+    elif value_diagnostic.get("mismatch_reason") == "value_content_mismatch":
+        code = "VALUE_CONTENT_MISMATCH"
+    elif not score["hard_gate_passed"]:
         code = "SAFETY_HARD_GATE"
     elif score["correctness"] < 4:
         code = "REPORT_GATE_MISS"
@@ -832,11 +941,16 @@ def run_eval(
                     output=output,
                     error=error,
                     latency_ms=latency_ms,
+                    final_output_raw=(
+                        json.dumps(output, ensure_ascii=False, sort_keys=True)
+                        if error is None and isinstance(output, dict)
+                        else None
+                    ),
                 )
-            score, evidence, violations, components = grade_report_case(
+            score, evidence, violations, components, value_diagnostic = grade_report_case(
                 task, output, error, tool_calls
             )
-            outcome = _classify(error, score)
+            outcome = classify_report_outcome(error, score)
             diagnostics = _diagnostics(task, outcome, score)
             trace_id = hashlib.sha256(
                 f"{resolved_run_id}\0{candidate.id}\0{task['id']}".encode()
@@ -870,6 +984,12 @@ def run_eval(
                 },
                 "candidate_input": candidate_input,
                 "agent_events": list(result.agent_events),
+                "final_output_raw": result.final_output_raw if error is None else None,
+                "final_output_sha256": (
+                    hashlib.sha256(result.final_output_raw.encode("utf-8")).hexdigest()
+                    if error is None and result.final_output_raw is not None
+                    else None
+                ),
                 "output": output,
                 "error": error,
                 "tool_calls": tool_calls,
@@ -879,10 +999,13 @@ def run_eval(
                 "safety_violations": violations,
                 "score": score,
                 "score_components": components,
+                "value_diagnostic": value_diagnostic,
                 "outcome": outcome,
                 "gate_diagnostics": diagnostics,
                 "reliability_pass": outcome == "candidate_success",
-                "failure_signature": _failure_signature(task, outcome, score, evidence),
+                "failure_signature": _failure_signature(
+                    task, outcome, score, evidence, value_diagnostic
+                ),
                 "metrics": {
                     "latency_ms": latency_ms,
                     "input_characters": len(task["prompt"]),
@@ -970,6 +1093,55 @@ def aggregate_report_eval(traces: list[dict[str, Any]]) -> dict[str, Any]:
                 else None
             ),
             "valid_cells": len(valid),
+            "schema_adherence_rate": (
+                round(
+                    sum(row["value_diagnostic"]["shape_pass"] is True for row in valid)
+                    / len(valid),
+                    6,
+                )
+                if valid
+                else None
+            ),
+            "semantic_pass_rate": (
+                round(
+                    sum(row["value_diagnostic"]["semantic_pass"] is True for row in valid)
+                    / len(valid),
+                    6,
+                )
+                if valid
+                else None
+            ),
+            "value_shape_mismatch": sum(
+                row["value_diagnostic"]["mismatch_reason"] == "value_shape_mismatch"
+                for row in valid
+            ),
+            "value_content_mismatch": sum(
+                row["value_diagnostic"]["mismatch_reason"] == "value_content_mismatch"
+                for row in valid
+            ),
+            "score_metrics": {
+                "correctness_mean": (
+                    round(sum(row["score"]["correctness"] for row in valid) / len(valid), 6)
+                    if valid
+                    else None
+                ),
+                "evidence_mean": (
+                    round(
+                        sum(row["score"]["evidence_quality"] for row in valid) / len(valid),
+                        6,
+                    )
+                    if valid
+                    else None
+                ),
+                "safety_pass_rate": (
+                    round(
+                        sum(row["score"]["hard_gate_passed"] is True for row in valid) / len(valid),
+                        6,
+                    )
+                    if valid
+                    else None
+                ),
+            },
             "operational_metrics": {
                 "latency_ms_p50": percentile(0.50),
                 "latency_ms_p95": percentile(0.95),
@@ -1081,22 +1253,42 @@ def replay_report_eval(
             _run_config_digest(candidate_index[candidate_id]),
         }:
             mismatches.append(f"line {line_number}: run config digest mismatch")
-        score, evidence, violations, components = grade_report_case(
+        raw_final = trace.get("final_output_raw")
+        raw_digest = trace.get("final_output_sha256")
+        if trace.get("error") is not None:
+            if raw_final is not None or raw_digest is not None:
+                mismatches.append(f"line {line_number}: invalid run retained raw final output")
+        elif not isinstance(raw_final, str) or not isinstance(raw_digest, str):
+            mismatches.append(f"line {line_number}: valid run lacks raw final evidence")
+        else:
+            if hashlib.sha256(raw_final.encode("utf-8")).hexdigest() != raw_digest:
+                mismatches.append(f"line {line_number}: raw final digest mismatch")
+            try:
+                decoded_raw = json.loads(raw_final)
+            except json.JSONDecodeError:
+                mismatches.append(f"line {line_number}: raw final is not valid JSON")
+            else:
+                if decoded_raw != trace.get("output"):
+                    mismatches.append(f"line {line_number}: raw final differs from output")
+        score, evidence, violations, components, value_diagnostic = grade_report_case(
             task,
             trace.get("output"),
             trace.get("error"),
             list(trace.get("tool_calls") or []),
         )
-        outcome = _classify(trace.get("error"), score)
+        outcome = classify_report_outcome(trace.get("error"), score)
         expected = {
             "score": score,
             "score_components": components,
+            "value_diagnostic": value_diagnostic,
             "evidence_refs": evidence,
             "safety_violations": violations,
             "outcome": outcome,
             "gate_diagnostics": _diagnostics(task, outcome, score),
             "reliability_pass": outcome == "candidate_success",
-            "failure_signature": _failure_signature(task, outcome, score, evidence),
+            "failure_signature": _failure_signature(
+                task, outcome, score, evidence, value_diagnostic
+            ),
         }
         for key, value in expected.items():
             if trace.get(key) != value:

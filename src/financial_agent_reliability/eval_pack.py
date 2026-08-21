@@ -18,13 +18,14 @@ from jsonschema import Draft202012Validator
 from financial_agent_reliability.contracts import validate_candidate_output
 from financial_agent_reliability.differential_oracle import evaluate
 from financial_agent_reliability.differential_oracle_reference import recompute
-from financial_agent_reliability.grading import grade_differential_output
+from financial_agent_reliability.grading import grade_differential_output, grade_report_case
 from financial_agent_reliability.models import Candidate
 from financial_agent_reliability.report_eval_pack import (
     TRACE_SCHEMA_VERSION as REPORT_TRACE_SCHEMA_VERSION,
 )
 from financial_agent_reliability.report_eval_pack import (
     aggregate_report_eval,
+    classify_report_outcome,
     replay_report_eval,
     validate_report_eval_pack,
 )
@@ -879,8 +880,10 @@ def _report_bundle_artifacts(output_directory: pathlib.Path) -> list[dict[str, A
 
 def _atomic_write_text(path: pathlib.Path, value: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+    path.parent.chmod(0o700)
     temporary = path.with_name(f".{path.name}.tmp")
     temporary.write_text(value, encoding="utf-8")
+    temporary.chmod(0o600)
     temporary.replace(path)
 
 
@@ -1009,6 +1012,11 @@ def _finalize_report_bundle(
     if adapters == {"pi-agent-live"}:
         if live_stage == "baseline" and invalid_runs > 5:
             status = "operationally_invalid"
+        elif (
+            live_stage == "calibration"
+            and next(iter(aggregate["by_candidate"].values()))["schema_adherence_rate"] < 0.9
+        ):
+            status = "calibration_failed"
         elif invalid_runs:
             status = "completed_with_invalids"
         else:
@@ -1062,7 +1070,9 @@ def _run_live_report_eval_pack(
     checkpoint_directory = output_directory / ".checkpoint"
     steps_directory = checkpoint_directory / "cases"
     output_directory.mkdir(parents=True, exist_ok=True)
+    output_directory.chmod(0o700)
     steps_directory.mkdir(parents=True, exist_ok=True)
+    steps_directory.chmod(0o700)
     identity = _report_checkpoint_identity(
         validation=validation,
         candidate=candidate,
@@ -1183,6 +1193,7 @@ def _run_report_eval_pack(
     )
     output_directory = pathlib.Path(output_directory)
     output_directory.mkdir(parents=True, exist_ok=False)
+    output_directory.chmod(0o700)
     return _finalize_report_bundle(
         output_directory,
         validation,
@@ -1285,6 +1296,198 @@ def _replay_report_eval_pack(
         "outcome_counts": aggregate["outcomes"],
         "network_calls_performed": 0,
         "claim_boundary": validation["claim_boundary"],
+    }
+
+
+def _verify_report_bundle_artifacts(bundle: pathlib.Path) -> dict[str, Any]:
+    manifest = _load(bundle / "manifest.json")
+    if manifest.get("contract_type") != "report_eval_bundle":
+        raise EvalPackError(f"not a report evaluation bundle: {bundle}")
+    registered = {
+        row.get("path"): row.get("sha256")
+        for row in manifest.get("artifacts", [])
+        if isinstance(row, dict)
+    }
+    expected = {
+        "validation.json",
+        "trace.jsonl",
+        "aggregate.json",
+        "failure_signatures.json",
+    }
+    if set(registered) != expected:
+        raise EvalPackError("report bundle manifest has missing or unexpected artifacts")
+    for name, digest in registered.items():
+        if not isinstance(digest, str) or _sha256(bundle / name) != digest:
+            raise EvalPackError(f"report bundle hash mismatch: {name}")
+    return manifest
+
+
+def _migration_rate(rows: list[dict[str, Any]], key: str) -> tuple[float | None, int]:
+    valid = [row for row in rows if row[key] != "invalid_run"]
+    if not valid:
+        return None, 0
+    return sum(row[key] == "candidate_success" for row in valid) / len(valid), len(valid)
+
+
+def analyze_eval_migration(
+    pack_directory: pathlib.Path,
+    old_bundles: list[pathlib.Path],
+    new_bundles: list[pathlib.Path],
+    *,
+    candidates: list[Candidate],
+    regression_limit: float = 0.05,
+    old_success_failure_limit: int = 5,
+) -> dict[str, Any]:
+    """Pair old observations with v3 results and regrade through the central scorer."""
+
+    if not _is_report_pack(pack_directory):
+        raise EvalPackError("eval migration requires a report Eval Pack")
+    if not old_bundles or not new_bundles:
+        raise EvalPackError("eval migration requires old and new bundles")
+    if not 0 <= regression_limit <= 1:
+        raise EvalPackError("migration regression limit must be between zero and one")
+    if old_success_failure_limit < 0:
+        raise EvalPackError("old-success failure limit must be non-negative")
+
+    validation = validate_eval_pack(pack_directory, candidates=candidates)
+    cases = load_report_cases(pack_directory)
+    tasks = {case["id"]: case for case in cases}
+    expected_cells = {(candidate.id, case["id"]) for candidate in candidates for case in cases}
+
+    def collect(
+        bundles: list[pathlib.Path], *, replay_current: bool
+    ) -> tuple[dict[tuple[str, str], dict[str, Any]], list[dict[str, Any]]]:
+        collected: dict[tuple[str, str], dict[str, Any]] = {}
+        evidence: list[dict[str, Any]] = []
+        for raw_bundle in bundles:
+            bundle = pathlib.Path(raw_bundle)
+            manifest = _verify_report_bundle_artifacts(bundle)
+            if replay_current:
+                replay = _replay_report_eval_pack(
+                    pack_directory,
+                    bundle,
+                    candidates=candidates,
+                )
+                evidence.append({"bundle": bundle.as_posix(), **replay})
+            else:
+                evidence.append(
+                    {
+                        "bundle": bundle.as_posix(),
+                        "status": "artifact_hashes_verified",
+                        "eval_pack_id": manifest.get("eval_pack_id"),
+                        "runner_protocol_version": manifest.get("runner_protocol_version"),
+                        "artifacts_verified": 4,
+                    }
+                )
+            for trace in _read_trace_rows(bundle / "trace.jsonl"):
+                cell = (
+                    str((trace.get("candidate") or {}).get("id")),
+                    str((trace.get("task") or {}).get("id")),
+                )
+                if cell in collected:
+                    raise EvalPackError(f"duplicate migration cell: {cell[0]} / {cell[1]}")
+                collected[cell] = trace
+        actual_cells = set(collected)
+        if actual_cells != expected_cells:
+            missing = expected_cells - actual_cells
+            unexpected = actual_cells - expected_cells
+            raise EvalPackError(
+                f"migration matrix mismatch: missing={len(missing)}, unexpected={len(unexpected)}"
+            )
+        return collected, evidence
+
+    old, old_evidence = collect(old_bundles, replay_current=False)
+    new, new_evidence = collect(new_bundles, replay_current=True)
+    paired: list[dict[str, Any]] = []
+    for candidate_id, task_id in sorted(expected_cells):
+        task = tasks[task_id]
+        old_trace = old[(candidate_id, task_id)]
+        new_trace = new[(candidate_id, task_id)]
+        old_score, _evidence, _violations, _components, old_diagnostic = grade_report_case(
+            task,
+            old_trace.get("output"),
+            old_trace.get("error"),
+            list(old_trace.get("tool_calls") or []),
+        )
+        counterfactual = classify_report_outcome(old_trace.get("error"), old_score)
+        paired.append(
+            {
+                "candidate_id": candidate_id,
+                "task_id": task_id,
+                "old_recorded_outcome": old_trace.get("outcome"),
+                "old_v3_counterfactual_outcome": counterfactual,
+                "old_v3_value_diagnostic": old_diagnostic,
+                "new_v3_outcome": new_trace.get("outcome"),
+                "new_v3_value_diagnostic": new_trace.get("value_diagnostic"),
+            }
+        )
+
+    def transitions(left: str, right: str) -> dict[str, int]:
+        counts = Counter(f"{row[left]}->{row[right]}" for row in paired)
+        return dict(sorted(counts.items()))
+
+    comparisons: dict[str, Any] = {}
+    review_reasons: list[str] = []
+    for candidate_id in sorted(candidate.id for candidate in candidates):
+        rows = [row for row in paired if row["candidate_id"] == candidate_id]
+        old_rate, old_denominator = _migration_rate(rows, "old_recorded_outcome")
+        counterfactual_rate, counterfactual_denominator = _migration_rate(
+            rows, "old_v3_counterfactual_outcome"
+        )
+        new_rate, new_denominator = _migration_rate(rows, "new_v3_outcome")
+        delta = new_rate - old_rate if old_rate is not None and new_rate is not None else None
+        old_success_to_new_failure = sum(
+            row["old_recorded_outcome"] == "candidate_success"
+            and row["new_v3_outcome"] == "candidate_failure"
+            for row in rows
+        )
+        reasons = []
+        if delta is not None and delta < -regression_limit:
+            reasons.append("candidate_success_rate_regressed_over_limit")
+        if old_success_to_new_failure >= old_success_failure_limit:
+            reasons.append("old_success_to_new_failure_limit_reached")
+        if reasons:
+            review_reasons.extend(f"{candidate_id}:{reason}" for reason in reasons)
+        comparisons[candidate_id] = {
+            "old_recorded_success_rate": old_rate,
+            "old_recorded_denominator": old_denominator,
+            "old_v3_counterfactual_success_rate": counterfactual_rate,
+            "old_v3_counterfactual_denominator": counterfactual_denominator,
+            "new_v3_success_rate": new_rate,
+            "new_v3_denominator": new_denominator,
+            "new_minus_old_success_rate": delta,
+            "old_success_to_new_failure": old_success_to_new_failure,
+            "review_reasons": reasons,
+        }
+
+    return {
+        "contract_type": "report_eval_protocol_migration_analysis",
+        "contract_version": REPORT_TRACE_SCHEMA_VERSION,
+        "status": "completed_review_required" if review_reasons else "completed",
+        "claim_boundary": "controlled_live_internal_diagnostic_no_model_or_agent_ranking",
+        "analysis_mode": "paired_counterfactual_regrade_no_network",
+        "eval_pack_id": validation["eval_pack_id"],
+        "runner_protocol_version": validation["runner_protocol_version"],
+        "network_calls_performed": 0,
+        "paired_cells": len(paired),
+        "review_policy": {
+            "success_rate_regression_strictly_greater_than": regression_limit,
+            "old_success_to_new_failure_at_least": old_success_failure_limit,
+        },
+        "review_reasons": review_reasons,
+        "comparisons": comparisons,
+        "transitions": {
+            "old_recorded_to_old_v3_counterfactual": transitions(
+                "old_recorded_outcome", "old_v3_counterfactual_outcome"
+            ),
+            "old_recorded_to_new_v3": transitions("old_recorded_outcome", "new_v3_outcome"),
+            "old_v3_counterfactual_to_new_v3": transitions(
+                "old_v3_counterfactual_outcome", "new_v3_outcome"
+            ),
+        },
+        "old_bundle_evidence": old_evidence,
+        "new_bundle_replays": new_evidence,
+        "cells": paired,
     }
 
 

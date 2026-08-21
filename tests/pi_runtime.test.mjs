@@ -7,7 +7,7 @@ import {
 } from "../src/financial_agent_reliability/adapters/pi_runtime.mjs";
 import {
   assertPinnedLiveRuntime,
-  decodeOutputV21,
+  decodeOutputV30,
   generationPayload,
   liveSystemPrompt,
   makeLiveModel,
@@ -116,29 +116,32 @@ test("applies JSON mode only to the final provider turn", () => {
 });
 
 
-test("classifies output-contract v2.1 without persisting model text", () => {
-  const invalid = decodeOutputV21([{ content: [{ type: "text", text: "not-json secret detail" }] }]);
+test("classifies output-contract v3 without persisting protocol-invalid text", () => {
+  const invalid = decodeOutputV30([{ content: [{ type: "text", text: "not-json secret detail" }] }]);
   assert.equal(invalid.output, null);
+  assert.equal(invalid.raw, null);
   assert.equal(invalid.diagnostic.classification, "invalid_json");
   assert.equal(invalid.diagnostic.characters, 22);
   assert.equal(invalid.diagnostic.sha256.length, 64);
   assert.equal(JSON.stringify(invalid.diagnostic).includes("secret detail"), false);
-  const valid = decodeOutputV21([{ content: [{ type: "text", text: '{"status":"answer","value":20,"reason_codes":[]}' }] }]);
+  const raw = '{"status":"answer","value":20,"reason_codes":[]}';
+  const valid = decodeOutputV30([{ content: [{ type: "text", text: raw }] }]);
   assert.deepEqual(valid.output, { status: "answer", value: 20, reason_codes: [] });
+  assert.equal(valid.raw, raw);
   assert.equal(valid.diagnostic.classification, "valid");
 });
 
 
-test("the v2.1 decoder only parses; the Python runner owns contract semantics", () => {
+test("the v3 decoder only parses; the Python runner owns contract semantics", () => {
   const refusalWithText = [{ content: [{
     type: "text",
     text: '{"status":"refuse","value":"I cannot trade","reason_codes":["REAL_TRADE_FORBIDDEN"]}',
   }] }];
-  const parsed = decodeOutputV21(refusalWithText);
+  const parsed = decodeOutputV30(refusalWithText);
   assert.deepEqual(parsed.output, { status: "refuse", value: "I cannot trade", reason_codes: ["REAL_TRADE_FORBIDDEN"] });
-  assert.equal(parsed.diagnostic.contract_version, "2.1.0");
+  assert.equal(parsed.diagnostic.contract_version, "3.0.0");
   assert.equal(parsed.diagnostic.classification, "valid");
-  const accepted = decodeOutputV21([{ content: [{
+  const accepted = decodeOutputV30([{ content: [{
     type: "text", text: '{"status":"refuse","value":null,"reason_codes":["REAL_TRADE_FORBIDDEN"]}',
   }] }]);
   assert.deepEqual(accepted.output, { status: "refuse", value: null, reason_codes: ["REAL_TRADE_FORBIDDEN"] });
@@ -146,14 +149,19 @@ test("the v2.1 decoder only parses; the Python runner owns contract semantics", 
 
 
 test("builds a Gold-free report contract prompt for the controlled live path", () => {
+  const valueSchema = { type: "object", properties: { answer: { type: "number" } }, required: ["answer"], additionalProperties: false };
   const prompt = liveSystemPrompt({ output_contract: {
     exact_keys: ["action", "value", "reason_codes", "cited_record_ids"],
     allowed_actions: ["answer", "abstain", "escalate", "reject_action"],
     allowed_reason_codes: ["INSUFFICIENT_EVIDENCE", "UNAUTHORIZED_PERMISSION"],
+    version: "3.0.0",
+    value_schema: valueSchema,
   } });
   assert.match(prompt, /read_fixture exactly once/);
   assert.match(prompt, /cited_record_ids/);
   assert.match(prompt, /reject_action/);
+  assert.match(prompt, /output_contract\.value_schema/);
+  assert.doesNotMatch(prompt, /additionalProperties/);
   assert.doesNotMatch(prompt, /Gold|expected_output/);
 });
 
@@ -176,7 +184,7 @@ test("runs the live pi tool loop through a local faux provider and binds exact i
   try {
     const result = await runLivePiAgent({
       mode: "run",
-      candidate: { ...candidate, config: { ...candidate.config, output_contract_version: "2.1.0" } },
+      candidate: { ...candidate, config: { ...candidate.config, output_contract_version: "3.0.0" } },
       runtime: {
         base_url: "https://example.invalid/v1",
         endpoint_id: "fixture-endpoint",
@@ -192,6 +200,7 @@ test("runs the live pi tool loop through a local faux provider and binds exact i
         tools: ["mock_portfolio_read"],
         resources: [{ fixture_id: "portfolio_synthetic", as_of: "2025-01-01T00:00:00Z", market: "MULTI" }],
         budget: { max_tool_calls: 1 },
+        output_contract: { version: "3.0.0" },
       },
     }, { apiKey: "memory-only", model: registration.getModel("fixture-model") });
     assert.equal(result.provider_turns, 2);
@@ -200,7 +209,11 @@ test("runs the live pi tool loop through a local faux provider and binds exact i
     assert.deepEqual(result.output, {
       status: "refuse", value: null, reason_codes: ["REAL_TRADE_FORBIDDEN"],
     });
-    assert.equal(result.provider_observability.output_diagnostic.contract_version, "2.1.0");
+    assert.equal(
+      result.final_output_raw,
+      '{"status":"refuse","value":null,"reason_codes":["REAL_TRADE_FORBIDDEN"]}',
+    );
+    assert.equal(result.provider_observability.output_diagnostic.contract_version, "3.0.0");
     assert.equal(result.provider_observability.output_diagnostic.classification, "valid");
     assert.deepEqual(result.provider_observability.output_transport, {
       mode: "json_object", applied_provider_turn: 2, final_tool_choice: "none",
@@ -219,7 +232,7 @@ test("blocks a live pi response whose provider identity differs", async () => {
   try {
     const result = await runLivePiAgent({
       mode: "preflight",
-      candidate: { ...candidate, config: { ...candidate.config, output_contract_version: "2.1.0" } },
+      candidate: { ...candidate, config: { ...candidate.config, output_contract_version: "3.0.0" } },
       runtime: {
         base_url: "https://example.invalid/v1",
         endpoint_id: "fixture-endpoint",

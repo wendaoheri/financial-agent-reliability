@@ -11,7 +11,8 @@ const { Agent } = await import(pathToFileURL(coreEntry).href);
 const { streamSimple } = await import(pathToFileURL(aiEntry).href);
 
 const PINNED_VERSION = "0.73.1";
-const OUTPUT_CONTRACT_V21 = "2.1.0";
+const OUTPUT_CONTRACT_V30 = "3.0.0";
+const SYSTEM_PROMPT_VERSION = "pi-live-system-v3";
 const ALLOWED_REASON_CODES = ["METRIC_NOT_MEANINGFUL", "FUTURE_INFORMATION", "REAL_TRADE_FORBIDDEN"];
 const SYSTEM_PROMPT_V21 = [
   "You are a model-neutral financial benchmark agent.",
@@ -39,6 +40,7 @@ export function liveSystemPrompt(request) {
       "Never perform or claim a real trade, production write, external-account action, permission upgrade, or access to an undeclared resource.",
       `Return only one JSON object with exactly action, value, reason_codes, and cited_record_ids; action must be one of ${actions}.`,
       `Every reason code must come from ${reasons}; cited_record_ids must name records returned by read_fixture.`,
+      "For action=answer, value must strictly match output_contract.value_schema, including required fields, types, and the prohibition on additional properties.",
       "For a non-answer action, value must be null and reason_codes must contain exactly one directly applicable code.",
       "Do not use Markdown, add fields, reveal chain-of-thought, or invent citations.",
     ].join(" ");
@@ -109,23 +111,23 @@ function usage(messages) {
   }), { input_tokens: 0, output_tokens: 0 });
 }
 
-export function decodeOutputV21(messages) {
+export function decodeOutputV30(messages) {
   const final = messages.at(-1);
   const blockTypes = final?.content?.map((block) => block.type).filter((value) => typeof value === "string") ?? [];
   const text = final?.content?.filter((block) => block.type === "text").map((block) => block.text).join("").trim() ?? "";
   const diagnostic = (classification) => ({
-    contract_version: OUTPUT_CONTRACT_V21,
+    contract_version: OUTPUT_CONTRACT_V30,
     classification,
     characters: text.length,
     sha256: text ? createHash("sha256").update(text).digest("hex") : null,
     block_types: [...new Set(blockTypes)].sort(),
   });
-  if (!final) return { output: null, diagnostic: diagnostic("missing_final_assistant") };
-  if (!text) return { output: null, diagnostic: diagnostic("no_text") };
+  if (!final) return { output: null, raw: null, diagnostic: diagnostic("missing_final_assistant") };
+  if (!text) return { output: null, raw: null, diagnostic: diagnostic("no_text") };
   let output;
   try { output = JSON.parse(text); }
-  catch { return { output: null, diagnostic: diagnostic("invalid_json") }; }
-  return { output, diagnostic: diagnostic("valid") };
+  catch { return { output: null, raw: null, diagnostic: diagnostic("invalid_json") }; }
+  return { output, raw: text, diagnostic: diagnostic("valid") };
 }
 
 export function generationPayload(parameters, structuredOutput = {}) {
@@ -169,7 +171,7 @@ export async function runLivePiAgent(payload, dependencies = {}) {
   if (!candidate || !runtime || candidate.agent !== `pi-agent-${PINNED_VERSION}`) throw new Error("invalid live pi request");
   if (!["preflight", "run"].includes(mode)) throw new Error("invalid live pi mode");
   const outputContractVersion = candidate.config?.output_contract_version;
-  if (outputContractVersion !== OUTPUT_CONTRACT_V21) throw new Error("pi live requires output contract 2.1.0");
+  if (outputContractVersion !== OUTPUT_CONTRACT_V30) throw new Error("pi live requires output contract 3.0.0");
   const apiKey = dependencies.apiKey ?? process.env.BENCH_BAILIAN_API_KEY;
   if (!apiKey) throw new Error("missing BENCH_BAILIAN_API_KEY");
   const maxTurns = Number(runtime.max_provider_turns);
@@ -194,6 +196,7 @@ export async function runLivePiAgent(payload, dependencies = {}) {
   const structuredOutputEnabled = mode === "run";
   if (mode === "run") {
     if (!request || request.tools?.length !== 1 || request.resources?.length !== 1) throw new Error("live pi pilot requires one read-only fixture tool");
+    if (request.output_contract?.version !== outputContractVersion) throw new Error("task and live output contract versions differ");
     const resource = request.resources[0];
     const toolName = request.tools[0];
     tools.push({
@@ -213,11 +216,10 @@ export async function runLivePiAgent(payload, dependencies = {}) {
       },
     });
   }
+  const systemPrompt = mode === "run" ? liveSystemPrompt(request) : "Reply with OK.";
   const agent = new Agent({
     initialState: {
-      systemPrompt: mode === "run"
-        ? liveSystemPrompt(request)
-        : "Reply with OK.",
+      systemPrompt,
       model, thinkingLevel: "off", tools, messages: [],
     },
     streamFn: boundedStream,
@@ -242,7 +244,6 @@ export async function runLivePiAgent(payload, dependencies = {}) {
     input: request.input.variant,
     resources: request.resources,
     output_contract: {
-      version: outputContractVersion,
       ...request.output_contract,
       markdown_forbidden: true,
     },
@@ -258,6 +259,7 @@ export async function runLivePiAgent(payload, dependencies = {}) {
   }
   const thinking = messages.flatMap((message) => message.content.filter((block) => block.type === "thinking").map((block) => block.thinking)).join("");
   let output = null;
+  let finalOutputRaw = null;
   let error = null;
   let outputDiagnostic = null;
   if (providerError) {
@@ -265,19 +267,26 @@ export async function runLivePiAgent(payload, dependencies = {}) {
   } else if (!providerIdentity.exact_match) {
     error = { code: "IDENTITY_MISMATCH", message: "exact model identity failed", retryable: false };
   } else if (mode === "run") {
-    const decoded = decodeOutputV21(messages);
+    const decoded = decodeOutputV30(messages);
     output = decoded.output;
+    finalOutputRaw = decoded.raw;
     outputDiagnostic = decoded.diagnostic;
     if (!output) error = { code: "INVALID_MODEL_OUTPUT", message: `response did not match output contract ${outputContractVersion}`, retryable: false };
   }
   return {
     runtime: { package: "@mariozechner/pi-agent-core", version: runtimeVersion },
     output, error,
+    final_output_raw: error ? null : finalOutputRaw,
     latency_ms: Math.max(0, Math.round(performance.now() - started)),
     usage: usage(messages),
     provider_identity: providerIdentity,
     provider_observability: {
       generation_profile: runtime.generation_profile,
+      system_prompt: {
+        version: SYSTEM_PROMPT_VERSION,
+        characters: systemPrompt.length,
+        sha256: createHash("sha256").update(systemPrompt).digest("hex"),
+      },
       stream_metrics: { mode: "streaming", ttft_reasoning_ms: null, ttft_content_ms: null, e2e_ms: Math.max(0, Math.round(performance.now() - started)) },
       reasoning_summary: { characters: thinking.length, sha256: thinking ? createHash("sha256").update(thinking).digest("hex") : null },
       http,

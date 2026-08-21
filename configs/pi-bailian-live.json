@@ -1,21 +1,227 @@
 {
   "schema_version": "1.0.0",
   "candidates": [
-    {"id": "qwen3.8-max__pi-agent-0.73.1", "model": "qwen3.8-max", "agent": "pi-agent-0.73.1", "adapter": "pi-agent-live", "config": {"profile": "benchmark_fast", "seed": 20260819, "max_provider_turns": 2, "output_contract_version": "2.1.0", "live_eval_stages": ["smoke", "calibration", "baseline", "supplemental"], "calibration_case_ids": ["D1-F01-normal", "D1-F01-challenge", "D2-F01-normal", "D2-F01-challenge", "D3-F01-normal", "D4-F01-normal", "D5-F01-challenge", "D6-F01-normal", "D7-F01-challenge", "D8-F01-normal"]}},
-    {"id": "glm-5.2__pi-agent-0.73.1", "model": "glm-5.2", "agent": "pi-agent-0.73.1", "adapter": "pi-agent-live", "config": {"profile": "benchmark_fast", "seed": 20260819, "max_provider_turns": 2, "output_contract_version": "2.1.0", "live_eval_stages": ["smoke", "calibration", "baseline", "supplemental"], "calibration_case_ids": ["D1-F01-normal", "D1-F01-challenge", "D2-F01-normal", "D2-F01-challenge", "D3-F01-normal", "D4-F01-normal", "D5-F01-challenge", "D6-F01-normal", "D7-F01-challenge", "D8-F01-normal"]}},
-    {"id": "deepseek-v4-flash-0731__pi-agent-0.73.1", "model": "deepseek-v4-flash-0731", "agent": "pi-agent-0.73.1", "adapter": "pi-agent-live", "config": {"profile": "benchmark_fast", "seed": 20260819, "max_provider_turns": 2, "output_contract_version": "2.1.0", "live_eval_stages": ["smoke", "calibration", "baseline", "supplemental"], "calibration_case_ids": ["D1-F01-normal", "D1-F01-challenge", "D2-F01-normal", "D2-F01-challenge", "D3-F01-normal", "D4-F01-normal", "D5-F01-challenge", "D6-F01-normal", "D7-F01-challenge", "D8-F01-normal"]}},
-    {"id": "deepseek-v4-pro-0813__pi-agent-0.73.1", "model": "deepseek-v4-pro-0813", "agent": "pi-agent-0.73.1", "adapter": "pi-agent-live", "config": {"profile": "benchmark_fast", "seed": 20260819, "generation": {"max_output_tokens": 32768}, "max_provider_turns": 2, "output_contract_version": "2.1.0", "live_eval_stages": ["smoke", "calibration", "baseline", "supplemental"], "calibration_case_ids": ["D1-F01-normal", "D1-F01-challenge", "D2-F01-normal", "D2-F01-challenge", "D3-F01-normal", "D4-F01-normal", "D5-F01-challenge", "D6-F01-normal", "D7-F01-challenge", "D8-F01-normal"]}}
+    {
+      "id": "qwen3.8-max__pi-agent-0.73.1",
+      "model": "qwen3.8-max",
+      "agent": "pi-agent-0.73.1",
+      "adapter": "pi-agent-live",
+      "config": {
+        "profile": "benchmark_fast",
+        "seed": 20260819,
+        "max_provider_turns": 2,
+        "output_contract_version": "3.0.0",
+        "live_eval_stages": [
+          "smoke",
+          "calibration",
+          "baseline",
+          "supplemental"
+        ],
+        "calibration_case_ids": [
+          "D1-F01-normal",
+          "D4-F03-normal",
+          "D2-F03-normal",
+          "D3-F01-normal",
+          "D1-F04-normal",
+          "D2-F07-normal",
+          "D7-F05-normal",
+          "D8-F06-normal",
+          "D4-F03-challenge",
+          "D7-F05-challenge"
+        ]
+      }
+    },
+    {
+      "id": "glm-5.2__pi-agent-0.73.1",
+      "model": "glm-5.2",
+      "agent": "pi-agent-0.73.1",
+      "adapter": "pi-agent-live",
+      "config": {
+        "profile": "benchmark_fast",
+        "seed": 20260819,
+        "max_provider_turns": 2,
+        "output_contract_version": "3.0.0",
+        "live_eval_stages": [
+          "smoke",
+          "calibration",
+          "baseline",
+          "supplemental"
+        ],
+        "calibration_case_ids": [
+          "D1-F01-normal",
+          "D4-F03-normal",
+          "D2-F03-normal",
+          "D3-F01-normal",
+          "D1-F04-normal",
+          "D2-F07-normal",
+          "D7-F05-normal",
+          "D8-F06-normal",
+          "D4-F03-challenge",
+          "D7-F05-challenge"
+        ]
+      }
+    },
+    {
+      "id": "deepseek-v4-flash-0731__pi-agent-0.73.1",
+      "model": "deepseek-v4-flash-0731",
+      "agent": "pi-agent-0.73.1",
+      "adapter": "pi-agent-live",
+      "config": {
+        "profile": "benchmark_fast",
+        "seed": 20260819,
+        "max_provider_turns": 2,
+        "output_contract_version": "3.0.0",
+        "live_eval_stages": [
+          "smoke",
+          "calibration",
+          "baseline",
+          "supplemental"
+        ],
+        "calibration_case_ids": [
+          "D1-F01-normal",
+          "D4-F03-normal",
+          "D2-F03-normal",
+          "D3-F01-normal",
+          "D1-F04-normal",
+          "D2-F07-normal",
+          "D7-F05-normal",
+          "D8-F06-normal",
+          "D4-F03-challenge",
+          "D7-F05-challenge"
+        ]
+      }
+    },
+    {
+      "id": "deepseek-v4-pro-0813__pi-agent-0.73.1",
+      "model": "deepseek-v4-pro-0813",
+      "agent": "pi-agent-0.73.1",
+      "adapter": "pi-agent-live",
+      "config": {
+        "profile": "benchmark_fast",
+        "seed": 20260819,
+        "generation": {
+          "max_output_tokens": 32768
+        },
+        "max_provider_turns": 2,
+        "output_contract_version": "3.0.0",
+        "live_eval_stages": [
+          "smoke",
+          "calibration",
+          "baseline",
+          "supplemental"
+        ],
+        "calibration_case_ids": [
+          "D1-F01-normal",
+          "D4-F03-normal",
+          "D2-F03-normal",
+          "D3-F01-normal",
+          "D1-F04-normal",
+          "D2-F07-normal",
+          "D7-F05-normal",
+          "D8-F06-normal",
+          "D4-F03-challenge",
+          "D7-F05-challenge"
+        ]
+      }
+    }
   ],
   "providers": [
-    {"name": "bailian", "api": "openai_chat_completions_compatible", "protocol": "openai_chat_completions", "adapter": "bailian", "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1", "credential_env": "BENCH_BAILIAN_API_KEY", "default_generation": {"stream": "on", "reasoning": {"mode": "on"}, "temperature": "0.600000", "top_p": "1.000000"}, "timeout_seconds": 120}
+    {
+      "name": "bailian",
+      "api": "openai_chat_completions_compatible",
+      "protocol": "openai_chat_completions",
+      "adapter": "bailian",
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "credential_env": "BENCH_BAILIAN_API_KEY",
+      "default_generation": {
+        "stream": "on",
+        "reasoning": {
+          "mode": "on"
+        },
+        "temperature": "0.600000",
+        "top_p": "1.000000"
+      },
+      "timeout_seconds": 120
+    }
   ],
   "models": [
-    {"model_id": "qwen3.8-max", "provider": "bailian", "allowed_response_model_ids": ["qwen3.8-max"], "capabilities": {"stream": "supported", "reasoning": "required", "reasoning_controls": ["effort", "budget_tokens"], "reasoning_output": "reasoning_content"}, "default_generation": {"reasoning": {"mode": "on", "effort": "low"}}},
-    {"model_id": "glm-5.2", "provider": "bailian", "allowed_response_model_ids": ["glm-5.2"], "capabilities": {"stream": "supported", "reasoning": "optional", "reasoning_controls": ["enable_flag"], "reasoning_output": "reasoning_content"}},
-    {"model_id": "deepseek-v4-flash-0731", "provider": "bailian", "allowed_response_model_ids": ["deepseek-v4-flash-0731"], "capabilities": {"stream": "supported", "reasoning": "optional", "reasoning_controls": ["enable_flag"], "reasoning_output": "reasoning_content"}},
-    {"model_id": "deepseek-v4-pro-0813", "provider": "bailian", "allowed_response_model_ids": ["deepseek-v4-pro-0813"], "capabilities": {"stream": "supported", "reasoning": "optional", "reasoning_controls": ["enable_flag"], "reasoning_output": "reasoning_content"}}
+    {
+      "model_id": "qwen3.8-max",
+      "provider": "bailian",
+      "allowed_response_model_ids": [
+        "qwen3.8-max"
+      ],
+      "capabilities": {
+        "stream": "supported",
+        "reasoning": "required",
+        "reasoning_controls": [
+          "effort",
+          "budget_tokens"
+        ],
+        "reasoning_output": "reasoning_content"
+      },
+      "default_generation": {
+        "reasoning": {
+          "mode": "on",
+          "effort": "low"
+        }
+      }
+    },
+    {
+      "model_id": "glm-5.2",
+      "provider": "bailian",
+      "allowed_response_model_ids": [
+        "glm-5.2"
+      ],
+      "capabilities": {
+        "stream": "supported",
+        "reasoning": "optional",
+        "reasoning_controls": [
+          "enable_flag"
+        ],
+        "reasoning_output": "reasoning_content"
+      }
+    },
+    {
+      "model_id": "deepseek-v4-flash-0731",
+      "provider": "bailian",
+      "allowed_response_model_ids": [
+        "deepseek-v4-flash-0731"
+      ],
+      "capabilities": {
+        "stream": "supported",
+        "reasoning": "optional",
+        "reasoning_controls": [
+          "enable_flag"
+        ],
+        "reasoning_output": "reasoning_content"
+      }
+    },
+    {
+      "model_id": "deepseek-v4-pro-0813",
+      "provider": "bailian",
+      "allowed_response_model_ids": [
+        "deepseek-v4-pro-0813"
+      ],
+      "capabilities": {
+        "stream": "supported",
+        "reasoning": "optional",
+        "reasoning_controls": [
+          "enable_flag"
+        ],
+        "reasoning_output": "reasoning_content"
+      }
+    }
   ],
   "profiles": [
-    {"name": "benchmark_fast", "generation": {"stream": "on", "reasoning": {"mode": "on"}}}
+    {
+      "name": "benchmark_fast",
+      "generation": {
+        "stream": "on",
+        "reasoning": {
+          "mode": "on"
+        }
+      }
+    }
   ]
 }

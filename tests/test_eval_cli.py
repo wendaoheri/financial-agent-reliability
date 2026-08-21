@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import pathlib
 import tempfile
@@ -12,6 +13,7 @@ from financial_agent_reliability.adapters.core import AdapterResult
 from financial_agent_reliability.cli import main
 from financial_agent_reliability.eval_pack import (
     aggregate_eval_bundles,
+    analyze_eval_migration,
     replay_eval_pack,
     run_eval_pack,
 )
@@ -34,15 +36,15 @@ LIVE_CONFIG = ROOT / "configs" / "pi-bailian-live.json"
 LIVE_CANDIDATE_ID = "qwen3.8-max__pi-agent-0.73.1"
 APPROVED_LIVE_CASE_IDS = [
     "D1-F01-normal",
-    "D1-F01-challenge",
-    "D2-F01-normal",
-    "D2-F01-challenge",
+    "D4-F03-normal",
+    "D2-F03-normal",
     "D3-F01-normal",
-    "D4-F01-normal",
-    "D5-F01-challenge",
-    "D6-F01-normal",
-    "D7-F01-challenge",
-    "D8-F01-normal",
+    "D1-F04-normal",
+    "D2-F07-normal",
+    "D7-F05-normal",
+    "D8-F06-normal",
+    "D4-F03-challenge",
+    "D7-F05-challenge",
 ]
 
 
@@ -191,6 +193,8 @@ class ReportEvalCLITests(unittest.TestCase):
                 error = None
                 if self.behavior == "candidate_failure":
                     output["cited_record_ids"] = []
+                elif self.behavior == "shape_mismatch":
+                    output["value"] = {"decision": output["value"]}
                 elif self.behavior == "invalid_protocol":
                     output = {"unexpected": "BENCH_BAILIAN_API_KEY=should-never-be-persisted"}
                 elif self.behavior == "provider_failure":
@@ -204,6 +208,11 @@ class ReportEvalCLITests(unittest.TestCase):
                     output=output,
                     error=error,
                     latency_ms=7,
+                    final_output_raw=(
+                        json.dumps(output, ensure_ascii=False, sort_keys=True)
+                        if error is None
+                        else None
+                    ),
                     input_tokens=101,
                     output_tokens=17,
                     provider_identity={"exact_match": True},
@@ -214,6 +223,7 @@ class ReportEvalCLITests(unittest.TestCase):
         expected = {
             "pass": "candidate_success",
             "candidate_failure": "candidate_failure",
+            "shape_mismatch": "candidate_failure",
             "invalid_protocol": "invalid_run",
             "provider_failure": "invalid_run",
         }
@@ -242,10 +252,24 @@ class ReportEvalCLITests(unittest.TestCase):
                 self.assertNotIn("gold", json.dumps(request.input, ensure_ascii=False))
                 if behavior == "invalid_protocol":
                     self.assertIsNone(trace["output"])
+                    self.assertIsNone(trace["final_output_raw"])
                     self.assertEqual(trace["error"]["code"], "INVALID_MODEL_OUTPUT")
                     self.assertEqual(len(trace["error"]["output_summary"]["sha256"]), 64)
                     self.assertNotIn("should-never-be-persisted", json.dumps(trace))
+                if behavior == "shape_mismatch":
+                    self.assertEqual(
+                        trace["value_diagnostic"]["mismatch_reason"],
+                        "value_shape_mismatch",
+                    )
+                    self.assertEqual(trace["failure_signature"]["code"], "VALUE_SHAPE_MISMATCH")
+                    self.assertIn("decision", trace["final_output_raw"])
                 if behavior == "pass":
+                    self.assertEqual(trace["value_diagnostic"]["shape_pass"], True)
+                    self.assertEqual(trace["value_diagnostic"]["semantic_pass"], True)
+                    self.assertEqual(
+                        hashlib.sha256(trace["final_output_raw"].encode()).hexdigest(),
+                        trace["final_output_sha256"],
+                    )
                     with tempfile.TemporaryDirectory() as temporary:
                         trace_path = pathlib.Path(temporary) / "live.jsonl"
                         trace_path.write_text(json.dumps(trace) + "\n", encoding="utf-8")
@@ -276,9 +300,10 @@ class ReportEvalCLITests(unittest.TestCase):
                 fixture = dict(request.resources[0])
                 tools.invoke("read_fixture")
                 return AdapterResult(
-                    output=_derive_mock_output(fixture),
+                    output=(output := _derive_mock_output(fixture)),
                     error=None,
                     latency_ms=1,
+                    final_output_raw=json.dumps(output, ensure_ascii=False, sort_keys=True),
                     input_tokens=10,
                     output_tokens=5,
                     provider_identity={"exact_match": True},
@@ -322,6 +347,8 @@ class ReportEvalCLITests(unittest.TestCase):
             self.assertEqual(report["trace_count"], 100)
             self.assertEqual(resumed.calls, 99)
             self.assertFalse((output / ".checkpoint").exists())
+            self.assertEqual(output.stat().st_mode & 0o777, 0o700)
+            self.assertEqual((output / "trace.jsonl").stat().st_mode & 0o777, 0o600)
             replay = replay_eval_pack(PACK, output, candidates=load_candidates(LIVE_CONFIG))
             self.assertEqual(replay["status"], "passed")
             self.assertEqual(
@@ -332,6 +359,70 @@ class ReportEvalCLITests(unittest.TestCase):
             self.assertEqual(aggregate["status"], "completed")
             self.assertEqual(aggregate["first_attempt_cells"], 100)
             self.assertEqual(aggregate["candidates"][candidate.id]["unique_cases"], 100)
+            migration = analyze_eval_migration(
+                PACK,
+                [output],
+                [output],
+                candidates=[candidate],
+            )
+            self.assertEqual(migration["status"], "completed")
+            self.assertEqual(migration["paired_cells"], 100)
+            self.assertEqual(migration["network_calls_performed"], 0)
+            self.assertEqual(
+                migration["comparisons"][candidate.id]["new_minus_old_success_rate"],
+                0,
+            )
+            self.assertNotIn("output", migration["cells"][0])
+
+    def test_live_calibration_fails_when_schema_adherence_is_below_nine_of_ten(self):
+        candidate = next(
+            item for item in load_candidates(LIVE_CONFIG) if item.id == LIVE_CANDIDATE_ID
+        )
+
+        class ShapeFailureAdapter:
+            version = "fixture"
+
+            def __init__(self) -> None:
+                self.calls = 0
+
+            def execute(self, request, _candidate, tools):
+                self.calls += 1
+                tools.invoke("read_fixture")
+                output = _derive_mock_output(dict(request.resources[0]))
+                if self.calls <= 2:
+                    output["value"] = {"unexpected_wrapper": output["value"]}
+                return AdapterResult(
+                    output=output,
+                    error=None,
+                    latency_ms=1,
+                    final_output_raw=json.dumps(output, ensure_ascii=False, sort_keys=True),
+                    provider_identity={"exact_match": True},
+                    cost_basis="token_plan_unpriced",
+                )
+
+        with tempfile.TemporaryDirectory() as temporary:
+            output = pathlib.Path(temporary) / "failed-calibration"
+            adapter = ShapeFailureAdapter()
+            with patch(
+                "financial_agent_reliability.report_eval_pack.get_adapter",
+                return_value=adapter,
+            ):
+                report = run_eval_pack(
+                    PACK,
+                    output,
+                    candidates=[candidate],
+                    case_ids=APPROVED_LIVE_CASE_IDS,
+                    repository_root=ROOT,
+                    run_id="failed-calibration",
+                    preflight_sha256="f" * 64,
+                    live_stage="calibration",
+                )
+            self.assertEqual(report["status"], "calibration_failed")
+            aggregate = json.loads((output / "aggregate.json").read_text())
+            self.assertEqual(
+                aggregate["by_candidate"][candidate.id]["schema_adherence_rate"],
+                0.8,
+            )
 
     def test_eval_validate_enforces_the_exact_report_pack(self):
         stdout = StringIO()
@@ -342,7 +433,7 @@ class ReportEvalCLITests(unittest.TestCase):
         self.assertEqual(report["status"], "passed")
         self.assertEqual(report["cases"], 100)
         self.assertEqual(report["variants"], {"challenge": 40, "normal": 60})
-        self.assertEqual(report["eval_pack_id"], "per424-report-eight-gates-100-dev-v2.1")
+        self.assertEqual(report["eval_pack_id"], "per424-report-eight-gates-100-dev-v3")
         self.assertEqual(report["network_calls_performed"], 0)
         self.assertEqual(set(report["gates"]), {f"D{number}" for number in range(1, 9)})
         self.assertEqual(set(report["root_causes"]), {f"R{number}" for number in range(1, 6)})

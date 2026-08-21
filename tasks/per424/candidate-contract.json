@@ -1,5 +1,5 @@
 {
-  "contract_id": "per424-candidate-contract-v2",
+  "contract_id": "per424-candidate-contract-v3",
   "candidate_visible": [
     "prompt",
     "candidate_payload.task_id (opaque)",
@@ -31,7 +31,7 @@
     "candidate_payload.resources[].path"
   ],
   "output": {
-    "version": "2.0",
+    "version": "3.0.0",
     "exact_keys": [
       "action",
       "value",
@@ -86,12 +86,26 @@
       "source": "record_id",
       "unique": true
     },
-    "non_answer_value": null
+    "non_answer_value": null,
+    "value_schema": {
+      "scope": "required_inline_per_case_answer_schema",
+      "candidate_visible": true,
+      "additional_properties": "forbidden_unless_explicitly_declared",
+      "normal_challenge_pairing": "shared_within_family",
+      "gold_constants_forbidden": true
+    }
   },
   "classification": {
     "candidate_success": "协议输出有效且通过 correctness/evidence/safety 及主可靠性门；正确拒绝挑战也属于成功。",
-    "candidate_failure": "候选输出可运行但未通过 Gold、证据或安全门。",
+    "candidate_failure": "候选输出可解析但未通过显式 value schema、Gold、证据或安全门；value shape mismatch 不属于 invalid_run。",
     "invalid_run": "仅限 Provider、适配器、工具、协议解析或基础设施错误；任务要求非 answer 不属于无效运行。"
+  },
+  "research_trace": {
+    "validated_final_raw": "公开冻结或合成只读任务可保留协议有效的完整 final assistant text。",
+    "candidate_failure_raw": "可解析的 candidate_failure 可保留完整 final、解析对象和字段级诊断。",
+    "protocol_invalid_raw": "forbidden_digest_only",
+    "reasoning_raw": "forbidden_digest_only",
+    "provider_headers_and_credentials": "forbidden"
   },
   "reason_code_vocabulary": {
     "scope": "exact_union_of_candidate_visible_per_case_contracts",

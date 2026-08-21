@@ -18,6 +18,7 @@ from financial_agent_reliability.compare import compare_traces
 from financial_agent_reliability.config import load_run_config
 from financial_agent_reliability.eval_pack import (
     aggregate_eval_bundles,
+    analyze_eval_migration,
     load_report_cases,
     replay_eval_pack,
     run_eval_pack,
@@ -146,6 +147,22 @@ def _parser() -> argparse.ArgumentParser:
     eval_aggregate.add_argument("--output", type=pathlib.Path, required=True)
     eval_aggregate.add_argument("--invalid-run-limit", type=int, default=5)
 
+    eval_migration = subparsers.add_parser(
+        "eval-migration",
+        help="pair old and current report bundles for a no-network protocol migration analysis",
+    )
+    eval_migration.add_argument("--pack", type=pathlib.Path, required=True)
+    eval_migration.add_argument("--config", type=pathlib.Path, required=True)
+    eval_migration.add_argument(
+        "--old-bundle", type=pathlib.Path, action="append", dest="old_bundles", required=True
+    )
+    eval_migration.add_argument(
+        "--new-bundle", type=pathlib.Path, action="append", dest="new_bundles", required=True
+    )
+    eval_migration.add_argument("--output", type=pathlib.Path, required=True)
+    eval_migration.add_argument("--regression-limit", type=float, default=0.05)
+    eval_migration.add_argument("--old-success-failure-limit", type=int, default=5)
+
     soak = subparsers.add_parser(
         "soak", help="run or resume a durable long-horizon pi harness qualification"
     )
@@ -188,7 +205,11 @@ def _write_safe_json(path: pathlib.Path, value: dict[str, Any]) -> None:
     if findings:
         raise ValueError("preflight rejected by persisted-secret gate: " + ", ".join(findings))
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(_render(value), encoding="utf-8")
+    path.parent.chmod(0o700)
+    temporary = path.with_name(f".{path.name}.tmp")
+    temporary.write_text(_render(value), encoding="utf-8")
+    temporary.chmod(0o600)
+    temporary.replace(path)
 
 
 def _live_preflight(candidates: list[Any], config_path: pathlib.Path) -> dict[str, Any]:
@@ -468,7 +489,11 @@ def main(argv: list[str] | None = None) -> int:
                 live_stage=args.live_stage,
             )
             print(_render(report), end="")
-            if report.get("status") in {"paused", "operationally_invalid"}:
+            if report.get("status") in {
+                "paused",
+                "operationally_invalid",
+                "calibration_failed",
+            }:
                 return 1
             return 1 if report.get("outcome_counts", {}).get("invalid_run") else 0
         if args.command == "eval-replay":
@@ -487,6 +512,20 @@ def main(argv: list[str] | None = None) -> int:
             _write_safe_json(args.output, report)
             print(_render({**report, "output": str(args.output)}), end="")
             return 1 if report["status"] == "partial" else 0
+        if args.command == "eval-migration":
+            candidates = load_candidates(args.config)
+            report = analyze_eval_migration(
+                args.pack,
+                args.old_bundles,
+                args.new_bundles,
+                candidates=candidates,
+                regression_limit=args.regression_limit,
+                old_success_failure_limit=args.old_success_failure_limit,
+            )
+            _write_safe_json(args.output, report)
+            rendered = {**report, "cells": "written_to_output", "output": str(args.output)}
+            print(_render(rendered), end="")
+            return 1 if report["status"] == "completed_review_required" else 0
         if args.command in {
             "validate",
             "preflight",

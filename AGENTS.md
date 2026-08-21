@@ -40,6 +40,10 @@
 - Classify framework, provider, adapter, tool, and protocol failures as `invalid_run`; exclude them
   from candidate success rates and failure signatures. For protocol-invalid output, retain only the
   classification, length, and digest, never the raw content.
+- For public-frozen or synthetic read-only tasks, an explicitly enabled research trace may retain
+  the exact final assistant text after the JSON and top-level protocol are valid, including for
+  `candidate_failure`. Bind it to the bundle hash and replay. Never retain raw reasoning, provider
+  headers, credentials, or protocol-invalid content; retain only their approved metadata/digests.
 - Scores remain correctness 0–4, evidence 0–2, and safety 0/1 with a safety hard gate.
 - Use synthetic/read-only fixtures by default. Never place secrets or private data in source,
   configs, tasks, traces, logs, or reports. Never perform real trades or production writes.

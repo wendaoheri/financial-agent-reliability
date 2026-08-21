@@ -1,12 +1,12 @@
 {
   "asset_files": {
     "README.md": {
-      "bytes": 2042,
-      "sha256": "a9dc66506963ce8ea177b649a249aeaa3bf5759ec84b5c0798659286ac3c12c9"
+      "bytes": 2283,
+      "sha256": "ad25e0e2aa4e717774dd495f74b7cc4ceb1c7767db52dbb177cda1ef63167c93"
     },
     "candidate-contract.json": {
-      "bytes": 4063,
-      "sha256": "8e2c37d271ce369a82f4ec0506e8dbd8156dd97ff177932d9b9f9dcf107a1456"
+      "bytes": 4835,
+      "sha256": "1d13c133bee14b0de197eccfcbe426dd9df3fa4509a40782e185d2dd20700fec"
     },
     "coverage.json": {
       "bytes": 47807,
@@ -413,16 +413,16 @@
       "sha256": "8f6604dbe677b9c5df0e5d2e6ea4be383ac7afb5bb58bffb476c7b90bb00d7cf"
     },
     "scoring.json": {
-      "bytes": 1195,
-      "sha256": "f85be9f98ef367b5664e8a1e3cda9df6d81b82b10c4bf8f43adc62616763c7cf"
+      "bytes": 1549,
+      "sha256": "48295863698c7363162f1dd6b401ff6404fd63741cfe561c34a6490f261d2be9"
     },
     "sources.jsonl": {
       "bytes": 170718,
       "sha256": "985330bc0450197b89c078b51027c79dc84b57da71d31e9c51cd81b390fe079f"
     },
     "tasks.jsonl": {
-      "bytes": 2136933,
-      "sha256": "9b55f556d4c6520781c5b21a74f2075f707ea537804d8b00c7e2f1f8154d8915"
+      "bytes": 2149389,
+      "sha256": "1f85cccaf16f2e1f3beb1e5c9fcf99d5c37cbc2bcf7d1dbe69780227ced799f8"
     }
   },
   "composition": {
@@ -444,7 +444,7 @@
     "prompt_min_trimmed_unicode_chars": 5000,
     "reused_paragraph_max_chars": 199
   },
-  "eval_pack_id": "per424-report-eight-gates-100-dev-v2.1",
+  "eval_pack_id": "per424-report-eight-gates-100-dev-v3",
   "gates": {
     "D1": {
       "case_count": 12,
@@ -512,10 +512,22 @@
     "R4": "工具、权限和长链状态失控",
     "R5": "组织治理与责任供应链约束失效"
   },
-  "runner_protocol_version": "financial-differential-eval/2.0",
+  "raw_final_capture": {
+    "allowed": true,
+    "data_classes": [
+      "public_source_frozen",
+      "synthetic_read_only"
+    ],
+    "protocol_invalid": "digest_only",
+    "reasoning": "digest_only"
+  },
+  "runner_protocol_version": "financial-differential-eval/3.0",
+  "output_contract_version": "3.0.0",
+  "trace_schema_version": "report-eval-trace-2.0.0",
   "scope": {
     "external_accounts_authorized": false,
-    "offline_only": true,
+    "offline_first": true,
+    "offline_only": false,
     "paid_calls_authorized": false,
     "ranking_claim_authorized": false,
     "read_only": true,
@@ -544,5 +556,5 @@
     ],
     "official_record_normal": 24
   },
-  "task_revision": "v2.1"
+  "task_revision": "v3"
 }

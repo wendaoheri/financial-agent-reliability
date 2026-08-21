@@ -73,7 +73,7 @@ def _candidate() -> Candidate:
         model="fixture-model",
         agent="pi-agent-0.73.1",
         adapter="pi-agent-live",
-        config={"max_provider_turns": 2, "output_contract_version": "2.1.0"},
+        config={"max_provider_turns": 2, "output_contract_version": "3.0.0"},
         source_path=ROOT / "configs" / "pi-bailian-live.json",
     )
 

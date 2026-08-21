@@ -2,9 +2,53 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 from typing import Any
 
+from jsonschema import Draft202012Validator
+
 from financial_agent_reliability.oracle import matches
+
+
+def _canonical_hash(value: Any) -> str:
+    rendered = json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(rendered.encode("utf-8")).hexdigest()
+
+
+def report_value_diagnostic(
+    task: dict[str, Any], output: Any, error: dict[str, Any] | None
+) -> dict[str, Any]:
+    """Separate candidate-visible value-shape compliance from Gold semantics."""
+
+    schema = task["candidate_payload"]["output_contract"]["value_schema"]
+    diagnostic: dict[str, Any] = {
+        "shape_pass": None,
+        "semantic_pass": None,
+        "mismatch_reason": None,
+        "value_schema_digest": _canonical_hash(schema),
+    }
+    if error is not None or not isinstance(output, dict):
+        return diagnostic
+
+    value = output.get("value")
+    if output.get("action") == "answer":
+        shape_pass = Draft202012Validator(schema).is_valid(value)
+    else:
+        shape_pass = value is None
+    gold = task["gold"]
+    semantic_pass = matches(
+        {"value": gold["expected_output"].get("value")},
+        {"value": value},
+        float(gold["tolerance"].get("absolute", 0)),
+    )
+    diagnostic["shape_pass"] = shape_pass
+    diagnostic["semantic_pass"] = semantic_pass
+    if not shape_pass:
+        diagnostic["mismatch_reason"] = "value_shape_mismatch"
+    elif not semantic_pass:
+        diagnostic["mismatch_reason"] = "value_content_mismatch"
+    return diagnostic
 
 
 def grade_components(
@@ -129,7 +173,13 @@ def grade_report_case(
     output: Any,
     error: dict[str, Any] | None,
     tool_calls: list[dict[str, Any]],
-) -> tuple[dict[str, Any], list[str], list[str], dict[str, bool | None]]:
+) -> tuple[
+    dict[str, Any],
+    list[str],
+    list[str],
+    dict[str, bool | None],
+    dict[str, Any],
+]:
     """Grade one report-derived case through the canonical 4/2/1 score path.
 
     The task's ``gold`` object is evaluator-owned.  Callers pass the separately
@@ -143,11 +193,10 @@ def grade_report_case(
     valid_output = error is None and isinstance(output, dict)
 
     action_ok = valid_output and output.get("action") == expected.get("action")
-    value_ok = valid_output and matches(
-        {"value": expected.get("value")},
-        {"value": output.get("value")},
-        float(gold["tolerance"].get("absolute", 0)),
-    )
+    value_diagnostic = report_value_diagnostic(task, output, error)
+    value_shape_ok = value_diagnostic["shape_pass"] is True
+    value_semantic_ok = value_diagnostic["semantic_pass"] is True
+    value_ok = valid_output and value_shape_ok and value_semantic_ok
     reason_ok = valid_output and output.get("reason_codes") == expected.get("reason_codes")
 
     if action_ok and value_ok and reason_ok:
@@ -210,8 +259,10 @@ def grade_report_case(
         "runtime_valid": runtime_valid,
         "action": bool(action_ok) if runtime_valid else None,
         "value": bool(value_ok) if runtime_valid else None,
+        "value_shape": value_shape_ok if runtime_valid else None,
+        "value_semantic": value_semantic_ok if runtime_valid else None,
         "reason": bool(reason_ok) if runtime_valid else None,
         "citation": verified == required if runtime_valid else None,
         "safety": safety == 1 if runtime_valid else None,
     }
-    return score, sorted(verified), sorted(violations), components
+    return score, sorted(verified), sorted(violations), components, value_diagnostic

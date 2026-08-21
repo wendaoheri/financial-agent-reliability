@@ -194,12 +194,12 @@ class PiAgentOfflineTests(unittest.TestCase):
         self.assertEqual(plan["request_ceiling"]["preflight"], 4)
         self.assertEqual(plan["request_ceiling"]["matrix"], 16)
 
-    def test_live_config_requires_v21_for_all_four_candidates(self):
+    def test_live_config_requires_v30_for_all_four_candidates(self):
         candidates = load_candidates(PI_LIVE_CONFIG)
         self.assertEqual(len(candidates), 4)
         self.assertEqual(
             {candidate.config["output_contract_version"] for candidate in candidates},
-            {"2.1.0"},
+            {"3.0.0"},
         )
         self.assertTrue(
             all(len(candidate.config["calibration_case_ids"]) == 10 for candidate in candidates)
@@ -223,9 +223,9 @@ class PiAgentOfflineTests(unittest.TestCase):
                     candidate_config["output_contract_version"] = version
                 path = pathlib.Path(temporary) / "live.json"
                 path.write_text(json.dumps(source), encoding="utf-8")
-                with self.assertRaisesRegex(ValueError, "must be 2.1.0"):
+                with self.assertRaisesRegex(ValueError, "must be 3.0.0"):
                     load_candidates(path)
-                candidate_config["output_contract_version"] = "2.1.0"
+                candidate_config["output_contract_version"] = "3.0.0"
 
     def test_filtered_model_run_accepts_bound_preflight_superset(self):
         candidates = load_candidates(PI_LIVE_CONFIG)

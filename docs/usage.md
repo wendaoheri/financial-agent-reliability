@@ -122,14 +122,23 @@ report. No live command is part of the default verification suite.
 
 ### PER-424 internal live baseline
 
-PER-424 live execution separates disposable framework checks from first-attempt baseline evidence.
+PER-424 v3 makes each task's answer `value_schema` candidate-visible and classifies a parsed
+schema mismatch as `candidate_failure`, not `invalid_run`. The central trace records shape and
+semantic diagnostics separately. For this public-frozen/read-only pack, protocol-valid success and
+candidate-failure traces retain the exact final assistant JSON text, its digest, the parsed output,
+candidate-visible input, tool calls, and approved provider metadata. Protocol-invalid content and
+raw reasoning remain digest-only. Bundle directories and files are owner-only and stay Git-ignored.
+
+Live execution separates disposable framework checks from first-attempt baseline evidence.
 Every live command selects exactly one candidate so candidates can run concurrently without sharing
 failure state. `smoke` accepts one registered calibration case, `calibration` requires the registered
 10-case slice, `baseline` runs the complete 100-case pack, and `supplemental` requires explicit case
 IDs. All four candidates use reasoning mode `on`; the provider adapter maps that policy to each
 model's supported control. An omitted output limit resolves to the framework's 4096-token technical
 ceiling. DeepSeek Pro uses a 32768-token candidate ceiling because calibration showed that its
-reasoning stream can exhaust 4096 tokens before emitting contract output.
+reasoning stream can exhaust 4096 tokens before emitting contract output. GLM v3 calibration starts
+at 8192 tokens and escalates to a fixed 16384, then 32768 only if a complete 10-case rerun still
+contains an exact-identity reasoning-only response with no final text.
 
 Calculate the zero-network ceiling before a fresh four-model preflight:
 
@@ -161,6 +170,8 @@ uv run bench eval-replay --pack tasks/per424 \
 Three consecutive retryable provider failures pause that candidate. An identity mismatch is an
 immediate hard stop. A completed 100-case candidate with more than five invalid runs is marked
 `operationally_invalid`; invalid runs remain excluded from the reliability-pass denominator.
+Calibration requires 10/10 identity, HTTP/tool-chain validity, zero invalid runs, at least 9/10
+schema adherence per candidate, and no schema family with both registered examples failing.
 Candidate-isolated baseline bundles can be verified and combined without a second grading path:
 
 ```bash
@@ -171,6 +182,26 @@ uv run bench eval-aggregate --pack tasks/per424 \
   --bundle runs/per424-live/deepseek-flash-baseline \
   --bundle runs/per424-live/deepseek-pro-baseline \
   --output runs/per424-live/baseline-summary.json
+```
+
+After the v3 baseline is complete, compare it with the retained v2 observations without making
+network calls or introducing another scorer. `eval-migration` verifies all bundle hashes, fully
+replays the v3 bundles, regrades old observations with the central v3 scorer, and writes only paired
+classifications and diagnostics. It requests review if any candidate's success rate drops by more
+than 5 percentage points or at least five old successes become v3 failures:
+
+```bash
+uv run bench eval-migration --pack tasks/per424 \
+  --config configs/pi-bailian-live.json \
+  --old-bundle runs/per424-live-v2/qwen38-baseline \
+  --old-bundle runs/per424-live-v2/glm52-baseline \
+  --old-bundle runs/per424-live-v2/deepseek-flash-baseline \
+  --old-bundle runs/per424-live-v2/deepseek-pro-baseline \
+  --new-bundle runs/per424-live-v3/qwen38-baseline \
+  --new-bundle runs/per424-live-v3/glm52-baseline \
+  --new-bundle runs/per424-live-v3/deepseek-flash-baseline \
+  --new-bundle runs/per424-live-v3/deepseek-pro-baseline \
+  --output runs/per424-live-v3/migration-analysis.json
 ```
 
 These are internal dev observations only. They do not establish unseen-task generalization or a

@@ -25,7 +25,7 @@ CLI → config/tasks → runner → adapters → grading → trace/compare
   response-model fallback, disables provider retries, and stops before a third provider turn. Its
   bound preflight uses the minimal direct SSE transport because pi-ai only exposes `responseModel`
   when the provider ID differs; live Agent turns still flag any such divergent ID as fallback.
-  The live pi boundary supports only output contract 2.1.0. It fixes the shared reason-code ontology,
+  The live pi boundary supports only output contract 3.0.0. It fixes the shared reason-code ontology,
   persists only invalid-output class, character count, content hash, and block types—never raw
   invalid provider text—and makes `answer.value` a non-null scalar while requiring null
   for `abstain`/`refuse`. On the final provider turn only, the pi payload adds Bailian's
