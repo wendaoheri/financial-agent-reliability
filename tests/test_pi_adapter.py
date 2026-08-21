@@ -155,7 +155,7 @@ class PiAgentOfflineTests(unittest.TestCase):
         self.assertEqual(plan["request_ceiling"]["matrix"], 48)
         self.assertEqual(plan["request_ceiling"]["total"], 52)
         self.assertEqual(plan["request_ceiling"]["retries_per_request"], 0)
-        self.assertEqual(plan["token_ceiling"]["output_hard_cap"], 540928)
+        self.assertEqual(plan["token_ceiling"]["output_hard_cap"], 884992)
         self.assertIsNone(plan["cost_usd_upper_bound"])
         self.assertTrue(plan["approval_required"])
 

@@ -136,9 +136,10 @@ failure state. `smoke` accepts one registered calibration case, `calibration` re
 IDs. All four candidates use reasoning mode `on`; the provider adapter maps that policy to each
 model's supported control. An omitted output limit resolves to the framework's 4096-token technical
 ceiling. DeepSeek Pro uses a 32768-token candidate ceiling because calibration showed that its
-reasoning stream can exhaust 4096 tokens before emitting contract output. GLM v3 calibration starts
-at 8192 tokens and escalates to a fixed 16384, then 32768 only if a complete 10-case rerun still
-contains an exact-identity reasoning-only response with no final text.
+reasoning stream can exhaust 4096 tokens before emitting contract output. GLM is fixed at 32768:
+complete 10-case runs at 8192 and 16384 each reproduced an exact-identity reasoning-only response
+with no final text on the same challenge case; the complete 32768 rerun finished with zero invalid
+runs and 10/10 schema adherence.
 
 Calculate the zero-network ceiling before a fresh four-model preflight:
 

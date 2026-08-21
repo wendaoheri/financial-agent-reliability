@@ -85,7 +85,7 @@ class GenerationProfileTests(unittest.TestCase):
                 if model.model_id == "qwen3.8-max":
                     self.assertEqual(resolved.resolved["max_output_tokens"], 4096)
                     self.assertEqual(resolved.effective_parameters["reasoning_effort"], "low")
-                elif model.model_id == "deepseek-v4-pro-0813":
+                elif model.model_id in {"glm-5.2", "deepseek-v4-pro-0813"}:
                     self.assertEqual(resolved.resolved["max_output_tokens"], 32768)
                     self.assertTrue(resolved.effective_parameters["enable_thinking"])
                 else:

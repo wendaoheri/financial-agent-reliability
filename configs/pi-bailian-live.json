@@ -39,6 +39,9 @@
       "config": {
         "profile": "benchmark_fast",
         "seed": 20260819,
+        "generation": {
+          "max_output_tokens": 32768
+        },
         "max_provider_turns": 2,
         "output_contract_version": "3.0.0",
         "live_eval_stages": [
