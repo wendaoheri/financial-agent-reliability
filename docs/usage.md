@@ -21,13 +21,13 @@ failure-signature, secret-scan, and manifest path:
 
 ```bash
 uv run bench qualify --tasks tasks/dev/tasks.jsonl \
-  --config configs/framework-qualification.v1.json \
+  --config configs/framework-qualification.json \
   --slice market_data --variant valid_book \
-  --output-dir runs/framework-qualification-v1 --run-id framework-qualification-v1
+  --output-dir runs/framework-qualification --run-id framework-qualification
 uv run bench qualify-replay --tasks tasks/dev/tasks.jsonl \
-  --config configs/framework-qualification.v1.json \
+  --config configs/framework-qualification.json \
   --slice market_data --variant valid_book \
-  --bundle runs/framework-qualification-v1
+  --bundle runs/framework-qualification
 ```
 
 The matrix changes only action, value, reason code, citation, safety, or runtime state per control.
@@ -89,13 +89,16 @@ uv run bench run --tasks tasks/dev/tasks.jsonl \
 This command intentionally exits 1 after writing a `WRONG_ANSWER` trace; that exit is the expected
 negative-control result.
 
-## Live pi Agent Phase 1 readiness
+## Live pi Agent readiness
 
-Calculate the full Phase 1 ceiling without loading credentials or making a network request:
+The sole current pi live configuration uses output contract 2.1. It requires a non-null scalar for
+answers, null for abstentions/refusals, a redaction-safe invalid-output diagnostic, and provider JSON
+Object mode only on the second and final turn. Calculate its full ceiling without loading credentials
+or making a network request:
 
 ```bash
 uv run bench plan-live --tasks tasks/dev/tasks.jsonl \
-  --config configs/pi-bailian-pilot.json \
+  --config configs/pi-bailian-live.json \
   --slice fundamentals --slice news_filings --slice portfolio
 ```
 
@@ -105,63 +108,47 @@ input contract is 74,624 tokens and the hard output cap is 24,832 tokens. Input 
 the token-plan's USD price are not provider-verifiable before an approved preflight, so the plan
 reports `cost_usd_upper_bound: null` instead of claiming zero cost.
 
-After explicit approval, run exact-identity preflight first:
+After separate explicit approval, run exact-identity preflight first:
 
 ```bash
-uv run bench preflight --config configs/pi-bailian-pilot.json \
+uv run bench preflight --config configs/pi-bailian-live.json \
   --output runs/pi-live-preflight.json
 ```
 
 Only a passed report whose config hash and all four exact response model IDs match can be bound to
-the pilot. The pilot uses the same slice filters as `plan-live`. It inherits only
+the run. The run uses the same slice filters as `plan-live`. It inherits only
 `BENCH_BAILIAN_API_KEY`; the key never enters subprocess input, command arguments, config, trace, or
 report. No live command is part of the default verification suite.
 
-Phase 1.1 uses a new output contract rather than changing or rescoring the Phase 1 trace. It fixes
-the reason-code ontology, records only a redaction-safe invalid-output classification/length/hash,
-and runs each model independently so one model's safety hard stop cannot suppress evidence from a
-different model. Calculate the approved eight-cell calibration without network access:
+For an isolated eight-cell dev calibration, filter the same current config explicitly:
 
 ```bash
 uv run bench plan-live --tasks tasks/dev/tasks.jsonl \
-  --config configs/pi-bailian-calibration-v2.json \
+  --config configs/pi-bailian-live.json \
   --slice fundamentals --slice portfolio \
   --variant positive_earnings --variant execute_trade
 ```
 
-After one four-model exact-identity preflight, execute four separate filtered runs with the same
-bound preflight. Each run orders the normal calculation before the safety case and preserves the
-per-model hard stop. Phase 1 and Phase 1.1 traces must not be concatenated into one ranking.
-
-Contract/call calibration 2.1 is configured separately in
-`configs/pi-bailian-calibration-v3.json`. It explicitly requires null values for abstentions and
-refusals, and uses provider JSON Object mode only on the second (final) turn. Plan it offline with
-the same two calibration cells before seeking approval for any new live calls:
-
-```bash
-uv run bench plan-live --tasks tasks/dev/tasks.jsonl \
-  --config configs/pi-bailian-calibration-v3.json \
-  --slice fundamentals --slice portfolio \
-  --variant positive_earnings --variant execute_trade
-```
+After one four-model exact-identity preflight, execute separate candidate-filtered runs with the same
+bound preflight so one model's hard stop cannot suppress another model's evidence.
 
 ## Live workflow
 
 Live calls require explicit approval and `BENCH_BAILIAN_API_KEY` in the environment:
 
 ```bash
-uv run bench preflight --config configs/bailian-token-plan.json \
+uv run bench preflight --config configs/plain-bailian-live.json \
   --output runs/live-preflight.json
 uv run bench run --tasks tasks/dev/tasks.jsonl \
-  --config configs/bailian-token-plan.json \
+  --config configs/plain-bailian-live.json \
   --preflight runs/live-preflight.json \
   --output runs/live.jsonl --run-id live
 ```
 
-The preflight is bound to the run-config hash and exact returned model identities. The legacy
-`bailian-live` path is plain-agent only. The `pi-agent-live` path uses the pinned Agent lifecycle,
-one simulated/read-only fixture tool, sequential execution, a two-turn ceiling, and zero automatic
-provider retries. Neither path can perform transactions.
+The preflight is bound to the run-config hash and exact returned model identities. The
+`bailian-live` path is the retained plain-agent comparison axis. The `pi-agent-live` path uses the
+pinned Agent lifecycle, one simulated/read-only fixture tool, sequential execution, a two-turn
+ceiling, and zero automatic provider retries. Neither path can perform transactions.
 
 ## Durable long-horizon qualification
 
@@ -174,7 +161,7 @@ experiment fingerprint.
 
 ```bash
 uv run bench soak --tasks tasks/dev/tasks.jsonl \
-  --config configs/pi-bailian-calibration-v3.json \
+  --config configs/pi-bailian-live.json \
   --slice portfolio --variant analyze_weight \
   --preflight runs/phase2/preflight.json \
   --steps 50 --experiment-id phase2-long-horizon-v1 \

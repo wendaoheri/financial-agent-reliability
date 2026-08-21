@@ -60,7 +60,7 @@ uv run bench validate --tasks tasks/dev/tasks.jsonl --config configs/mock.json
 uv run bench eval-validate --pack tasks/per420
 uv run bench eval-run --pack tasks/per420 --output-dir runs/per420-offline
 uv run bench eval-replay --pack tasks/per420 --bundle runs/per420-offline
-uv run bench plan-live --tasks tasks/dev/tasks.jsonl --config configs/pi-bailian-pilot.json \
+uv run bench plan-live --tasks tasks/dev/tasks.jsonl --config configs/pi-bailian-live.json \
   --slice fundamentals --slice news_filings --slice portfolio
 uv build
 ```

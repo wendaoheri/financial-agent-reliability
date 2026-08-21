@@ -32,7 +32,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 TASKS = ROOT / "tasks" / "dev" / "tasks.jsonl"
 CANDIDATES = ROOT / "configs" / "mock.json"
 NEGATIVE_CONTROLS = ROOT / "tests" / "fixtures" / "negative-control.json"
-LIVE_CANDIDATES = ROOT / "configs" / "bailian-token-plan.json"
+LIVE_CANDIDATES = ROOT / "configs" / "plain-bailian-live.json"
 
 
 class BenchMVPTests(unittest.TestCase):

@@ -23,7 +23,7 @@ from financial_agent_reliability.trace import read_traces
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 TASKS = ROOT / "tasks" / "dev" / "tasks.jsonl"
-CONFIG = ROOT / "configs" / "framework-qualification.v1.json"
+CONFIG = ROOT / "configs" / "framework-qualification.json"
 
 
 class FrameworkQualificationTests(unittest.TestCase):

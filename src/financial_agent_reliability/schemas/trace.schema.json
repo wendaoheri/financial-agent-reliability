@@ -103,7 +103,7 @@
               "type": "object", "additionalProperties": false,
               "required": ["contract_version", "classification", "characters", "sha256", "block_types"],
               "properties": {
-                "contract_version": {"enum": ["2.0.0", "2.1.0"]},
+                "contract_version": {"const": "2.1.0"},
                 "classification": {"enum": ["valid", "missing_final_assistant", "no_text", "invalid_json", "wrong_keys", "invalid_status", "invalid_reason_codes", "invalid_reason_semantics", "invalid_value_semantics"]},
                 "characters": {"type": "integer", "minimum": 0},
                 "sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},

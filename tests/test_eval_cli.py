@@ -23,8 +23,9 @@ from financial_agent_reliability.report_eval_pack import (
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 TASKS = ROOT / "tasks" / "per424" / "tasks.jsonl"
 PACK = TASKS.parent
-CONFIG = ROOT / "configs" / "per424-mock.json"
-LIVE_CONFIG = ROOT / "configs" / "pi-bailian-calibration-v3.json"
+CONFIG = ROOT / "configs" / "mock.json"
+MOCK_CANDIDATE_ID = "mock-small__tool-agent"
+LIVE_CONFIG = ROOT / "configs" / "pi-bailian-live.json"
 LIVE_CANDIDATE_ID = "qwen3.8-max__pi-agent-0.73.1"
 APPROVED_LIVE_CASE_IDS = [
     "D1-F01-normal",
@@ -246,6 +247,8 @@ class ReportEvalCLITests(unittest.TestCase):
                         str(PACK),
                         "--config",
                         str(CONFIG),
+                        "--candidate",
+                        MOCK_CANDIDATE_ID,
                         "--output-dir",
                         str(output),
                         "--run-id",

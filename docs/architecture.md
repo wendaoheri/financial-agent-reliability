@@ -25,15 +25,15 @@ CLI → config/tasks → runner → adapters → grading → trace/compare
   response-model fallback, disables provider retries, and stops before a third provider turn. Its
   bound preflight uses the minimal direct SSE transport because pi-ai only exposes `responseModel`
   when the provider ID differs; live Agent turns still flag any such divergent ID as fallback.
-  Output contract 2.0.0 is opt-in through a versioned candidate config: it fixes the shared
-  reason-code ontology and persists only invalid-output class, character count, content hash, and
-  block types—never raw invalid provider text. A passed full preflight may bind a filtered subset
-  of the same config, enabling safety-isolated per-model calibration runs.
-  Output contract 2.1.0 is additive: it makes `answer.value` a non-null scalar and requires null
+  The live pi boundary supports only output contract 2.1.0. It fixes the shared reason-code ontology,
+  persists only invalid-output class, character count, content hash, and block types—never raw
+  invalid provider text—and makes `answer.value` a non-null scalar while requiring null
   for `abstain`/`refuse`. On the final provider turn only, the pi payload adds Bailian's
   `response_format={"type":"json_object"}` and disables further tool selection; the first turn
   remains an unconstrained read-only tool call. Trace observability records which output transport
-  was applied. Contract 2.0.0 and its historical traces are not changed or regraded.
+  was applied. A passed full preflight may bind a filtered subset of the same config, enabling
+  safety-isolated per-model runs. Older live output-contract implementations are available only
+  through Git history.
 - `schemas/` contains the current config, task, trace, and differential-task schemas as wheel
   package data.
 - `differential_oracle.py` and `differential_oracle_reference.py` independently recompute PER-420

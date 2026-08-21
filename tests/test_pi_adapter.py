@@ -17,9 +17,7 @@ from financial_agent_reliability.trace import read_traces
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 TASKS = ROOT / "tasks" / "dev" / "tasks.jsonl"
 PI_CONFIG = ROOT / "configs" / "pi-offline.json"
-PI_LIVE_CONFIG = ROOT / "configs" / "pi-bailian-pilot.json"
-PI_CALIBRATION_CONFIG = ROOT / "configs" / "pi-bailian-calibration-v2.json"
-PI_CONTRACT_V21_CONFIG = ROOT / "configs" / "pi-bailian-calibration-v3.json"
+PI_LIVE_CONFIG = ROOT / "configs" / "pi-bailian-live.json"
 PHASE0_SLICES = ("fundamentals", "news_filings", "portfolio")
 
 
@@ -172,14 +170,14 @@ class PiAgentOfflineTests(unittest.TestCase):
         self.assertEqual(result, expected)
         adapter_class.return_value.preflight.assert_called_once_with(candidate)
 
-    def test_phase11_plan_has_eight_isolated_calibration_cells(self):
+    def test_current_live_plan_has_eight_isolated_calibration_cells(self):
         stdout = StringIO()
         arguments = [
             "plan-live",
             "--tasks",
             str(TASKS),
             "--config",
-            str(PI_CALIBRATION_CONFIG),
+            str(PI_LIVE_CONFIG),
             "--slice",
             "fundamentals",
             "--slice",
@@ -196,16 +194,31 @@ class PiAgentOfflineTests(unittest.TestCase):
         self.assertEqual(plan["request_ceiling"]["preflight"], 4)
         self.assertEqual(plan["request_ceiling"]["matrix"], 16)
 
-    def test_v21_config_is_additive_and_enables_all_four_candidates(self):
-        candidates = load_candidates(PI_CONTRACT_V21_CONFIG)
+    def test_live_config_requires_v21_for_all_four_candidates(self):
+        candidates = load_candidates(PI_LIVE_CONFIG)
         self.assertEqual(len(candidates), 4)
         self.assertEqual(
             {candidate.config["output_contract_version"] for candidate in candidates},
             {"2.1.0"},
         )
 
+    def test_live_config_rejects_removed_output_contracts(self):
+        source = json.loads(PI_LIVE_CONFIG.read_text(encoding="utf-8"))
+        for version in (None, "1.0.0", "2.0.0"):
+            with self.subTest(version=version), tempfile.TemporaryDirectory() as temporary:
+                candidate_config = source["candidates"][0]["config"]
+                if version is None:
+                    candidate_config.pop("output_contract_version")
+                else:
+                    candidate_config["output_contract_version"] = version
+                path = pathlib.Path(temporary) / "live.json"
+                path.write_text(json.dumps(source), encoding="utf-8")
+                with self.assertRaisesRegex(ValueError, "must be 2.1.0"):
+                    load_candidates(path)
+                candidate_config["output_contract_version"] = "2.1.0"
+
     def test_filtered_model_run_accepts_bound_preflight_superset(self):
-        candidates = load_candidates(PI_CALIBRATION_CONFIG)
+        candidates = load_candidates(PI_LIVE_CONFIG)
         with tempfile.TemporaryDirectory() as temporary:
             path = pathlib.Path(temporary) / "preflight.json"
             versions = {"config_sha256": "a" * 64}
@@ -238,7 +251,7 @@ class PiAgentOfflineTests(unittest.TestCase):
         self.assertEqual(len(versions["preflight_sha256"]), 64)
 
     def test_bound_preflight_rejects_expired_or_candidate_mismatched_evidence(self):
-        candidate = load_candidates(PI_CALIBRATION_CONFIG)[0]
+        candidate = load_candidates(PI_LIVE_CONFIG)[0]
         now = datetime.now(UTC)
         report = {
             "status": "passed",

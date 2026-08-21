@@ -49,7 +49,7 @@ Phase 1 的零调用准备入口：
 
 ```bash
 uv run bench plan-live --tasks tasks/dev/tasks.jsonl \
-  --config configs/pi-bailian-pilot.json \
+  --config configs/pi-bailian-live.json \
   --slice fundamentals --slice news_filings --slice portfolio
 ```
 
@@ -63,7 +63,7 @@ provider turns 和 50 次工具调用：
 
 ```bash
 uv run bench soak --tasks tasks/dev/tasks.jsonl \
-  --config configs/pi-bailian-calibration-v3.json \
+  --config configs/pi-bailian-live.json \
   --slice portfolio --variant analyze_weight \
   --preflight runs/phase2/preflight.json \
   --steps 50 --experiment-id phase2-long-horizon-v1 \
@@ -74,8 +74,12 @@ uv run bench soak --tasks tasks/dev/tasks.jsonl \
 指纹变化时拒绝续跑。Git 状态和框架依赖不进入该指纹。`incomplete`/`cancelled` 不进入完成
 聚合，模型身份漂移和非只读工具调用是全局硬停止。
 
-`configs/` 是唯一的用户运行配置目录；`tasks/` 只保存任务和合成 fixture；运行输出只写入
-被忽略的 `runs/`。当前只有一个 CLI：`bench`。命令和 live provider 边界见
+`configs/` 是唯一的用户运行配置目录，规范配置按稳定角色命名：`mock.json`、
+`framework-qualification.json`、`pi-offline.json`、`pi-offline-negative-control.json`、
+`pi-bailian-live.json` 和 `plain-bailian-live.json`。文件区分环境或安全边界；配置中的
+generation profile 只描述生成行为，model × agent 组合由 candidate 表示。`tasks/` 只保存任务
+和合成 fixture；运行输出只写入被忽略的 `runs/`。当前只有一个 CLI：`bench`。命令和 live
+provider 边界见
 [`docs/usage.md`](docs/usage.md)，代码边界见 [`docs/architecture.md`](docs/architecture.md)。
 
 ## 验证

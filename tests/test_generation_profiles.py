@@ -15,7 +15,7 @@ from financial_agent_reliability.adapters.http import _parse_sse
 from financial_agent_reliability.config import load_run_config
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-LIVE_CONFIG = ROOT / "configs" / "bailian-token-plan.json"
+LIVE_CONFIG = ROOT / "configs" / "plain-bailian-live.json"
 
 
 def _provider(generation: dict | None = None):
